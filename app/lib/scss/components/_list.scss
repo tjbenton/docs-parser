@@ -1,0 +1,72 @@
+// @name Lists
+// @author Tyler Benton
+// @page components/list
+//
+// @markup
+//  <ul class="c-list">
+//   <li class="c-list__item">Item 1</li>
+//   <li class="c-list__item">Item 2</li>
+//   <li class="c-list__item">Item 3</li>
+//   <li class="c-list__item">Item 4</li>
+//  </ul>
+//  <ul class="c-list c-list--has-anchors">
+//   <li><a href="">Item 1</a></li>
+//   <li><a href="">Item 2</a></li>
+//   <li><a href="">Item 3</a></li>
+//   <li><a href="">Item 4</a></li>
+//  </ul>
+$list-config: (
+ border: 1px solid get($config, border-color),
+ border-radius: get($config, border-radius),
+ padding: .8em nth-val(get($config, padding), 2)
+);
+
+%c-list__item-padding{
+ display: block; // this is to ensure anchor tags display correctly.
+ padding: .8em nth-val(get($config, padding), 2);
+}
+
+
+@include namespace(component, ".list"){
+ @include reset;
+ border: 1px solid get($config, border-color) {
+  radius: get($config, border-radius);
+ };
+ > *{
+  border: none {
+   top: get($list-config, border);
+   radius: 0;
+  };
+  margin: 0;
+  &:first-child{
+   border-top: none;
+   border-top-right-radius: inherit;
+   border-top-left-radius: inherit;
+  }
+
+  &:last-child{
+   border-bottom-right-radius: inherit;
+   border-bottom-left-radius: inherit;
+  }
+ }
+
+ &__item{
+  @extend %c-list__item-padding;
+ }
+
+ &--has-anchors > *:not(.c-list__item){
+  > a{
+   @extend %c-list__item-padding;
+   position: relative;
+   &:before{
+    @include icon-pos(right, $extend: false);
+    @include icon-styles();
+    @include icon-get(arrow-right);
+   }
+  }
+ }
+
+ .c-badge{
+  float: right;
+ }
+}

@@ -1,0 +1,117 @@
+// @name Tags
+// @author Tyler Benton
+// @page components/tags
+//
+// @state .c-tag--delete
+// @state .c-tag--inverted
+// @state .c-tag--inverted.c-tag--delete
+//
+// @markup
+//  <span class="c-tag {$state} c-tag--default">Default</span>
+//  <span class="c-tag {$state} c-tag--primary">Primary</span>
+//  <span class="c-tag {$state} c-tag--secondary">Secondary</span>
+//  <span class="c-tag {$state} c-tag--success">Success</span>
+//  <span class="c-tag {$state} c-tag--info">Info</span>
+//  <span class="c-tag {$state} c-tag--warning">Warning</span>
+//  <span class="c-tag {$state} c-tag--danger">Danger</span>
+$tag:(
+ font-size: 12px,
+ padding: 6px 9px,
+ margin: 9px 7.5px,
+ icon: (
+  font-size: 10.5px,
+  spacing: 6px
+ )
+);
+
+@include define-color-set("tags", (
+ colors: (
+  default: (
+   0: color(a)
+  ),
+  primary: (
+   0: color(b)
+  ),
+  secondary: (
+   0: color(c)
+  ),
+  success: (
+   0: color(success, $namespace: "messaging")
+  ),
+  info: (
+   0: color(info, $namespace: "messaging")
+  ),
+  warning: (
+   0: color(warning, $namespace: "messaging")
+  ),
+  danger: (
+   0: color(danger, $namespace: "messaging")
+  )
+ )
+));
+
+%c-tag{
+ $this: #{&};
+ border-radius: em(4px, get($tag, font-size));
+ color: color(white);
+ display: inline-block;
+ font-size: get($tag, font-size);
+ line-height: 1em;
+ margin-top: em(nth-val(get($tag, margin), 1), get($tag, font-size));
+ padding: em(nth-val(get($tag, padding), 1), get($tag, font-size)) em(nth-val(get($tag, padding), 2), get($tag, font-size));
+ position: relative;
+ &, &:hover, &:active, &:focus{ // ensures there won't be a weird text decoration on any state
+  text-decoration: none;
+ }
+
+ & + &{
+  margin-left: em(nth-val(get($tag, margin), 2), get($tag, font-size));
+ }
+
+ @at-root {
+  &--delete{
+   border-right: {
+    width: get($tag, icon, font-size) + (get($tag, icon, spacing) * 2);
+    style: solid;
+   };
+   &:before{
+    @include icon-styles();
+    @include icon-get(close);
+    @include icon-pos(right, ((get($tag, icon, font-size) + (get($tag, icon, spacing) * 2)) * -1), false);
+    height: 10px;
+    font-size: em(get($tag, icon, font-size), get($tag, font-size));
+    width: 10px;
+   }
+  }
+
+  &--inverted{
+   background: rgba(#fff, .8);
+   border-right-color: rgba(color(#fff, 3), .8);
+   text-shadow: none;
+  }
+ }
+}
+
+
+@include namespace(component, ".tag"){
+ @extend %c-tag;
+
+ &--delete{
+  @extend %c-tag--delete;
+ }
+
+ @at-root #{&}#{&}--inverted{
+  @extend %c-tag--inverted;
+ }
+
+ @each $theme in map-keys(get-color-set("tags", colors)){
+  @at-root #{if($theme == default, &, &--#{$theme})}{
+   background: color($theme, 0, $namespace: "tags");
+   border-right-color: color($theme, 1, $namespace: "tags");
+   text-shadow: 0 0 .25em color($theme, 2, $namespace: "tags");
+   &.c-tag--inverted{
+    color: color($theme, 0, $namespace: "tags");
+   }
+  }
+ }
+}

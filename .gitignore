@@ -1,0 +1,11 @@
+node_modules/
+**/nmp-debug.log
+build/
+build.zip
+.tmp
+.DS_Store
+.sass-cache
+bower_components/
+*.css
+*.map
+docs/docs.json

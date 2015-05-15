@@ -1,0 +1,163 @@
+@mixin header($args...){
+ $selector: ();
+ @each $arg in $args{
+  $selector: join($selector, ($arg, ".#{$arg}"), "comma");
+ }
+ #{$selector}{
+  @content;
+ }
+}
+
+
+// @name Headings
+// @author Tyler Benton
+//
+// @page general/typography
+//
+// @markup
+// <h1>Heading 1</h1>
+// <span class="h1">Heading 1</span>
+// <h2>Heading 2</h2>
+// <span class="h2">Heading 2</span>
+// <h3>Heading 3</h3>
+// <span class="h3">Heading 3</span>
+// <h4>Heading 4</h4>
+// <span class="h4">Heading 4</span>
+// <h5>Heading 5</h5>
+// <span class="h5">Heading 5</span>
+// <h6>Heading 6</h6>
+// <span class="h6">Heading 6</span>
+@include header(h1, h2, h3, h4, h5, h6){
+ color: color(b, 0);
+ display: block;
+ font-size: 1em;
+ font-weight: bold;
+ letter-spacing: -.02em;
+ line-height: 1.25em;
+ margin: 0;
+ a{
+  color: inherit;
+ }
+ *:not(script):not(link):not(meta):not(style) + &{
+  margin-top: .5em;
+ }
+}
+
+@include header(h1, h4, h5){
+ font-weight: 400;
+}
+@include header(h1, h3, h5){
+ color: color(a, 0);
+}
+@include header(h1){
+ font-size: em(29px);
+}
+@include header(h2){
+ font-size: em(26.25px);
+}
+@include header(h3){
+ font-size: em(24.5px);
+}
+@include header(h4){
+ font-size: em(21.75px);
+}
+@include header(h5){
+ font-size: em(17.5px);
+}
+
+
+
+// @name Links
+// @author Tyler Benton
+//
+// @page general/typography
+//
+// @markup
+// <a href="#">Link</a>
+a, p a{
+ color: color(b, 0);
+ text-decoration: none;
+ &:hover, &:active, &:focus{
+  text-decoration: underline;
+ }
+ &:hover{
+  color: color(b, -2);
+ }
+ &:active, &:focus{
+  color: color(b, 2);
+ }
+}
+
+// @name Paragraphs
+// @author Tyler Benton
+// @page general/typography
+//
+// @markup
+// <p>Lorem ipsum dolor sit amet, <a href="#">consectetur adipisicing elit</a>. Unde numquam, culpa, sit laboriosam aperiam perferendis, cumque incidunt quaerat nemo quibusdam animi vel ducimus consectetur tempora laborum ipsam placeat blanditiis maxime.</p>
+// <p>Expedita quod architecto praesentium nostrum aspernatur a nobis, consequuntur tempora, eius iste ducimus non laborum deleniti cum nihil perferendis. Assumenda quasi deleniti dicta aspernatur.</p>
+// <p>Tempore incidunt accusamus blanditiis quod doloremque quas, architecto hic aut ratione, fugiat odit commodi non in, sint sit.</p>
+p{
+ margin: 0;
+ padding: 0;
+ line-height: get($config, line-height); // @note {!!!} - This has to be here because it is needed for list views used
+ white-space: normal;
+}
+
+
+// @name Lists
+// @author Tyler Benton
+// @page general/typography
+//
+// @markup
+// <ul>
+//  <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam, consequuntur.</li>
+//  <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non, natus.</li>
+//  <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur, aspernatur.</li>
+//  <li>
+//   <ul>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Totam, molestiae?</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque, quisquam.</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores, dolor.</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus, tempore!</li>
+//   </ul>
+//  </li>
+//  <li>
+//   <ol>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero, facere!</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est, corporis.</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel, deleniti?</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto, quod.</li>
+//   </ol>
+//  </li>
+// </ul>
+// <ol>
+//  <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit, perferendis.</li>
+//  <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, illo.</li>
+//  <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia, magni.</li>
+//  <li>
+//   <ul>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, asperiores.</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, temporibus!</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Earum, quidem.</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quae, distinctio.</li>
+//   </ul>
+//  </li>
+//  <li>
+//   <ol>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Temporibus, impedit.</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse, quas.</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, enim.</li>
+//    <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, sed!</li>
+//   </ol>
+//  </li>
+// </ol>
+ul, ol{
+ margin-left: 2em;
+ padding: 0;
+ ul{
+  list-style-type: circle;
+ }
+ li{
+  @include owl(sm, "li");
+ }
+}

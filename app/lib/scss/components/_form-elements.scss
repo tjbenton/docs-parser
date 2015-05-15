@@ -1,0 +1,619 @@
+%form-element-reset{
+ -webkit-appearance: none;
+ -ms-appearance: none;
+ appearance: none;
+ background: transparent;
+ border: none {
+  radius: 0;
+ };
+ box-shadow: none;
+ color: inherit;
+ display: block;
+ font-size: 1em;
+ line-height: 1em;
+ outline: none;
+ padding: 0;
+}
+
+label{
+ display: block;
+ font-weight: 800;
+ *{
+  font-weight: 400;
+ }
+ > *{
+  margin-top: .5em;
+ }
+}
+
+button{
+ @extend %form-element-reset;
+}
+
+input, textarea, select{
+ @extend %form-element-reset;
+ width: 100%;
+}
+
+$form-config: (
+ border: 1px solid get($config, border-color),
+ border-radius: get($config, border-radius),
+ padding: em(12px, $round: 3) nth-val(get($config, padding), 2)
+);
+
+%form-element-base{
+ background: #fff;
+ border: get($form-config, border){
+  radius: get($form-config, border-radius);
+ };
+ label &{
+  margin-top: .5em;
+ }
+}
+
+%form-element-padding{
+ padding: get($form-config, padding);
+}
+
+%hide-input{
+ height: 0;
+ margin: 0;
+ visibility: hidden;
+ width: 0;
+}
+
+%no-selection{
+ &:selection{
+  background: none;
+ }
+}
+
+// @name Text inputs and Textarea
+// @author Tyler Benton
+// @page components/form-elements
+//
+// @markup
+//  <label>
+//   Text input with placeholder
+//   <input type="text" placeholder="Lorem ipsum dolor sit amet">
+//  </label>
+//
+//  <label>
+//   Text input
+//   <input type="text" value="Lorem ipsum dolor sit amet">
+//  </label>
+//
+//  <label>
+//   Email Input
+//   <input type="email" placeholder="example@example.com">
+//  </label>
+//
+//  <label>
+//   URL Input
+//   <input type="url">
+//  </label>
+//
+//  <label>
+//   Search Input
+//   <input type="search">
+//  </label>
+//
+//  <label>
+//   Password Input
+//   <input type="password">
+//  </label>
+//
+//  <label>
+//   Textarea:
+//   <textarea name="textarea">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Numquam, voluptate, voluptates, animi doloribus necessitatibus ipsa repudiandae natus corporis sequi dolore nulla cum nam harum dolorem eum omnis adipisci fugit sunt aperiam ad.</textarea>
+//  </label>
+
+// @name Numeric inputs
+// @author Tyler Benton
+// @page components/form-elements
+//
+// @markup
+//  <label>
+//   Simple Number:
+//   <input type="number" pattern="[0-9]*" name="number" value="">
+//  </label>
+//
+//  <label>
+//   Number with leading 0: *ios 6 truncates the leading 0s (TYPE STARTS AS NUMBER, changes in IOS 6) use data-leadingzero to id these, there is a global js function to handle them.
+//   <input type="number" pattern="[0-9]*" name="numberZero" value="" data-leadingzero="">
+//  </label>
+//
+//  <label>
+//   Number with decimal places (BV/IBV):
+//   <input type="number" step="any" name="numberDecimal" value="">
+//  </label>
+//
+//  <label>
+//   Phone number Input
+//   <input type="tel">
+//  </label>
+//
+//  <label>
+//   Range Input
+//   <input type="range" min="1" max="100" value="0">
+//  </label>
+//
+
+// @name Date inputs
+// @author Tyler Benton
+// @page components/form-elements
+//
+// @markup
+//  <label>
+//   Date Input
+//   <input type="date">
+//  </label>
+//
+//  <label>
+//   Month Input
+//   <input type="month">
+//  </label>
+//
+//  <label>
+//   Week Input
+//   <input type="week">
+//  </label>
+//
+//  <label>
+//   Time Input
+//   <input type="time">
+//  </label>
+//
+//  <label>
+//   Datetime Input
+//   <input type="datetime">
+//  </label>
+//
+//  <label>
+//   Datetime-local Input
+//   <input type="datetime-local">
+//  </label>
+@include namespace(component, ".input"){
+ @extend %form-element-base;
+ input{
+  // This is probably one of the dumbest things I've had to do but for some stupid reason it makes the input fields match up with the buttons.
+  padding: nth-val(get($form-config, padding), 1) - .072em nth-val(get($form-config, padding), 2);
+  // This fixes the spacing issues in chrome but doesn't fix it everywhere.
+  // &[type="date"], &[type="month"], &[type="week"], &[type="time"], &[type="datetime-local"]{
+  //  padding: nth-val(get($form-config, padding), 1) - .25em nth-val(get($form-config, padding), 2);
+  // }
+ }
+ &--range{
+  // doesn't match the spacing of the other input fields.
+ }
+}
+
+textarea{
+ @extend %form-element-base;
+ @extend %form-element-padding;
+ line-height: get($config, line-height);
+ resize: vertical;
+ overflow: auto; // Safari fix
+}
+
+// @name Select
+// @author Tyler Benton
+// @page components/form-elements
+//
+// @markup
+//  <label>
+//   Select list:
+//   <select class="test-class" name="test">
+//    <option value="#">One</option>
+//    <option value="#">Two</option>
+//    <option value="#">Three</option>
+//   </select>
+//  </label>
+//  @note {!!!} If you have changing the styles of the select list please see the documentation in the `_form-elements.scss` file because there're a few hacks that have had to happen to make it work correctly accross all browsers
+@include namespace(component, ".select"){
+ // There are a few really weird things happening with styling select lists
+ // the following is nessissary because browsers suck
+ // donkey balls at giving you the ability to easily style select lists
+ //
+ //  1. Makes sure the select list isn't visible outside the container
+ //  2. Ensures the text appears where it's supposed to
+ //  3. Makes the padding work correctly based off of the line height of the text
+ //  4. Adds extra padding on the right side of the select list so it can be hidden
+ //  5. Allows the select list to stretch to fit its container.
+ //  6. Adds extra width onto the select list so the default arrow of IE can't be seen
+ //  7. Removes the arrow from IE10+
+ //  8. Removes extremely weird styling in firefox
+ //     a. Removes default styling
+ //     b. Removes padding because it's too much in firefox comparied to other browsers
+ //     c. Hides the select list arrow
+ //     d. Removes an really weird dotted border around the select list on focus
+ @extend %form-element-base;
+ @extend %form-element-padding; // 2
+ @include icon-pos(right, $extend: false, $selector-only: true);
+ position: relative;
+ overflow: hidden; // 1
+ line-height: 1em; // this should match the same line-height as the input fields and buttons
+ &:after{ // styles for the arrow
+  @include icon-pos(right, $extend: false, $pseudos-only: true);
+  @include icon-get(arrow-down);
+  @include icon-styles();
+  padding: 0;
+ }
+
+ span{ // 3
+  display: inline-block;
+ }
+
+ select{
+  @extend %form-element-padding; // 2
+  padding-right: nth-val(get($form-config, padding), 2) + 60px; // 4
+  position: absolute; // 5
+  top: 0; // 5
+  right: 0; // 5
+  left: 0; // 5
+  margin-top: 0;
+  bottom: 0; // 5
+  width: 105%; // 6
+  opacity: 0;
+  &:-ms-expand{ // 7
+   display: none;
+  }
+
+  @include moz-only(){ // 8
+   -moz-appearance: none;
+   overflow: -moz-hidden-unscrollable;
+   padding-top: 0; // 8b
+   padding-bottom: 0; // 8b
+   text-indent: 0.01px; // 8c
+   text-overflow: ""; // 8c
+   color: transparent; // 8d
+   text-shadow: 0 0 0 get($config, color); // 8d
+  }
+
+  option{ // removes the margin top that gets displayed on option elements in firefox only
+   margin-top: 0;
+  }
+ }
+}
+
+// @name Toggle
+// @author Tyler Benton
+// @page components/form-elements
+// @markup
+//  <label class="c-toggle c-toggle--ios">
+//   <input type="checkbox" name="checkbox-a">
+//   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa, aut libero sit dignissimos cum harum aspernatur quibusdam veniam incidunt facere adipisci
+//  </label>
+//  <label class="c-toggle c-toggle--single-line c-toggle--ios">
+//   <input type="checkbox" name="checkbox-a">
+//   Lorem ipsum dolor sit amet, consectetur
+//  </label>
+//  <label class="c-toggle c-toggle--flip">
+//   <input type="checkbox" name="checkbox-a">
+//   Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa, aut libero sit dignissimos cum harum aspernatur quibusdam veniam incidunt facere adipisci
+//  </label>
+@include namespace(component, ".toggle"){
+ $toggle: (
+ height: 2em,
+ width: 4em
+ );
+ $toggle-half-width: get($toggle, width) / 2;
+ @extend %no-selection;
+ font-weight: 400;
+ padding-left: get($toggle, width) + em(get($icon, spacing));
+ position: relative;
+ &--single-line{
+  padding-top: em(5px);
+ }
+ input{
+  @extend %hide-input;
+  + div{
+   cursor: pointer;
+   display: block;
+   height: get($toggle, height);
+   left: 0;
+   margin: 0;
+   outline: 0;
+   position: absolute;
+   top: 0;
+   user-select: none;
+   width: get($toggle, width);
+   &:after, &:before{
+    content: "";
+    display: block;
+    height: 100%;
+    position: relative;
+   }
+  }
+ }
+
+ &--ios input{
+   + div{
+    background: #fbfbfb;
+    border: 1px solid #e8eae9;
+    border-radius: 2em;
+    padding: 2px;
+    transition: all .4s ease;
+    &:before{
+     display: none;
+    }
+    &:after{
+     background: #fbfbfb;
+     border-radius: 2em;
+     box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 4px 0 rgba(0, 0, 0, .08);
+     transition: left .3s cubic-bezier(.175, .885, .320, 1.275), width .3s ease, margin .3s ease;
+     width: 50%;
+    }
+    &:active{
+     box-shadow: inset 0 0 0 2em #e8eae9;
+     &:after{
+      width: $toggle-half-width + ($toggle-half-width / 4);
+     }
+    }
+   }
+   &:checked + div{
+    background: #86d993;
+    &:after{
+     left: 50%;
+    }
+    &:active{
+     box-shadow: none;
+     &:after{
+      margin-left: -.75em;
+     }
+    }
+   }
+ }
+
+ &--flip input{
+  + div{
+   padding: 2px; // for flip
+   perspective: 100px; // for flip
+   transition: all .2s ease; // for flip
+   &:before, &:after{
+    backface-visibility: hidden;
+    border-radius: get($config, border-radius);
+    color: #fff;
+    display: inline-block;
+    font-weight: bold;
+    left: 0;
+    line-height: 2em;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    transition: all .4s ease;
+    width: 100%;
+   }
+   &:after{
+    background: #02c66f;
+    content: "Yep";
+    left: 0;
+    transform: rotateY(-180deg);
+   }
+   &:before{
+    background: #ff3a19;
+    content: "Nope";
+   }
+   &:active:before{
+    transform: rotateY(-20deg);
+   }
+  }
+  &:checked + div{
+   &:after{
+    background: #7fc6a6;
+    left: 0;
+    transform: rotateY(0);
+   }
+   &:before{
+    transform: rotateY(180deg);
+   }
+   &:active:after{
+    transform: rotateY(20deg);
+   }
+  }
+ }
+}
+
+
+// @name Checkbox
+// @author Tyler Benton
+// @page components/form-elements
+// @markup
+//  <label class="c-checkbox">
+//   <input type="checkbox" name="checkbox-a">
+//   Lorem ipsum dolor sit amet.
+//  </label>
+@include namespace(component, ".checkbox"){
+ @extend %no-selection;
+ @extend %form-element-base;
+ @extend %form-element-padding;
+ padding-left: em(get($icon, spacing) * 2) + 1em;
+ position: relative;
+ input{
+  @extend %form-element-base;
+  border-radius: 4px;
+  height: 1em;
+  left: em(get($icon, spacing));
+  margin-top: -.5em;
+  position: absolute;
+  top: 50%;
+  width: 1em;
+  &:after{
+   @include icon-styles();
+   @include icon-pos(middle);
+  }
+  &:checked{
+   &:after{
+    @include icon-get(checkmark);
+    color: color(b);
+   }
+  }
+ }
+}
+
+
+// @name Radio
+// @author Tyler Benton
+// @page components/form-elements
+// @markup
+//  <label class="c-radio">
+//   <input type="radio" name="radio-a">
+//   Lorem ipsum dolor sit amet.
+//  </label>
+@include namespace(component, ".radio"){
+ @extend .c-checkbox;
+ input{
+  border-radius: 4em;
+  &:checked{
+   border-color: color(b);
+   &:after{
+    background: color(b);
+    border-radius: inherit;
+    content: "";
+    font-size: .4em;
+   }
+  }
+ }
+}
+
+// @name Lists of radios
+// @author Tyler Benton
+// @page components/form-elements
+// @markup
+//  <fieldset class="c-list">
+//   <label class="c-radio">
+//    <input type="radio" name="radio-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//   <label class="c-radio">
+//    <input type="radio" name="radio-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//   <label class="c-radio">
+//    <input type="radio" name="radio-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//   <label class="c-radio">
+//    <input type="radio" name="radio-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//  </fieldset>
+
+// @name Lists of checkboxes
+// @author Tyler Benton
+// @page components/form-elements
+// @markup
+//  <fieldset class="c-list">
+//   <label class="c-checkbox">
+//    <input type="checkbox" name="checkbox-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//   <label class="c-checkbox">
+//    <input type="checkbox" name="checkbox-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//   <label class="c-checkbox">
+//    <input type="checkbox" name="checkbox-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//   <label class="c-checkbox">
+//    <input type="checkbox" name="checkbox-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//  </fieldset>
+
+// @name Lists of radios and checkboxes
+// @author Tyler Benton
+// @page components/form-elements
+// @markup
+//  <fieldset class="c-list">
+//   <label class="c-checkbox">
+//    <input type="checkbox" name="checkbox-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//   <label class="c-radio">
+//    <input type="radio" name="radio-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//   <label class="c-checkbox">
+//    <input type="checkbox" name="checkbox-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//   <label class="c-radio">
+//    <input type="radio" name="radio-a">
+//    Lorem ipsum dolor sit amet.
+//   </label>
+//  </fieldset>
+fieldset.c-list{
+ @extend .c-list;
+}
+
+// @name Input groups
+// @author Tyler Benton
+// @page components/form-elements
+// @markup
+//  <div class="c-input-group">
+//   <input class="c-input-group__form-control" type="text" placeholder="Lorem ipsum dolor sit amet">
+//   <div class="c-input-group__btn">
+//    <select name="">
+//     <option value="#">Two</option>
+//     <option value="#">Three</option>
+//    </select>
+//   </div>
+//  </div>
+//  <div class="c-input-group">
+//   <input class="c-input-group__form-control" type="text" placeholder="Lorem ipsum dolor sit amet">
+//   <div class="c-input-group__btn">
+//    <select name="">
+//     <option value="#">Two</option>
+//     <option value="#">Three</option>
+//    </select>
+//   </div>
+//   <div class="c-input-group__btn">
+//    <button class="c-btn">Go</button>
+//   </div>
+//  </div>
+@include namespace(component, ".input-group"){
+ border: {
+  collapse: separate;
+  radius: get($form-config, border-radius);
+ }
+ display: table;
+ *{
+  border-radius: inherit;
+ }
+ > *{
+  border-radius: 0;
+  display: table-cell;
+  margin-top: 0;
+  width: 100%;
+  input, select{
+   width: auto;
+  }
+  &:first-child{
+   border-top-left-radius: inherit;
+   border-bottom-left-radius: inherit;
+  }
+  &:last-child{
+   border-top-right-radius: inherit;
+   border-bottom-right-radius: inherit;
+  }
+  + *, + .c-input-group__btn > *{
+   border-left: none;
+  }
+ }
+ &__btn{
+  vertical-align: middle;
+  white-space: nowrap;
+  width: 1%;
+  > *{
+   border-radius: inherit;
+  }
+ }
+ &__form-control{
+  float: left;
+  > *, input, select{
+   width: 100%;
+  }
+ }
+}

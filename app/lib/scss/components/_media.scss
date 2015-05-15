@@ -1,0 +1,123 @@
+// @name Media
+// @author Tyler Benton
+// @page components/media
+//
+// @description
+//  Abstract object styles for building various types of components (like blog comments, Tweets, etc)
+//  that feature a left- or right-aligned image alongside textual content.
+//
+// @markup ### Single media object
+//  <figure class="c-media">
+//   <a href="#"><img src="http:/\/placehold.it/64x64"></a> <!-- with anchor tag -->
+//   <figcaption class="c-media__body">
+//    <h4>Media heading</h4>
+//    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+//   </figcaption>
+//  </figure>
+//  <figure class="c-media">
+//   <div><img src="http:/\/placehold.it/64x64"></div> <!-- with div tag -->
+//   <figcaption class="c-media__body">
+//    <h4>Media heading</h4>
+//    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+//   </figcaption>
+//  </figure>
+//
+// @markup ### Image on the right
+//  <figure class="c-media">
+//   <figcaption class="c-media__body">
+//    <h4>Media heading</h4>
+//    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+//   </figcaption>
+//   <a href="#"><img src="http:/\/placehold.it/64x64"></a>
+//  </figure>
+//
+// @markup ### Media alignment
+//  <figure class="c-media">
+//   <a href="#"><img src="http:/\/placehold.it/64x64"></a>
+//   <figcaption class="c-media__body">
+//    <h4>Top aligned media</h4>
+//    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+//    <p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+//   </figcaption>
+//  </figure>
+//  <figure class="c-media">
+//   <a class="c-media-middle" href="#"><img src="http:/\/placehold.it/64x64"></a>
+//   <figcaption class="c-media__body">
+//    <h4>Middle aligned media</h4>
+//    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+//    <p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+//   </figcaption>
+//  </figure>
+//  <figure class="c-media">
+//   <a class="c-media-bottom" href="#"><img src="http:/\/placehold.it/64x64"></a>
+//   <figcaption class="c-media__body">
+//    <h4>Bottom aligned media</h4>
+//    <p>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+//    <p>Donec sed odio dui. Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+//   </figcaption>
+//  </figure>
+//
+// @markup ### Media list
+//  <ul class="c-media-list">
+//   <li>
+//    <a href="#"><img src="http:/\/placehold.it/64x64"></a>
+//    <figcaption>
+//     <h4>Media heading</h4>
+//     Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+//    </figcaption>
+//   </li>
+//   <li>
+//    <a href="#"><img src="http:/\/placehold.it/64x64"></a>
+//    <figcaption>
+//     <h4>Media heading</h4>
+//     Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+//    </figcaption>
+//   </li>
+//   <li>
+//    <a href="#"><img src="http:/\/placehold.it/64x64"></a>
+//    <div>
+//     <h4>Nested media heading</h4>
+//     Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+//     <figure class="c-media">
+//      <a href="#"><img src="http:/\/placehold.it/64x64"></a>
+//      <figcaption>
+//       <h4>Media heading</h4>
+//       Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+//      </figcaption>
+//     </figure>
+//    </figcaption>
+//   </li>
+//  </ul>
+@include namespace(component, ".media"){
+ @include owl(lg);
+ overflow: hidden;
+ zoom: 1;
+ > *{
+  display: table-cell;
+  vertical-align: top;
+  @include owl(off);
+  + *{
+   padding-left: nth-val(get($config, padding), 2);
+  }
+  img{
+   max-width: none; // resets the max-width to none so that the image will display at it's original size
+  }
+ }
+
+ // controls alignment
+ &-middle{
+  vertical-align: middle;
+ }
+ &-bottom{
+  vertical-align: bottom;
+ }
+
+ // for list views
+ &-list{
+  @include reset;
+  > *{
+   @extend .c-media;
+  }
+ }
+}
+/* end shit */

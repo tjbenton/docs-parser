@@ -1,0 +1,35 @@
+// @author Tyler Benton
+// @page components/badges
+//
+// @markup **Example:** In anchor tag
+//  <a href="#">Inbox <span class="c-badge">42</span></a>
+//
+// @markup **Example:** In a button
+//  <button class="c-btn c-btn--primary">Messages <span class="c-badge">4</span></button>
+//
+// @markup **Example:** In a list
+//  <ul class="c-list c-list--has-anchors">
+//   <li><a href="#">Categories <span class="c-badge">10</span></a></li>
+//   <li><a href="#">Categories <span class="c-badge">8</span></a></li>
+//   <li><a href="#">Categories <span class="c-badge">100</span></a></li>
+//  </ul>
+@include namespace(component, ".badge"){
+ background-color: color(a);
+ border-radius: 1em;
+ color: #fff;
+ display: inline-block;
+ font: {
+  size: em(12px);
+  weight: 800;
+ }
+ line-height: 1em;
+ margin-left: .5em;
+ min-width: 1em;
+ padding: em(3px) em(7px);
+ text-align: center;
+ vertical-align: baseline;
+ white-space: nowrap;
+ &:empty{
+  display: none;
+ }
+}
