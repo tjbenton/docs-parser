@@ -133,6 +133,26 @@ var docs = (function(){
   }
  };
 
+
+ _.merge = function(base, to_extend){
+  var name = Object.keys(to_extend)[0];
+
+  // a) the current item being merged is already defined in the base
+  // b) define the target
+  if(base[name] !== undefined){
+   // a) convert the target to an array
+   // b) add item to the current target array
+   if(!is.array(base[name])){
+    base[name] = [base[name], to_extend[name]];
+   }else{
+    base[name].push(to_extend[name]);
+   }
+  }else{
+   base[name] = to_extend[name];
+  }
+  return base;
+ };
+
  // @description Takes the contents of a file and parses it
  // @arg [string, array] files - file paths to parse
  // @arg [function] callback - the callback to exicute after the files are parsed.
@@ -186,11 +206,11 @@ var docs = (function(){
              }
 
              block = { // reset the `block`
-              // file: {
-              //  contents: file,
-              //  path: path,
-              //  type: filetype,
-              // },
+              file: {
+               contents: file,
+               path: path,
+               type: filetype,
+              },
               comment: {
                contents: [],
                start: 0,
@@ -269,7 +289,7 @@ var docs = (function(){
               if(_current_parser_name !== undefined){
                // call the parser function
                _current_parser_info.end = i - 1;
-               _.extend(_parsers_in_block, run_parser(_current_parser_name, _current_parser_info, block));
+               _.merge(_parsers_in_block, run_parser(_current_parser_name, _current_parser_info, block));
               }
 
               // resets the current parser to be blank
@@ -289,7 +309,7 @@ var docs = (function(){
             if(i === l - 1){
              if(name_of_parser !== undefined){
               _current_parser_info.end = i - 1;
-              _.extend(_parsers_in_block, run_parser(_current_parser_name, _current_parser_info, block));
+              _.merge(_parsers_in_block, run_parser(_current_parser_name, _current_parser_info, block));
               _parsed_blocks.push(_parsers_in_block);
              }
             }
@@ -299,8 +319,10 @@ var docs = (function(){
           function run_parser(name, parser_block, block_info){
            var output = {};
            parser_block.name = name;
-           output[name] = _.extend(parser_block, block_info);
-           output[name] = parsers[name].call(output);
+           parser_block = {
+            parser: parser_block
+           };
+           output[name] = parsers[name].call(_.extend(parser_block, block_info));
            return output;
           };
 
@@ -331,7 +353,7 @@ docs.setting("md", {
 docs.parser("name", {
  default: function(){
   console.log(this);
-  console.log("");
+  // console.log("");
   return false;
  },
  js: function(){
