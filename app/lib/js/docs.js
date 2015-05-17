@@ -133,26 +133,6 @@ var docs = (function(){
   }
  };
 
-
- _.merge = function(base, to_extend){
-  var name = Object.keys(to_extend)[0];
-
-  // a) the current item being merged is already defined in the base
-  // b) define the target
-  if(base[name] !== undefined){
-   // a) convert the target to an array
-   // b) add item to the current target array
-   if(!is.array(base[name])){
-    base[name] = [base[name], to_extend[name]];
-   }else{
-    base[name].push(to_extend[name]);
-   }
-  }else{
-   base[name] = to_extend[name];
-  }
-  return base;
- };
-
  // @description Takes the contents of a file and parses it
  // @arg [string, array] files - file paths to parse
  // @arg [function] callback - the callback to exicute after the files are parsed.
@@ -289,7 +269,7 @@ var docs = (function(){
               if(_current_parser_name !== undefined){
                // call the parser function
                _current_parser_info.end = i - 1;
-               _.merge(_parsers_in_block, run_parser(_current_parser_name, _current_parser_info, block));
+               parse(_current_parser_name, _current_parser_info, block);
               }
 
               // resets the current parser to be blank
@@ -301,29 +281,41 @@ var docs = (function(){
 
               _current_parser_name = name_of_parser;
               _current_parser_info.start = i;
+              line = line.slice(parser_prefix_index + 1 + name_of_parser.length).trim();
              }
             }
 
             _current_parser_info.contents.push(line);
 
-            if(i === l - 1){
-             if(name_of_parser !== undefined){
-              _current_parser_info.end = i - 1;
-              _.merge(_parsers_in_block, run_parser(_current_parser_name, _current_parser_info, block));
-              _parsed_blocks.push(_parsers_in_block);
-             }
+            // a) parse the current block push it to the parsed blocks
+            if(i === l - 1 && name_of_parser !== undefined && _current_parser_info.contents.length){
+             _current_parser_info.end = i - 1;
+             _parsed_blocks.push(parse(_current_parser_name, _current_parser_info, block));
             }
            } // end block loop
           } // end blocks loop
 
-          function run_parser(name, parser_block, block_info){
-           var output = {};
+          function parse(name, parser_block, block_info){
            parser_block.name = name;
            parser_block = {
             parser: parser_block
            };
-           output[name] = parsers[name].call(_.extend(parser_block, block_info));
-           return output;
+           return (function(to_extend){
+            // a) the current item being merged is already defined in the base
+            // b) define the target
+            if(_parsers_in_block[name] !== undefined){
+             // a) convert the target to an array
+             // b) add item to the current target array
+             if(!is.array(_parsers_in_block[name])){
+              _parsers_in_block[name] = [_parsers_in_block[name], to_extend];
+             }else{
+              _parsers_in_block[name].push(to_extend);
+             }
+            }else{
+             _parsers_in_block[name] = to_extend;
+            }
+            return _parsers_in_block;
+           })(parsers[name].call(_.extend(parser_block, block_info)));
           };
 
           return _parsed_blocks;
@@ -352,8 +344,6 @@ docs.setting("md", {
 // Describe default parsing of a name
 docs.parser("name", {
  default: function(){
-  console.log(this);
-  // console.log("");
   return false;
  },
  js: function(){
