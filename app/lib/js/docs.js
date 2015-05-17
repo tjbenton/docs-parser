@@ -34,8 +34,7 @@ var docs = (function(){
  // @arg [*] - The item to check
  // @returns [boolean] - The result of the test
  is.object = function(value){
-  var type = typeof value;
-  return type === "function" || type === "object" && !!value;
+  return Object.prototype.toString.call(value) === "[object Object]";
  };
 
  // @description is a given value String?
@@ -66,8 +65,8 @@ var docs = (function(){
    var key = keys[i];
 
    // Detect object without array, date or null.
-   if(Object.prototype.toString.call(b[key]) === "[object Object]"){
-    if(Object.prototype.toString.call(a[key]) !== "[object Object]"){
+   if(is.object(b[key])){
+    if(!is.object(a[key])){
      a[key] = b[key];
     }else{
      a[key] = _.extend(a[key], b[key]);
