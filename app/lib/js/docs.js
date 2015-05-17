@@ -238,6 +238,10 @@ var docs = (function(){
 
           return _blocks;
          })(),
+
+         // @description Parses each block in blocks
+         // @arg [array] the blocks that are returned from blocks
+         // @returns [array]
          parsed_blocks = (function(blocks){
           var _parsed_blocks = [],
               _parsers_in_block = {},
@@ -280,10 +284,13 @@ var docs = (function(){
 
               _current_parser_name = name_of_parser;
               _current_parser_info.start = i;
+
+              // removes the current parser name and it's prefix from the first line
               line = line.slice(parser_prefix_index + 1 + name_of_parser.length).trim();
              }
             }
 
+            // adds the current line to the contents
             _current_parser_info.contents.push(line);
 
             // a) parse the current block push it to the parsed blocks
@@ -294,6 +301,10 @@ var docs = (function(){
            } // end block loop
           } // end blocks loop
 
+          // @description Used as a helper function because this action is performed in two spots
+          // @arg [string] name of the parser to run
+          // @arg [object] information of the current parser block
+          // @arg [object] information about the current comment block, the code after the comment block and the full file contents
           function parse(name, parser_block, block_info){
            parser_block.name = name;
            parser_block = {
@@ -340,23 +351,14 @@ docs.setting("md", {
  block_comment: "##"
 });
 
-// Describe default parsing of a name
-docs.parser("name", {
- default: function(){
-  return false;
- },
- js: function(){
-  return false;
 
-  // return this.line.contents;
- }
+// base parsers
+docs.parser("name", function(){
+ return this.parser.contents[0];
 });
 
-// Describe default parsing of a description
-docs.parser("description", {
- default: function(){
-  return "yo this was a description ";
- }
+docs.parser("description", function(){
+ return this.parser.contents.join("\n");
 });
 
 docs.parser("page", function(){
