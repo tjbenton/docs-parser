@@ -80,8 +80,8 @@ var docs = (function(){
  // the settings object that holds the file specific settings as well as the base settings
  _.all_settings = {
   default: {
-   file_comment: "//// ", // file level comment blockidentifier
-   block_comment: "/// ", // block level comment block identifier
+   file_comment: "////", // file level comment blockidentifier
+   block_comment: "///", // block level comment block identifier
    parser_prefix: "@" // the start of the parser id(this should probably never be changed)
   }
  };
