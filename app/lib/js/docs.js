@@ -182,7 +182,8 @@ var docs = (function(){
        filetype = path.slice(path.lastIndexOf(".") + 1),
        setting = _.settings(filetype),
        parsers = _.parsers(filetype),
-       parser_keys = Object.keys(parsers);
+       parser_keys = Object.keys(parsers),
+       output = {};
 
    fs.exists(path, function(exists){
     if(!exists){
@@ -375,8 +376,19 @@ var docs = (function(){
           return _parsed_blocks;
          })(blocks);
 
-     console.log("");
-     console.log("parsed_blocks = ", parsed_blocks);
+     // a) the current item being merged is already defined in the base
+     // b) define the target
+     if(!is.undefined(json[filetype])){
+      // a) convert the target to an array
+      // b) add item to the current target array
+      if(!is.array(json[filetype])){
+       json[filetype] = [json[filetype], parsed_blocks];
+      }else{
+       json[filetype].push(parsed_blocks);
+      }
+     }else{
+      json[filetype] = parsed_blocks;
+     }
     }
    });
   }
