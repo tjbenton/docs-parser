@@ -428,19 +428,17 @@ docs.parser("markup", function(){
  return this.parser.contents;
 });
 
+
 // Module exports
 if(typeof exports !== "undefined"){
  if(typeof module !== "undefined" && module.exports){
   exports = module.exports = docs;
  }
  exports.docs = docs;
-}else{
- root[ "docs" ] = docs;
-}
-
-// AMD definition
-if(typeof define === "function" && define.amd){
+}else if(typeof define === "function" && define.amd){ // AMD definition
  define(function(require){
   return docs;
  });
+}else{
+ root[ "docs" ] = docs;
 }
