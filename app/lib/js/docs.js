@@ -260,7 +260,6 @@ var docs = (function(){
  // @returns [array]
  parse_blocks = function(){
   var parser_keys = Object.getOwnPropertyNames(this.parsers);
-  console.log(this);
   this.parsed_blocks = [];
 
   // @description Used as a helper function because this action is performed in two spots
