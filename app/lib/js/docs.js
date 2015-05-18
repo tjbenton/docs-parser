@@ -177,8 +177,8 @@ var docs = (function(){
   }
 
   // loop over each file file in files and parse the data.
-  for(var i = 0, l = files.length; i < l; i++){
-   var path = files[i],
+  for(var current_file = 0, total_files = files.length; current_file < total_files; current_file++){
+   var path = files[current_file],
        filetype = path.slice(path.lastIndexOf(".") + 1),
        setting = _.settings(filetype),
        parsers = _.parsers(filetype),
