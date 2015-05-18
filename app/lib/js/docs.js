@@ -107,7 +107,7 @@ var docs = (function(){
  // @arg [string] - the current filetype that is being parsed
  // @returns [object] the settings to use
  _.settings = function(filetype){
-  return _.all_settings[filetype] !== undefined ? _.extend(_.all_settings.default, _.all_settings[filetype]) : _.all_settings.default;
+  return !is.undefined(_.all_settings[filetype]) ? _.extend(_.all_settings.default, _.all_settings[filetype]) : _.all_settings.default;
  };
 
  // @description Allows you to specify settings for specific file types
@@ -125,7 +125,7 @@ var docs = (function(){
  // @arg [string] - the current filetype that is being parsed
  // @returns [object] the settings to use
  _.parsers = function(filetype){
-  return _.all_parsers[filetype] !== undefined ? _.extend(_.all_parsers.default, _.all_parsers[filetype]) : _.all_parsers.default;
+  return !is.undefined(_.all_parsers[filetype]) ? _.extend(_.all_parsers.default, _.all_parsers[filetype]) : _.all_parsers.default;
  };
 
  // @description
