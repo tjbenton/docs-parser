@@ -217,7 +217,7 @@ var docs = (function(){
               },
               comment: {
                contents: [],
-               start: 0,
+               start: i,
                end: 0
               },
               code: {
@@ -227,7 +227,6 @@ var docs = (function(){
               }
              };
 
-             block_info.comment.start = i;
              in_comment = true;
             }
 
