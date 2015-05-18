@@ -37,6 +37,13 @@ var docs = (function(){
   return Object.prototype.toString.call(value) === "[object Object]";
  };
 
+ // @description is a given value empty? Objects, arrays, strings
+ // @arg [object, array, string] - What you want to check to see if it's empty
+ // @returns [boolean] - determins if the item you passes was empty or not
+ is.empty = function(value){
+  return is.object(value) ? Object.getOwnPropertyNames(value).length === 0 : is.array(value) ? value.length > 0 : value === "";
+ };
+
  // @description is a given value String?
  // @arg [*] - The item to check
  // @returns [boolean] - The result of the test
