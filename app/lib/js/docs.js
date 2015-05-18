@@ -104,7 +104,7 @@ var docs = (function(){
  // @arg [string] - the current filetype that is being parsed
  // @returns [object] the settings to use
  _.settings = function(filetype){
-  return _.all_settings[filetype] !== undefined ? _.extend(_.all_settings.default, _.all_settings[filetype]) : _.all_settings.default;
+  return !is.undefined(_.all_settings[filetype]) ? _.extend(_.all_settings.default, _.all_settings[filetype]) : _.all_settings.default;
  };
 
  // @description Allows you to specify settings for specific file types
@@ -122,7 +122,7 @@ var docs = (function(){
  // @arg [string] - the current filetype that is being parsed
  // @returns [object] the settings to use
  _.parsers = function(filetype){
-  return _.all_parsers[filetype] !== undefined ? _.extend(_.all_parsers.default, _.all_parsers[filetype]) : _.all_parsers.default;
+  return !is.undefined(_.all_parsers[filetype]) ? _.extend(_.all_parsers.default, _.all_parsers[filetype]) : _.all_parsers.default;
  };
 
  // @description
@@ -215,7 +215,7 @@ var docs = (function(){
              in_code = false;
 
              // a) There was block that has already been processed
-             if(block_info !== undefined){
+             if(!is.undefined(block_info)){
               block_info.code.end = i - 1;
               _blocks.push(block_info);
              }
@@ -252,7 +252,7 @@ var docs = (function(){
              block_info.comment.end = i;
              _blocks.push(block_info);
             }
-           }else if(block_info !== undefined){
+           }else if(!is.undefined(block_info)){
             if(in_comment){
              in_comment = false;
              block_info.comment.end = i - 1; // -1 because the end was the line before
@@ -356,7 +356,7 @@ var docs = (function(){
 
            // a) the current item being merged is already defined in the base
            // b) define the target
-           if(_parsers_in_block[name] !== undefined){
+           if(!is.undefined(_parsers_in_block[name])){
             // a) convert the target to an array
             // b) add item to the current target array
             if(!is.array(_parsers_in_block[name])){
