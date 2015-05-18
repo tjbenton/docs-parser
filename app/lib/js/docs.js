@@ -59,9 +59,7 @@ var docs = (function(){
    return a;
   }
 
-  var keys = Object.keys(b);
-
-  for(var i = 0, l = keys.length; i < l; i++){
+  for(var i = 0, keys = Object.keys(b), l = keys.length; i < l; i++){
    var key = keys[i];
 
    // Detect object without array, date or null.
