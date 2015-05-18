@@ -306,7 +306,7 @@ var docs = (function(){
 
              // a) the name is one of the parser names
              if(parser_keys.indexOf(name_of_parser) >= 0){
-              if(Object.keys(_current_parser_info).length !== 0){
+              if(!is.empty(_current_parser_info)){
                _current_parser_info.end = i - 1;
                parse(_current_parser_info, block);
               }
@@ -322,8 +322,10 @@ var docs = (function(){
              }
             }
 
-            // adds the current line to the contents
-            _current_parser_info.contents.push(line);
+            if(!is.empty(_current_parser_info)){
+             // adds the current line to the contents
+             _current_parser_info.contents.push(line);
+            }
 
             // a) is the last line in the comment block
             if(i === l - 1){
