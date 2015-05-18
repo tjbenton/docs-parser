@@ -13,21 +13,21 @@ var docs = (function(){
  // @arg [*] - The item to check
  // @returns [boolean] - The result of the test
  is.function = function(value){ // fallback check is for IE
-  return toString.call(value) === "[object Function]" || typeof value === "function";
+  return Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function";
  };
 
  // @description is a given value Array?
  // @arg [*] - The item to check
  // @returns [boolean] - The result of the test
  is.array = Array.isArray || function(value){ // check native isArray first
-  return toString.call(value) === "[object Array]";
+  return Object.prototype.toString.call(value) === "[object Array]";
  };
 
  // @description is a given value Boolean?
  // @arg [*] - The item to check
  // @returns [boolean] - The result of the test
  is.boolean = function(value){
-  return value === true || value === false || toString.call(value) === "[object Boolean]";
+  return value === true || value === false || Object.prototype.toString.call(value) === "[object Boolean]";
  };
 
  // @description is a given value object?
@@ -41,7 +41,7 @@ var docs = (function(){
  // @arg [*] - The item to check
  // @returns [boolean] - The result of the test
  is.string = function(value){
-  return toString.call(value) === "[object String]";
+  return Object.prototype.toString.call(value) === "[object String]";
  };
 
  var _ = {}, // the main object to return
