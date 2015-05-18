@@ -181,8 +181,7 @@ var docs = (function(){
          // @returns [array] of the comment blocks
          blocks = (function(){
           var _blocks = [],
-              block,
-              push_block = false,
+              block_info,
               lines = file.split(/\n/),
               in_code = false,
               in_comment = false;
@@ -200,16 +199,21 @@ var docs = (function(){
             // a) The previous line wasn't a comment
             if(!in_comment){
              in_code = false;
-             if(block !== undefined){
-              block.code.end = i - 1;
-              _blocks.push(block);
+
+             // a) There was block that has already been processed
+             if(block_info !== undefined){
+              block_info.code.end = i - 1;
+              _blocks.push(block_info);
              }
 
-             block = { // reset the `block`
+             // reset the `block_info` to use on the new block
+             block_info = {
               file: {
                contents: file,
                path: path,
                type: filetype,
+               start: 0,
+               end: file.split("\n").length - 1
               },
               comment: {
                contents: [],
@@ -223,36 +227,37 @@ var docs = (function(){
               }
              };
 
-             block.comment.start = i;
+             block_info.comment.start = i;
              in_comment = true;
             }
 
-            // adds this line to block comment contents
-            block.comment.contents.push(line);
+            // adds this line to block_info comment contents
+            block_info.comment.contents.push(line);
 
             // a) The last line in the file is a commment
             if(i === l - 1){
-             block.comment.end = i;
-             _blocks.push(block);
+             block_info.comment.end = i;
+             _blocks.push(block_info);
             }
-           }else if(block !== undefined){
+           }else if(block_info !== undefined){
             if(in_comment){
              in_comment = false;
-             block.comment.end = i - 1; // -1 because the end was the line before
+             block_info.comment.end = i - 1; // -1 because the end was the line before
             }
 
             // a) The previous line was a comment
             if(!in_code){
              in_code = true;
-             block.code.start = i;
+             block_info.code.start = i;
             }
 
             // adds this line to block code contents
-            block.code.contents.push(line);
+            block_info.code.contents.push(line);
 
+            // a) pushes the last block onto the _blocks
             if(i === l - 1){
-             block.code.end = i;
-             _blocks.push(block);
+             block_info.code.end = i;
+             _blocks.push(block_info);
             }
            }
           } // end loop
@@ -264,19 +269,17 @@ var docs = (function(){
          // @arg [array] the blocks that are returned from blocks
          // @returns [array]
          parsed_blocks = (function(blocks){
-          var _parsed_blocks = [],
-              _parsers_in_block = {},
-              _current_parser_info = {
-               contents: [],
-               start: 0,
-               end: 0
-              },
-              _current_parser_name;
+          var _parsed_blocks = [];
 
           // loop over each block
           for(var a = 0, blocks_length = blocks.length; a < blocks_length; a++){
            var block = blocks[a],
-               to_parse = block.comment.contents;
+               to_parse = block.comment.contents,
+               _parsers_in_block = {},
+               _current_parser_info = {};
+
+           block.comment.contents = _.normalize(block.comment.contents);
+           block.code.contents = _.normalize(block.code.contents);
 
            // loop over each line in the comment block
            for(var i = 0, l = to_parse.length; i < l; i++){
@@ -290,34 +293,29 @@ var docs = (function(){
 
              // a) the name is one of the parser names
              if(parser_keys.indexOf(name_of_parser) >= 0){
-              if(_current_parser_name !== undefined){
-               // call the parser function
+              if(Object.keys(_current_parser_info).length !== 0){
                _current_parser_info.end = i - 1;
-               parse(_current_parser_name, _current_parser_info, block);
+               parse(_current_parser_info, block);
               }
 
-              // resets the current parser to be blank
+              // redefines resets the current parser to be blank
               _current_parser_info = {
+               name: name_of_parser, // sets the current parser name
+               line: line.slice(parser_prefix_index + 1 + name_of_parser.length).trim(), // removes the current parser name and it's prefix from the first line
                contents: [],
-               start: 0,
+               start: i, // sets the starting line of the parser
                end: 0
               };
-
-              _current_parser_name = name_of_parser;
-              _current_parser_info.start = i;
-
-              // removes the current parser name and it's prefix from the first line
-              line = line.slice(parser_prefix_index + 1 + name_of_parser.length).trim();
              }
             }
 
             // adds the current line to the contents
             _current_parser_info.contents.push(line);
 
-            // a) parse the current block push it to the parsed blocks
-            if(i === l - 1 && name_of_parser !== undefined && _current_parser_info.contents.length){
-             _current_parser_info.end = i - 1;
-             _parsed_blocks.push(parse(_current_parser_name, _current_parser_info, block));
+            // a) is the last line in the comment block
+            if(i === l - 1){
+             _current_parser_info.end = i;
+             _parsed_blocks.push(parse(_current_parser_info, block));
             }
            } // end block loop
           } // end blocks loop
@@ -326,27 +324,37 @@ var docs = (function(){
           // @arg [string] name of the parser to run
           // @arg [object] information of the current parser block
           // @arg [object] information about the current comment block, the code after the comment block and the full file contents
-          function parse(name, parser_block, block_info){
-           parser_block.name = name;
+          function parse(parser_block, block_info){
+           var name = parser_block.name;
+
+           // removes the first line because it's the "line" of the parser
+           parser_block.contents.shift();
+
+           // normalizes the current parser block contents
+           parser_block.contents = _.normalize(parser_block.contents);
+
+           // sets the parser block information to be in it's own namespace of `parser`
            parser_block = {
             parser: parser_block
            };
-           return (function(to_extend){
-            // a) the current item being merged is already defined in the base
-            // b) define the target
-            if(_parsers_in_block[name] !== undefined){
-             // a) convert the target to an array
-             // b) add item to the current target array
-             if(!is.array(_parsers_in_block[name])){
-              _parsers_in_block[name] = [_parsers_in_block[name], to_extend];
-             }else{
-              _parsers_in_block[name].push(to_extend);
-             }
+
+           // call the parser function and store the result
+           var to_extend = parsers[name].call(_.extend(parser_block, block_info));
+
+           // a) the current item being merged is already defined in the base
+           // b) define the target
+           if(_parsers_in_block[name] !== undefined){
+            // a) convert the target to an array
+            // b) add item to the current target array
+            if(!is.array(_parsers_in_block[name])){
+             _parsers_in_block[name] = [_parsers_in_block[name], to_extend];
             }else{
-             _parsers_in_block[name] = to_extend;
+             _parsers_in_block[name].push(to_extend);
             }
-            return _parsers_in_block;
-           })(parsers[name].call(_.extend(parser_block, block_info)));
+           }else{
+            _parsers_in_block[name] = to_extend;
+           }
+           return _parsers_in_block;
           };
 
           return _parsed_blocks;
@@ -362,7 +370,6 @@ var docs = (function(){
   callback();
  };
 
-
  return _;
 })();
 
@@ -375,23 +382,23 @@ docs.setting("md", {
 
 // base parsers
 docs.parser("name", function(){
- return this.parser.contents[0];
+ return this.parser.line;
 });
 
 docs.parser("description", function(){
- return this.parser.contents.join("\n");
+ return this.parser.line || this.parser.contents;
 });
 
 docs.parser("page", function(){
- return "yo this was a page";
+ return this.parser.line;
 });
 
 docs.parser("author", function(){
- return "yo this was a author";
+ return this.parser.line;
 });
 
 docs.parser("markup", function(){
- return "yo this was a markup";
+ return this.parser.contents;
 });
 
 // Module exports
