@@ -60,7 +60,10 @@ var docs = (function(){
 
  var _ = {}, // the main object to return
      fs = require("fs"),
-     blocks = [];
+     glob = require("glob"),
+     json = {},
+     get_blocks,
+     parse_blocks;
 
  // @description
  // Extend object `b` onto `a`
