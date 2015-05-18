@@ -48,6 +48,7 @@ var docs = (function(){
      fs = require("fs"),
      blocks = [];
 
+ // @description
  // Extend object `b` onto `a`
  // http://jsperf.com/deep-extend-comparison
  // @arg [Object] a Source object.
