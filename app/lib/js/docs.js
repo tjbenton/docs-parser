@@ -381,13 +381,20 @@ var docs = (function(){
  // @arg [string, array] files - file paths to parse
  // @arg [function] callback - the callback to exicute after the files are parsed.
  _.parse = function(files, callback){
+  var paths = [],
+      json = {};
+
   // converts the string to an array so it can be looped over
   if(is.string(files)){
    files = [files];
   }
 
-  glob(files.join(","), function(err, paths){
-   // loop over each file file in files and parse the data.
+  // get the files paths using glob
+  for(var i = files.length; i--;){
+   paths.push.apply(paths, glob.sync(files[i]));
+  }
+
+  return (function(paths){
    for(var current_file = 0, total_files = paths.length; current_file < total_files; current_file++){
     var path = paths[current_file],
         filetype = path.slice(path.lastIndexOf(".") + 1),
@@ -417,8 +424,9 @@ var docs = (function(){
     json[filetype].push.apply(json[filetype], parsed_blocks);
    }
 
+   // run the callback of parse
    callback(json);
-  });
+  })(paths.reverse());
  };
 
  return _;
