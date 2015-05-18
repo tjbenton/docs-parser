@@ -51,6 +51,13 @@ var docs = (function(){
   return Object.prototype.toString.call(value) === "[object String]";
  };
 
+ // @description is a given value undefined?
+ // @arg [*] - The item to check
+ // @returns [boolean]
+ is.undefined = function(value){
+  return value === void 0;
+ };
+
  var _ = {}, // the main object to return
      fs = require("fs"),
      blocks = [];
