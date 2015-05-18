@@ -309,25 +309,25 @@ var docs = (function(){
 
    // a) the current item being merged is already defined in the base
    // b) define the target
-   if(!is.undefined(_parsers_in_block[name])){
+   if(!is.undefined(parsers_in_block[name])){
     // a) convert the target to an array
     // b) add item to the current target array
-    if(!is.array(_parsers_in_block[name])){
-     _parsers_in_block[name] = [_parsers_in_block[name], to_extend];
+    if(!is.array(parsers_in_block[name])){
+     parsers_in_block[name] = [parsers_in_block[name], to_extend];
     }else{
-     _parsers_in_block[name].push(to_extend);
+     parsers_in_block[name].push(to_extend);
     }
    }else{
-    _parsers_in_block[name] = to_extend;
+    parsers_in_block[name] = to_extend;
    }
-   return _parsers_in_block;
+   return parsers_in_block;
   };
 
   // loop over each block
   for(var a = 0, blocks_length = this.blocks.length; a < blocks_length; a++){
    var block = this.blocks[a],
        to_parse = block.comment.contents,
-       _parsers_in_block = {},
+       parsers_in_block = {},
        current_parser = {};
 
    block.comment.contents = _.normalize(block.comment.contents);
