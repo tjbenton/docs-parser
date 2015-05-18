@@ -61,7 +61,6 @@ var docs = (function(){
  var _ = {}, // the main object to return
      fs = require("fs"),
      glob = require("glob"),
-     json = {},
      get_blocks,
      parse_blocks;
 
@@ -98,9 +97,34 @@ var docs = (function(){
  // the settings object that holds the file specific settings as well as the base settings
  _.all_settings = {
   default: {
-   file_comment: "////", // file level comment blockidentifier
-   block_comment: "///", // block level comment block identifier
-   parser_prefix: "@" // the start of the parser id(this should probably never be changed)
+   // file level comment block identifier
+   file_comment: {
+    start: null,
+    line: "////",
+    end: null
+   },
+
+   // block level comment block identifier
+   block_comment: {
+    start: null,
+    line: "///",
+    end: null
+   },
+
+   // the start of the parser id(this should probably never be changed)
+   parser_prefix: "@"
+  },
+  css: {
+   file_comment: {
+    start: "/****",
+    line: "*",
+    end: "****/"
+   },
+   block_comment: {
+    start: "/**",
+    line: "*",
+    end: "**/"
+   }
   }
  };
 
@@ -187,12 +211,12 @@ var docs = (function(){
   // loop over each line in the file and gets the comment blocks
   for(var i = 0, l = lines.length; i < l; i++){
    var line = lines[i],
-       comment_index = line.indexOf(setting.block_comment);
+       comment_index = line.indexOf(setting.block_comment.line);
 
    // a) The line is a comment
    // b) There was a previous comment block
    if(comment_index > -1){
-    line = line.slice(comment_index + setting.block_comment.length);
+    line = line.slice(comment_index + setting.block_comment.line.length);
 
     // a) The previous line wasn't a comment
     if(!in_comment){
