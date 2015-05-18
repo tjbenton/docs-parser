@@ -110,6 +110,28 @@ var docs = (function(){
   return _.all_parsers[filetype] !== undefined ? _.extend(_.all_parsers.default, _.all_parsers[filetype]) : _.all_parsers.default;
  };
 
+ // @description
+ // Removes extra whitespace before all the lines that are passed
+ // Removes trailing blank lines
+ // Removes all whitespace at the end of each line
+ // @arg [array] - The array of lines that will be normalized
+ // @returns [string] - The normalized string
+ _.normalize = function(content){
+  // remove trailing blank lines
+  for(var i = content.length; i-- && content[i].length === 0;){
+   content.pop();
+  }
+
+  // get the length of extra whitespace to cut off of the beginning of each line in content array
+  var slice_from = content.join("\n").match(/^\s*/gm).sort(function(a, b){
+       return a.length - b.length;
+      })[0].length;
+
+  // remove extra whitespace
+  return content.map(function(line){
+   return line.slice(slice_from);
+  }).join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
+ };
 
  // @description Used to define the parsers
  // @arg [string] The name of the variable
