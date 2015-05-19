@@ -29,7 +29,13 @@ gulp.task("docs", function(){
  //  console.log(parsedObject);
  // });
  //
- docs.parse("./app/lib/testing-files/scss/_test.scss", function(obj){
-
+ docs.parse("./app/lib/testing-files/**/*.{scss,css}", function(documentation){
+  console.log("");
+  console.log("");
+  console.log("");
+  console.log("");
+  console.log("");
+  console.log("----------------------------------------------------------------");
+  console.log(JSON.stringify(documentation));
  });
 });
