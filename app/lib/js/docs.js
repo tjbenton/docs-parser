@@ -299,58 +299,6 @@ var docs = (function(){
   var parser_keys = Object.getOwnPropertyNames(this.parsers);
   this.parsed_blocks = [];
 
-
-  // @description
-  // Gets the other parsers for the other file types
-  this.get_other_parsers = function(obj){
-   var name = obj.parser.name,
-       defined_parsers = {}, // stores the defined parsers for this `name`
-       parsers_result = {}; // object to be returned
-
-   // loop over each of the defined file specific parsers (including the default)
-   for(var i = 0, keys = Object.getOwnPropertyNames(_.all_parsers), l = keys.length, current_parser_set; i < l; i++){
-    var key = keys[i];
-    current_parser_set = _.all_parsers[key];
-
-    // a) Add the current_parser_set[name] to the set that will be returned
-    if(!is.undefined(current_parser_set[name])){
-     defined_parsers[key] = current_parser_set[name];
-    }
-   }
-
-   // loop over each of the defined parsers and call them to get the parsed result
-   for(var i = 0, keys = Object.getOwnPropertyNames(defined_parsers), l = keys.length, key; i < l; i++){
-    key = keys[i];
-
-    // store the defined_parsers so it won't change
-    var other_parsers = _.extend({}, defined_parsers);
-
-    // a) Delete the parser(default, sass, etc) that is going to be called
-    //    because you can't have this parser call itself
-    if(!is.undefined(other_parsers[key])){
-     delete other_parsers[key];
-    }
-
-    // 1. add the result to the `parsers_result`
-    // 2. create a temp object using the `key` and then extend it onto `parsers_result`
-    // 3. call the current parser to get the result
-    // 4. extend the other parsers onto the obj that was passed
-    _.extend( // 1
-     parsers_result,
-     _.create_object( // 2
-      key,
-      function(){
-       return defined_parsers[key].call( // 3
-               _.extend(obj, _.create_object("parsers", other_parsers)) // 4
-              );
-      }
-     )
-    );
-   }
-
-   return parsers_result;
-  };
-
   // @description Used as a helper function because this action is performed in two spots
   // @arg [string] name of the parser to run
   // @arg [object] information of the current parser block
@@ -372,13 +320,13 @@ var docs = (function(){
               parser: annotation // sets the parser block information to be in it's own namespace of `parser`
              }, info);
 
-   // sets an empty object just incase there aren't other parsers other than the current one
-   to_call.parsers = this.get_other_parsers(to_call);
-
-   // a) deletes the current file type parser from the to_call object
-   //    so that you can't accidentally have it call itself
-   if(!is.undefined(to_call.parsers[info.file.type])){
-    delete to_call.parsers[to_call.file.type];
+   // a) add the default parser function to the `annotation.parsers` object so it can be called in the file specific parser if needed
+   if(!is.undefined(_.all_parsers[info.file.type]) && !is.undefined(_.all_parsers[info.file.type][name])){
+    _.extend(to_call, {
+     default: function(){
+      return _.all_parsers.default[name].call(to_call);
+     }
+    });
    }
 
    // call the parser function and store the result
@@ -522,7 +470,7 @@ docs.parser("name", {
   return this.parser.line;
  },
  scss: function(){
-  return this.parsers.default.call(this) + " scss specific";
+  return this.default() + " scss version";
  }
 });
 
