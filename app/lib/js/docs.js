@@ -294,7 +294,9 @@ var docs = (function(){
   // @arg [object] information of the current parser block
   // @arg [object] information about the current comment block, the code after the comment block and the full file contents
   this.parse = function(parser_block, block_info){
-   var name = parser_block.name;
+   var name = parser_block.name,
+       to_call,
+       to_extend;
 
    // removes the first line because it's the "line" of the parser
    parser_block.contents.shift();
@@ -304,11 +306,21 @@ var docs = (function(){
 
    // sets the parser block information to be in it's own namespace of `parser`
    parser_block = {
-    parser: parser_block
+    parser: parser_block,
+    parsers: {}
    };
 
+   to_call = _.extend(parser_block, block_info);
+
+   // a) add the default parser function to the `parser_block.parsers` object so it can be called in the file specific parser if needed
+   if(!is.undefined(_.all_parsers[block_info.file.type]) && !is.undefined(_.all_parsers[block_info.file.type][name])){
+    parser_block.parsers.default = function(){
+     return _.all_parsers.default[name].call(to_call);
+    };
+   }
+
    // call the parser function and store the result
-   var to_extend = this.parsers[name].call(_.extend(parser_block, block_info));
+   to_extend = this.parsers[name].call(to_call);
 
    // a) the current item being merged is already defined in the base
    // b) define the target
