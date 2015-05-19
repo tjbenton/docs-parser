@@ -29,7 +29,15 @@ gulp.task("docs", function(){
  //  console.log(parsedObject);
  // });
  //
- docs.parse("./app/lib/testing-files/scss/_test.scss", function(obj){
-
+ // docs.parse("./app/lib/testing-files/scss/*.scss", function(documentation){
+ //  console.log(documentation);
+ // });
+ docs.parse(["./app/lib/testing-files/scss/*.scss", "./app/lib/testing-files/css/*.css"], function(documentation){
+  console.log("");
+  console.log("");
+  console.log("");
+  console.log("");
+  console.log("documentation --------------------------------------------------------------");
+  console.log(documentation);
  });
 });
