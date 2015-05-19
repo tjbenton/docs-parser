@@ -146,10 +146,13 @@ var docs = (function(){
  // the parsers object
  _.all_parsers = {};
 
+ // @description
+ // This gets the parsers to use for the current filetype.
+ // Basically the file specific parsers get extended onto the default parsers
  // @arg [string] - the current filetype that is being parsed
  // @returns [object] the settings to use
  _.parsers = function(filetype){
-  return !is.undefined(_.all_parsers[filetype]) ? _.extend(_.all_parsers.default, _.all_parsers[filetype]) : _.all_parsers.default;
+  return !is.undefined(_.all_parsers[filetype]) ? _.extend(_.extend({}, _.all_parsers.default), _.all_parsers[filetype]) : _.all_parsers.default;
  };
 
  // @description
