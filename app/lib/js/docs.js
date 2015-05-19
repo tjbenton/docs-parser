@@ -178,6 +178,16 @@ var docs = (function(){
   }).join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
  };
 
+ // @description
+ // Used to create a temp object with a specific key name
+ // @arg [string] - name that you want the key to be
+ // @arg [*] - the value of the key
+ _.create_object = function(key, value){
+  var temp = {};
+  temp[key] = value;
+  return temp;
+ };
+
  // @description Used to define the parsers
  // @arg [string] The name of the variable
  // @arg [object] The callback to be executed at parse time
