@@ -303,30 +303,28 @@ var docs = (function(){
   // @arg [string] name of the parser to run
   // @arg [object] information of the current parser block
   // @arg [object] information about the current comment block, the code after the comment block and the full file contents
-  this.parse = function(parser_block, block_info){
-   var name = parser_block.name,
+  this.parse = function(annotation, info){
+   var name = annotation.name,
        to_call,
        to_extend;
 
    // removes the first line because it's the "line" of the parser
-   parser_block.contents.shift();
+   annotation.contents.shift();
 
    // normalizes the current parser block contents
-   parser_block.contents = _.normalize(parser_block.contents);
+   annotation.contents = _.normalize(annotation.contents);
 
 
    // Merges the data together so it can be used to run all the parsers
    to_call = _.extend({
-              parser: parser_block // sets the parser block information to be in it's own namespace of `parser`
-             }, block_info);
+              parser: annotation // sets the parser block information to be in it's own namespace of `parser`
+             }, info);
 
-   // a) add the default parser function to the `parser_block.parsers` object so it can be called in the file specific parser if needed
-   if(!is.undefined(_.all_parsers[block_info.file.type]) && !is.undefined(_.all_parsers[block_info.file.type][name])){
+   // a) add the default parser function to the `annotation.parsers` object so it can be called in the file specific parser if needed
+   if(!is.undefined(_.all_parsers[info.file.type]) && !is.undefined(_.all_parsers[info.file.type][name])){
     _.extend(to_call, {
-     parsers: {
-      default: function(){
-       return _.all_parsers.default[name].call(to_call);
-      }
+     default: function(){
+      return _.all_parsers.default[name].call(to_call);
      }
     });
    }
@@ -472,7 +470,7 @@ docs.parser("name", {
   return this.parser.line;
  },
  scss: function(){
-  return this.parsers.default() + " scss version";
+  return this.default() + " scss version";
  }
 });
 
