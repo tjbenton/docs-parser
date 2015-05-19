@@ -322,9 +322,13 @@ var docs = (function(){
 
    // a) add the default parser function to the `parser_block.parsers` object so it can be called in the file specific parser if needed
    if(!is.undefined(_.all_parsers[block_info.file.type]) && !is.undefined(_.all_parsers[block_info.file.type][name])){
-    parser_block.parsers.default = function(){
-     return _.all_parsers.default[name].call(to_call);
-    };
+    _.extend(to_call, {
+     parsers: {
+      default: function(){
+       return _.all_parsers.default[name].call(to_call);
+      }
+     }
+    });
    }
 
    // call the parser function and store the result
@@ -463,8 +467,13 @@ docs.setting("md", {
 
 
 // base parsers
-docs.parser("name", function(){
- return this.parser.line;
+docs.parser("name", {
+ default: function(){
+  return this.parser.line;
+ },
+ scss: function(){
+  return this.parsers.default() + " scss version";
+ }
 });
 
 docs.parser("description", function(){
