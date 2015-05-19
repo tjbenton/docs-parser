@@ -314,13 +314,11 @@ var docs = (function(){
    // normalizes the current parser block contents
    parser_block.contents = _.normalize(parser_block.contents);
 
-   // sets the parser block information to be in it's own namespace of `parser`
-   parser_block = {
-    parser: parser_block,
-    parsers: {}
-   };
 
-   to_call = _.extend(parser_block, block_info);
+   // Merges the data together so it can be used to run all the parsers
+   to_call = _.extend({
+              parser: parser_block // sets the parser block information to be in it's own namespace of `parser`
+             }, block_info);
 
    // a) add the default parser function to the `parser_block.parsers` object so it can be called in the file specific parser if needed
    if(!is.undefined(_.all_parsers[block_info.file.type]) && !is.undefined(_.all_parsers[block_info.file.type][name])){
