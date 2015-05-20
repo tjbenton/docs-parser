@@ -59,7 +59,7 @@ var docs = (function(){
  };
 
  // is a given string include parameter substring?
- is.included = function(str, substr) {
+ is.included = function(str, substr){
   var index = str.indexOf(substr);
   return !is.empty(str) && !is.empty(substr) ? index > -1 ? index : false : false;
  };
@@ -70,14 +70,14 @@ var docs = (function(){
  };
 
  // is a given value truthy?
- is.truthy = function(value) {
+ is.truthy = function(value){
   return value !== null && value !== undefined && value !== false && !(value !== value) && value !== "" && value !== 0;
  };
 
  // is given value falsy?
  is.falsy = function(value){
   return !is.truthy(value);
- }
+ };
 
  var _ = {}, // the main object to return
      fs = require("fs"),
@@ -232,6 +232,7 @@ var docs = (function(){
       block_info,
       lines = this.file.contents.split(/\n/),
       setting = this.setting,
+      is_start_and_end = !is.undefined(setting.block_comment.start) && !is.undefined(setting.block_comment.end),
       in_code = false,
       in_comment = false;
 
@@ -241,15 +242,16 @@ var docs = (function(){
   // loop over each line in the file and gets the comment blocks
   for(var i = 0, l = lines.length; i < l; i++){
    var line = lines[i],
-       comment_index = line.indexOf(setting.block_comment.line);
+       comment_index = {
+        line: is.included(line, setting.block_comment.line),
+        start: is_start_and_end ? is.included(line, setting.block_comment.start) : false,
+        end: is_start_and_end ? is.included(line, setting.block_comment.end) : false
+       };
 
-   // a) The line is a comment
-   // b) There was a previous comment block
-   if(comment_index > -1){
-    line = line.slice(comment_index + setting.block_comment.line.length);
-
-    // a) The previous line wasn't a comment
-    if(!in_comment){
+   // a) is the start and end style or there was an instance of a comment line
+   if(is_start_and_end || !is.false(comment_index.line)){
+    // a) is the start of a new block
+    if(!is.false(comment_index.start) || !is_start_and_end && !in_comment){
      in_code = false;
 
      // a) There was block that has already been processed
@@ -275,20 +277,42 @@ var docs = (function(){
      in_comment = true;
     }
 
-    // adds this line to block_info comment contents
-    block_info.comment.contents.push(line);
+    // a) check for the end comment
+    if(is_start_and_end && !is.false(comment_index.end)){
+     in_comment = false;
+     block_info.comment.end = i;
+     i++; // skips end comment line
+     line = lines[i]; // updates to be the next line
+     comment_index.end = is.included(setting.block_comment.end); // updates the index
+    }
+
+    // a) adds this line to block_info comment contents
+    if(in_comment && is.false(comment_index.start) && is.false(comment_index.end)){
+     // a) removes the `setting.block_comment.line` from the line
+     if(!is.false(comment_index.line)){
+      line = line.slice(comment_index.line + setting.block_comment.line.length);
+     }
+     block_info.comment.contents.push(line);
+    }
+
+    // b) check the next line for an instance of the a line comment
+    if(!is_start_and_end && is.false(is.included(lines[i + 1], setting.block_comment.line))){
+     in_comment = false;
+    }
 
     // a) The last line in the file is a commment
-    if(i === l - 1){
-     block_info.comment.end = i;
+    if(in_comment && (is_start_and_end && !is.false(comment_index.end) ? i === l : i === l - 1)){
+     block_info.comment.end = is_start_and_end ? i - 1 : i;
      _blocks.push(block_info);
-    }
-   }else if(!is.undefined(block_info)){
-    if(in_comment){
-     in_comment = false;
-     block_info.comment.end = i - 1; // -1 because the end was the line before
-    }
 
+     // ensures that the loop stops because it's the last line in the file
+     break;
+    }
+   } // end comment code
+
+
+   // a) add code to current block_info
+   if(!in_comment && is.false(comment_index.end) && !is.undefined(block_info)){
     // a) The previous line was a comment
     if(!in_code){
      in_code = true;
