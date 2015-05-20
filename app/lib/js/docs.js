@@ -120,16 +120,12 @@ var docs = (function(){
   default: {
    // file level comment block identifier
    file_comment: {
-    start: null,
-    line: "////",
-    end: null
+    line: "////"
    },
 
    // block level comment block identifier
    block_comment: {
-    start: null,
-    line: "///",
-    end: null
+    line: "///"
    },
 
    // the start of the parser id(this should probably never be changed)
