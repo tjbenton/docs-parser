@@ -58,6 +58,27 @@ var docs = (function(){
   return value === void 0;
  };
 
+ // is a given string include parameter substring?
+ is.included = function(str, substr) {
+  var index = str.indexOf(substr);
+  return !is.empty(str) && !is.empty(substr) ? index > -1 ? index : false : false;
+ };
+
+ // is a given value false
+ is.false = function(value){
+  return value === false;
+ };
+
+ // is a given value truthy?
+ is.truthy = function(value) {
+  return value !== null && value !== undefined && value !== false && !(value !== value) && value !== "" && value !== 0;
+ };
+
+ // is given value falsy?
+ is.falsy = function(value){
+  return !is.truthy(value);
+ }
+
  var _ = {}, // the main object to return
      fs = require("fs"),
      glob = require("glob"),
