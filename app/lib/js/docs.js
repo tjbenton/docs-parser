@@ -271,6 +271,7 @@ var docs = (function(){
     // a) is the start and end style or there was an instance of a comment line
     if(!is.false(file_comment.start) || !in_file_comment && !is.false(file_comment.line)){
      in_file_comment = true;
+     _file_block.start = i;
     }
 
     // a) adds this line to block_info comment contents
