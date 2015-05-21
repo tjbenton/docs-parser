@@ -420,7 +420,10 @@ var docs = (function(){
    }
   } // end loop
 
-  return _blocks;
+  return {
+   file: _file_block,
+   general: _blocks
+  };
  };
 
  /// @description Parses each block in blocks
@@ -447,7 +450,7 @@ var docs = (function(){
    // Merges the data together so it can be used to run all the parsers
    to_call = _.extend({
               parser: annotation // sets the parser block information to be in it's own namespace of `parser`
-             }, info);
+             }, info || {});
 
    // a) add the default parser function to the `annotation.parsers` object so it can be called in the file specific parser if needed
    if(!is.undefined(_.all_parsers[info.file.type]) && !is.undefined(_.all_parsers[info.file.type][name])){
