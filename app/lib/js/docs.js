@@ -1,81 +1,93 @@
 "use strict";
 
-// docs.js
-// @author Tyler Benton
-// @descripton
-// This is used to parse any filetype that you want to and gets the documentation for it and returns an {} of the document data
+////
+//// @name docs.js
+//// @author Tyler Benton
+//// @version 0.0.1
+//// @descripton
+/// This is used to parse any filetype that you want to and gets the documentation for it and returns an {} of the document data
+////
 var docs = (function(){
  // A few helper functions for checking common things.
  // It's not located under the main object (_) because these are just helper functions.
  var is = {},
      toString = Object.prototype.toString; // cache to call later on
 
- // @description is a given value function?
- // @arg [*] - The item to check
- // @returns [boolean] - The result of the test
+ //// @description is a given value function?
+ //// @arg {*} value - The item to check
+ //// @returns {boolean} - The result of the test
  is.function = function(value){ // fallback check is for IE
   return toString.call(value) === "[object Function]" || typeof value === "function";
  };
 
- // @description is a given value Array?
- // @arg [*] - The item to check
- // @returns [boolean] - The result of the test
+ //// @description is a given value Array?
+ //// @arg {*} value - The item to check
+ //// @returns {boolean} - The result of the test
  is.array = Array.isArray || function(value){ // check native isArray first
   return toString.call(value) === "[object Array]";
  };
 
- // @description is a given value Boolean?
- // @arg [*] - The item to check
- // @returns [boolean] - The result of the test
+ /// @description is a given value Boolean?
+ /// @arg {*} value - The item to check
+ /// @returns {boolean} - The result of the test
  is.boolean = function(value){
   return value === true || value === false || toString.call(value) === "[object Boolean]";
  };
 
- // @description is a given value object?
- // @arg [*] - The item to check
- // @returns [boolean] - The result of the test
+ /// @description is a given value object?
+ /// @arg {*} value - The item to check
+ /// @returns {boolean} - The result of the test
  is.object = function(value){
   return toString.call(value) === "[object Object]";
  };
 
- // @description is a given value empty? Objects, arrays, strings
- // @arg [object, array, string] - What you want to check to see if it's empty
- // @returns [boolean] - determins if the item you passes was empty or not
+ /// @description is a given value empty? Objects, arrays, strings
+ /// @arg {object, array, string} value - What you want to check to see if it's empty
+ /// @returns {boolean} - determins if the item you passes was empty or not
  is.empty = function(value){
   return is.object(value) ? Object.getOwnPropertyNames(value).length === 0 : is.array(value) ? value.length > 0 : value === "";
  };
 
- // @description is a given value String?
- // @arg [*] - The item to check
- // @returns [boolean] - The result of the test
+ /// @description is a given value String?
+ /// @arg {*} value - The item to check
+ /// @returns {boolean} - The result of the test
  is.string = function(value){
   return toString.call(value) === "[object String]";
  };
 
- // @description is a given value undefined?
- // @arg [*] - The item to check
- // @returns [boolean]
+ /// @description is a given value undefined?
+ /// @arg {*} value - The item to check
+ /// @returns {boolean}
  is.undefined = function(value){
   return value === void 0;
  };
 
- // is a given string include parameter substring?
+ /// @description is a given string include parameter substring?
+ /// @arg {string} str - string to match against
+ /// @arg {string} substr - string to look for in `str`
+ /// @returns {number, boolean}
  is.included = function(str, substr){
   var index = str.indexOf(substr);
   return !is.empty(str) && !is.empty(substr) ? index > -1 ? index : false : false;
  };
 
- // is a given value false
+ /// @description is a given value false
+ /// @arg {*} value - value to check if it is false
+ /// @returns {boolean}
  is.false = function(value){
   return value === false;
  };
 
- // is a given value truthy?
+ /// @description is a given value truthy?
+ /// @arg {*} value - the item you want to check and see if it's truthy
+ /// @returns {boolean}
  is.truthy = function(value){
   return value !== null && value !== undefined && value !== false && !(value !== value) && value !== "" && value !== 0;
  };
 
- // is given value falsy?
+ /// @description is given value falsy?
+ /// @arg {*} value - the item you want to check and see if it's falsy
+ /// @returns {boolean}
  is.falsy = function(value){
   return !is.truthy(value);
  };
@@ -86,12 +98,12 @@ var docs = (function(){
      get_blocks,
      parse_blocks;
 
- // @description
- // Extend object `b` onto `a`
- // http://jsperf.com/deep-extend-comparison
- // @arg [Object] a Source object.
- // @arg [Object] b Object to extend with.
- // @returns [Object] a Extended object.
+ /// @description
+ /// Extend object `b` onto `a`
+ /// http://jsperf.com/deep-extend-comparison
+ /// @arg {Object} a Source object.
+ /// @arg {Object} b Object to extend with.
+ /// @returns {Object} a Extended object.
  _.extend = function(a, b){
   // Don't touch 'null' or 'undefined' objects.
   if(!a || !b){
@@ -148,15 +160,16 @@ var docs = (function(){
   }
  };
 
- // @arg [string] - the current filetype that is being parsed
- // @returns [object] the settings to use
+ /// @description Merges the default settings with the file specific settings
+ /// @arg {string} filetype - the current filetype that is being parsed
+ /// @returns {object} the settings to use
  _.settings = function(filetype){
   return !is.undefined(_.all_settings[filetype]) ? _.extend(_.all_settings.default, _.all_settings[filetype]) : _.all_settings.default;
  };
 
- // @description Allows you to specify settings for specific file types
- // @arg [string] - the file extention you want to target
- // @arg [object] - the settings you want to adjust for this file type
+ /// @description Allows you to specify settings for specific file types
+ /// @arg {string} extention - the file extention you want to target
+ /// @arg {object} obj - the settings you want to adjust for this file type
  _.setting = function(extention, obj){
   var to_extend = {};
   to_extend[extention] = obj;
@@ -166,21 +179,21 @@ var docs = (function(){
  // the parsers object
  _.all_parsers = {};
 
- // @description
- // This gets the parsers to use for the current filetype.
- // Basically the file specific parsers get extended onto the default parsers
- // @arg [string] - the current filetype that is being parsed
- // @returns [object] the settings to use
+ /// @description
+ /// This gets the parsers to use for the current filetype.
+ /// Basically the file specific parsers get extended onto the default parsers
+ /// @arg {string} filetype - the current filetype that is being parsed
+ /// @returns {object} the settings to use
  _.parsers = function(filetype){
   return !is.undefined(_.all_parsers[filetype]) ? _.extend(_.extend({}, _.all_parsers.default), _.all_parsers[filetype]) : _.all_parsers.default;
  };
 
- // @description
- // Removes extra whitespace before all the lines that are passed
- // Removes trailing blank lines
- // Removes all whitespace at the end of each line
- // @arg [array] - The array of lines that will be normalized
- // @returns [string] - The normalized string
+ /// @description
+ /// Removes extra whitespace before all the lines that are passed
+ /// Removes trailing blank lines
+ /// Removes all whitespace at the end of each line
+ /// @arg {array} content - The array of lines that will be normalized
+ /// @returns {string} - The normalized string
  _.normalize = function(content){
   // remove trailing blank lines
   for(var i = content.length; i-- && content[i].length === 0;){
@@ -198,19 +211,19 @@ var docs = (function(){
   }).join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
  };
 
- // @description
- // Used to create a temp object with a specific key name
- // @arg [string] - name that you want the key to be
- // @arg [*] - the value of the key
+ /// @description
+ /// Used to create a temp object with a specific key name
+ /// @arg {string} key - name that you want the key to be
+ /// @arg {*} value - the value of the key
  _.create_object = function(key, value){
   var temp = {};
   temp[key] = value;
   return temp;
  };
 
- // @description Used to define the parsers
- // @arg [string] The name of the variable
- // @arg [object] The callback to be executed at parse time
+ /// @description Used to define the parsers
+ /// @arg {string} name - The name of the variable
+ /// @arg {object} obj - The callback to be executed at parse time
  _.parser = function(name, obj){
   if(is.function(obj)){
    obj = {
@@ -227,9 +240,9 @@ var docs = (function(){
   }
  };
 
- // @description Parses the file and returns the comment blocks in an array
- // @arg [string] file
- // @returns [array] of the comment blocks
+ /// @description Parses the file and returns the comment blocks in an array
+ /// @arg {string}
+ /// @returns {array} of the comment blocks
  get_blocks = function(){
   var _blocks = [], // holds all the blocks
       _file_block = { // holds the file level comment block
@@ -385,17 +398,15 @@ var docs = (function(){
   return _blocks;
  };
 
- // @description Parses each block in blocks
- // @arg [array] the blocks that are returned from blocks
- // @returns [array]
+ /// @description Parses each block in blocks
+ /// @returns {array}
  parse_blocks = function(){
   var parser_keys = Object.getOwnPropertyNames(this.parsers);
   this.parsed_blocks = [];
 
-  // @description Used as a helper function because this action is performed in two spots
-  // @arg [string] name of the parser to run
-  // @arg [object] information of the current parser block
-  // @arg [object] information about the current comment block, the code after the comment block and the full file contents
+  /// @description Used as a helper function because this action is performed in two spots
+  /// @arg {object} annotation - information of the current parser block
+  /// @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
   this.parse = function(annotation, info){
    var name = annotation.name,
        to_call,
@@ -495,9 +506,9 @@ var docs = (function(){
   return this.parsed_blocks;
  };
 
- // @description Takes the contents of a file and parses it
- // @arg [string, array] files - file paths to parse
- // @arg [function] callback - the callback to exicute after the files are parsed.
+ /// @description Takes the contents of a file and parses it
+ /// @arg {string, array} files - file paths to parse
+ /// @arg {function} callback - the callback to exicute after the files are parsed.
  _.parse = function(files, callback){
   var paths = [],
       json = {};
@@ -584,6 +595,9 @@ docs.parser("markup", function(){
 });
 
 // Module exports
+// a) export module
+// b) define amd
+// c) add docs to the root
 if(typeof exports !== "undefined"){
  if(typeof module !== "undefined" && module.exports){
   exports = module.exports = docs;
