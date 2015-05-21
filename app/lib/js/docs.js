@@ -481,11 +481,11 @@ var docs = (function(){
   };
 
   // loop over each block
-  for(var a = 0, blocks_length = this.blocks.length; a < blocks_length; a++){
-   var block = this.blocks[a],
+  for(var a = 0, blocks_length = this.blocks.general.length; a < blocks_length; a++){
+   var block = this.blocks.general[a],
        to_parse = block.comment.contents,
        parsers_in_block = {},
-       current_parser = {};
+       _annotation = {};
 
    block.comment.contents = _.normalize(block.comment.contents);
    block.code.contents = _.normalize(block.code.contents);
@@ -502,13 +502,14 @@ var docs = (function(){
 
      // a) the name is one of the parser names
      if(parser_keys.indexOf(name_of_parser) >= 0){
-      if(!is.empty(current_parser)){
-       current_parser.end = i - 1;
-       this.parse(current_parser, block);
+      // a) parse the current parser
+      if(!is.empty(_annotation)){
+       _annotation.end = i - 1;
+       this.parse(_annotation, block);
       }
 
       // redefines resets the current parser to be blank
-      current_parser = {
+      _annotation = {
        name: name_of_parser, // sets the current parser name
        line: line.slice(parser_prefix_index + 1 + name_of_parser.length).trim(), // removes the current parser name and it's prefix from the first line
        contents: [],
@@ -518,15 +519,15 @@ var docs = (function(){
      }
     }
 
-    // adds the current line to the contents
-    if(!is.empty(current_parser)){
-     current_parser.contents.push(line);
+    // a) adds the current line to the contents
+    if(!is.empty(_annotation)){
+     _annotation.contents.push(line);
     }
 
     // a) is the last line in the comment block
     if(i === l - 1){
-     current_parser.end = i;
-     this.parsed_blocks.push(this.parse(current_parser, block));
+     _annotation.end = i;
+     this.parsed_blocks.push(this.parse(_annotation, block));
     }
    } // end block loop
   } // end blocks loop
