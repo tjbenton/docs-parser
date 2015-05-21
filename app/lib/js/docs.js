@@ -461,23 +461,7 @@ var docs = (function(){
     });
    }
 
-   // call the parser function and store the result
-   to_extend = this.parsers[name].call(to_call);
-
-   // a) the current item being merged is already defined in the base
-   // b) define the target
-   if(!is.undefined(parsers_in_block[name])){
-    // a) convert the target to an array
-    // b) add item to the current target array
-    if(!is.array(parsers_in_block[name])){
-     parsers_in_block[name] = [parsers_in_block[name], to_extend];
-    }else{
-     parsers_in_block[name].push(to_extend);
-    }
-   }else{
-    parsers_in_block[name] = to_extend;
-   }
-   return parsers_in_block;
+   return _.merge(parsers_in_block, name, this.parsers[name].call(to_call));
   };
 
   // loop over each block
