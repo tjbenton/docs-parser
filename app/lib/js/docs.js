@@ -7,34 +7,35 @@
 var docs = (function(){
  // A few helper functions for checking common things.
  // It's not located under the main object (_) because these are just helper functions.
- var is = {};
+ var is = {},
+     toString = Object.prototype.toString; // cache to call later on
 
  // @description is a given value function?
  // @arg [*] - The item to check
  // @returns [boolean] - The result of the test
  is.function = function(value){ // fallback check is for IE
-  return Object.prototype.toString.call(value) === "[object Function]" || typeof value === "function";
+  return toString.call(value) === "[object Function]" || typeof value === "function";
  };
 
  // @description is a given value Array?
  // @arg [*] - The item to check
  // @returns [boolean] - The result of the test
  is.array = Array.isArray || function(value){ // check native isArray first
-  return Object.prototype.toString.call(value) === "[object Array]";
+  return toString.call(value) === "[object Array]";
  };
 
  // @description is a given value Boolean?
  // @arg [*] - The item to check
  // @returns [boolean] - The result of the test
  is.boolean = function(value){
-  return value === true || value === false || Object.prototype.toString.call(value) === "[object Boolean]";
+  return value === true || value === false || toString.call(value) === "[object Boolean]";
  };
 
  // @description is a given value object?
  // @arg [*] - The item to check
  // @returns [boolean] - The result of the test
  is.object = function(value){
-  return Object.prototype.toString.call(value) === "[object Object]";
+  return toString.call(value) === "[object Object]";
  };
 
  // @description is a given value empty? Objects, arrays, strings
@@ -48,7 +49,7 @@ var docs = (function(){
  // @arg [*] - The item to check
  // @returns [boolean] - The result of the test
  is.string = function(value){
-  return Object.prototype.toString.call(value) === "[object String]";
+  return toString.call(value) === "[object String]";
  };
 
  // @description is a given value undefined?
