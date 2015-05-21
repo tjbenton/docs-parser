@@ -96,7 +96,7 @@
   "escape": true
  },
  "requireParenthesesAroundIIFE": true,
- "maximumLineLength": 200,
+ "maximumLineLength": 300,
  "validateLineBreaks": "LF",
  "validateIndentation": 1,
  "validateParameterSeparator": ", ",
