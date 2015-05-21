@@ -133,9 +133,9 @@ var docs = (function(){
   },
   css: {
    file_comment: {
-    start: "/****",
+    start: "/***",
     line: "*",
-    end: "****/"
+    end: "***/"
    },
    block_comment: {
     start: "/**",
@@ -228,16 +228,61 @@ var docs = (function(){
  // @arg [string] file
  // @returns [array] of the comment blocks
  get_blocks = function(){
-  var _blocks = [],
-      block_info,
+  var _blocks = [], // holds all the blocks
+      _file_block = { // holds the file level comment block
+       contents: [],
+       start: 0,
+       end: 0
+      },
+      block_info, // holds the current block information
       lines = this.file.contents.split(/\n/),
       setting = this.setting,
+      is_start_and_end_file_comment = !is.undefined(setting.file_comment.start) && !is.undefined(setting.file_comment.end),
+      in_file_comment = false,
       is_start_and_end = !is.undefined(setting.block_comment.start) && !is.undefined(setting.block_comment.end),
       in_code = false,
       in_comment = false;
 
   // remove the settings from this because it doesn't need to be on every block.
   delete this.setting;
+
+  // a) file level comment exists
+  if(is_start_and_end_file_comment ? !is.false(is.included(this.file.contents, setting.file_comment.start)) : setting.file_comment.line !== setting.block_comment.line ? !is.false(is.included(this.file.contents, setting.file_comment.line)) : false){
+   // _.extend(_file_block, this);
+   // loop over each line to look for file level comments
+   for(var i = 0, l = lines.length; i < l; i++){
+    var line = lines[i],
+        file_comment = {
+         line: is.included(line, setting.file_comment.line),
+         start: is_start_and_end_file_comment ? is.included(line, setting.file_comment.start) : false,
+         end: is_start_and_end_file_comment ? is.included(line, setting.file_comment.end) : false
+        };
+
+    // a) is the start and end style or there was an instance of a comment line
+    if(!is.false(file_comment.start) || !in_file_comment && !is.false(file_comment.line)){
+     in_file_comment = true;
+    }
+
+    // a) adds this line to block_info comment contents
+    if(in_file_comment && is.false(file_comment.start) && is.false(file_comment.end)){
+     // a) removes the `setting.file_comment.line` from the line
+     if(!is.false(file_comment.line)){
+      line = line.slice(file_comment.line + setting.file_comment.line.length);
+     }
+     _file_block.contents.push(line);
+    }
+
+    // a) check for the end of the file level comment
+    if((is_start_and_end_file_comment && !is.false(file_comment.end)) || (!is_start_and_end_file_comment && !is.false(is.included(lines[i + 1], setting.file_comment.line)))){
+     in_comment = false;
+     _file_block.end = i;
+
+     // ensures that the loop stops because there's only 1 file level comment per file
+     break;
+    }
+   }
+  }
+
 
   // loop over each line in the file and gets the comment blocks
   for(var i = 0, l = lines.length; i < l; i++){
@@ -255,7 +300,7 @@ var docs = (function(){
      in_code = false;
 
      // a) There was block that has already been processed
-     if(!is.undefined(block_info)){
+     if(!is.undefined(block_info)){ // holds the current block information
       block_info.code.end = i - 1;
       _blocks.push(block_info);
      }
