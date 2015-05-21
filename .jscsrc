@@ -84,9 +84,6 @@
  "requireSemicolons": true,
  "requireSpaceAfterBinaryOperators": true,
  "requireSpaceAfterKeywords": ["return", "typeof", "void"],
- "requireSpaceAfterLineComment": {
-  "allExcept": ["#", "="]
- },
  "disallowSpacesInsideObjectBrackets": null,
  "requireDollarBeforejQueryAssignment": true,
  "safeContextKeyword": ["obj", "that", "_this", "self", "_self", "_"],
