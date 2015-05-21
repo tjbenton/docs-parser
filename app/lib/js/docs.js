@@ -240,6 +240,31 @@ var docs = (function(){
   }
  };
 
+ /// @description
+ /// This makes it easy to merge arrays in objects.
+ /// If there are multiple objects that you want to assign to a name it will convert it to an array and push new items to it.
+ ///
+ /// @arg {object} obj - The object that you want to update
+ /// @arg {string} name - Name of the object key you want to update/define
+ /// @arg {object} to_extend - The object you want to add to the `obj[name]`
+ /// @returns {object} - With the updated `name`
+ _.merge = function(obj, name, to_extend){
+  // a) the current item being merged is already defined in the base
+  // b) define the target
+  if(!is.undefined(obj[name])){
+   // a) convert the target to an array
+   // b) add item to the current target array
+   if(!is.array(obj[name])){
+    obj[name] = [obj[name], to_extend];
+   }else{
+    obj[name].push(to_extend);
+   }
+  }else{
+   obj[name] = to_extend;
+  }
+  return obj;
+ };
+
  /// @description Parses the file and returns the comment blocks in an array
  /// @arg {string}
  /// @returns {array} of the comment blocks
