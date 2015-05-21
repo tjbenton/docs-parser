@@ -121,7 +121,9 @@ var docs = (function(){
   default: {
    // file level comment block identifier
    file_comment: {
-    line: "////"
+    start: "////",
+    line: "///",
+    end: "////"
    },
 
    // block level comment block identifier
