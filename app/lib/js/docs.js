@@ -440,7 +440,7 @@ var docs = (function(){
        to_call,
        to_extend;
 
-   // removes the first line because it's the "line" of the parser
+   // removes the first line because it's the "line" of the annotation
    annotation.contents.shift();
 
    // normalizes the current parser block contents
@@ -450,7 +450,7 @@ var docs = (function(){
    // Merges the data together so it can be used to run all the parsers
    to_call = _.extend({
               parser: annotation // sets the parser block information to be in it's own namespace of `parser`
-             }, info || {});
+             }, is.undefined(info) ? info : {});
 
    // a) add the default parser function to the `annotation.parsers` object so it can be called in the file specific parser if needed
    if(!is.undefined(_.all_parsers[info.file.type]) && !is.undefined(_.all_parsers[info.file.type][name])){
