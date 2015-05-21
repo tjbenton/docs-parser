@@ -238,13 +238,17 @@ var docs = (function(){
        end: 0
       },
       block_info, // holds the current block information
-      lines = this.file.contents.split(/\n/),
-      setting = this.setting,
-      is_start_and_end_file_comment = !is.undefined(setting.file_comment.start) && !is.undefined(setting.file_comment.end),
-      in_file_comment = false,
-      is_start_and_end = !is.undefined(setting.block_comment.start) && !is.undefined(setting.block_comment.end),
-      in_code = false,
-      in_comment = false;
+      lines = this.file.contents.split(/\n/), // all the lines in the file
+      setting = this.setting, // stores the settings because it's removed from `this`
+
+      // file specific variables
+      is_start_and_end_file_comment = !is.undefined(setting.file_comment.start) && !is.undefined(setting.file_comment.end), // determins if the file comment has a start and end style or is line by line
+      in_file_comment = false, // used to determin if you're in a file level comment or not
+
+      // block specific variables
+      is_start_and_end = !is.undefined(setting.block_comment.start) && !is.undefined(setting.block_comment.end), // determins if the block comment has a start and end style or is line by line
+      in_comment = false, // used to determin that you are in a comment
+      in_code = false, // used to determin if you are in the code after the comment block
 
   // remove the settings from this because it doesn't need to be on every block.
   delete this.setting;
