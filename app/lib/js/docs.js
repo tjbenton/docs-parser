@@ -498,10 +498,9 @@ var docs = (function(){
     // a) there is an index of the parser prefix
     if(parser_prefix_index >= 0){
      var first_space = line.indexOf(" ", parser_prefix_index),
-         name_of_parser = line.slice(parser_prefix_index + 1, first_space >= 0 ? first_space : line.length);
-
+         name_of_annotation = line.slice(parser_prefix_index + 1, first_space >= 0 ? first_space : line.length);
      // a) the name is one of the parser names
-     if(parser_keys.indexOf(name_of_parser) >= 0){
+     if(parser_keys.indexOf(name_of_annotation) >= 0){
       // a) parse the current parser
       if(!is.empty(_annotation)){
        _annotation.end = i - 1;
@@ -510,8 +509,8 @@ var docs = (function(){
 
       // redefines resets the current parser to be blank
       _annotation = {
-       name: name_of_parser, // sets the current parser name
-       line: line.slice(parser_prefix_index + 1 + name_of_parser.length).trim(), // removes the current parser name and it's prefix from the first line
+       name: name_of_annotation, // sets the current parser name
+       line: line.slice(parser_prefix_index + 1 + name_of_annotation.length).trim(), // removes the current parser name and it's prefix from the first line
        contents: [],
        start: i, // sets the starting line of the parser
        end: 0
