@@ -234,8 +234,8 @@ var docs = (function(){
   var _blocks = [], // holds all the blocks
       _file_block = { // holds the file level comment block
        contents: [],
-       start: 0,
-       end: 0
+       start: -1,
+       end: -1
       },
       block_info, // holds the current block information
       lines = this.file.contents.split(/\n/), // all the lines in the file
@@ -269,7 +269,7 @@ var docs = (function(){
         };
 
     // a) is the start and end style or there was an instance of a comment line
-    if(!is.false(file_comment.start) || !in_file_comment && !is.false(file_comment.line)){
+    if(!is.false(file_comment.start) && _file_block.start === -1 || !in_file_comment && !is.false(file_comment.line)){
      in_file_comment = true;
      _file_block.start = i;
     }
@@ -284,8 +284,8 @@ var docs = (function(){
     }
 
     // a) check for the end of the file level comment
-    if((is_start_and_end_file_comment && !is.false(file_comment.end)) || (!is_start_and_end_file_comment && !is.false(is.included(lines[i + 1], setting.file_comment.line)))){
-     in_comment = false;
+    if((is_start_and_end_file_comment && _file_block.start !== i && !is.false(file_comment.end)) || (!is_start_and_end_file_comment && !is.false(is.included(lines[i + 1], setting.file_comment.line)))){
+     in_file_comment = false;
      _file_block.end = i;
 
      // ensures that the loop stops because there's only 1 file level comment per file
