@@ -1,6 +1,10 @@
+////
+/// @author Tyler Benton
+/// @page tests/scss-file
+////
+
 /// @name moz-only
 /// @author Tyler Benton
-/// @page helpers/mixins
 /// @description This allows you to write specific styles for mozilla firefox only
 /// @markup {scss} (example="false") **Example:**
 ///  @include moz-only(){
