@@ -287,9 +287,8 @@ var docs = (function(){
     if((is_start_and_end_file_comment && _file_block.start !== i && !is.false(file_comment.end)) || (!is_start_and_end_file_comment && !is.false(is.included(lines[i + 1], setting.file_comment.line)))){
      in_file_comment = false;
      _file_block.end = i;
-
-     // ensures that the loop stops because there's only 1 file level comment per file
-     break;
+     i++; // added 1 more to `i` so that the next loop starts on the next line
+     break; // ensures that the loop stops because there's only 1 file level comment per file
     }
    }
   }
@@ -359,9 +358,7 @@ var docs = (function(){
     if(in_comment && (is_start_and_end && !is.false(comment_index.end) ? i === l : i === l - 1)){
      block_info.comment.end = is_start_and_end ? i - 1 : i;
      _blocks.push(block_info);
-
-     // ensures that the loop stops because it's the last line in the file
-     break;
+     break; // ensures that the loop stops because it's the last line in the file
     }
    } // end comment code
 
