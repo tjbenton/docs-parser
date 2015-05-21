@@ -250,13 +250,17 @@ var docs = (function(){
       in_comment = false, // used to determin that you are in a comment
       in_code = false, // used to determin if you are in the code after the comment block
 
+      // variables that are shared between the two loops
+      i = 0, // current array item
+      l = lines.length; // the length of the lines array
+
   // remove the settings from this because it doesn't need to be on every block.
   delete this.setting;
 
   // a) file level comment exists
   if(is_start_and_end_file_comment ? !is.false(is.included(this.file.contents, setting.file_comment.start)) : setting.file_comment.line !== setting.block_comment.line ? !is.false(is.included(this.file.contents, setting.file_comment.line)) : false){
    // loop over each line to look for file level comments
-   for(var i = 0, l = lines.length; i < l; i++){
+   for(; i < l; i++){
     var line = lines[i],
         file_comment = {
          line: is.included(line, setting.file_comment.line),
@@ -289,9 +293,8 @@ var docs = (function(){
    }
   }
 
-
   // loop over each line in the file and gets the comment blocks
-  for(var i = 0, l = lines.length; i < l; i++){
+  for(; i < l; i++){
    var line = lines[i],
        comment_index = {
         line: is.included(line, setting.block_comment.line),
