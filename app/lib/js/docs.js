@@ -251,7 +251,6 @@ var docs = (function(){
 
   // a) file level comment exists
   if(is_start_and_end_file_comment ? !is.false(is.included(this.file.contents, setting.file_comment.start)) : setting.file_comment.line !== setting.block_comment.line ? !is.false(is.included(this.file.contents, setting.file_comment.line)) : false){
-   // _.extend(_file_block, this);
    // loop over each line to look for file level comments
    for(var i = 0, l = lines.length; i < l; i++){
     var line = lines[i],
