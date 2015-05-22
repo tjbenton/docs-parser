@@ -245,12 +245,25 @@ var docs = (function(){
  /// @arg {string}
  /// @returns {array} of the comment blocks
  get_blocks = function(){
+  this.new_block = function(i){
+   var to_extend = _.extend({}, this);
+   delete to_extend.new_block;
+   return _.extend({
+     comment: {
+      contents: [],
+      start: -1,
+      end: -1
+     },
+     code: {
+      contents: [],
+      start: -1,
+      end: -1
+     }
+    }, to_extend);
+  };
+
   var _blocks = [], // holds all the blocks
-      _file_block = { // holds the file level comment block
-       contents: [],
-       start: -1,
-       end: -1
-      },
+      _file_block = this.new_block(-1), // holds the file level comment block
       block_info, // holds the current block information
       lines = this.file.contents.split(/\n/), // all the lines in the file
       setting = this.setting, // stores the settings because it's removed from `this`
@@ -283,9 +296,9 @@ var docs = (function(){
         };
 
     // a) is the start and end style or there was an instance of a comment line
-    if(!is.false(file_comment.start) && _file_block.start === -1 || !in_file_comment && !is.false(file_comment.line)){
+    if(!is.false(file_comment.start) && _file_block.comment.start === -1 || !in_file_comment && !is.false(file_comment.line)){
      in_file_comment = true;
-     _file_block.start = i;
+     _file_block.comment.start = i;
     }
 
     // a) adds this line to block_info comment contents
@@ -294,13 +307,13 @@ var docs = (function(){
      if(!is.false(file_comment.line)){
       line = line.slice(file_comment.line + setting.file_comment.line.length);
      }
-     _file_block.contents.push(line);
+     _file_block.comment.contents.push(line);
     }
 
     // a) check for the end of the file level comment
-    if((is_start_and_end_file_comment && _file_block.start !== i && !is.false(file_comment.end)) || (!is_start_and_end_file_comment && !is.false(is.included(lines[i + 1], setting.file_comment.line)))){
+    if((is_start_and_end_file_comment && _file_block.comment.start !== i && !is.false(file_comment.end)) || (!is_start_and_end_file_comment && !is.false(is.included(lines[i + 1], setting.file_comment.line)))){
      in_file_comment = false;
-     _file_block.end = i;
+     _file_block.comment.end = i;
      i++; // added 1 more to `i` so that the next loop starts on the next line
      break; // ensures that the loop stops because there's only 1 file level comment per file
     }
@@ -329,18 +342,7 @@ var docs = (function(){
      }
 
      // reset the `block_info` to use on the new block
-     block_info = _.extend({
-      comment: {
-       contents: [],
-       start: i,
-       end: 0
-      },
-      code: {
-       contents: [],
-       start: 0,
-       end: 0
-      }
-     }, this);
+     block_info = this.new_block(i);
 
      in_comment = true;
     }
