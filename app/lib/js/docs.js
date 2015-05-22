@@ -95,6 +95,7 @@ var docs = (function(){
  var _ = {}, // the main object to return
      fs = require("fs"),
      glob = require("glob"),
+     marked = require("marked"),
      get_blocks,
      parse_blocks;
 
