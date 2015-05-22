@@ -483,6 +483,7 @@ var docs = (function(){
     if(parser_prefix_index >= 0){
      var first_space = line.indexOf(" ", parser_prefix_index),
          name_of_annotation = line.slice(parser_prefix_index + 1, first_space >= 0 ? first_space : line.length);
+
      // a) the name is one of the parser names
      if(parser_keys.indexOf(name_of_annotation) >= 0){
       // a) parse the current parser
