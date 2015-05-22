@@ -400,7 +400,7 @@ var docs = (function(){
 
   return {
    file: _file_block,
-   general: _blocks
+   general: _blocks // I have no idea what the key for this should be named but it probabaly shouldn't be `general`
   };
  };
 
