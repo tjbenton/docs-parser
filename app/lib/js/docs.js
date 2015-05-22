@@ -408,12 +408,12 @@ var docs = (function(){
  /// @returns {array}
  parse_blocks = function(){
   var parser_keys = Object.getOwnPropertyNames(this.parsers);
-  this.parsed_blocks = [];
 
   /// @description Used as a helper function because this action is performed in two spots
   /// @arg {object} annotation - information of the current parser block
   /// @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
-  this.parse = function(annotation, info){
+  /// @returns {object}
+  this.merge = function(annotation, info){
    var name = annotation.name,
        to_call,
        to_extend;
@@ -439,62 +439,106 @@ var docs = (function(){
     });
    }
 
-   return _.merge(parsers_in_block, name, this.parsers[name].call(to_call));
+   // run the parser and store the result
+   to_extend = this.parsers[name].call(to_call);
+
+   // a) the current item being merged is already defined in the base
+   // b) define the target
+   if(!is.undefined(this.parsers_in_block[name])){
+    // a) convert the target to an array
+    // b) add item to the current target array
+    if(!is.array(this.parsers_in_block[name])){
+     this.parsers_in_block[name] = [this.parsers_in_block[name], to_extend];
+    }else{
+     this.parsers_in_block[name].push(to_extend);
+    }
+   }else{
+    this.parsers_in_block[name] = to_extend;
+   }
+   return this.parsers_in_block;
   };
 
-  // loop over each block
-  for(var a = 0, blocks_length = this.blocks.general.length; a < blocks_length; a++){
-   var block = this.blocks.general[a],
-       to_parse = block.comment.contents,
-       parsers_in_block = {},
-       _annotation = {};
+  // @description
+  // Used to parse an array of blocks and runs the parsers function and returns the result
+  // @arg {object, array} - The block/blocks you want to have parsed
+  // @returns {array} of parsed blocks
+  this.parse = function(blocks){
+   var parsed_blocks = [];
 
-   block.comment.contents = _.normalize(block.comment.contents);
-   block.code.contents = _.normalize(block.code.contents);
+   // if it's an object then convert it to an array.
+   blocks = is.object(blocks) ? [blocks] : is.array(blocks) ? blocks : [];
 
-   // loop over each line in the comment block
-   for(var i = 0, l = to_parse.length; i < l; i++){
-    var line = to_parse[i],
-        parser_prefix_index = line.indexOf(this.setting.parser_prefix);
+   // loop over each block
+   for(var a = 0, blocks_length = blocks.length; a < blocks_length; a++){
+    var block = blocks[a],
+        to_parse = block.comment.contents,
+        _annotation = {};
 
-    // a) there is an index of the parser prefix
-    if(parser_prefix_index >= 0){
-     var first_space = line.indexOf(" ", parser_prefix_index),
-         name_of_annotation = line.slice(parser_prefix_index + 1, first_space >= 0 ? first_space : line.length);
+    this.parsers_in_block = {};
 
-     // a) the name is one of the parser names
-     if(parser_keys.indexOf(name_of_annotation) >= 0){
-      // a) parse the current parser
-      if(!is.empty(_annotation)){
-       _annotation.end = i - 1;
-       this.parse(_annotation, block);
+    if(!is.undefined(block.comment) && !is.undefined(block.code)){
+     block.comment.contents = _.normalize(block.comment.contents);
+     block.code.contents = _.normalize(block.code.contents);
+    }
+
+    // loop over each line in the comment block
+    for(var i = 0, l = to_parse.length; i < l; i++){
+     var line = to_parse[i],
+         parser_prefix_index = line.indexOf(this.setting.parser_prefix);
+
+     // a) there is an index of the parser prefix
+     if(parser_prefix_index >= 0){
+      var first_space = line.indexOf(" ", parser_prefix_index),
+          name_of_annotation = line.slice(parser_prefix_index + 1, first_space >= 0 ? first_space : line.length);
+
+      // a) the name is one of the parser names
+      if(parser_keys.indexOf(name_of_annotation) >= 0){
+       // a) parse the current parser
+       if(!is.empty(_annotation)){
+        _annotation.end = i - 1;
+        this.merge(_annotation, block);
+       }
+
+       // redefines resets the current parser to be blank
+       _annotation = {
+        name: name_of_annotation, // sets the current parser name
+        line: line.slice(parser_prefix_index + 1 + name_of_annotation.length).trim(), // removes the current parser name and it's prefix from the first line
+        contents: [],
+        start: i, // sets the starting line of the parser
+        end: 0
+       };
       }
-
-      // redefines resets the current parser to be blank
-      _annotation = {
-       name: name_of_annotation, // sets the current parser name
-       line: line.slice(parser_prefix_index + 1 + name_of_annotation.length).trim(), // removes the current parser name and it's prefix from the first line
-       contents: [],
-       start: i, // sets the starting line of the parser
-       end: 0
-      };
      }
-    }
 
-    // a) adds the current line to the contents
-    if(!is.empty(_annotation)){
-     _annotation.contents.push(line);
-    }
+     // a) adds the current line to the contents
+     if(!is.empty(_annotation)){
+      _annotation.contents.push(line);
+     }
 
-    // a) is the last line in the comment block
-    if(i === l - 1){
-     _annotation.end = i;
-     this.parsed_blocks.push(this.parse(_annotation, block));
-    }
-   } // end block loop
-  } // end blocks loop
+     // a) is the last line in the comment block
+     if(i === l - 1){
+      _annotation.end = i;
+      parsed_blocks.push(this.merge(_annotation, block));
+     }
+    } // end block loop
+   } // end blocks loop
+   return parsed_blocks;
+  };
 
-  return this.parsed_blocks;
+  // parses the file and gets the results
+  var file_annotations = !is.empty(this.blocks.file) ? this.parse(this.blocks.file)[0] : false,
+      parsed_blocks = this.parse(this.blocks.general);
+
+  // a) loop over each parsed blocks and set the file annotations
+  if(!is.false(file_annotations)){
+   var _blocks = [];
+   for(var i = 0, l = parsed_blocks.length; i < l; i++){
+    _blocks.push(_.extend(_.extend({}, file_annotations), parsed_blocks[i]));
+   }
+   parsed_blocks = _blocks;
+  }
+
+  return parsed_blocks;
  };
 
  /// @description Takes the contents of a file and parses it
