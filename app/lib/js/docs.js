@@ -476,10 +476,8 @@ var docs = (function(){
 
     this.parsers_in_block = {};
 
-    if(!is.undefined(block.comment) && !is.undefined(block.code)){
-     block.comment.contents = _.normalize(block.comment.contents);
-     block.code.contents = _.normalize(block.code.contents);
-    }
+    block.comment.contents = _.normalize(block.comment.contents);
+    block.code.contents = _.normalize(block.code.contents);
 
     // loop over each line in the comment block
     for(var i = 0, l = to_parse.length; i < l; i++){
