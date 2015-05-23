@@ -193,9 +193,11 @@ var docs = (function(){
  /// Removes extra whitespace before all the lines that are passed
  /// Removes trailing blank lines
  /// Removes all whitespace at the end of each line
- /// @arg {array} content - The array of lines that will be normalized
+ /// @arg {array, string} content - The array of lines that will be normalized
  /// @returns {string} - The normalized string
  _.normalize = function(content){
+  content = is.string(content) ? [content] : content;
+
   // remove trailing blank lines
   for(var i = content.length; i-- && content[i].length === 0;){
    content.pop();
