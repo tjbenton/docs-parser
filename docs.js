@@ -1,10 +1,10 @@
 "use strict";
 
 ////
-//// @name docs.js
-//// @author Tyler Benton
-//// @version 0.0.1
-//// @descripton
+/// @name docs.js
+/// @author Tyler Benton
+/// @version 0.0.1
+/// @descripton
 /// This is used to parse any filetype that you want to and gets the documentation for it and returns an {} of the document data
 ////
 var docs = (function(){
@@ -178,15 +178,15 @@ var docs = (function(){
  };
 
  // the parsers object
- _.all_parsers = {};
+ _.all_annotations = {};
 
  /// @description
  /// This gets the parsers to use for the current filetype.
  /// Basically the file specific parsers get extended onto the default parsers
  /// @arg {string} filetype - the current filetype that is being parsed
  /// @returns {object} the settings to use
- _.parsers = function(filetype){
-  return !is.undefined(_.all_parsers[filetype]) ? _.extend(_.extend({}, _.all_parsers.default), _.all_parsers[filetype]) : _.all_parsers.default;
+ _.annotations = function(filetype){
+  return !is.undefined(_.all_annotations[filetype]) ? _.extend(_.extend({}, _.all_annotations.default), _.all_annotations[filetype]) : _.all_annotations.default;
  };
 
  /// @description
@@ -227,7 +227,7 @@ var docs = (function(){
  /// @description Used to define the parsers
  /// @arg {string} name - The name of the variable
  /// @arg {object} obj - The callback to be executed at parse time
- _.parser = function(name, obj){
+ _.annotation = function(name, obj){
   if(is.function(obj)){
    obj = {
     default: obj
@@ -238,8 +238,8 @@ var docs = (function(){
    var to_extend = {},
        result = {};
    to_extend[name] = obj[item];
-   result[item] = _.extend(_.all_parsers[item] || {}, to_extend);
-   _.extend(_.all_parsers, result);
+   result[item] = _.extend(_.all_annotations[item] || {}, to_extend);
+   _.extend(_.all_annotations, result);
   }
  };
 
@@ -409,7 +409,7 @@ var docs = (function(){
  /// @description Parses each block in blocks
  /// @returns {array}
  parse_blocks = function(){
-  var parser_keys = Object.getOwnPropertyNames(this.parsers);
+  var parser_keys = Object.getOwnPropertyNames(this.annotations);
 
   /// @description Used as a helper function because this action is performed in two spots
   /// @arg {object} annotation - information of the current parser block
@@ -430,7 +430,7 @@ var docs = (function(){
 
    // Merges the data together so it can be used to run all the parsers
    to_call = _.extend({
-              parser: annotation, // sets the parser block information to be in it's own namespace of `parser`
+              annotation: annotation, // sets the parser block information to be in it's own namespace of `parser`
 
               /// @description Allows you to add a parser from within a parser
               /// @arg {string} name - the name of the annotation you want to add
@@ -448,31 +448,31 @@ var docs = (function(){
              }, !is.undefined(info) ? info : {});
 
    // a) add the default parser function to the `annotation.parsers` object so it can be called in the file specific parser if needed
-   if(!is.undefined(_.all_parsers[info.file.type]) && !is.undefined(_.all_parsers[info.file.type][name])){
+   if(!is.undefined(_.all_annotations[info.file.type]) && !is.undefined(_.all_annotations[info.file.type][name])){
     _.extend(to_call, {
      default: function(){
-      return _.all_parsers.default[name].call(to_call);
+      return _.all_annotations.default[name].call(to_call);
      }
     });
    }
 
    // run the parser and store the result
-   to_extend = this.parsers[name].call(to_call);
+   to_extend = this.annotations[name].call(to_call);
 
    // a) the current item being merged is already defined in the base
    // b) define the target
-   if(!is.undefined(this.parsers_in_block[name])){
+   if(!is.undefined(this.annotations_in_block[name])){
     // a) convert the target to an array
     // b) add item to the current target array
-    if(!is.array(this.parsers_in_block[name])){
-     this.parsers_in_block[name] = [this.parsers_in_block[name], to_extend];
+    if(!is.array(this.annotations_in_block[name])){
+     this.annotations_in_block[name] = [this.annotations_in_block[name], to_extend];
     }else{
-     this.parsers_in_block[name].push(to_extend);
+     this.annotations_in_block[name].push(to_extend);
     }
    }else{
-    this.parsers_in_block[name] = to_extend;
+    this.annotations_in_block[name] = to_extend;
    }
-   return this.parsers_in_block;
+   return this.annotations_in_block;
   };
 
   // @description
@@ -491,7 +491,7 @@ var docs = (function(){
         to_parse = block.comment.contents,
         _annotation = {};
 
-    this.parsers_in_block = {};
+    this.annotations_in_block = {};
 
     block.comment.contents = _.normalize(block.comment.contents);
     block.code.contents = _.normalize(block.code.contents);
@@ -581,7 +581,7 @@ var docs = (function(){
         file = fs.readFileSync(path) + "", // the `""` converts the file from a buffer to a string
         parsed_blocks = parse_blocks.call({
          setting: setting,
-         parsers: _.parsers(filetype),
+         annotations: _.annotations(filetype),
          blocks: get_blocks.call({
           setting: setting,
           file: {
@@ -619,29 +619,29 @@ docs.setting("md", {
 
 
 // base parsers
-docs.parser("name", {
+docs.annotation("name", {
  default: function(){
-  return this.parser.line;
+  return this.annotation.line;
  },
  scss: function(){
   return this.default() + " scss version";
  }
 });
 
-docs.parser("description", function(){
- return this.parser.line || this.parser.contents;
+docs.annotation("description", function(){
+ return this.annotation.line || this.annotation.contents;
 });
 
-docs.parser("page", function(){
- return this.parser.line;
+docs.annotation("page", function(){
+ return this.annotation.line;
 });
 
-docs.parser("author", function(){
- return this.parser.line;
+docs.annotation("author", function(){
+ return this.annotation.line;
 });
 
-docs.parser("markup", function(){
- return this.parser.contents;
+docs.annotation("markup", function(){
+ return this.annotation.contents;
 });
 
 // Module exports
