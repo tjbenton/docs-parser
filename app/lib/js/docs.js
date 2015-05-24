@@ -418,7 +418,8 @@ var docs = (function(){
   this.merge = function(annotation, info){
    var name = annotation.name,
        to_call,
-       to_extend;
+       to_extend,
+       self = this;
 
    // removes the first line because it's the "line" of the annotation
    annotation.contents.shift();
