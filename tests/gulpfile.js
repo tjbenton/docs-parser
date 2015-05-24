@@ -5,7 +5,7 @@ var gulp = require("gulp"),
 
 // This is for the documentation
 gulp.task("docs", function(){
- docs.parse("lib/**/*.{scss,css}", function(documentation){
+ docs.parse("lib/**/*.*", function(documentation){
   console.log("");
   console.log("");
   console.log("");
@@ -15,3 +15,5 @@ gulp.task("docs", function(){
   console.log(JSON.stringify(documentation));
  });
 });
+
+gulp.task("default", ["docs"]);
