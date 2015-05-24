@@ -430,7 +430,21 @@ var docs = (function(){
 
    // Merges the data together so it can be used to run all the parsers
    to_call = _.extend({
-              parser: annotation // sets the parser block information to be in it's own namespace of `parser`
+              parser: annotation, // sets the parser block information to be in it's own namespace of `parser`
+
+              /// @description Allows you to add a parser from within a parser
+              /// @arg {string} name - the name of the annotation you want to add
+              /// @arg {string} str - information that is passed to the annotation
+              add: function(name, str){
+               str = str.split(/\n/);
+               return self.merge({
+                       name: name,
+                       line: _.normalize(str[0]),
+                       contents: str,
+                       start: null,
+                       end: null
+                      }, info);
+              }
              }, !is.undefined(info) ? info : {});
 
    // a) add the default parser function to the `annotation.parsers` object so it can be called in the file specific parser if needed
