@@ -139,7 +139,7 @@ docs.annotation("content", {
 });
 ```
 
-###### Adding an annotation within an annotation
+###### Adding an different annotation within an annotation
 ```js
 docs.annotation("arg", {
  default: function(){
