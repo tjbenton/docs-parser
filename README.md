@@ -21,33 +21,35 @@ Docs fixes all these issues by giving you the ability to generate documentation 
 There're 3 different settings that're avaiable to change on a per file basis. When you define out new settings for a specific filetype it will be merged with the default settings.
 
 #### Options
- - `file_comment`
+`file_comment`:
   - **Description:** File level comment block identifier
   - **Type:** Object
   - **Default:**
-   - `file_comment.start`
-     - **Description:** Start of a file level comment block
-     - **Default**: `"////"`
-   - `file_comment.line`
-     - **Description:** Start of each line in a file level comment block
-     - **Default**: `"///"`
-   - `file_comment.end`
-     - **Description:** Last line of a file level the comment block
-     - **Default**: `"////"`
- - `block_comment`
+    - `file_comment.start`
+      - **Description:** Start of a file level comment block
+      - **Default**: `"////"`
+    - `file_comment.line`
+      - **Description:** Start of each line in a file level comment block
+      - **Default**: `"///"`
+    - `file_comment.end`
+      - **Description:** Last line of a file level the comment block
+      - **Default**: `"////"`
+
+`block_comment`:
   - **Description:** block level comment block identifier
   - **Type:** Object
   - **Default:**
-   - `block_comment.start`
-    - **Description:** Start of a comment block
-    - **Default**: `""`
-   - `block_comment.line`
-    - **Description:** Start of each line in a comment block
-    - **Default**: `"///"`
-   - `block_comment.end`
-    - **Description:** Last line of a file level the comment block
-    - **Default**: `""`
- - `parser_prefix`
+    - `block_comment.start`
+      - **Description:** Start of a comment block
+      - **Default**: `""`
+    - `block_comment.line`
+      - **Description:** Start of each line in a comment block
+      - **Default**: `"///"`
+    - `block_comment.end`
+      - **Description:** Last line of a file level the comment block
+      - **Default**: `""`
+
+`parser_prefix`
   - **Description:** The prefix of the annotation(not recommended to change)
   - **Default:** `"@"`
 
@@ -81,25 +83,25 @@ docs.setting("css", {
 ##### Callback `this`:
 
 - `this.annotation`: Information about the annotation
- - `this.annotation.name`: Name of this annotation
- - `this.annotation.line`: The string that is on the same line as the declared annotation
- - `this.annotation.contents`: The content assosiated with the annotation
- - `this.annotation.start`: Start of the annotation
- - `this.annotation.end`: End of the annotation
+  - `this.annotation.name`: Name of this annotation
+  - `this.annotation.line`: The string that is on the same line as the declared annotation
+  - `this.annotation.contents`: The content assosiated with the annotation
+  - `this.annotation.start`: Start of the annotation
+  - `this.annotation.end`: End of the annotation
 - `this.comment`: Information about the current comment block
- - `this.comment.contents`: The content assosiated the comment block
- - `this.comment.start`: Start of the comment block
- - `this.comment.end`: End of the comment block
+  - `this.comment.contents`: The content assosiated the comment block
+  - `this.comment.start`: Start of the comment block
+  - `this.comment.end`: End of the comment block
 - `this.code:` Information about the code after the current comment block
- - `this.code.contents`: The code after the current comment block
- - `this.code.start`: Start of the code
- - `this.code.end`: End of the code
+  - `this.code.contents`: The code after the current comment block
+  - `this.code.start`: Start of the code
+  - `this.code.end`: End of the code
 - `this.file`: Information about the file the comment block is in
- - `this.file.contents`: The file contents
- - `this.file.path`: Path of the file
- - `this.file.type`: Type of the file
- - `this.file.start`: start of the file(aka `0`)
- - `this.file.end`: Total lines in the file
+  - `this.file.contents`: The file contents
+  - `this.file.path`: Path of the file
+  - `this.file.type`: Type of the file
+  - `this.file.start`: start of the file(aka `0`)
+  - `this.file.end`: Total lines in the file
 - `this.add`: Allows you to add other annotations based off of the information in the current annotation callback(see example below)
 - `this.default`: This allows you to call the default annotation callback if you specific a specific filetype callback for an annotation. **Note** This is only avaiable on specific filetype callbacks.
 
@@ -178,25 +180,25 @@ Returns an object
 
  - `data`: The data that is returned after the files have been parsed
  - `write`: A function to write the data out to a file
-  - `function(location, spacing){ ... }`
+   - `function(location, spacing){ ... }`
    - `location`:
-    - **Description:** The location to write the file to
-    - **Type:** String
+     - **Description:** The location to write the file to
+     - **Type:** String
    - `spacing`
-    - **Description:** The spacing you want the file to have.
-    - **Default:** 1
-    - **Type:** Number,`\t`,`\s`
+     - **Description:** The spacing you want the file to have.
+     - **Default:** 1
+     - **Type:** Number,`\t`,`\s`
  - `then`: Helper function to allow you to do something with the data after it's parsed before it's written to a file
   - `function(callback){ ... }`
    - `callback`
-    - **Description:** It's the callback function you want to run. `this` is applied to the callback`
-    - **Default:** 1
-    - **Type:** Function
+     - **Description:** It's the callback function you want to run. `this` is applied to the callback`
+     - **Default:** 1
+     - **Type:** Function
  - `documentize`: Auto documents the files(Hasn't been implemented)
   - `function(location){ ... }`
    - `location`:
-    - **Description:** The location to write the documentation to
-    - **Type:** String
+     - **Description:** The location to write the documentation to
+     - **Type:** String
 
 ###### Examples
 
