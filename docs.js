@@ -562,9 +562,8 @@ var docs = (function(){
 
  /// @description Takes the contents of a file and parses it
  /// @arg {string, array} files - file paths to parse
- /// @arg {function} callback - the callback to exicute after the files are parsed.
  /// @returns {object} - the data that was parsed
- _.parse = function(files, callback){
+ _.parse = function(files){
   var paths = [],
       json = {};
 
@@ -608,8 +607,43 @@ var docs = (function(){
     json[filetype].push.apply(json[filetype], parsed_blocks);
    }
 
-   // run the callback of parse
-   return is.function(callback) ? callback(json) : json;
+   return {
+
+    // @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
+    data: json,
+
+    /// @description Helper function to write out the data to a json file
+    /// @arg {string} location - The location to write the file too
+    /// @arg {number,\t,\s} spacing [1] - The spacing you want the file to have.
+    /// @returns {this}
+    write: function(location, spacing){
+     fs.writeFile(location, JSON.stringify(this.data, null, !is.undefined(spacing) ? spacing : 1), function(err){
+      if(err){
+       throw err;
+      }
+     });
+     return this;
+    },
+
+    /// @description
+    /// Helper function to allow you to do something with the data after
+    /// it's parsed before it's written to a file
+    /// @arg {function} callback
+    /// @returns {this}
+    then: function(callback){
+     if(is.function(callback)){
+      callback.call(this);
+     }
+     return this;
+    },
+
+    /// @todo {tylerb} - Add a way to documentize the files
+    /// This should be apart of it's own code base so it doesn't pollute this one.
+    /// @returns {this}
+    documentize: function(){
+     console.log("documentize");
+    }
+   };
   })(paths.reverse());
  };
 
@@ -635,7 +669,7 @@ docs.annotation("page", function(){
 });
 
 docs.annotation("author", function(){
- return this.annotation.line;
+ return this.annotation.line ? this.annotation.line + "\n" + this.annotation.contents : this.annotation.contents;
 });
 
 docs.annotation("markup", function(){
