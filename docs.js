@@ -95,9 +95,13 @@ var docs = (function(){
  var _ = {}, // the main object to return
      fs = require("fs"),
      glob = require("glob"),
-     marked = require("marked"),
      get_blocks,
      parse_blocks;
+
+ /// @description
+ /// Helper function to convert markdown text to html
+ /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
+ _.markdown = require("marked");
 
  /// @description
  /// Extend object `b` onto `a`
@@ -623,7 +627,7 @@ docs.annotation("name", {
 });
 
 docs.annotation("description", function(){
- return this.annotation.line || this.annotation.contents;
+ return docs.markdown(this.annotation.line || this.annotation.contents);
 });
 
 docs.annotation("page", function(){
