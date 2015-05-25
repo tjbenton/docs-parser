@@ -307,6 +307,12 @@ This type of comment can only occur **once** per file. Any annotations that are 
 ```
 
 
+# Todo
+ - Fix issue with `this.comment.start`, `this.comment.end`, `this.code.start`, `this.code.end` where sometimes it doesn't update the line number.
+ - Add the ability to add aliases
+   - Take into account the ability to specify alias and file types. For example being able to extend something onto the `name` but use the `scss` specific filetype callback.
+
+
 <!-- Document Generators -->
 [sass-doc]: https://github.com/SassDoc/sassdoc
 [js-doc]: https://github.com/jsdoc3/jsdoc
