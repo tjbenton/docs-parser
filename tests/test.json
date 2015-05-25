@@ -1,0 +1,32 @@
+{
+ "scss": [
+  {
+   "author": "Tyler Benton",
+   "page": "tests/scss-file",
+   "name": "moz-only scss version",
+   "description": "<p>This allows you to write specific styles for mozilla firefox only</p>\n",
+   "markup": "@include moz-only(){\n // removes the weird styling in firefox\n -moz-appearance: none;\n padding: {\n  top: nth-val(get($form-config, padding), 1) - .2em;\n  bottom: nth-val(get($form-config, padding), 3) - .2em;\n };\n text-indent: 0.01px;\n text-overflow: \"\";\n}"
+  },
+  {
+   "author": "Tyler Benton",
+   "page": "tests/all",
+   "name": "Test one scss version",
+   "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nQuasi omnis facilis vero architecto perferendis, debitis dignissimos tempore\ndolorem amet. Delectus, voluptatum, distinctio. Voluptas officiis\niste nostrum vel, culpa iure. Adipisci.</p>\n"
+  }
+ ],
+ "js": [],
+ "css": [
+  {
+   "author": "Tyler Benton",
+   "page": "test/css-file",
+   "name": "Base Styles",
+   "description": "<ol>\n<li>Set default font family to sans-serif.</li>\n<li>Prevent iOS text size adjust after orientation change, without disabling\nuser zoom.</li>\n</ol>\n"
+  },
+  {
+   "author": "Tyler Benton",
+   "page": "test/css-file",
+   "name": "Input",
+   "description": "<ol>\n<li>Address <code>appearance</code> set to <code>searchfield</code> in Safari 5 and Chrome.</li>\n<li>Address <code>box-sizing</code> set to <code>border-box</code> in Safari 5 and Chrome\n(include <code>-moz</code> to future-proof).</li>\n</ol>\n"
+  }
+ ]
+}
