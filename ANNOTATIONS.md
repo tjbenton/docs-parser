@@ -276,6 +276,7 @@ Autofilled     | -
 Modifier can be any selector, or pseudo selector.
 Description is optional. Hyphen before description is optional.
 Description is parsed as Markdown.*
+This parser should always be used in conjunction with `@markup`
 
 ###### Example
 ```scss
