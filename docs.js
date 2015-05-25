@@ -611,14 +611,7 @@ var docs = (function(){
  return _;
 })();
 
-// settings for markdown
-docs.setting("md", {
- file_comment: "###",
- block_comment: "##"
-});
-
-
-// base parsers
+// base annotations
 docs.annotation("name", {
  default: function(){
   return this.annotation.line;
