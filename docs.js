@@ -559,6 +559,7 @@ var docs = (function(){
  /// @description Takes the contents of a file and parses it
  /// @arg {string, array} files - file paths to parse
  /// @arg {function} callback - the callback to exicute after the files are parsed.
+ /// @returns {object} - the data that was parsed
  _.parse = function(files, callback){
   var paths = [],
       json = {};
@@ -604,7 +605,7 @@ var docs = (function(){
    }
 
    // run the callback of parse
-   callback(json);
+   return is.function(callback) ? callback(json) : json;
   })(paths.reverse());
  };
 
