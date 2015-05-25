@@ -148,8 +148,8 @@ var docs = (function(){
     line: "///"
    },
 
-   // the start of the parser id(this should probably never be changed)
-   parser_prefix: "@"
+   // the start of the annotation id(this should probably never be changed)
+   annotation_prefix: "@"
   },
   css: {
    file_comment: {
@@ -181,12 +181,12 @@ var docs = (function(){
   return _.extend(_.all_settings, to_extend);
  };
 
- // the parsers object
+ // the annotations object
  _.all_annotations = {};
 
  /// @description
- /// This gets the parsers to use for the current filetype.
- /// Basically the file specific parsers get extended onto the default parsers
+ /// This gets the annotations to use for the current filetype.
+ /// Basically the file specific annotations get extended onto the default annotations
  /// @arg {string} filetype - the current filetype that is being parsed
  /// @returns {object} the settings to use
  _.annotations = function(filetype){
@@ -228,7 +228,7 @@ var docs = (function(){
   return temp;
  };
 
- /// @description Used to define the parsers
+ /// @description Used to define the new annotations
  /// @arg {string} name - The name of the variable
  /// @arg {object} obj - The callback to be executed at parse time
  _.annotation = function(name, obj){
@@ -413,10 +413,10 @@ var docs = (function(){
  /// @description Parses each block in blocks
  /// @returns {array}
  parse_blocks = function(){
-  var parser_keys = Object.getOwnPropertyNames(this.annotations);
+  var annotation_keys = Object.getOwnPropertyNames(this.annotations);
 
   /// @description Used as a helper function because this action is performed in two spots
-  /// @arg {object} annotation - information of the current parser block
+  /// @arg {object} annotation - information of the current annotation block
   /// @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
   /// @returns {object}
   this.merge = function(annotation, info){
@@ -428,15 +428,15 @@ var docs = (function(){
    // removes the first line because it's the "line" of the annotation
    annotation.contents.shift();
 
-   // normalizes the current parser block contents
+   // normalizes the current annotation block contents
    annotation.contents = _.normalize(annotation.contents);
 
 
-   // Merges the data together so it can be used to run all the parsers
+   // Merges the data together so it can be used to run all the annotations
    to_call = _.extend({
-              annotation: annotation, // sets the parser block information to be in it's own namespace of `parser`
+              annotation: annotation, // sets the annotation block information to be in it's own namespace of `annotation`
 
-              /// @description Allows you to add a parser from within a parser
+              /// @description Allows you to add a different annotation from within a annotation
               /// @arg {string} name - the name of the annotation you want to add
               /// @arg {string} str - information that is passed to the annotation
               add: function(name, str){
@@ -451,7 +451,7 @@ var docs = (function(){
               }
              }, !is.undefined(info) ? info : {});
 
-   // a) add the default parser function to the `annotation.parsers` object so it can be called in the file specific parser if needed
+   // a) add the default annotation function to the object so it can be called in the file specific annotation functions if needed
    if(!is.undefined(_.all_annotations[info.file.type]) && !is.undefined(_.all_annotations[info.file.type][name])){
     _.extend(to_call, {
      default: function(){
@@ -460,7 +460,7 @@ var docs = (function(){
     });
    }
 
-   // run the parser and store the result
+   // run the annotation function and store the result
    to_extend = this.annotations[name].call(to_call);
 
    // a) the current item being merged is already defined in the base
@@ -480,7 +480,7 @@ var docs = (function(){
   };
 
   // @description
-  // Used to parse an array of blocks and runs the parsers function and returns the result
+  // Used to parse an array of blocks and runs the annotations function and returns the result
   // @arg {object, array} - The block/blocks you want to have parsed
   // @returns {array} of parsed blocks
   this.parse = function(blocks){
@@ -503,27 +503,27 @@ var docs = (function(){
     // loop over each line in the comment block
     for(var i = 0, l = to_parse.length; i < l; i++){
      var line = to_parse[i],
-         parser_prefix_index = line.indexOf(this.setting.parser_prefix);
+         annotation_prefix_index = line.indexOf(this.setting.annotation_prefix);
 
-     // a) there is an index of the parser prefix
-     if(parser_prefix_index >= 0){
-      var first_space = line.indexOf(" ", parser_prefix_index),
-          name_of_annotation = line.slice(parser_prefix_index + 1, first_space >= 0 ? first_space : line.length);
+     // a) there is an index of the annotation prefix
+     if(annotation_prefix_index >= 0){
+      var first_space = line.indexOf(" ", annotation_prefix_index),
+          name_of_annotation = line.slice(annotation_prefix_index + 1, first_space >= 0 ? first_space : line.length);
 
-      // a) the name is one of the parser names
-      if(parser_keys.indexOf(name_of_annotation) >= 0){
-       // a) parse the current parser
+      // a) the name is one of the annotation names
+      if(annotation_keys.indexOf(name_of_annotation) >= 0){
+       // a) parse the current annotation
        if(!is.empty(_annotation)){
         _annotation.end = i - 1;
         this.merge(_annotation, block);
        }
 
-       // redefines resets the current parser to be blank
+       // redefines resets the current annotation to be blank
        _annotation = {
-        name: name_of_annotation, // sets the current parser name
-        line: line.slice(parser_prefix_index + 1 + name_of_annotation.length).trim(), // removes the current parser name and it's prefix from the first line
+        name: name_of_annotation, // sets the current annotation name
+        line: line.slice(annotation_prefix_index + 1 + name_of_annotation.length).trim(), // removes the current annotation name and it's prefix from the first line
         contents: [],
-        start: i, // sets the starting line of the parser
+        start: i, // sets the starting line of the annotation
         end: 0
        };
       }

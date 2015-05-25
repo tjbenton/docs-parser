@@ -49,7 +49,7 @@ There're 3 different settings that're avaiable to change on a per file basis. Wh
       - **Description:** Last line of a file level the comment block
       - **Default**: `""`
 
-`parser_prefix`
+`annotation_prefix`
   - **Description:** The prefix of the annotation(not recommended to change)
   - **Default:** `"@"`
 
