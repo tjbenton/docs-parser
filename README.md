@@ -1,272 +1,157 @@
-# Project setup
+# Docs
 
-This sets up the structure of the project and it also has the build tools already pre defined.
+<br>
+[![Build Status][travis-image]][travis-url]
+[![License][license-image]][license-url]
 
+[![NPM][npm-image]][npm-url]
 
-The build tool that is being used is [gulp](http://gulpjs.com/). Basically it makes your life easier.
-
-# Getting Started
-
-#### Global dependencies
-If you don't have Node installed please see someone who has a clue. If you proceed to install node through their website, I might shank you.
-
-Install global dependencies: `npm i -g gulp`(npm install --global gulp)
-To check if it's installed: `npm list -g gulp`
-
-#### Install dependencies
-
-First make sure you're on the same file level as `package.json` aka the root of your project.
-
-Run the following to install the node packages, install the bower components, and combine all the bower packages into a combined.js file.
-
-```bash
-npm run setup
-```
-
-### Tada your done, and ready to start changing the world.
-
-**Note:** If you are updated your project you will want to run
-
-```bash
-npm run fresh-setup
-```
-
-# Writing SCSS
-
-## The Namespaces
-
-In no particular order, here are the individual namespaces and a brief description. We’ll look at each in more detail in a moment, but the following list should acquaint you with the kinds of thing we’re hoping to achieve.
-
- - `o-`: Signify that something is an Object, and that it may be used in any number of unrelated contexts to the one you can currently see it in. Making modifications to these types of class could potentially have knock-on effects in a lot of other unrelated places. Tread carefully.
- - `c-`: Signify that something is a Component. This is a concrete, implementation-specific piece of UI. All of the changes you make to its styles should be detectable in the context you’re currently looking at. Modifying these styles should be safe and have no side effects.
- - `u-`: Signify that this class is a Utility class. It has a very specific role (often providing only one declaration) and should not be bound onto or changed. It can be reused and is not tied to any specific piece of UI. You will probably recognise this namespace from libraries and methodologies like SUIT.
- - `t-`: Signify that a class is responsible for adding a Theme to a view. It lets us know that UI Components’ current cosmetic appearance may be due to the presence of a theme.
- - `s-`: Signify that a class creates a new styling context or Scope. Similar to a Theme, but not necessarily cosmetic, these should be used sparingly—they can be open to abuse and lead to poor CSS if not used wisely.
- - `is-`, `has-`: Signify that the piece of UI in question is currently styled a certain way because of a state or condition. This stateful namespace is gorgeous, and comes from SMACSS. It tells us that the DOM currently has a temporary, optional, or short-lived style applied to it due to a certain state being invoked.
- - `_`: Signify that this class is the worst of the worst—a hack! Sometimes, although incredibly rarely, we need to add a class in our markup in order to force something to work. If we do this, we need to let others know that this class is less than ideal, and hopefully temporary (i.e. do not bind onto this).
- - `js-`: Signify that this piece of the DOM has some behaviour acting upon it, and that JavaScript binds onto it to provide that behaviour. If you’re not a developer working with JavaScript, leave these well alone.
- - `qa-`: Signify that a QA or Test Engineering team is running an automated UI test which needs to find or bind onto these parts of the DOM. Like the JavaScript namespace, this basically just reserves hooks in the DOM for non-CSS purposes.
+Documentation chameleon, addapts to any language and will help you document all the things.
+Where there is development there is a need for documentation. There are several great libraries for all sorts of files, written by brilliant developers, libraries like [SassDoc](sass-doc), [JSDoc](js-doc), [JavaDoc](java-doc), [Jazzy](jazzy)
+[StyleDocco](styledocco), [KSS](kss), [Hologram](hologram), [DSS](dss). All of these libraries do a very good job for documenting their respective languages. However there are very few projects that only require 1 file type. Which means if you really want to document all you code you may have to use 3 or 4 of these documentation generators. Each of the generators have their own way of documenting and their annotations, and their own document site which just makes it harder to keep all your documentation in one spot.
+Docs fixes all these issues by giving you the ability to generate documentation for all your files. While giving you control over what annotations you want to use in each file type.
 
 
-# API
 
-## Compiling SCSS/CSS
+## Settings
+There're 3 different settings that're avaiable to change on a per file basis. When you define out new settings for a specific filetype it will be merged with the default settings.
 
-These are the gulp tasks available for all `*.{scss, sass}` files.
-
-The build process for the CSS files is pretty straight forward.
-
- 1. Compiles the scss to css
- 2. Combines all the media queries so you don't have 2 of the same media queries in the same file
- 3. Adds the nessissary prefixes(this allows you to focus on the code not the prefixes).
- 4. Outputs it to `lib/css/**/*.css`
- 5. Creates a minified version `lib/css/**/*.min.css`
-
-In the examples below I'm going to use `compass`, but you can use any one of these aliases to do the same thing `styles`, `sass`, `scss`.
-
-###### Options
-
-Arg                            | Description
--------------------------------|-------------------------
-`-w, --watch, watch`           | This will watch all the SCSS files for changes including subfolders.
-`-d, --folder [FOLDER_NAME]`   | This narrows the scope to a specific folder @remove
-`-f, --file [FILE_NAME]`       | This narrows the scope to a specific file @remove
-`-p, --path [PATH]`            | This narrows the scope to what you specified.
-`-l`, `--live`, `--production` | Strips out any debuging code, as well as source map references
-`--stats`                      | This will output stats about the file(s)
-
-###### Examples
-
-``` bash
-# Compiles all the files **/*.scss
-gulp styles
-
-# Watches all the files **/*.scss for changes
-gulp styles --watch
-gulp styles -w
-
-# compiles only the main file
-# if there isn't a file extention then ".{scss, sass}" is appended (doesn't apply to --path or -p)
-gulp styles --file main
-gulp styles --file main.scss
-gulp styles -f main.scss
-gulp styles -f main
-gulp styles --path main.scss
-gulp styles -p main.* # the star is to select all file types
-gulp styles -p main.{scss, sass} # this allows you to specify multiple files types
-
-# compiles all the files inside of pages (`pages/**/*.{scss, sass}`)
-gulp styles --folder pages
-gulp styles -d pages
-gulp styles --path pages/**/* # `**/*` includes all subfolders and files
-gulp styles -p pages/**/*
-
-
-# compiles search.scss inside of pages (`pages/search.scss`)
-gulp styles --folder pages --file search.scss
-gulp styles -d pages -f search.scss
-gulp styles --path pages/search.*
-gulp styles -p pages/search.scss
-
-# watch changes for all the files in pages
-gulp styles --watch --folder pages
-
-# watch changes to search.scss in pages
-gulp styles --watch --folder pages --file search.scss
-
-# watch changes to search.scss in pages
-gulp styles --watch --path pages/search.scss
-
-# compiles the css and removes sourcemap references
-gulp styles -l
-gulp styles --live
-gulp styles --production
-
-# this will compile the css and then give you some stats about it
-gulp styles --stats
-```
-
-Style stats
-
-
-## JS
-
-Our JS is setup very similar to how our SASS is. You can now include partials(aka any file that starts with `_`) into any main file(aka any file that **doesn't** start with a `_`). Sourcemaps for these files will be generated to make debuging easy.
-
-**Note:** There should never be `.min.js` files in `app/lib/js/`. The `.min.js` files are created and put in `dest/lib/js`
-
-### How to include js files.
-
-You can add an array of files, normal glob rules apply so you can add multiple files and you can add folders and their sub folders.
+#### Example
+Defining file specific settings.
 
 ```js
-//= include ["helpers/_clamp.js", "components/*.js"]
+// first param is the filetype you want to target, the second is the settings you want to add
+docs.setting("css", {
+ file_comment: {
+  start: "/***",
+  line: "*",
+  end: "***/"
+ },
+ block_comment: {
+  start: "/**",
+  line: "*",
+  end: "**/"
+ }
+});
+```
+
+#### Options
+ - `file_comment`
+   *Description:* File level comment block identifier
+   *Type:* Object
+   *Default:*
+    - `file_comment.start`
+      *Description:* Start of a file level comment block
+      *Default*: `"////"`
+    - `file_comment.line`
+      *Description:* Start of each line in a file level comment block
+      *Default*: `"///"`
+    - `file_comment.end`
+      *Description:* Last line of a file level the comment block
+      *Default*: `"////"`
+ - `block_comment`
+   *Description:* block level comment block identifier
+   *Type:* Object
+   *Default:*
+    - `block_comment.start`
+      *Description:* Start of a comment block
+      *Default*: `""`
+    - `block_comment.line`
+      *Description:* Start of each line in a comment block
+      *Default*: `"///"`
+    - `block_comment.end`
+      *Description:* Last line of a file level the comment block
+      *Default*: `""`
+ - `parser_prefix`
+   *Description:* The prefix of the annotation(not recommended to change)
+   *Default:* `"@"`
+
+
+
+
+## `docs.annotation(name, obj)`
+
+### Adding a annotation
+
+`docs.annotation` expects the name of the variable you're looking for and a callback function to manipulate the contents. Whatever is returned by that callback function is what is used in generate JSON for that comment block.
+
+##### Callback `this`:
+
+- `this.annotation`: Information about the annotation
+ - `this.annotation.name`: Name of this annotation
+ - `this.annotation.line`: The string that is on the same line as the declared annotation
+ - `this.annotation.contents`: The content assosiated with the annotation
+ - `this.annotation.start`: Start of the annotation
+ - `this.annotation.end`: End of the annotation
+- `this.comment`: Information about the current comment block
+ - `this.comment.contents`: The content assosiated the comment block
+ - `this.comment.start`: Start of the comment block
+ - `this.comment.end`: End of the comment block
+- `this.code:` Information about the code after the current comment block
+ - `this.code.contents`: The code after the current comment block
+ - `this.code.start`: Start of the code
+ - `this.code.end`: End of the code
+- `this.file`: Information about the file the comment block is in
+ - `this.file.contents`: The file contents
+ - `this.file.path`: Path of the file
+ - `this.file.type`: Type of the file
+ - `this.file.start`: start of the file(aka `0`)
+ - `this.file.end`: Total lines in the file
+- `this.add`: Allows you to add other annotations based off of the information in the current annotation callback(see example below)
+- this.default: This allows you to call the default annotation callback if you specific a specific filetype callback for an annotation. **Note** This is only avaiable on specific filetype callbacks.
+
+#### Annotation Examples:
+###### Defining a basic annotation with only a default callback function
+
+```js
+docs.annotation("name", function(){
+ return this.annotation.line;
+});
+```
+
+###### Overwriting an annotation for a specific filetype
+
+```js
+docs.annotation("name", {
+ default: function(){ // default callback for every other filetype
+  return this.annotation.line;
+ },
+ scss: function(){ // callback for `.scss` files only
+  return this.annotation.line + " scss specific";
+ }
+});
+```
+
+###### Writing a file specific annotation only
+
+```js
+// This will only be applied to `.scss` files
+docs.annotation("content", {
+ scss: function(){
+  return this.annotation.line || this.annotation.contents;
+ }
+});
 ```
 
 
-
-###### Options
-
-Arg                            | Description
--------------------------------|-------------------------
-`-w`, `--watch`                | This will watch all the JS files for changes including subfolders.
-`-l`, `--live`, `--production` | Strips out any debuging code, as well as source map references
-
-
-These are the gulp tasks available for `*.js` files
-
-###### Examples
-
-``` bash
-gulp js # updates/creates a minified version of the js file as well as adds source maps
-gulp js:clean # removes all js files from `dest/`
-gulp js:hint # this will make sure each js file is formated correctly in app.js
-
-gulp bower # this combines all of the bower js libs together (modernizer, jquery)
-gulp bower:clean # removes the `combined.js` file from
-```
+## Parse
 
 
 
-## Images
 
-###### Examples
+<!-- Document Generators -->
+[sass-doc]: https://github.com/SassDoc/sassdoc
+[js-doc]: https://github.com/jsdoc3/jsdoc
+[java-doc]: http://www.oracle.com/technetwork/java/javase/documentation/index-jsp-135444.html
+[jazzy]: https://github.com/realm/jazzy
+[styledocco]: https://github.com/jashkenas/docco
+[kss]: https://github.com/kneath/kss
+[hologram]: https://github.com/trulia/hologram
+[dss]: https://github.com/DSSWG/DSS
 
-``` bash
-gulp images # Optimize any image that is changed/added in `app/lib/images`, and copys images to `dest/lib/images/`
-
-gulp images:clean # removes all images from `dest/lib/images`
-```
-
-## HTML
-
-###### Examples
-
-``` bash
-gulp html # copys all html files over to `dest/lib/images`
-
-gulp html:clean # removes all html files from `dest/lib/images`
-```
-
-## Fonts
-
-###### Examples
-
-``` bash
-gulp fonts # copys all html files over to `dest/lib/images/fonts`
-
-gulp fonts:clean # removes all font files from `dest/lib/images/fonts`
-```
-
-## Clean
-
-Removes `./dest/` and `./dest.zip`
-
-###### Examples
-
-``` bash
-gulp clean
-```
-
-## Zip
-
-Creates a zip file of `dest/`
-
-###### Examples
-
-``` bash
-gulp zip
-```
-
-## Watch
-
-###### Options
-
-Arg                            | Description
--------------------------------|-------------------------
-`-w`, `--watch`                | This will watch for changes in all the files in `app/` and run the correct task for each filetype.
-`-s`, `--serve`                | This will start a local server pointing to `dest/`
-`-l`, `--live`, `--production` | This will remove all debug statements from the js, and remove all the css comments
-###### Examples
-
-``` bash
-gulp watch
-
-gulp watch -s
-gulp watch --serve
-
-gulp -l
-gulp --live
-gulp --production
-```
-
-
-## Default
-
-This will run `styles`, `js`, `images`, `fonts`, and `html`
-
-``` bash
-gulp
-```
-
-
-## Docs
-
-###### Options
-
-Arg                            | Description
--------------------------------|-------------------------
-`-w`, `--watch`                | This will watch for changes in all the files in `app/`, `docs/` and run the correct task for each filetype.
-`-s`, `--serve`                | This will start a local server pointing to `docs/`, and do the same as `--watch`
-
-```bash
-gulp docs
-
-gulp docs --serve
-```
-## Things to look into adding
- * page speed insights
- * scss-lint
- * ES6 to ES5 transpiler
-
-
+<!-- file -->
+[npm-url]: https://www.npmjs.com/package/cameleon
+[npm-image]: https://nodei.co/npm/cameleon.png?downloads=true
+[travis-url]: https://travis-ci.org/tjbenton/docs?branch=master
+[travis-image]: https://travis-ci.org/tjbenton/docs.svg?style=flat-square
+[license-url]: LICENSE.md
