@@ -127,6 +127,19 @@ docs.annotation("name", {
 });
 ```
 
+###### Using `this.default()`
+
+```js
+docs.annotation("name", {
+ default: function(){ // default callback for every other filetype
+  return this.annotation.line;
+ },
+ scss: function(){ // callback for `.scss` files only
+  return this.default() + " scss specific";
+ }
+});
+```
+
 ###### Writing a file specific annotation only
 
 ```js
