@@ -5,15 +5,17 @@ var gulp = require("gulp"),
 
 // This is for the documentation
 gulp.task("docs", function(){
- docs.parse("lib/**/*.*", function(documentation){
-  console.log("");
-  console.log("");
-  console.log("");
-  console.log("");
-  console.log("");
-  console.log("----------------------------------------------------------------");
-  console.log(JSON.stringify(documentation));
- });
+ docs
+  .parse("lib/**/*.*")
+  .then(function(){
+   console.log("");
+   console.log("");
+   console.log("");
+   console.log("");
+   console.log("-------------------------------------------------------------------");
+   console.log(this.data);
+  })
+  .write("test.json");
 });
 
 gulp.task("default", ["docs"]);
