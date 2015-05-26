@@ -213,7 +213,7 @@ Multiple types should be separated with pipes (,).
 
 ###### Example
 ```scss
-/// @type {bool, string}
+/// @type {bool}
 /// @type {bool, string}
 ```
 
@@ -259,8 +259,8 @@ Description is parsed as Markdown.*
 ```scss
 /// @require item
 /// @require {type} item
-/// @require {type} item - description
 /// @require {type} item description
+/// @require {type} item - description
 ```
 
 ### @state

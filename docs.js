@@ -651,30 +651,74 @@ var docs = (function(){
 })();
 
 // base annotations
-docs.annotation("name", {
- default: function(){
-  return this.annotation.line;
- },
- scss: function(){
-  return this.default() + " scss version";
- }
+docs.annotation("name", function(){
+ return this.annotation.line;
+});
+
+docs.annotation("page", function(){ // group
+ return this.annotation.line;
+});
+
+docs.annotation("author", function(){
+ return this.annotation.line;
 });
 
 docs.annotation("description", function(){
- return docs.markdown(this.annotation.line || this.annotation.contents);
-});
-
-docs.annotation("page", function(){
- return this.annotation.line;
+ return docs.markdown(this.annotation.line ? this.annotation.line + "\n" + this.annotation.contents : this.annotation.contents);
 });
 
 docs.annotation("author", function(){
  return this.annotation.line ? this.annotation.line + "\n" + this.annotation.contents : this.annotation.contents;
 });
 
+docs.annotation("note", function(){
+ // add regex for `{7} - A note`
+ return this.annotation.line;
+});
+
+docs.annotation("access", function(){
+ return this.annotation.line;
+});
+
+docs.annotation("returns", function(){ // return
+ return this.annotation.line;
+});
+
+docs.annotation("alias", function(){
+ return this.annotation.line;
+});
+
+docs.annotation("arg", function(){ // argument, param, parameter
+ // add regex for {type} name-of-variable [default value] - description
+ return this.annotation.line;
+});
+
+docs.annotation("type", function(){
+ // add regex for {bool, string}
+ return this.annotation.line;
+});
+
+docs.annotation("todo", function(){
+ // add regex for {5} [assignee-one, assignee-two] - Task to be done
+ return this.annotation.line;
+});
+
+docs.annotation("requires", function(){ // require
+ // add regex for {type} item - description
+ return this.annotation.line;
+});
+
+docs.annotation("state", function(){
+ // add regex for modifier - description
+ return this.annotation.line;
+});
+
 docs.annotation("markup", function(){
+ // add regex for {language} [settings] - description
  return this.annotation.contents;
 });
+
+
 
 // Module exports
 // a) export module
