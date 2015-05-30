@@ -94,7 +94,9 @@ var docs = (function(){
 
  var _ = {}, // the main object to return
      fs = require("fs"),
-     glob = require("glob"),
+     path = require("path"),
+     changed = require("./changed.js"),
+     Deferred = require("./deferred.js"),
      get_blocks,
      parse_blocks;
 
@@ -575,91 +577,92 @@ var docs = (function(){
   return parsed_blocks;
  };
 
+ // a small object to help with reading and writing the temp data.
+ var temp_data = {
+  get: function(){
+   var def = new Deferred();
+   fs.readFile(".tmp/data.json", function(err, data){
+    if(err){
+     throw err;
+    }
+    def.resolve(data);
+   });
+   return def.promise();
+  },
+  write: function(data){
+   fs.writeFile(".tmp/data.json", data, function(err){
+    if(err){
+     throw err;
+    }
+   });
+  }
+ };
+
  /// @description Takes the contents of a file and parses it
  /// @arg {string, array} files - file paths to parse
  /// @returns {object} - the data that was parsed
  _.parse = function(files){
-  var paths = [],
-      json = {};
+  var json = {},
+      def = new Deferred();
+  console.log(path);
 
-  // converts the string to an array so it can be looped over
-  if(is.string(files)){
-   files = [files];
-  }
-
-  // get the files paths using glob
-  for(var i = files.length; i--;){
-   paths.push.apply(paths, glob.sync(files[i]));
-  }
-
-  return (function(paths){
-   for(var current_file = 0, total_files = paths.length; current_file < total_files; current_file++){
-    var path = paths[current_file],
-        filetype = path.slice(path.lastIndexOf(".") + 1),
-        setting = _.settings(filetype),
-        file = fs.readFileSync(path) + "", // the `""` converts the file from a buffer to a string
-        parsed_blocks = parse_blocks.call({
-         setting: setting,
-         annotations: _.annotations(filetype),
-         blocks: get_blocks.call({
+  Deferred.when(changed(files))
+   .done(function(file_paths){
+    for(var i = 0, l = file_paths.length; i < l; i++){
+     var file_path = file_paths[i],
+         filetype = path.extname(file_path).replace(".", ""),
+         setting = _.settings(filetype),
+         file = fs.readFileSync(file_path) + "", // the `""` converts the file from a buffer to a string
+         parsed_blocks = parse_blocks.call({
           setting: setting,
-          file: {
-           contents: file,
-           path: path,
-           type: filetype,
-           start: 0,
-           end: file.split("\n").length - 1
-          }
-         })
-        });
+          annotations: _.annotations(filetype),
+          blocks: get_blocks.call({
+           setting: setting,
+           file: {
+            contents: file,
+            path: file_path,
+            type: filetype,
+            start: 0,
+            end: file.split("\n").length - 1
+           }
+          })
+         });
 
-    // a) if the current block is undefined in the json objected then create it
-    if(is.undefined(json[filetype])){
-     json[filetype] = [];
-    }
-
-    // merges the existing array with the new blocks arrays
-    json[filetype].push.apply(json[filetype], parsed_blocks);
-   }
-
-   return {
-
-    // @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
-    data: json,
-
-    /// @description Helper function to write out the data to a json file
-    /// @arg {string} location - The location to write the file too
-    /// @arg {number,\t,\s} spacing [1] - The spacing you want the file to have.
-    /// @returns {this}
-    write: function(location, spacing){
-     fs.writeFile(location, JSON.stringify(this.data, null, !is.undefined(spacing) ? spacing : 1), function(err){
-      if(err){
-       throw err;
-      }
-     });
-     return this;
-    },
-
-    /// @description
-    /// Helper function to allow you to do something with the data after
-    /// it's parsed before it's written to a file
-    /// @arg {function} callback
-    /// @returns {this}
-    then: function(callback){
-     if(is.function(callback)){
-      callback.call(this);
+     // a) if the current block is undefined in the json objected then create it
+     if(is.undefined(json[filetype])){
+      json[filetype] = [];
      }
-     return this;
-    },
 
-    /// @todo {tylerb} - Add a way to documentize the files
-    /// This should be apart of it's own code base so it doesn't pollute this one.
-    /// @returns {this}
-    documentize: function(){
-     console.log("documentize");
+     // merges the existing array with the new blocks arrays
+     json[filetype].push.apply(json[filetype], parsed_blocks);
     }
-   };
-  })(paths.reverse());
+
+    def.resolve({
+     // @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
+     data: json,
+
+     /// @description Helper function to write out the data to a json file
+     /// @arg {string} location - The location to write the file too
+     /// @arg {number,\t,\s} spacing [1] - The spacing you want the file to have.
+     /// @returns {this}
+     write: function(location, spacing){
+      fs.writeFile(location, JSON.stringify(this.data, null, !is.undefined(spacing) ? spacing : 1), function(err){
+       if(err){
+        throw err;
+       }
+      });
+      return this;
+     },
+
+     /// @todo {tylerb} - Add a way to documentize the files
+     /// This should be apart of it's own code base so it doesn't pollute this one.
+     /// @returns {this}
+     documentize: function(){
+      console.log("documentize");
+     }
+    });
+   });
+  return def.promise();
  };
 
  return _;
