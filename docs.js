@@ -563,7 +563,7 @@ var docs = (function(){
   var file_annotations = !is.empty(this.blocks.file) ? this.parse(this.blocks.file)[0] : false,
       parsed_blocks = this.parse(this.blocks.general);
 
-  // a) loop over each parsed blocks and set the file annotations
+  // a) loop over each parsed blocks and set the file level annotations
   if(!is.false(file_annotations)){
    var _blocks = [];
    for(var i = 0, l = parsed_blocks.length; i < l; i++){
