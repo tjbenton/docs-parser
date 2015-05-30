@@ -2,7 +2,7 @@
 var fs = require("fs"),
     path = require("path"),
     glob = require("glob"),
-    Deferred = require("deferred-js");
+    Deferred = require("./deferred.js");
 
 fs.mkdirp = function(dir, mode, callback){
  var _mode = parseInt("0777", 8); // Because `Octal literals are not allowed in strict mode.`
@@ -76,17 +76,6 @@ fs.fakeCopy = function(source, target, callback){
    callback && callback();
   });
  });
-};
-
-Deferred.when.all = function(deferreds){
- var deferred = new Deferred();
- Deferred.when.apply(null, deferreds)
-  .then(function(){
-   deferred.resolve(Array.prototype.slice.call(arguments));
-  }, function(){
-   deferred.fail(Array.prototype.slice.call(arguments));
-  });
- return deferred;
 };
 
 function changed(globs, settings, callback){
