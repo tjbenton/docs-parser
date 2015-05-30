@@ -134,7 +134,7 @@ var docs = (function(){
 
 
  // the settings object that holds the file specific settings as well as the base settings
- _.all_settings = {
+ _.file_specific_settings = {
   default: {
    // file level comment block identifier
    file_comment: {
@@ -169,16 +169,31 @@ var docs = (function(){
  /// @arg {string} filetype - the current filetype that is being parsed
  /// @returns {object} the settings to use
  _.settings = function(filetype){
-  return !is.undefined(_.all_settings[filetype]) ? _.extend(_.all_settings.default, _.all_settings[filetype]) : _.all_settings.default;
+  var defaults = {
+   // file level comment block identifier
+   file_comment: {
+    start: "////",
+    line: "///",
+    end: "////"
+   },
+
+   // block level comment block identifier
+   block_comment: {
+    line: "///"
+   },
+
+   // the start of the annotation id(this should probably never be changed)
+   annotation_prefix: "@"
+  };
+
+  return !is.undefined(_.file_specific_settings[filetype]) ? _.extend(defaults, _.file_specific_settings[filetype]) : defaults;
  };
 
  /// @description Allows you to specify settings for specific file types
  /// @arg {string} extention - the file extention you want to target
  /// @arg {object} obj - the settings you want to adjust for this file type
  _.setting = function(extention, obj){
-  var to_extend = {};
-  to_extend[extention] = obj;
-  return _.extend(_.all_settings, to_extend);
+  return _.extend(_.file_specific_settings, _.create_object(extention, obj));
  };
 
  // the annotations object
