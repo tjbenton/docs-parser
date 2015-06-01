@@ -403,7 +403,7 @@ var docs = (function(){
      // a) check for the end comment
      if(is_start_and_end && !is.false(comment_index.end)){
       in_comment = false;
-      block_info.comment.end = i;
+      block_info.comment.end = i; // sets the end line in the comment block
       i++; // skips end comment line
       line = lines[i]; // updates to be the next line
       comment_index.end = is.included(setting.block_comment.end); // updates the index
@@ -418,9 +418,12 @@ var docs = (function(){
       block_info.comment.contents.push(line);
      }
 
-     // b) check the next line for an instance of the a line comment
+     // a) check the next line for an instance of the a line comment
      if(!is_start_and_end && is.false(is.included(lines[i + 1], setting.block_comment.line))){
       in_comment = false;
+      block_info.comment.end = i; // sets the end line in the comment block
+      i++; // skips end comment line
+      line = lines[i]; // updates to be the next line
      }
 
      // a) The last line in the file is a commment
@@ -619,7 +622,7 @@ var docs = (function(){
 
   Deferred.when(changed(files))
    .done(function(file_paths){
-    file_paths = ["/Users/tylerbenton/ui-development/docs/tests/lib/scss/_test.scss"];
+    // file_paths = ["/Users/tylerbenton/ui-development/docs/tests/lib/scss/_test.scss"];
     for(var i = 0, l = file_paths.length; i < l; i++){
      var file_path = file_paths[i],
          filetype = path.extname(file_path).replace(".", "");
