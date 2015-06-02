@@ -78,11 +78,14 @@ fs.fake_copy = function(source, target, callback){
  });
 };
 
-function changed(globs, settings, callback){
+function paths(globs, changed){
+ // a) sets changed to be true by default
+ if(changed === undefined){
+  changed = true;
+ }
+
  var base = process.cwd() + "/",
-     settings = {
-      write_folder: ".tmp/"
-     },
+     write_folder = ".tmp/",
 
      // @name Files
      // @description
@@ -113,7 +116,7 @@ function changed(globs, settings, callback){
      check = function(file){
       var deferred = new Deferred(),
           source = base + file,
-          target = base + settings.write_folder + file;
+          target = base + write_folder + file;
 
       // gets the status of the source file
       fs.stat(source, function(err, source_stats){
@@ -146,14 +149,16 @@ function changed(globs, settings, callback){
      // @returns {array} - Array of changed files
      filter = function(files){
       var deferred = new Deferred(),
-          changed = [];
+          changed_paths = [];
 
       // loops over all the files and filters out the files that haven't changed
       for(var i = 0, l = files.length; i < l; i++){
        var file = files[i];
-       changed.push(check(file));
+       changed_paths.push(check(file));
+
+       // a) filters out the changed files
        if(i === l - 1){
-        Deferred.when.all(changed)
+        Deferred.when.all(changed_paths)
          .done(function(result){
           deferred.resolve(result.filter(function(obj){
            return obj;
@@ -168,9 +173,8 @@ function changed(globs, settings, callback){
 
  Deferred.when(paths(globs))
   .done(function(files){
-   return Deferred.when(filter(files))
+   return !changed ? result.resolve(files) : Deferred.when(filter(files))
            .done(function(filtered_files){
-            console.log("filtered files =", filtered_files);
             result.resolve(filtered_files);
            });
   });
@@ -182,16 +186,16 @@ function changed(globs, settings, callback){
 // Module exports
 // a) export module
 // b) define amd
-// c) add changed to the root
+// c) add to the root
 if(typeof exports !== "undefined"){
  if(typeof module !== "undefined" && module.exports){
-  exports = module.exports = changed;
+  exports = module.exports = paths;
  }
- exports.changed = changed;
+ exports.paths = paths;
 }else if(typeof define === "function" && define.amd){ // AMD definition
  define(function(require){
-  return changed;
+  return paths;
  });
 }else{
- root[ "changed" ] = changed;
+ root[ "paths" ] = paths;
 }
