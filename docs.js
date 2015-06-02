@@ -95,7 +95,7 @@ var docs = (function(){
  var _ = {}, // the main object to return
      fs = require("fs"),
      path = require("path"),
-     changed = require("./changed.js"),
+     paths = require("./paths.js"),
      Deferred = require("./deferred.js");
 
  /// @description
@@ -620,7 +620,7 @@ var docs = (function(){
       _data = temp_data.get(),
       def = new Deferred();
 
-  Deferred.when(changed(files))
+  Deferred.when(paths(files))
    .done(function(file_paths){
     // file_paths = ["/Users/tylerbenton/ui-development/docs/tests/lib/scss/_test.scss"];
     for(var i = 0, l = file_paths.length; i < l; i++){
