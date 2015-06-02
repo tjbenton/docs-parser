@@ -65,7 +65,7 @@ fs.copy = function(source, target, callback){
  };
 };
 
-fs.fakeCopy = function(source, target, callback){
+fs.fake_copy = function(source, target, callback){
  var cbCalled = false,
      source = path.parse(source),
      target = path.parse(target);
