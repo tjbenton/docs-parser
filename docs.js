@@ -606,7 +606,6 @@ var docs = (function(){
 
   Deferred.when(paths(files))
    .done(function(file_paths){
-    // file_paths = ["/Users/tylerbenton/ui-development/docs/tests/lib/scss/_test.scss"];
     for(var i = 0, l = file_paths.length; i < l; i++){
      var file_path = file_paths[i],
          filetype = path.extname(file_path).replace(".", "");
