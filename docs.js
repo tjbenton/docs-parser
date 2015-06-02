@@ -135,22 +135,6 @@ var docs = (function(){
 
  // the settings object that holds the file specific settings as well as the base settings
  _.file_specific_settings = {
-  default: {
-   // file level comment block identifier
-   file_comment: {
-    start: "////",
-    line: "///",
-    end: "////"
-   },
-
-   // block level comment block identifier
-   block_comment: {
-    line: "///"
-   },
-
-   // the start of the annotation id(this should probably never be changed)
-   annotation_prefix: "@"
-  },
   css: {
    file_comment: {
     start: "/***",
