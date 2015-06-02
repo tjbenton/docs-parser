@@ -602,13 +602,14 @@ var docs = (function(){
 
  /// @description Takes the contents of a file and parses it
  /// @arg {string, array} files - file paths to parse
+ /// @arg {boolean} changed [true] - If true it will only parse changed files
  /// @returns {object} - the data that was parsed
- _.parse = function(files){
+ _.parse = function(files, changed){
   var json = {},
       _data = temp_data.get(),
       def = new Deferred();
 
-  Deferred.when(paths(files))
+  Deferred.when(paths(files, changed))
    .done(function(file_paths){
     for(var i = 0, l = file_paths.length; i < l; i++){
      var file_path = file_paths[i],
