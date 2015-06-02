@@ -267,6 +267,10 @@ var docs = (function(){
   }
  };
 
+ /// @description
+ /// Parses a single file
+ /// @arg {string} - The path to the file you're wanting to parse
+ /// @returns {array} - Array of parsed blocks
  _.parse_file = function(file_path){
   var get_blocks,
       parse_blocks,
