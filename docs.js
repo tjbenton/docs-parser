@@ -572,7 +572,7 @@ var docs = (function(){
       }
 
       // a) is the last line in the comment block
-      if(i === l - 1){
+      if(i === l - 1 && !is.undefined(_annotation.start)){
        _annotation.end = i;
        parsed_blocks.push(this.merge(_annotation, block));
       }
