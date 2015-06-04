@@ -3,8 +3,7 @@
 ////
 /// @name docs.js
 /// @author Tyler Benton
-/// @version 0.0.1
-/// @descripton
+/// @description
 /// This is used to parse any filetype that you want to and gets the documentation for it and returns an {} of the document data
 ////
 var docs = (function(){
@@ -13,81 +12,81 @@ var docs = (function(){
  var is = {},
      toString = Object.prototype.toString; // cache to call later on
 
- //// @description is a given value function?
- //// @arg {*} value - The item to check
- //// @returns {boolean} - The result of the test
+ // @description is a given value function?
+ // @arg {*} value - The item to check
+ // @returns {boolean} - The result of the test
  is.function = function(value){ // fallback check is for IE
   return toString.call(value) === "[object Function]" || typeof value === "function";
  };
 
- //// @description is a given value Array?
- //// @arg {*} value - The item to check
- //// @returns {boolean} - The result of the test
+ // @description is a given value Array?
+ // @arg {*} value - The item to check
+ // @returns {boolean} - The result of the test
  is.array = Array.isArray || function(value){ // check native isArray first
   return toString.call(value) === "[object Array]";
  };
 
- /// @description is a given value Boolean?
- /// @arg {*} value - The item to check
- /// @returns {boolean} - The result of the test
+ // @description is a given value Boolean?
+ // @arg {*} value - The item to check
+ // @returns {boolean} - The result of the test
  is.boolean = function(value){
   return value === true || value === false || toString.call(value) === "[object Boolean]";
  };
 
- /// @description is a given value object?
- /// @arg {*} value - The item to check
- /// @returns {boolean} - The result of the test
+ // @description is a given value object?
+ // @arg {*} value - The item to check
+ // @returns {boolean} - The result of the test
  is.object = function(value){
   return toString.call(value) === "[object Object]";
  };
 
- /// @description is a given value empty? Objects, arrays, strings
- /// @arg {object, array, string} value - What you want to check to see if it's empty
- /// @returns {boolean} - determins if the item you passes was empty or not
+ // @description is a given value empty? Objects, arrays, strings
+ // @arg {object, array, string} value - What you want to check to see if it's empty
+ // @returns {boolean} - determins if the item you passes was empty or not
  is.empty = function(value){
   return is.object(value) ? Object.getOwnPropertyNames(value).length === 0 : is.array(value) ? value.length > 0 : value === "";
  };
 
- /// @description is a given value String?
- /// @arg {*} value - The item to check
- /// @returns {boolean} - The result of the test
+ // @description is a given value String?
+ // @arg {*} value - The item to check
+ // @returns {boolean} - The result of the test
  is.string = function(value){
   return toString.call(value) === "[object String]";
  };
 
- /// @description is a given value undefined?
- /// @arg {*} value - The item to check
- /// @returns {boolean}
+ // @description is a given value undefined?
+ // @arg {*} value - The item to check
+ // @returns {boolean}
  is.undefined = function(value){
   return value === void 0;
  };
 
- /// @description is a given string include parameter substring?
- /// @arg {string} str - string to match against
- /// @arg {string} substr - string to look for in `str`
- /// @returns {number, boolean}
+ // @description is a given string include parameter substring?
+ // @arg {string} str - string to match against
+ // @arg {string} substr - string to look for in `str`
+ // @returns {number, boolean}
  is.included = function(str, substr){
   var index = str.indexOf(substr);
   return !is.empty(str) && !is.empty(substr) ? index > -1 ? index : false : false;
  };
 
- /// @description is a given value false
- /// @arg {*} value - value to check if it is false
- /// @returns {boolean}
+ // @description is a given value false
+ // @arg {*} value - value to check if it is false
+ // @returns {boolean}
  is.false = function(value){
   return value === false;
  };
 
- /// @description is a given value truthy?
- /// @arg {*} value - the item you want to check and see if it's truthy
- /// @returns {boolean}
+ // @description is a given value truthy?
+ // @arg {*} value - the item you want to check and see if it's truthy
+ // @returns {boolean}
  is.truthy = function(value){
   return value !== null && value !== undefined && value !== false && !(value !== value) && value !== "" && value !== 0;
  };
 
- /// @description is given value falsy?
- /// @arg {*} value - the item you want to check and see if it's falsy
- /// @returns {boolean}
+ // @description is given value falsy?
+ // @arg {*} value - the item you want to check and see if it's falsy
+ // @returns {boolean}
  is.falsy = function(value){
   return !is.truthy(value);
  };
@@ -98,17 +97,19 @@ var docs = (function(){
      paths = require("./paths.js"),
      Deferred = require("./deferred.js");
 
+ /// @name markdown
  /// @description
  /// Helper function to convert markdown text to html
  /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
  _.markdown = require("marked");
 
+ /// @name extend
  /// @description
  /// Extend object `b` onto `a`
  /// http://jsperf.com/deep-extend-comparison
- /// @arg {Object} a Source object.
- /// @arg {Object} b Object to extend with.
- /// @returns {Object} a Extended object.
+ /// @arg {object} a - Source object.
+ /// @arg {object} b - Object to extend with.
+ /// @returns {object} The extended object.
  _.extend = function(a, b){
   // Don't touch 'null' or 'undefined' objects.
   if(!a || !b){
@@ -149,6 +150,7 @@ var docs = (function(){
   }
  };
 
+ /// @name settings
  /// @description Merges the default settings with the file specific settings
  /// @arg {string} filetype - the current filetype that is being parsed
  /// @returns {object} the settings to use
@@ -173,6 +175,7 @@ var docs = (function(){
   return !is.undefined(_.file_specific_settings[filetype]) ? _.extend(defaults, _.file_specific_settings[filetype]) : defaults;
  };
 
+ /// @name setting
  /// @description Allows you to specify settings for specific file types
  /// @arg {string} extention - the file extention you want to target
  /// @arg {object} obj - the settings you want to adjust for this file type
@@ -183,6 +186,7 @@ var docs = (function(){
  // the annotations object
  _.all_annotations = {};
 
+ /// @name annotations
  /// @description
  /// This gets the annotations to use for the current filetype.
  /// Basically the file specific annotations get extended onto the default annotations
@@ -192,6 +196,7 @@ var docs = (function(){
   return !is.undefined(_.all_annotations[filetype]) ? _.extend(_.extend({}, _.all_annotations.default), _.all_annotations[filetype]) : _.all_annotations.default;
  };
 
+ /// @name normalize
  /// @description
  /// Removes extra whitespace before all the lines that are passed
  /// Removes trailing blank lines
@@ -217,6 +222,7 @@ var docs = (function(){
   }).join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
  };
 
+ /// @name create_object
  /// @description
  /// Used to create a temp object with a specific key name
  /// @arg {string} key - name that you want the key to be
@@ -227,6 +233,7 @@ var docs = (function(){
   return temp;
  };
 
+ /// @name annotation
  /// @description Used to define the new annotations
  /// @arg {string} name - The name of the variable
  /// @arg {object} obj - The callback to be executed at parse time
@@ -251,9 +258,10 @@ var docs = (function(){
   get: function(){
    var def = new Deferred();
    fs.readFile(".tmp/data.json", function(err, data){
-    // if(err){
-    //  throw err;
-    // }
+    if(err){
+     // throw err;
+     def.resolve({});
+    }
     def.resolve(data);
    });
    return def.promise();
@@ -267,6 +275,7 @@ var docs = (function(){
   }
  };
 
+ /// @name parse_file
  /// @description
  /// Parses a single file
  /// @arg {string} - The path to the file you're wanting to parse
@@ -288,9 +297,9 @@ var docs = (function(){
        }
       };
 
-  /// @description Parses the file and returns the comment blocks in an array
-  /// @arg {string}
-  /// @returns {array} of the comment blocks
+  // @description Parses the file and returns the comment blocks in an array
+  // @arg {string}
+  // @returns {array} of the comment blocks
   get_blocks = function(){
    function new_block(i){
     return _.extend({
@@ -448,21 +457,20 @@ var docs = (function(){
    };
   };
 
-  /// @description Parses each block in blocks
-  /// @returns {array}
+  // @description Parses each block in blocks
+  // @returns {array}
   parse_blocks = function(){
    var annotation_keys = Object.getOwnPropertyNames(annotations);
 
-   /// @description Used as a helper function because this action is performed in two spots
-   /// @arg {object} annotation - information of the current annotation block
-   /// @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
-   /// @returns {object}
+   // @description Used as a helper function because this action is performed in two spots
+   // @arg {object} annotation - information of the current annotation block
+   // @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
+   // @returns {object}
    this.merge = function(annotation, info){
     var name = annotation.name,
         to_call,
         to_extend,
         self = this;
-
     // removes the first line because it's the "line" of the annotation
     annotation.contents.shift();
 
@@ -474,6 +482,8 @@ var docs = (function(){
     to_call = _.extend({
                annotation: annotation, // sets the annotation block information to be in it's own namespace of `annotation`
 
+               /// @name this.add
+               /// @page annotation
                /// @description Allows you to add a different annotation from within a annotation
                /// @arg {string} name - the name of the annotation you want to add
                /// @arg {string} str - information that is passed to the annotation
@@ -572,7 +582,7 @@ var docs = (function(){
       }
 
       // a) is the last line in the comment block
-      if(i === l - 1 && !is.undefined(_annotation.start)){
+      if(i === l - 1 && !is.empty(_annotation)){
        _annotation.end = i;
        parsed_blocks.push(this.merge(_annotation, block));
       }
@@ -600,6 +610,7 @@ var docs = (function(){
   return parse_blocks.call(get_blocks());
  };
 
+ /// @name parse
  /// @description Takes the contents of a file and parses it
  /// @arg {string, array} files - file paths to parse
  /// @arg {boolean} changed [true] - If true it will only parse changed files
@@ -608,12 +619,13 @@ var docs = (function(){
   var json = {},
       _data = temp_data.get(),
       def = new Deferred();
-
+  console.log(_data);
   Deferred.when(paths(files, changed))
    .done(function(file_paths){
     for(var i = 0, l = file_paths.length; i < l; i++){
      var file_path = file_paths[i],
-         filetype = path.extname(file_path).replace(".", "");
+         filetype = path.extname(file_path).replace(".", ""),
+         parsed_data = _.parse_file(file_path);
 
      // a) if the current block is undefined in the json objected then create it
      if(is.undefined(json[filetype])){
@@ -621,13 +633,32 @@ var docs = (function(){
      }
 
      // merges the existing array with the new blocks arrays
-     json[filetype].push.apply(json[filetype], _.parse_file(file_path));
+     json[filetype].concat(parsed_data);
+
+
+     // temp data stuff ------------------------------------------------------------
+
+     // a) if the current block is undefined in the json objected then create it
+     if(is.undefined(_data[filetype])){
+      _data[filetype] = {};
+     }
+
+     // a) creates array for the filepath
+     if(is.undefined(_data[filetype][file_path])){
+      _data[filetype][file_path] = [];
+     }
+
+     // merges the existing array with the new blocks arrays
+     _data[filetype][file_path].push.apply(_data[filetype][file_path], parsed_data);
     }
 
+    console.log(JSON.stringify(_data, null, 1));
     def.resolve({
-     // @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
+     /// @name parse().data
+     /// @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
      data: json,
 
+     /// @name parse().write
      /// @description Helper function to write out the data to a json file
      /// @arg {string} location - The location to write the file too
      /// @arg {number,\t,\s} spacing [1] - The spacing you want the file to have.
@@ -641,9 +672,9 @@ var docs = (function(){
       return this;
      },
 
-     /// @todo {tylerb} - Add a way to documentize the files
-     /// This should be apart of it's own code base so it doesn't pollute this one.
-     /// @returns {this}
+     // @todo {tylerb} - Add a way to documentize the files
+     // This should be apart of it's own code base so it doesn't pollute this one.
+     // @returns {this}
      documentize: function(){
       console.log("documentize");
      }
@@ -656,68 +687,107 @@ var docs = (function(){
 })();
 
 // base annotations
+
+/// @name name
+/// @page annotations
+/// @description Name of the documented item
 docs.annotation("name", function(){
  return this.annotation.line;
 });
 
+/// @name page
+/// @page annotations
+/// @description The page you want the documented item to be on
 docs.annotation("page", function(){ // group
  return this.annotation.line;
 });
 
+/// @name author
+/// @page annotations
+/// @description A note about the documented item
 docs.annotation("author", function(){
- return this.annotation.line;
+ return this.annotation.line || this.annotation.contents;
 });
 
+/// @name description
+/// @page annotations
+/// @description Description of the documented item
 docs.annotation("description", function(){
  return docs.markdown(this.annotation.line ? this.annotation.line + "\n" + this.annotation.contents : this.annotation.contents);
 });
 
-docs.annotation("author", function(){
- return this.annotation.line ? this.annotation.line + "\n" + this.annotation.contents : this.annotation.contents;
-});
-
+/// @name note
+/// @page annotations
+/// @description A note about the documented item
 docs.annotation("note", function(){
  // add regex for `{7} - A note`
  return this.annotation.line;
 });
 
+/// @name access
+/// @page annotations
+/// @description Access of the documented item
 docs.annotation("access", function(){
  return this.annotation.line;
 });
 
-docs.annotation("returns", function(){ // return
- return this.annotation.line;
-});
-
+/// @name alias
+/// @page annotations
+/// @description Whether the documented item is an alias of another item
 docs.annotation("alias", function(){
  return this.annotation.line;
 });
 
+/// @name returns
+/// @page annotations
+/// @description Return from the documented function
+docs.annotation("returns", function(){ // return
+ return this.annotation.line;
+});
+
+/// @name arg
+/// @page annotations
+/// @description Parameters from the documented function/mixin
 docs.annotation("arg", function(){ // argument, param, parameter
  // add regex for {type} name-of-variable [default value] - description
  return this.annotation.line;
 });
 
+/// @name type
+/// @page annotations
+/// @description Describes the type of a variable
 docs.annotation("type", function(){
  // add regex for {bool, string}
  return this.annotation.line;
 });
 
+/// @name todo
+/// @page annotations
+/// @description Things to do related to the documented item
 docs.annotation("todo", function(){
  // add regex for {5} [assignee-one, assignee-two] - Task to be done
  return this.annotation.line;
 });
 
+/// @name requires
+/// @page annotations
+/// @description Requirements from the documented item
 docs.annotation("requires", function(){ // require
  // add regex for {type} item - description
  return this.annotation.line;
 });
 
+/// @name state
+/// @page annotations
+/// @description A state of a the documented item
 docs.annotation("state", function(){
  // add regex for modifier - description
  return this.annotation.line;
 });
 
+/// @name markup
+/// @page annotations
+/// @description Code for the documented item
 docs.annotation("markup", function(){
  // add regex for {language} [settings] - description
  return this.annotation.contents;
