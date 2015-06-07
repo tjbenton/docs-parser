@@ -1,69 +1,72 @@
 {
- "name": "docs",
- "description": "Documentation chameleon, addapts to any language and will help you document all the things.",
- "author": {
-  "name": "Tyler Benton",
-  "email": "tjbenton21@gmail.com"
- },
- "version": "0.1.0",
- "license": {
-  "type": "MIT",
-  "url": "http://opensource.org/licenses/MIT"
- },
- "repository": {
-  "type": "git",
-  "url": "https://github.com/tjbenton/docs"
- },
- "bugs": {
-  "url": "https://github.com/tjbenton/docs/issues"
- },
- "dependencies": {
-  "deferred-js": "^1.0.2",
-  "glob": "^5.0.6",
-  "marked": "^0.3.3"
- },
- "main": "./docs.js",
- "keywords": [
-  "css",
-  "sass",
-  "scss",
-  "less",
-  "stylus",
-  "crush",
-  "preprocessor",
-  "js",
-  "javascript",
-  "coffescript",
-  "sql",
-  "nosql",
-  "perl",
-  "java",
-  "coldfusion",
-  "xml",
-  "cfm",
-  "cfc",
-  "cfml",
-  "php",
-  "c",
-  "c#",
-  "c++",
-  "objective-c",
-  "swift",
-  "python",
-  "ruby",
-  "rb",
-  "shell",
-  "bash",
-  "code",
-  "doc",
-  "docs",
-  "documentation",
-  "parse",
-  "parser",
-  "annotation",
-  "comments"
- ],
- "engines": {
-  "node": ">=0.10.0"
- }
+  "name": "docs",
+  "description": "Documentation chameleon, addapts to any language and will help you document all the things.",
+  "author": {
+    "name": "Tyler Benton",
+    "email": "tjbenton21@gmail.com"
+  },
+  "version": "0.1.0",
+  "license": {
+    "type": "MIT",
+    "url": "http://opensource.org/licenses/MIT"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tjbenton/docs"
+  },
+  "bugs": {
+    "url": "https://github.com/tjbenton/docs/issues"
+  },
+  "dependencies": {
+    "deferred-js": "^1.0.2",
+    "glob": "^5.0.6",
+    "marked": "^0.3.3"
+  },
+  "main": "./docs.js",
+  "keywords": [
+    "css",
+    "sass",
+    "scss",
+    "less",
+    "stylus",
+    "crush",
+    "preprocessor",
+    "js",
+    "javascript",
+    "coffescript",
+    "sql",
+    "nosql",
+    "perl",
+    "java",
+    "coldfusion",
+    "xml",
+    "cfm",
+    "cfc",
+    "cfml",
+    "php",
+    "c",
+    "c#",
+    "c++",
+    "objective-c",
+    "swift",
+    "python",
+    "ruby",
+    "rb",
+    "shell",
+    "bash",
+    "code",
+    "doc",
+    "docs",
+    "documentation",
+    "parse",
+    "parser",
+    "annotation",
+    "comments"
+  ],
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "devDependencies": {
+    "babel": "^5.5.4"
+  }
 }

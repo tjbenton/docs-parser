@@ -2,7 +2,7 @@
 var fs = require("fs"),
     path = require("path"),
     glob = require("glob"),
-    Deferred = require("./deferred.js");
+    Deferred = require("./assets/deferred.js");
 
 fs.mkdirp = function(dir, mode, callback){
  var _mode = parseInt("0777", 8); // Because `Octal literals are not allowed in strict mode.`

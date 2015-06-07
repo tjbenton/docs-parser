@@ -7,15 +7,15 @@ var gulp = require("gulp"),
 gulp.task("docs", function(){
  docs
   .parse("lib/**/*.*")
-  .then(function(){
+  .then(function(data){
    console.log("");
    console.log("");
    console.log("");
    console.log("");
    console.log("-------------------------------------------------------------------");
-   console.log(this.data);
+   console.log(data);
   })
-  .write("test.json");
+  // .write("test.json");
 });
 
 gulp.task("default", ["docs"]);
