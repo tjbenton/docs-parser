@@ -1,5 +1,10 @@
 "use strict";
 
+import {is} from "./src/utils";
+import marked from "marked";
+
+
+
 ////
 /// @name docs.js
 /// @author Tyler Benton
@@ -7,89 +12,6 @@
 /// This is used to parse any filetype that you want to and gets the documentation for it and returns an {} of the document data
 ////
 var docs = (function(){
- // A few helper functions for checking common things.
- // It's not located under the main object (_) because these are just helper functions.
- var is = {},
-     toString = Object.prototype.toString; // cache to call later on
-
- // @description is a given value function?
- // @arg {*} value - The item to check
- // @returns {boolean} - The result of the test
- is.function = function(value){ // fallback check is for IE
-  return toString.call(value) === "[object Function]" || typeof value === "function";
- };
-
- // @description is a given value Array?
- // @arg {*} value - The item to check
- // @returns {boolean} - The result of the test
- is.array = Array.isArray || function(value){ // check native isArray first
-  return toString.call(value) === "[object Array]";
- };
-
- // @description is a given value Boolean?
- // @arg {*} value - The item to check
- // @returns {boolean} - The result of the test
- is.boolean = function(value){
-  return value === true || value === false || toString.call(value) === "[object Boolean]";
- };
-
- // @description is a given value object?
- // @arg {*} value - The item to check
- // @returns {boolean} - The result of the test
- is.object = function(value){
-  return toString.call(value) === "[object Object]";
- };
-
- // @description is a given value empty? Objects, arrays, strings
- // @arg {object, array, string} value - What you want to check to see if it's empty
- // @returns {boolean} - determins if the item you passes was empty or not
- is.empty = function(value){
-  return is.object(value) ? Object.getOwnPropertyNames(value).length === 0 : is.array(value) ? value.length > 0 : value === "";
- };
-
- // @description is a given value String?
- // @arg {*} value - The item to check
- // @returns {boolean} - The result of the test
- is.string = function(value){
-  return toString.call(value) === "[object String]";
- };
-
- // @description is a given value undefined?
- // @arg {*} value - The item to check
- // @returns {boolean}
- is.undefined = function(value){
-  return value === void 0;
- };
-
- // @description is a given string include parameter substring?
- // @arg {string} str - string to match against
- // @arg {string} substr - string to look for in `str`
- // @returns {number, boolean}
- is.included = function(str, substr){
-  var index = str.indexOf(substr);
-  return !is.empty(str) && !is.empty(substr) ? index > -1 ? index : false : false;
- };
-
- // @description is a given value false
- // @arg {*} value - value to check if it is false
- // @returns {boolean}
- is.false = function(value){
-  return value === false;
- };
-
- // @description is a given value truthy?
- // @arg {*} value - the item you want to check and see if it's truthy
- // @returns {boolean}
- is.truthy = function(value){
-  return value !== null && value !== undefined && value !== false && !(value !== value) && value !== "" && value !== 0;
- };
-
- // @description is given value falsy?
- // @arg {*} value - the item you want to check and see if it's falsy
- // @returns {boolean}
- is.falsy = function(value){
-  return !is.truthy(value);
- };
 
  var _ = {}, // the main object to return
      fs = require("fs"),
@@ -101,7 +23,7 @@ var docs = (function(){
  /// @description
  /// Helper function to convert markdown text to html
  /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
- _.markdown = require("marked");
+ _.markdown = marked;
 
  /// @name extend
  /// @description
@@ -689,6 +611,9 @@ var docs = (function(){
  return _;
 })();
 
+
+export default docs;
+
 // base annotations
 
 /// @name name
@@ -816,22 +741,3 @@ docs.annotation("markup", function(){
  // add regex for `{language} [settings] - description`
  return this.annotation.contents;
 });
-
-
-
-// Module exports
-// a) export module
-// b) define amd
-// c) add docs to the root
-if(typeof exports !== "undefined"){
- if(typeof module !== "undefined" && module.exports){
-  exports = module.exports = docs;
- }
- exports.docs = docs;
-}else if(typeof define === "function" && define.amd){ // AMD definition
- define(function(require){
-  return docs;
- });
-}else{
- root[ "docs" ] = docs;
-}
