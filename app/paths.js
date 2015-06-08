@@ -68,13 +68,11 @@ fs.fake_copy = (source, target, callback) => {
 
  // creates the directory path if it doesn't exist
  fs.mkdirp(path.resolve(source.dir, path.relative(source.dir, target.dir)), () => {
-  fs.writeFile(path.join(target.dir, target.base), "", () => {
-   callback && callback();
-  });
+  fs.writeFile(path.join(target.dir, target.base), "", () => callback && callback());
  });
 };
 
-function paths(globs, changed){
+export default function paths(globs, changed){
  // a) sets changed to be true by default
  if(changed === undefined){
   changed = true;
@@ -168,21 +166,3 @@ function paths(globs, changed){
 
  return result.promise();
 };
-
-
-// Module exports
-// a) export module
-// b) define amd
-// c) add to the root
-if(typeof exports !== "undefined"){
- if(typeof module !== "undefined" && module.exports){
-  exports = module.exports = paths;
- }
- exports.paths = paths;
-}else if(typeof define === "function" && define.amd){ // AMD definition
- define(function(require){
-  return paths;
- });
-}else{
- root[ "paths" ] = paths;
-}
