@@ -22,7 +22,6 @@
     "glob": "^5.0.6",
     "marked": "^0.3.3"
   },
-  "main": "./docs.js",
   "keywords": [
     "css",
     "sass",
@@ -68,5 +67,8 @@
   },
   "devDependencies": {
     "babel": "^5.5.4"
+  },
+  "scripts": {
+   "postinstall": "make postinstall"
   }
 }

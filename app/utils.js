@@ -1,25 +1,42 @@
+export function defer(){
+  let resolve, reject;
+
+  let promise = new Promise((resolve_, reject_) => {
+    resolve = resolve_;
+    reject = reject_;
+  });
+
+  return {
+    promise,
+    resolve,
+    reject,
+  };
+}
+
+
+
 const toString = arg => Object.prototype.toString.call(arg);
 
 export const is = {
   // @description is a given value function?
   // @arg {*} value - The item to check
   // @returns {boolean} - The result of the test
-  function: arg => toString.call(arg) === "[object Function]" || typeof arg === "function",
+  function: arg => toString(arg) === "[object Function]" || typeof arg === "function",
 
   // @description is a given value Array?
   // @arg {*} value - The item to check
   // @returns {boolean} - The result of the test
-  array: arg => toString.call(arg) === "[object Array]",
+  array: arg => toString(arg) === "[object Array]",
 
   // @description is a given value Boolean?
   // @arg {*} value - The item to check
   // @returns {boolean} - The result of the test
-  boolean: arg => arg === true || arg === false || toString.call(arg) === "[object Boolean]",
+  boolean: arg => arg === true || arg === false || toString(arg) === "[object Boolean]",
 
   // @description is a given value object?
   // @arg {*} value - The item to check
   // @returns {boolean} - The result of the test
-  object: arg => toString.call(arg) === "[object Object]",
+  object: arg => toString(arg) === "[object Object]",
 
   // @description is a given value empty? Objects, arrays, strings
   // @arg {object, array, string} value - What you want to check to see if it's empty
@@ -29,7 +46,7 @@ export const is = {
   // @description is a given value String?
   // @arg {*} value - The item to check
   // @returns {boolean} - The result of the test
-  string: arg => toString.call(arg) === "[object String]",
+  string: arg => toString(arg) === "[object String]",
 
   // @description is a given value undefined?
   // @arg {*} value - The item to check
