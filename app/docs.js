@@ -1,9 +1,11 @@
 "use strict";
 
-import {is} from "./src/utils";
-import marked from "marked";
-
-
+import {is} from "./utils";
+import markdown from "marked";
+import fs from "fs";
+import path from "path";
+import paths from "./paths.js";
+import Deferred from "./deferred.js";
 
 ////
 /// @name docs.js
@@ -12,18 +14,45 @@ import marked from "marked";
 /// This is used to parse any filetype that you want to and gets the documentation for it and returns an {} of the document data
 ////
 var docs = (function(){
+ // the main object to return
+ // a small object to help with reading and writing the temp data.
+ const temp_data = {
+        get(){
+         let def = new Deferred();
+         fs.readFile(".tmp/data.json", (err, data) => err ? def.resolve({}) : def.resolve(data));
+         return def.promise();
+        },
+        write(data){
+         fs.writeFile(".tmp/data.json", data, err => {
+          if(err){
+           throw err
+          }
+         });
+        }
+       },
+       _ = {
+        /// @name markdown
+        /// @description
+        /// Helper function to convert markdown text to html
+        /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
+        markdown
+       };
 
- var _ = {}, // the main object to return
-     fs = require("fs"),
-     path = require("path"),
-     paths = require("./paths.js"),
-     Deferred = require("./deferred.js");
-
- /// @name markdown
- /// @description
- /// Helper function to convert markdown text to html
- /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
- _.markdown = marked;
+ // the settings object that holds the file specific settings as well as the base settings
+ _.file_specific_settings = {
+   css: {
+    file_comment: {
+     start: "/***",
+     line: "*",
+     end: "***/"
+    },
+    block_comment: {
+     start: "/**",
+     line: "*",
+     end: "**/"
+    }
+   }
+  }
 
  /// @name extend
  /// @description
@@ -32,14 +61,14 @@ var docs = (function(){
  /// @arg {object} a - Source object.
  /// @arg {object} b - Object to extend with.
  /// @returns {object} The extended object.
- _.extend = function(a, b){
+ _.extend = (a, b) => {
   // Don't touch 'null' or 'undefined' objects.
   if(!a || !b){
    return a;
   }
 
-  for(var i = 0, keys = Object.keys(b), l = keys.length; i < l; i++){
-   var key = keys[i];
+  for(let i = 0, keys = Object.keys(b), l = keys.length; i < l; i++){
+   let key = keys[i];
 
    // Detect object without array, date or null.
    if(is.object(b[key])){
@@ -52,32 +81,16 @@ var docs = (function(){
     a[key] = b[key];
    }
   }
+
   return a;
- };
-
-
- // the settings object that holds the file specific settings as well as the base settings
- _.file_specific_settings = {
-  css: {
-   file_comment: {
-    start: "/***",
-    line: "*",
-    end: "***/"
-   },
-   block_comment: {
-    start: "/**",
-    line: "*",
-    end: "**/"
-   }
-  }
  };
 
  /// @name settings
  /// @description Merges the default settings with the file specific settings
  /// @arg {string} filetype - the current filetype that is being parsed
  /// @returns {object} the settings to use
- _.settings = function(filetype){
-  var defaults = {
+ _.settings = filetype => {
+  let defaults = {
    // file level comment block identifier
    file_comment: {
     start: "////",
@@ -92,18 +105,19 @@ var docs = (function(){
 
    // the start of the annotation id(this should probably never be changed)
    annotation_prefix: "@"
-  };
-
+  }
   return !is.undefined(_.file_specific_settings[filetype]) ? _.extend(defaults, _.file_specific_settings[filetype]) : defaults;
- };
+ }
 
  /// @name setting
  /// @description Allows you to specify settings for specific file types
  /// @arg {string} extention - the file extention you want to target
  /// @arg {object} obj - the settings you want to adjust for this file type
- _.setting = function(extention, obj){
-  return _.extend(_.file_specific_settings, _.create_object(extention, obj));
- };
+ _.setting = (extention, obj) => {
+  return _.extend(_.file_specific_settings, {
+   [extention]: obj
+  });
+ }
 
  // the annotations object
  _.all_annotations = {};
@@ -114,9 +128,7 @@ var docs = (function(){
  /// Basically the file specific annotations get extended onto the default annotations
  /// @arg {string} filetype - the current filetype that is being parsed
  /// @returns {object} the settings to use
- _.annotations = function(filetype){
-  return !is.undefined(_.all_annotations[filetype]) ? _.extend(_.extend({}, _.all_annotations.default), _.all_annotations[filetype]) : _.all_annotations.default;
- };
+ _.annotations = filetype => !is.undefined(_.all_annotations[filetype]) ? _.extend(_.extend({}, _.all_annotations.default), _.all_annotations[filetype]) : _.all_annotations.default;
 
  /// @name normalize
  /// @description
@@ -125,41 +137,26 @@ var docs = (function(){
  /// Removes all whitespace at the end of each line
  /// @arg {array, string} content - The array of lines that will be normalized
  /// @returns {string} - The normalized string
- _.normalize = function(content){
-  content = is.string(content) ? [content] : content;
+ _.normalize = content => {
+  content = is.string(content) ? content.split(/\n/) : content;
 
   // remove trailing blank lines
-  for(var i = content.length; i-- && content[i].length === 0;){
+  for(let i = content.length; i-- && content[i].length === 0;){
    content.pop();
   }
 
   // get the length of extra whitespace to cut off of the beginning of each line in content array
-  var slice_from = content.join("\n").match(/^\s*/gm).sort(function(a, b){
-       return a.length - b.length;
-      })[0].length;
+  let slice_from = content.join("\n").match(/^\s*/gm).sort((a, b) => a.length - b.length)[0].length;
 
   // remove extra whitespace
-  return content.map(function(line){
-   return line.slice(slice_from);
-  }).join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
- };
-
- /// @name create_object
- /// @description
- /// Used to create a temp object with a specific key name
- /// @arg {string} key - name that you want the key to be
- /// @arg {*} value - the value of the key
- _.create_object = function(key, value){
-  var temp = {};
-  temp[key] = value;
-  return temp;
+  return content.map(line => line.slice(slice_from)).join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
  };
 
  /// @name annotation
  /// @description Used to define the new annotations
  /// @arg {string} name - The name of the variable
  /// @arg {object} obj - The callback to be executed at parse time
- _.annotation = function(name, obj){
+ _.annotation = (name, obj) => {
   if(is.function(obj)){
    obj = {
     default: obj
@@ -167,35 +164,14 @@ var docs = (function(){
   }
 
   for(var item in obj){
-   var to_extend = {},
-       result = {};
-   to_extend[name] = obj[item];
-   result[item] = _.extend(_.all_annotations[item] || {}, to_extend);
-   _.extend(_.all_annotations, result);
+   _.extend(_.all_annotations, {
+    [item]: _.extend(_.all_annotations[item] || {}, {
+     [name]: obj[item]
+    })
+   });
   }
- };
+ }
 
- // a small object to help with reading and writing the temp data.
- var temp_data = {
-  get: function(){
-   var def = new Deferred();
-   fs.readFile(".tmp/data.json", function(err, data){
-    if(err){
-     // throw err;
-     def.resolve({});
-    }
-    def.resolve(data);
-   });
-   return def.promise();
-  },
-  write: function(data){
-   fs.writeFile(".tmp/data.json", data, function(err){
-    if(err){
-     throw err;
-    }
-   });
-  }
- };
 
  /// @name parse_file
  /// @description
@@ -203,7 +179,7 @@ var docs = (function(){
  /// @arg {string} - The path to the file you're wanting to parse
  /// @returns {array} - Array of parsed blocks
  _.parse_file = function(file_path){
-  var get_blocks,
+  let get_blocks,
       parse_blocks,
       filetype = path.extname(file_path).replace(".", ""),
       setting = _.settings(filetype),
@@ -221,11 +197,11 @@ var docs = (function(){
 
   // @description Parses the file and returns the comment blocks in an array
   // @returns {array} of the comment blocks
-  get_blocks = function(){
+  get_blocks = () => {
    // @description Used to create new placeholder for each block
    // @arg {number} i - The start line of the comment block
    // @returns {object}
-   function new_block(i){
+   const new_block = i => {
     return _.extend({
       comment: {
        contents: [],
@@ -240,7 +216,7 @@ var docs = (function(){
      }, _obj);
    };
 
-   var _blocks = [], // holds all the blocks
+   let _blocks = [], // holds all the blocks
        _file_block = new_block(-1), // holds the file level comment block
        block_info, // holds the current block information
        lines = _obj.file.contents.split(/\n/), // all the lines in the file
@@ -262,7 +238,7 @@ var docs = (function(){
    if(is_start_and_end_file_comment ? !is.false(is.included(_obj.file.contents, setting.file_comment.start)) : setting.file_comment.line !== setting.block_comment.line ? !is.false(is.included(_obj.file.contents, setting.file_comment.line)) : false){
     // loop over each line to look for file level comments
     for(; i < l; i++){
-     var line = lines[i],
+     let line = lines[i],
          file_comment = {
           line: is.included(line, setting.file_comment.line),
           start: is_start_and_end_file_comment ? is.included(line, setting.file_comment.start) : false,
@@ -296,7 +272,7 @@ var docs = (function(){
 
    // loop over each line in the file and gets the comment blocks
    for(; i < l; i++){
-    var line = lines[i],
+    let line = lines[i],
         comment_index = {
          line: is.included(line, setting.block_comment.line),
          start: is_start_and_end ? is.included(line, setting.block_comment.start) : false,
@@ -384,14 +360,14 @@ var docs = (function(){
   // @description Parses each block in blocks
   // @returns {array}
   parse_blocks = function(){
-   var annotation_keys = Object.getOwnPropertyNames(annotations);
+   const annotation_keys = Object.getOwnPropertyNames(annotations);
 
    // @description Used as a helper function because this action is performed in two spots
    // @arg {object} annotation - information of the current annotation block
    // @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
    // @returns {object}
    this.merge = function(annotation, info){
-    var name = annotation.name,
+    let name = annotation.name,
         to_call,
         to_extend,
         self = this;
@@ -405,31 +381,29 @@ var docs = (function(){
 
     // Merges the data together so it can be used to run all the annotations
     to_call = _.extend({
-               annotation: annotation, // sets the annotation block information to be in it's own namespace of `annotation`
+     annotation: annotation, // sets the annotation block information to be in it's own namespace of `annotation`
 
-               /// @name this.add
-               /// @page annotation
-               /// @description Allows you to add a different annotation from within a annotation
-               /// @arg {string} name - the name of the annotation you want to add
-               /// @arg {string} str - information that is passed to the annotation
-               add: function(name, str){
-                str = str.split(/\n/);
-                return self.merge({
-                        name: name,
-                        line: _.normalize(str[0]),
-                        contents: str,
-                        start: null,
-                        end: null
-                       }, info);
-               }
-              }, !is.undefined(info) ? info : {});
+     /// @name this.add
+     /// @page annotation
+     /// @description Allows you to add a different annotation from within a annotation
+     /// @arg {string} name - the name of the annotation you want to add
+     /// @arg {string} str - information that is passed to the annotation
+     add(name, str){
+      str = str.split(/\n/);
+      return self.merge({
+              name: name,
+              line: _.normalize(str[0]),
+              contents: str,
+              start: null,
+              end: null
+             }, info);
+     }
+    }, !is.undefined(info) ? info : {});
 
     // a) add the default annotation function to the object so it can be called in the file specific annotation functions if needed
     if(!is.undefined(_.all_annotations[info.file.type]) && !is.undefined(_.all_annotations[info.file.type][name])){
      _.extend(to_call, {
-      default: function(){
-       return _.all_annotations.default[name].call(to_call);
-      }
+      default: () => _.all_annotations.default[name].call(to_call)
      });
     }
 
@@ -449,6 +423,7 @@ var docs = (function(){
     }else{
      this.annotations_in_block[name] = to_extend;
     }
+
     return this.annotations_in_block;
    };
 
@@ -456,30 +431,31 @@ var docs = (function(){
    // Used to parse an array of blocks and runs the annotations function and returns the result
    // @arg {object, array} - The block/blocks you want to have parsed
    // @returns {array} of parsed blocks
-   this.parse = function(blocks){
-    var parsed_blocks = [];
+   this.parse = blocks => {
+    let parsed_blocks = [];
 
     // if it's an object then convert it to an array.
     blocks = is.object(blocks) ? [blocks] : is.array(blocks) ? blocks : [];
 
     // loop over each block
-    for(var a = 0, blocks_length = blocks.length; a < blocks_length; a++){
-     var block = blocks[a],
+    for(let a = 0, blocks_length = blocks.length; a < blocks_length; a++){
+     let block = blocks[a],
          to_parse = block.comment.contents,
          _annotation = {};
+
      this.annotations_in_block = {};
 
      block.comment.contents = _.normalize(block.comment.contents);
      block.code.contents = _.normalize(block.code.contents);
 
      // loop over each line in the comment block
-     for(var i = 0, l = to_parse.length; i < l; i++){
-      var line = to_parse[i],
+     for(let i = 0, l = to_parse.length; i < l; i++){
+      let line = to_parse[i],
           annotation_prefix_index = line.indexOf(setting.annotation_prefix);
 
       // a) there is an index of the annotation prefix
       if(annotation_prefix_index >= 0){
-       var first_space = line.indexOf(" ", annotation_prefix_index),
+       let first_space = line.indexOf(" ", annotation_prefix_index),
            name_of_annotation = line.slice(annotation_prefix_index + 1, first_space >= 0 ? first_space : line.length);
 
        // a) the name is one of the annotation names
@@ -513,17 +489,18 @@ var docs = (function(){
       }
      } // end block loop
     } // end blocks loop
+
     return parsed_blocks;
    };
 
    // parses the file and gets the results
-   var file_annotations = !is.empty(this.file) ? this.parse(this.file)[0] : false,
+   let file_annotations = !is.empty(this.file) ? this.parse(this.file)[0] : false,
        parsed_blocks = this.parse(this.general);
 
    // a) loop over each parsed blocks and set the file level annotations
    if(!is.false(file_annotations)){
-    var _blocks = [];
-    for(var i = 0, l = parsed_blocks.length; i < l; i++){
+    let _blocks = [];
+    for(let i = 0, l = parsed_blocks.length; i < l; i++){
      _blocks.push(_.extend(_.extend({}, file_annotations), parsed_blocks[i]));
     }
     parsed_blocks = _blocks;
@@ -540,18 +517,16 @@ var docs = (function(){
  /// @arg {string, array} files - file paths to parse
  /// @arg {boolean} changed [true] - If true it will only parse changed files
  /// @returns {object} - the data that was parsed
- _.parse = function(files, changed){
-  var json = {},
+ _.parse = (files, changed) => {
+  let json = {},
       _data = temp_data.get(),
       def = new Deferred();
-  console.log(_data);
   Deferred.when(paths(files, changed))
-   .done(function(file_paths){
-    for(var i = 0, l = file_paths.length; i < l; i++){
-     var file_path = file_paths[i],
+   .done(file_paths => {
+    for(let i = 0, l = file_paths.length; i < l; i++){
+     let file_path = file_paths[i],
          filetype = path.extname(file_path).replace(".", ""),
          parsed_data = _.parse_file(file_path);
-
      // a) if the current block is undefined in the json objected then create it
      if(is.undefined(json[filetype])){
       json[filetype] = [];
@@ -578,6 +553,7 @@ var docs = (function(){
     }
 
     console.log(JSON.stringify(_data, null, 1));
+
     def.resolve({
      /// @name parse().data
      /// @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
@@ -588,8 +564,8 @@ var docs = (function(){
      /// @arg {string} location - The location to write the file too
      /// @arg {number,\t,\s} spacing [1] - The spacing you want the file to have.
      /// @returns {this}
-     write: function(location, spacing){
-      fs.writeFile(location, JSON.stringify(this.data, null, !is.undefined(spacing) ? spacing : 1), function(err){
+     write(location, spacing){
+      fs.writeFile(location, JSON.stringify(this.data, null, !is.undefined(spacing) ? spacing : 1), err => {
        if(err){
         throw err;
        }
@@ -600,19 +576,19 @@ var docs = (function(){
      // @todo {tylerb} - Add a way to documentize the files
      // This should be apart of it's own code base so it doesn't pollute this one.
      // @returns {this}
-     documentize: function(){
+     documentize(){
       console.log("documentize");
      }
     });
    });
+
   return def.promise();
  };
 
  return _;
 })();
 
-
-export default docs;
+// console.log(Object.keys(docs));
 
 // base annotations
 
@@ -741,3 +717,6 @@ docs.annotation("markup", function(){
  // add regex for `{language} [settings] - description`
  return this.annotation.contents;
 });
+
+
+export default docs;

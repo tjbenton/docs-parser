@@ -1,4 +1,7 @@
-BIN = $(PWD)/node_modules/.bin/
+BIN = $(PWD)/node_modules/.bin
+GBIN = $(npm -g bin)
+# BABEL = [[ -f  $(npm -g bin)/babel ]] && $(npm -g bin)/babel || $(BIN)/babel
+BABEL = [[ -d $(npm -g root)/babel ]] && babel || $(BIN)/babel
 
 all: es6
 
@@ -12,9 +15,16 @@ all: es6
 
 # Compile ES6 from `src` to ES5 in `dist`
 # =======================================
+run:
+	rm -rf build/
+	make build
 
-dist:
-	rm -rf build && $(BIN)babel app -d build
+build:
+	babel app -d build
+
+postinstall:
+	# [[ -d $(npm -g root)/babel ]] || npm i babel
+	make build
 
 # Development
 # ===========

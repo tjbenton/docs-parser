@@ -1,10 +1,11 @@
 "use strict";
-var fs = require("fs"),
-    path = require("path"),
-    glob = require("glob"),
-    Deferred = require("./assets/deferred.js");
+import fs from "fs";
+import path from "path";
+import glob from "glob";
+import Deferred from "./deferred.js";
 
-fs.mkdirp = function(dir, mode, callback){
+
+fs.mkdirp = (dir, mode, callback) => {
  var _mode = parseInt("0777", 8); // Because `Octal literals are not allowed in strict mode.`
  if(callback === void 0){
   callback = mode;
@@ -15,7 +16,7 @@ fs.mkdirp = function(dir, mode, callback){
  }
 
  //Call the standard fs.mkdir
- fs.mkdir(dir, mode, function(error){
+ fs.mkdir(dir, mode, error => {
   //When it fail in this way, do the custom steps
   if(error && error.code !== "EEXIST"){
    //Create all the parents recursively
@@ -30,29 +31,24 @@ fs.mkdirp = function(dir, mode, callback){
  });
 };
 
-fs.copy = function(source, target, callback){
- var cbCalled = false,
-     source = path.parse(source),
-     target = path.parse(target);
+fs.copy = (source, target, callback) => {
+ let cbCalled = false;
+
+ source = path.parse(source);
+ target = path.parse(target);
 
  // creates the directory path if it doesn't exist
- fs.mkdirp(path.resolve(source.dir, path.relative(source.dir, target.dir)), function(){
-  var source_stream = fs.createReadStream(path.join(source.dir, source.base)), // creates a read stream
+ fs.mkdirp(path.resolve(source.dir, path.relative(source.dir, target.dir)), () => {
+  let source_stream = fs.createReadStream(path.join(source.dir, source.base)), // creates a read stream
       target_stream = fs.createWriteStream(path.join(target.dir, target.base)); // creates a write stream
   // handles errors for the read stream
-  source_stream.on("error", function(err){
-   done(err);
-  });
+  source_stream.on("error", err => done(err));
 
   // handles errors for the write stream
-  target_stream.on("error", function(err){
-   done(err);
-  });
+  target_stream.on("error", err => done(err));
 
   // handles the callback for when the file has been successfully copied
-  target_stream.on("close", function(ex){
-   done();
-  });
+  target_stream.on("close", ex => done());
   source_stream.pipe(target_stream);
  });
 
@@ -65,14 +61,14 @@ fs.copy = function(source, target, callback){
  };
 };
 
-fs.fake_copy = function(source, target, callback){
+fs.fake_copy = (source, target, callback) => {
  var cbCalled = false,
      source = path.parse(source),
      target = path.parse(target);
 
  // creates the directory path if it doesn't exist
- fs.mkdirp(path.resolve(source.dir, path.relative(source.dir, target.dir)), function(){
-  fs.writeFile(path.join(target.dir, target.base), "", function(){
+ fs.mkdirp(path.resolve(source.dir, path.relative(source.dir, target.dir)), () => {
+  fs.writeFile(path.join(target.dir, target.base), "", () => {
    callback && callback();
   });
  });
@@ -90,7 +86,7 @@ function paths(globs, changed){
      // @name Files
      // @description
      // Converts `files` into a deferred so ti can get the
-     paths = function(files){
+     paths = files => {
       var deferred = new Deferred(),
           result = [];
 
@@ -113,20 +109,20 @@ function paths(globs, changed){
      // @description
      // checks the status of the file to see if it has changed or not.
      // @returns {boolean}
-     check = function(file){
+     check = file => {
       var deferred = new Deferred(),
           source = base + file,
           target = base + write_folder + file;
 
       // gets the status of the source file
-      fs.stat(source, function(err, source_stats){
+      fs.stat(source, (err, source_stats) => {
        // a) returns an error
        if(err){
         return deferred.reject(err);
        }
 
        // gets the status of the target file
-       fs.stat(target, function(err, target_stats){
+       fs.stat(target, (err, target_stats) => {
         // a) copies source file into the target directory and returns the source
         if(target_stats === void 0 || (target_stats.mtime < source_stats.mtime)){
          // copies new files over.
@@ -147,7 +143,7 @@ function paths(globs, changed){
      // gets returned in the array
      //
      // @returns {array} - Array of changed files
-     filter = function(files){
+     filter = files => {
       var deferred = new Deferred(),
           changed_paths = [];
 
@@ -159,11 +155,7 @@ function paths(globs, changed){
        // a) filters out the changed files
        if(i === l - 1){
         Deferred.when.all(changed_paths)
-         .done(function(result){
-          deferred.resolve(result.filter(function(obj){
-           return obj;
-          }));
-         });
+         .done(result => deferred.resolve(result.filter(obj => obj)));
        }
       }
 
@@ -172,12 +164,7 @@ function paths(globs, changed){
      result = new Deferred();
 
  Deferred.when(paths(globs))
-  .done(function(files){
-   return !changed ? result.resolve(files) : Deferred.when(filter(files))
-           .done(function(filtered_files){
-            result.resolve(filtered_files);
-           });
-  });
+  .done(files => !changed ? result.resolve(files) : Deferred.when(filter(files)).done(filtered_files => result.resolve(filtered_files)));
 
  return result.promise();
 };

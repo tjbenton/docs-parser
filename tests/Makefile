@@ -4,6 +4,6 @@ rebuild:
 
 build:
 	rm -rf node_modules/docs
-	rm -rf .tmp/lib/css
+	rm -rf .tmp/
 	npm i
 	gulp

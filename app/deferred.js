@@ -10,19 +10,5 @@ Deferred.when.all = function(deferreds){
  return deferred;
 };
 
-// Module exports
-// a) export module
-// b) define amd
-// c) add Deferred to the root
-if(typeof exports !== "undefined"){
- if(typeof module !== "undefined" && module.exports){
-  exports = module.exports = Deferred;
- }
- exports.Deferred = Deferred;
-}else if(typeof define === "function" && define.amd){ // AMD definition
- define(function(require){
-  return Deferred;
- });
-}else{
- root[ "Deferred" ] = Deferred;
-}
+
+export default Deferred;
