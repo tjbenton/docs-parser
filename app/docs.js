@@ -178,7 +178,7 @@ var docs = (function(){
  /// Parses a single file
  /// @arg {string} - The path to the file you're wanting to parse
  /// @returns {array} - Array of parsed blocks
- _.parse_file = function(file_path){
+ _.parse_file = file_path => {
   let get_blocks,
       parse_blocks,
       filetype = path.extname(file_path).replace(".", ""),
@@ -366,11 +366,10 @@ var docs = (function(){
    // @arg {object} annotation - information of the current annotation block
    // @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
    // @returns {object}
-   this.merge = function(annotation, info){
+   this.merge = (annotation, info) => {
     let name = annotation.name,
         to_call,
-        to_extend,
-        self = this;
+        to_extend;
 
     // removes the first line because it's the "line" of the annotation
     annotation.contents.shift();
@@ -388,9 +387,9 @@ var docs = (function(){
      /// @description Allows you to add a different annotation from within a annotation
      /// @arg {string} name - the name of the annotation you want to add
      /// @arg {string} str - information that is passed to the annotation
-     add(name, str){
+     add: (name, str) => {
       str = str.split(/\n/);
-      return self.merge({
+      return this.merge({
               name: name,
               line: _.normalize(str[0]),
               contents: str,
