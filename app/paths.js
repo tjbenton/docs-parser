@@ -96,7 +96,7 @@ export default function paths(globs, changed){
       // get the files paths using glob
       for(var i = 0, l = files.length; i < l; i++){
        result.push.apply(result, glob.sync(files[i]));
-       if(i === 0){
+       if(i === l - 1){
         deferred.resolve(result);
        }
       }
