@@ -40,19 +40,50 @@ var docs = (function(){
 
  // the settings object that holds the file specific settings as well as the base settings
  _.file_specific_settings = {
-   css: {
-    file_comment: {
-     start: "/***",
-     line: "*",
-     end: "***/"
-    },
-    block_comment: {
-     start: "/**",
-     line: "*",
-     end: "**/"
-    }
+  css: {
+   file_comment: {
+    start: "/***",
+    line: "*",
+    end: "***/"
+   },
+   block_comment: {
+    start: "/**",
+    line: "*",
+    end: "**/"
+   }
+  },
+  rb: {
+   file_comment: {
+    start: "###",
+    line: "##",
+    end: "###"
+   },
+   block_comment: {
+    line: "##"
+   }
+  },
+  html: {
+   file_comment: {
+    start: "<!----",
+    end: "/--->"
+   },
+   block_comment: {
+    start: "<!---",
+    end: "/-->"
+   }
+  },
+  cfm: {
+   file_comment: {
+    start: "<!-----",
+    end: "/--->"
+   },
+   block_comment: {
+    start: "<!----",
+    end: "/--->"
    }
   }
+ }
+ _.file_specific_settings.py = _.file_specific_settings.rb;
 
  /// @name extend
  /// @description
