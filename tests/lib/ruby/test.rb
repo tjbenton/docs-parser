@@ -1,8 +1,6 @@
 ###
-## @author John Doe
-## @name Message Board
-## @description
-## This is a file-level multi-line comment made of single line comments.
+## @author Tyler Benton
+## @page tests/rb-file
 ###
 
 ## @name main

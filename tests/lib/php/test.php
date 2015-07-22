@@ -1,7 +1,8 @@
 <?php
-	/////
+	////
 	/// @author Tyler Benton
-	/////
+ /// @page tests/php-file
+	////
 
 
 	/// @name main

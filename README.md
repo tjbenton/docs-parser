@@ -368,7 +368,51 @@ This type of comment can only occur **once** per file. Any annotations that are 
     }
    ```
    These types of comments are fairly common throughout any development procces for temp code that's for debugging or notes to come back and fix the issue. The number that is passed to `#{2}` is referring to the number of lines after the comment.
-
+ - Figure out why the F description isn't showing up in all the languages.
+ - Instead of returning
+ ```json
+ "cs": {
+  "/Users/tylerbenton/ui-development/docs/tests/lib/c#/test.cs": [
+   {
+    "author": "Tyler Benton",
+    "page": "tests/c#-file",
+    "name": "main"
+   },
+   {
+    "author": "Tyler Benton",
+    "page": "tests/c#-file",
+    "name": "Something"
+   },
+   {
+    "author": "Tyler Benton",
+    "page": "tests/c#-file",
+    "name": "Something else"
+   }
+  ]
+ }
+ ```
+ change to return
+ ```json
+ "cs": {
+  "/Users/tylerbenton/ui-development/docs/tests/lib/c#/test.cs": {
+   file: {
+    "author": "Tyler Benton",
+    "page": "tests/c#-file",
+   },
+   blocks: [
+    {
+     "name": "main"
+    },
+    {
+     "name": "Something"
+    },
+    {
+     "name": "Something else"
+    }
+   ]
+  }
+ }
+ ```
 
 <!-- Document Generators -->
 [sass-doc]: https://github.com/SassDoc/sassdoc

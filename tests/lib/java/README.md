@@ -31,14 +31,14 @@ A *normal* multi-line Java comment with `/*` and `*/` :
 
 A *file-level* multi-line Java comment with `/` :
 
-	/////
+	////
 	///
 	/// stuff
 	///
-	/////
+	////
 
 A *normal* multi-line Java comment with `/` :
-	
+
 	///
 	/// stuff
 	///

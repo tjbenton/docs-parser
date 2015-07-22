@@ -1,8 +1,7 @@
-/////
+////
 /// @author Tyler Benton
-/// @description
-/// This is a file-level multi-line comment.
-/////
+/// @page tests/c#-file
+////
 
 /// @name main
 /// @description
