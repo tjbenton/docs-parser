@@ -21,12 +21,12 @@ var docs = (function(){
 
          // a) Create `temp_file`
          // b) Resolve with data from `temp_file`
-         fs.readFile(temp_file, "utf8", (err, data) => err ? fs.writeFilep(temp_file, "{}", () => def.resolve({})) : def.resolve(data));
+         fs.readJson(temp_file, (err, data) => err ? fs.outputJson(temp_file, {}, () => def.resolve({})) : def.resolve(data));
 
          return def.promise();
         },
         write(data){
-         fs.writeFilep(temp_file, JSON.stringify(data, null, 1));
+         fs.writeJson(temp_file, data, (err) => err && console.error(err));
         }
        },
        _ = {

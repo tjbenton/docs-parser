@@ -66,9 +66,10 @@
     "node": ">=0.10.0"
   },
   "devDependencies": {
-    "babel": "^5.5.4"
+    "babel": "^5.5.4",
+    "fs-extra": "^0.22.1"
   },
   "scripts": {
-   "postinstall": "make postinstall"
+    "postinstall": "make postinstall"
   }
 }
