@@ -1,8 +1,8 @@
-////
+/////
 /// @author Tyler Benton
 /// @description
 /// This is a file-level multi-line comment.
-////
+/////
 
 /// @name HelloWorldApp
 /// @description
@@ -15,7 +15,6 @@ class HelloWorldApp {
 
 // This is a normal single-line comment, and shouldn't start a new block
 
-/// @author Jim Bob
 /// @name Something
 /// @description
 /// This is a normal multi-line comment.

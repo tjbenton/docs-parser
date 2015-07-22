@@ -16,18 +16,20 @@ import Deferred from "./deferred.js";
 var docs = (function(){
  // the main object to return
  // a small object to help with reading and writing the temp data.
- const temp_data = {
+ const root = process.cwd() + "/",
+       temp_file = path.join(root, ".tmp/data.json"),
+       temp_data = {
         get(){
          let def = new Deferred();
-         fs.readFile(".tmp/data.json", (err, data) => err ? def.resolve({}) : def.resolve(data));
+
+         // a) Create `temp_file`
+         // b) Resolve with data from `temp_file`
+         fs.readFile(temp_file, "utf8", (err, data) => err ? fs.writeFilep(temp_file, "{}", () => def.resolve({})) : def.resolve(JSON.parse(data)));
+
          return def.promise();
         },
         write(data){
-         fs.writeFile(".tmp/data.json", data, err => {
-          if(err){
-           throw err
-          }
-         });
+         fs.writeFilep(temp_file, JSON.stringify(data, null, 1));
         }
        },
        _ = {
