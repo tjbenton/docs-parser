@@ -469,7 +469,7 @@ var docs = (function(){
     // loop over each block
     for(let a = 0, blocks_length = blocks.length; a < blocks_length; a++){
      let block = blocks[a],
-         to_parse = block.comment.contents,
+         comment = block.comment.contents,
          _annotation = {};
 
      this.annotations_in_block = {};
@@ -481,6 +481,8 @@ var docs = (function(){
      for(let i = 0, l = to_parse.length; i < l; i++){
       let line = to_parse[i],
           annotation_prefix_index = line.indexOf(setting.annotation_prefix);
+     for(let i = 0, l = comment.length; i < l; i++){
+      let line = comment[i],
 
       // a) there is an index of the annotation prefix
       if(annotation_prefix_index >= 0){
