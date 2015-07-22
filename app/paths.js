@@ -82,7 +82,7 @@ export default function paths(globs, changed){
        // a) filters out the changed files
        if(i === l - 1){
         Deferred.when.all(changed_paths)
-         .done(result => deferred.resolve(result.filter(obj => obj)));
+         .done(result => deferred.resolve(result.filter(obj => obj && obj.indexOf(".") > -1)));
        }
       }
 
