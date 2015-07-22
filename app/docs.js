@@ -708,6 +708,48 @@ docs.annotation("type", function(){
  return this.annotation.line;
 });
 
+/// @name deprecated
+/// @page annotations
+/// @description Lets you know that a mixin/function has been depricated
+/// @returns {string}
+docs.annotation("deprecated", function(){
+ // add regex for `{version} - description`
+ return this.annotation.line;
+});
+
+/// @name chainable
+/// @page annotations
+/// @description Used to notate that a function is chainable
+/// @returns {boolean}
+docs.annotation("chainable", function(){
+ return true;
+});
+
+/// @name readonly
+/// @page annotations
+/// @description To note that a property is readonly
+/// @returns {boolean}
+docs.annotation("readonly", function(){
+ return true;
+});
+
+/// @name constructor
+/// @page annotations
+/// @description Describes the type of a variable
+/// @returns {boolean}
+docs.annotation("constructor", function(){
+ return true;
+});
+
+/// @name version
+/// @page annotations
+/// @description Describes the type of a variable
+/// @returns {string}
+docs.annotation("version", function(){
+ // add regex for `{type} - description`
+ return this.annotation.line;
+});
+
 /// @name todo
 /// @page annotations
 /// @description Things to do related to the documented item
