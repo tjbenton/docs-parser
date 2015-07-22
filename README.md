@@ -311,6 +311,63 @@ This type of comment can only occur **once** per file. Any annotations that are 
  - Add the ability to add aliases
    - Take into account the ability to specify alias and file types. For example being able to extend something onto the `name` but use the `scss` specific filetype callback.
  - Filter out files that haven't changed, and only pass through the new files.
+ - Ability to add single line notations, or allow the user to define how many lines they want to return. The way it would work is to have a special identifier after the opening comments(eg `/**#{2} @remove */`) for laguages that use them, or after the single line comment(`///#{5}`). If you didn't want to return multiple lines, then you could just write `///#` and it would return everything before the comment. Note that `///#` is different that `///#{1}` because the `{2}` telling the parser to return the next 2 lines. There couldn't be any spaces inbetween the specified comment style and the special character that's used to identify this type of comment. Having this ability would allow you to do things like the following.
+
+   ###### Returning a single line example
+   ```css
+    .foo{
+     background: blue;
+     outline: 1px solid red; /**# @remove #*/
+     margin: 10px; /**# @todo {10} - fix spacing */
+    }
+    .foo--bar{ /** @state */
+      background: black;
+    }
+   ```
+   ```scss
+   .foo{
+    background: blue;
+    outline: 1px solid red; ///# @remove
+    margin: $bar; ///# @todo {10} - fix spacing
+
+    &--bar{ ///# @state
+     background: black;
+    }
+   }
+   ```
+   ```js
+    function foo(){
+     console.log(arguments); ///# @remove
+    }
+   ```
+
+   ###### Returning a specified number of lines.
+   ```css
+    .foo{
+     margin: 10px;
+
+     /**#{2} @remove #*/
+     background: cyan;
+     outline: 1px solid red;
+    }
+   ```
+   ```scss
+   .foo{
+     margin: 10px;
+
+     ///#{2} @remove
+     background: cyan;
+     outline: 1px solid red;
+    }
+   ```
+   ```js
+    function foo(){
+     ///#{2} @remove
+     console.log(arguments);
+     console.log(arguments[0]);
+    }
+   ```
+   These types of comments are fairly common throughout any development procces for temp code that's for debugging or notes to come back and fix the issue. The number that is passed to `#{2}` is referring to the number of lines after the comment.
 
 
 <!-- Document Generators -->
