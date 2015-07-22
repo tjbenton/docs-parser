@@ -1,7 +1,6 @@
 ////
 /// @author Tyler Benton
-/// @description
-/// This is a file-level multi-line comment.
+/// @page tests/swift-file
 ////
 
 /// @name main

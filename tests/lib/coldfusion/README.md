@@ -1,5 +1,5 @@
 ## Colfusion Script and HTML
-*Reference: [http://www.learncfinaweek.com/week1/Commenting/](http://www.learncfinaweek.com/week1/Commenting/)* 
+*Reference: [http://www.learncfinaweek.com/week1/Commenting/](http://www.learncfinaweek.com/week1/Commenting/)*
 
 In brief, the following are ways to comment in Coldfusion:
 
@@ -12,7 +12,7 @@ In brief, the following are ways to comment in Coldfusion:
 
 A *file-level* multi-line Coldfusion HTML comment:
 
-	<!------ 
+	<!------
 	stuff
 	------->
 
@@ -27,7 +27,7 @@ A *normal* multi-line Coldfusion HTML comment:
 > For this type, comments *normally* begin with `/*` and end with `*/`. *File-level* comments contain five `*` instead of one. It is up to you how you want to `tab` or `space` stuff inside. The comments are as follows:
 
 A *file-level* multi-line Coldfusion Script comment with `/*` and `*/` :
-	
+
 	/*****
 		stuff
 	*****/
@@ -44,14 +44,14 @@ A *normal* multi-line Coldfusion Script comment with `/*` and `*/`:
 
 A *file-level* multi-line Coldfusion Script comment with `/` :
 
-	/////
+	////
 	///
 	/// stuff
 	///
-	/////
+	////
 
 A *normal* multi-line Coldfusion Script comment with `/`:
-	
+
 	///
 	/// stuff
 	///

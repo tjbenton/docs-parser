@@ -651,6 +651,7 @@ docs.annotation("author", function(){
 /// @note Runs through markdown
 /// @returns {string}
 docs.annotation("description", function(){
+ console.log(this.annotation.contents);
  return docs.markdown(this.annotation.line ? this.annotation.line + "\n" + this.annotation.contents : this.annotation.contents);
 });
 

@@ -29,15 +29,15 @@ A *normal* multi-line Swift comment with `/*` and `*/` :
 
 A *file-level* multi-line Swift comment with `/` :
 
-	
-	/////
+
+	////
 	///
 	/// stuff
 	///
-	/////
+	////
 
 A *normal* multi-line Swift comment with `/` :
-	
+
 	///
 	/// stuff
 	///

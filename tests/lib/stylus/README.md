@@ -31,14 +31,14 @@ A *normal* multi-line Stylus comment with `/*` and `*/`:
 
 A *file-level* multi-line Stylus comment with `/` :
 
-	/////
+	////
 	///
 	/// stuff
 	///
-	/////
+	////
 
 A *normal* multi-line Stylus comment with `/` :
-	
+
 	///
 	/// stuff
 	///

@@ -29,14 +29,14 @@ A *normal* multi-line Less comment with `/*` and `*/`:
 
 A *file-level* multi-line Less comment with `/` :
 
-	/////
+	////
 	///
 	/// stuff
 	///
-	/////
+	////
 
 A *normal* multi-line Less comment with `/` :
-	
+
 	///
 	/// stuff
 	///

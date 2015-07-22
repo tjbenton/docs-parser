@@ -30,14 +30,14 @@ A *normal* multi-line php comment with `/*` and `*/`:
 
 A *file-level* multi-line php comment with `/` :
 
-	/////
+	////
 	///
 	/// stuff
 	///
-	/////
+	////
 
 A *normal* multi-line php comment with `/` :
-	
+
 	///
 	/// stuff
 	///
@@ -59,7 +59,7 @@ A *file-level* multi-line php comment with `#` :
 	#####
 
 A *normal* multi-line php comment with `#` :
-	
+
 	##
 	## stuff
 	##

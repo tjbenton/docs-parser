@@ -14,7 +14,7 @@ These are explained in detail below.
 A *file-level* multi-line C# comment with `/*` and `*/` :
 
 	/*****
-	* 
+	*
 	* stuff
 	*
 	*****/
@@ -37,14 +37,14 @@ Another *normal* multi-line C# comment with `/*` and `*/` :
 
 A *file-level* multi-line C# comment with `/` :
 
-	/////
+	////
 	///
 	/// stuff
 	///
-	/////
+	////
 
 A *normal* multi-line C# comment with `/` :
-	
+
 	///
 	/// stuff
 	///

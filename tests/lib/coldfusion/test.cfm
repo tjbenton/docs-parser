@@ -1,7 +1,6 @@
 <!-----
 @author Tyler Benton
-@description
-This is a file-level multi-line coldfusion comment.
+@page tests/cfm-file
 /--->
 
 <!----
