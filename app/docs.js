@@ -478,16 +478,14 @@ var docs = (function(){
      block.code.contents = _.normalize(block.code.contents);
 
      // loop over each line in the comment block
-     for(let i = 0, l = to_parse.length; i < l; i++){
-      let line = to_parse[i],
-          annotation_prefix_index = line.indexOf(setting.annotation_prefix);
      for(let i = 0, l = comment.length; i < l; i++){
       let line = comment[i],
+          prefix_index = line.indexOf(setting.annotation_prefix);
 
       // a) there is an index of the annotation prefix
-      if(annotation_prefix_index >= 0){
-       let first_space = line.indexOf(" ", annotation_prefix_index),
-           name_of_annotation = line.slice(annotation_prefix_index + 1, first_space >= 0 ? first_space : line.length);
+      if(prefix_index >= 0){
+       let first_space = line.indexOf(" ", prefix_index),
+           name_of_annotation = line.slice(prefix_index + 1, first_space >= 0 ? first_space : line.length);
 
        // a) the name is one of the annotation names
        if(annotation_keys.indexOf(name_of_annotation) >= 0){
@@ -500,7 +498,7 @@ var docs = (function(){
         // redefines resets the current annotation to be blank
         _annotation = {
          name: name_of_annotation, // sets the current annotation name
-         line: line.slice(annotation_prefix_index + 1 + name_of_annotation.length).trim(), // removes the current annotation name and it's prefix from the first line
+         line: line.slice(prefix_index + 1 + name_of_annotation.length).trim(), // removes the current annotation name and it's prefix from the first line
          contents: [],
          start: i, // sets the starting line of the annotation
          end: 0
