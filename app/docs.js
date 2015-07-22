@@ -548,10 +548,12 @@ var docs = (function(){
  /// @returns {object} - the data that was parsed
  _.parse = (files, changed) => {
   let json = {},
-      _data = temp_data.get(),
       def = new Deferred();
-  Deferred.when(paths(files, changed))
-   .done(file_paths => {
+  Deferred.when.all([paths(files, changed), temp_data.get()])
+   .done(deferreds => {
+    let file_paths = deferreds[0],
+        _data = deferreds[1];
+    console.log("file_paths =", file_paths);
     for(let i = 0, l = file_paths.length; i < l; i++){
      let file_path = file_paths[i],
          filetype = path.extname(file_path).replace(".", ""),
