@@ -583,12 +583,13 @@ var docs = (function(){
      _data[filetype][file_path].push.apply(_data[filetype][file_path], parsed_data);
     }
 
-    console.log(JSON.stringify(_data, null, 1));
+    // updates the temp file
+    temp_data.write(_data);
 
     def.resolve({
      /// @name parse().data
      /// @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
-     data: json,
+     data: _data,
 
      /// @name parse().write
      /// @description Helper function to write out the data to a json file
@@ -618,8 +619,6 @@ var docs = (function(){
 
  return _;
 })();
-
-// console.log(Object.keys(docs));
 
 // base annotations
 
