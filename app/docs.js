@@ -21,7 +21,7 @@ var docs = (function(){
 
          // a) Create `temp_file`
          // b) Resolve with data from `temp_file`
-         fs.readFile(temp_file, "utf8", (err, data) => err ? fs.writeFilep(temp_file, "{}", () => def.resolve({})) : def.resolve(JSON.parse(data)));
+         fs.readFile(temp_file, "utf8", (err, data) => err ? fs.writeFilep(temp_file, "{}", () => def.resolve({})) : def.resolve(data));
 
          return def.promise();
         },
