@@ -14,7 +14,7 @@ function defer(){
 }
 
 
-import fs from "fs";
+import * as fs from "fs-extra";
 import path from "path";
 import Deferred from "deferred-js";
 import glob from "glob";
@@ -42,80 +42,6 @@ Deferred.when.all = function(deferreds){
 //   });
 //  return deferred;
 // };
-
-// creates directories recursivly without errors
-fs.mkdirp = (dir, mode, callback) => {
- dir = path.extname(dir) === "" ? dir :  path.dirname(dir);
- var _mode = parseInt("0777", 8); // Because `Octal literals are not allowed in strict mode.`
-
- if(callback === void 0){
-  callback = mode;
-  mode = _mode;
- }
-
- if(mode === void 0){
-  mode = _mode;
- }
-
- //Call the standard fs.mkdir
- fs.mkdir(dir, mode, error => {
-  //When it fail in this way, do the custom steps
-  if(error && error.code !== "EEXIST"){
-   //Create all the parents recursively
-   fs.mkdirp(path.dirname(dir), mode, callback);
-
-   //And then the directory
-   fs.mkdirp(dir, mode, callback);
-  }
-
-  //Manually run the callback since we used our own callback to do all these
-  callback && callback(error);
- });
-};
-
-fs.writeFilep = (filepath, data, callback) => {
- // creates the directory path if it doesn't exist
- fs.mkdirp(filepath, () => {
-  fs.writeFile(filepath, data, (err) => {
-   if(err){
-    console.log(err);
-   }
-   callback && callback(err);
-  });
- });
-};
-
-
-// copies files from `source` to `target` without errors(makes directories as needed)
-fs.copy = (source, target, callback) => {
- let cbCalled = false;
-
- source = path.parse(source);
- target = path.parse(target);
-
- // creates the directory path if it doesn't exist
- fs.mkdirp(path.resolve(source.dir, path.relative(source.dir, target.dir)), () => {
-  let source_stream = fs.createReadStream(path.join(source.dir, source.base)), // creates a read stream
-      target_stream = fs.createWriteStream(path.join(target.dir, target.base)); // creates a write stream
-  // handles errors for the read stream
-  source_stream.on("error", err => done(err));
-
-  // handles errors for the write stream
-  target_stream.on("error", err => done(err));
-
-  // handles the callback for when the file has been successfully copied
-  target_stream.on("close", ex => done());
-  source_stream.pipe(target_stream);
- });
-
- // used as a helper function for the error handling
- function done(err){
-  if(!cbCalled){
-   callback && callback(err);
-   cbCalled = true;
-  }
- };
-};
 
 fs.fake_copy = (source, target, callback) => {
  var cbCalled = false,
