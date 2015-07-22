@@ -1,4 +1,4 @@
-export function defer(){
+function defer(){
   let resolve, reject;
 
   let promise = new Promise((resolve_, reject_) => {
@@ -14,29 +14,145 @@ export function defer(){
 }
 
 
+import fs from "fs";
+import path from "path";
+import Deferred from "deferred-js";
+import glob from "glob";
 
-const toString = arg => Object.prototype.toString.call(arg);
 
-export const is = {
+// extends the functionality of deffered to accept an array of deffereds
+Deferred.when.all = function(deferreds){
+ let deferred = new Deferred();
+ Deferred.when.apply(null, deferreds)
+  .then(function(){
+   deferred.resolve(Array.prototype.slice.call(arguments))
+  }, function(){
+   deferred.fail(Array.prototype.slice.call(arguments))
+  });
+ return deferred;
+};
+
+// Deferred.when.each = function(deferreds){
+//  let deferred = new Deferred();
+//  Deferred.when.apply(null, deferreds)
+//   .done(function(){
+//    deferred.resolve(Array.prototype.slice.call(arguments))
+//   }, function(){
+//    deferred.fail(Array.prototype.slice.call(arguments))
+//   });
+//  return deferred;
+// };
+
+// creates directories recursivly without errors
+fs.mkdirp = (dir, mode, callback) => {
+ dir = path.extname(dir) === "" ? dir :  path.dirname(dir);
+ var _mode = parseInt("0777", 8); // Because `Octal literals are not allowed in strict mode.`
+
+ if(callback === void 0){
+  callback = mode;
+  mode = _mode;
+ }
+
+ if(mode === void 0){
+  mode = _mode;
+ }
+
+ //Call the standard fs.mkdir
+ fs.mkdir(dir, mode, error => {
+  //When it fail in this way, do the custom steps
+  if(error && error.code !== "EEXIST"){
+   //Create all the parents recursively
+   fs.mkdirp(path.dirname(dir), mode, callback);
+
+   //And then the directory
+   fs.mkdirp(dir, mode, callback);
+  }
+
+  //Manually run the callback since we used our own callback to do all these
+  callback && callback(error);
+ });
+};
+
+fs.writeFilep = (filepath, data, callback) => {
+ // creates the directory path if it doesn't exist
+ fs.mkdirp(filepath, () => {
+  fs.writeFile(filepath, data, (err) => {
+   if(err){
+    console.log(err);
+   }
+   callback && callback(err);
+  });
+ });
+};
+
+
+// copies files from `source` to `target` without errors(makes directories as needed)
+fs.copy = (source, target, callback) => {
+ let cbCalled = false;
+
+ source = path.parse(source);
+ target = path.parse(target);
+
+ // creates the directory path if it doesn't exist
+ fs.mkdirp(path.resolve(source.dir, path.relative(source.dir, target.dir)), () => {
+  let source_stream = fs.createReadStream(path.join(source.dir, source.base)), // creates a read stream
+      target_stream = fs.createWriteStream(path.join(target.dir, target.base)); // creates a write stream
+  // handles errors for the read stream
+  source_stream.on("error", err => done(err));
+
+  // handles errors for the write stream
+  target_stream.on("error", err => done(err));
+
+  // handles the callback for when the file has been successfully copied
+  target_stream.on("close", ex => done());
+  source_stream.pipe(target_stream);
+ });
+
+ // used as a helper function for the error handling
+ function done(err){
+  if(!cbCalled){
+   callback && callback(err);
+   cbCalled = true;
+  }
+ };
+};
+
+fs.fake_copy = (source, target, callback) => {
+ var cbCalled = false,
+     source = path.parse(source),
+     target = path.parse(target);
+
+ // creates the directory path if it doesn't exist
+ fs.mkdirp(path.resolve(source.dir, path.relative(source.dir, target.dir)), () => {
+  fs.writeFile(path.join(target.dir, target.base), "", () => callback && callback());
+ });
+};
+
+// export default fs_extra;
+
+
+const to_string = arg => Object.prototype.toString.call(arg);
+
+const is = {
   // @description is a given value function?
   // @arg {*} value - The item to check
   // @returns {boolean} - The result of the test
-  function: arg => toString(arg) === "[object Function]" || typeof arg === "function",
+  function: arg => to_string(arg) === "[object Function]" || typeof arg === "function",
 
   // @description is a given value Array?
   // @arg {*} value - The item to check
   // @returns {boolean} - The result of the test
-  array: arg => toString(arg) === "[object Array]",
+  array: arg => to_string(arg) === "[object Array]",
 
   // @description is a given value Boolean?
   // @arg {*} value - The item to check
   // @returns {boolean} - The result of the test
-  boolean: arg => arg === true || arg === false || toString(arg) === "[object Boolean]",
+  boolean: arg => arg === true || arg === false || to_string(arg) === "[object Boolean]",
 
   // @description is a given value object?
   // @arg {*} value - The item to check
   // @returns {boolean} - The result of the test
-  object: arg => toString(arg) === "[object Object]",
+  object: arg => to_string(arg) === "[object Object]",
 
   // @description is a given value empty? Objects, arrays, strings
   // @arg {object, array, string} value - What you want to check to see if it's empty
@@ -46,7 +162,7 @@ export const is = {
   // @description is a given value String?
   // @arg {*} value - The item to check
   // @returns {boolean} - The result of the test
-  string: arg => toString(arg) === "[object String]",
+  string: arg => to_string(arg) === "[object String]",
 
   // @description is a given value undefined?
   // @arg {*} value - The item to check
@@ -77,3 +193,6 @@ export const is = {
   promise: arg => arg && is.function(arg.then),
   stream: arg => arg && is.function(arg.pipe)
 };
+
+
+export {Deferred, fs, path, glob, to_string, is};
