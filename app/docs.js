@@ -1,11 +1,8 @@
 "use strict";
 
-import {is} from "./utils";
 import markdown from "marked";
-import fs from "fs";
-import path from "path";
+import {Deferred, fs, path, glob, to_string, is} from "./utils.js";
 import paths from "./paths.js";
-import Deferred from "./deferred.js";
 
 ////
 /// @name docs.js
