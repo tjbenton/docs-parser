@@ -6,7 +6,7 @@ var gulp = require("gulp"),
 // This is for the documentation
 gulp.task("docs", function(){
  docs
-  .parse("lib/**/*.styl")
+  .parse("lib/**/*")
   .then(function(data){
    console.log("");
    console.log("");

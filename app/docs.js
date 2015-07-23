@@ -539,6 +539,7 @@ var docs = (function(){
        parsed_blocks = this.parse(this.general);
 
    // a) loop over each parsed blocks and set the file level annotations
+   // @todo {5} - remove this so code doesn't get duplicated.
    if(!is.false(file_annotations)){
     let _blocks = [];
     for(let i = 0, l = parsed_blocks.length; i < l; i++){

@@ -1,11 +1,17 @@
 ////
 /// @author Tyler Benton
 /// @page tests/c#-file
+/// @description
+/// Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+/// Eaque temporibus praesentium iure, qui dolorem blanditiis
+/// error a reprehenderit voluptates debitis iusto, quibusdam.
 ////
 
 /// @name main
 /// @description
-/// main method
+/// Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+/// Eaque temporibus praesentium iure, qui dolorem blanditiis
+/// error a reprehenderit voluptates debitis iusto, quibusdam.
 #include <stdio.h>
 int main(){
   char name[50];
