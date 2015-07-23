@@ -553,49 +553,40 @@ var docs = (function(){
  /// @arg {boolean} changed [true] - If true it will only parse changed files
  /// @returns {object} - the data that was parsed
  _.parse = (files, changed) => {
-  let json = {},
-      def = new Deferred();
+  let def = new Deferred();
   Deferred.when.all([paths(files, changed), temp_data.get()])
    .done(deferreds => {
     let file_paths = deferreds[0],
-        _data = deferreds[1];
-    console.log("file_paths =", file_paths);
+        json = deferreds[1];
+    // loops over all the files that return
     for(let i = 0, l = file_paths.length; i < l; i++){
      let file_path = file_paths[i],
          filetype = path.extname(file_path).replace(".", ""),
          parsed_data = _.parse_file(file_path);
-     // a) if the current block is undefined in the json objected then create it
-     if(is.undefined(json[filetype])){
-      json[filetype] = [];
-     }
-
-     // merges the existing array with the new blocks arrays
-     json[filetype].concat(parsed_data);
-
 
      // temp data stuff ------------------------------------------------------------
 
      // a) if the current block is undefined in the json objected then create it
-     if(is.undefined(_data[filetype])){
-      _data[filetype] = {};
+     if(is.undefined(json[filetype])){
+      json[filetype] = {};
      }
 
      // a) creates array for the filepath
-     if(is.undefined(_data[filetype][file_path])){
-      _data[filetype][file_path] = [];
+     if(is.undefined(json[filetype][file_path])){
+      json[filetype][file_path] = [];
      }
 
      // merges the existing array with the new blocks arrays
-     _data[filetype][file_path].push.apply(_data[filetype][file_path], parsed_data);
+     json[filetype][file_path].push.apply(json[filetype][file_path], parsed_data);
     }
 
     // updates the temp file
-    temp_data.write(_data);
+    temp_data.write(json);
 
     def.resolve({
      /// @name parse().data
      /// @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
-     data: _data,
+     data: json,
 
      /// @name parse().write
      /// @description Helper function to write out the data to a json file
