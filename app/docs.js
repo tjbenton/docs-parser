@@ -233,9 +233,11 @@ var docs = (function(){
        }
       };
 
+  // @name get_blocks
   // @description Parses the file and returns the comment blocks in an array
   // @returns {array} of the comment blocks
   get_blocks = () => {
+   // @name new_block
    // @description Used to create new placeholder for each block
    // @arg {number} i - The start line of the comment block
    // @returns {object}
@@ -395,9 +397,11 @@ var docs = (function(){
    };
   };
 
+  // @name parse_blocks
   // @description Parses each block in blocks
   // @returns {array}
   parse_blocks = function(){
+   // @name this.merge
    // @description Used as a helper function because this action is performed in two spots
    // @arg {object} annotation - information of the current annotation block
    // @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
@@ -462,6 +466,7 @@ var docs = (function(){
     return this.annotations_in_block;
    };
 
+   // @name this.parse
    // @description
    // Used to parse an array of blocks and runs the annotations function and returns the result
    // @arg {object, array} - The block/blocks you want to have parsed
