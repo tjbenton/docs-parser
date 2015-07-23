@@ -32,17 +32,7 @@ Deferred.when.all = function(deferreds){
  return deferred;
 };
 
-// Deferred.when.each = function(deferreds){
-//  let deferred = new Deferred();
-//  Deferred.when.apply(null, deferreds)
-//   .done(function(){
-//    deferred.resolve(Array.prototype.slice.call(arguments))
-//   }, function(){
-//    deferred.fail(Array.prototype.slice.call(arguments))
-//   });
-//  return deferred;
-// };
-
+// creates an empty file temp file in the `.tmp/`
 fs.fake_copy = (source, target, callback) => {
  var cbCalled = false,
      source = path.parse(source),
@@ -53,9 +43,6 @@ fs.fake_copy = (source, target, callback) => {
   fs.writeFile(path.join(target.dir, target.base), "", () => callback && callback());
  });
 };
-
-// export default fs_extra;
-
 
 const to_string = arg => Object.prototype.toString.call(arg);
 
@@ -120,5 +107,8 @@ const is = {
   stream: arg => arg && is.function(arg.pipe)
 };
 
+Array.prototype.contains = function(i){
+ return this.indexOf(i) >= 0;
+};
 
-export {Deferred, fs, path, glob, to_string, is};
+export {Deferred, fs, path, glob, to_string, is, Array};
