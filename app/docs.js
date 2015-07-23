@@ -216,10 +216,11 @@ var docs = (function(){
       annotations = _.annotations(filetype),
       annotation_keys = Object.getOwnPropertyNames(annotations),
 
-      // the `""` converts the file from a buffer to a string
+      // The ` + ""` converts the file from a buffer to a string
       //
-      // the replace fixes a extremily stupid issue with strings, it removes`\r` and replaces it with `\n` from the end of the line.
-      // if this isn't here then when `match` runs it will return 1 more item in the matched array than it should(in the normalize function)
+      // The `replace` fixes a extremily stupid issue with strings, that is caused by shitty microsoft computers.
+      // It removes`\r` and replaces it with `\n` from the end of the line. If this isn't here then when `match`
+      // runs it will return 1 more item in the matched array than it should(in the normalize function)
       // http://stackoverflow.com/questions/20023625/javascript-replace-not-replacing-text-containing-literal-r-n-strings
       file = (fs.readFileSync(file_path) + "").replace(/(?:\\[rn]|[\r\n]+)+/g, "\n"),
       _obj = {
