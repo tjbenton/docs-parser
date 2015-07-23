@@ -20,7 +20,8 @@
   "dependencies": {
     "deferred-js": "^1.0.2",
     "glob": "^5.0.6",
-    "marked": "^0.3.3"
+    "marked": "^0.3.3",
+    "fs-extra": "^0.22.1"
   },
   "keywords": [
     "css",
@@ -66,8 +67,7 @@
     "node": ">=0.10.0"
   },
   "devDependencies": {
-    "babel": "^5.5.4",
-    "fs-extra": "^0.22.1"
+    "babel": "^5.5.4"
   },
   "scripts": {
     "postinstall": "make postinstall"
