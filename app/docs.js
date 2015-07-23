@@ -259,7 +259,7 @@ var docs = (function(){
    let _blocks = [], // holds all the blocks
        _file_block = new_block(-1), // holds the file level comment block
        block_info, // holds the current block information
-       lines = _obj.file.contents.split(/\n/), // all the lines in the file
+       lines = _obj.file.contents.split("\n"), // all the lines in the file
 
        // file specific variables
        is_start_and_end_file_comment = !is.undefined(setting.file_comment.start) && !is.undefined(setting.file_comment.end), // determins if the file comment has a start and end style or is line by line
@@ -430,7 +430,7 @@ var docs = (function(){
      /// @arg {string} name - the name of the annotation you want to add
      /// @arg {string} str - information that is passed to the annotation
      add: (name, str) => {
-      str = str.split(/\n/);
+      str = str.split("\n");
       return this.merge({
               name: name,
               line: _.normalize(str[0]),
