@@ -414,9 +414,11 @@ var docs = (function(){
     // removes the first line because it's the "line" of the annotation
     annotation.contents.shift();
 
-    // normalizes the current annotation block contents
+    // normalizes the current annotation contents
     annotation.contents = _.normalize(annotation.contents);
 
+    // normalizes the current annotation line
+    annotation.line = _.normalize(annotation.line);
 
     // Merges the data together so it can be used to run all the annotations
     to_call = _.extend({
