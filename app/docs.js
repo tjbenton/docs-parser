@@ -163,23 +163,23 @@ var docs = (function(){
  /// @name normalize
  /// @description
  /// Removes extra whitespace before all the lines that are passed
- /// Removes trailing blank lines
  /// Removes all whitespace at the end of each line
+ /// Removes trailing blank lines
  /// @arg {array, string} content - The array of lines that will be normalized
  /// @returns {string} - The normalized string
  _.normalize = content => {
-  content = is.string(content) ? content.split("\n") : content;
+  content = is.string(content) ? content.split("\n") : content; // this allows arrays and strings to be passed
 
   // remove trailing blank lines
-  for(let i = content.length; i-- && content[i].length === 0;){
-   content.pop();
-  }
+  for(let i = content.length; i-- && content[i].length === 0; content.pop());
 
-  // get the length of extra whitespace to cut off of the beginning of each line in content array
-  let slice_from = content.join("\n").match(/^\s*/gm).sort((a, b) => a.length - b.length)[0].length;
-
-  // remove extra whitespace
-  return content.map(line => line.slice(slice_from)).join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
+  return content
+          .map(line => line.slice(
+           content.join("\n") // converts content to string to string
+            .match(/^\s*/gm) // gets the extra whitespace at the begining of the line and returns a map of the spaces
+            .sort((a, b) => a.length - b.length)[0].length; // sorts the spaces array from smallest to largest and then checks returns the length of the first item in the array
+          )) // remove extra whitespace from the begining of each line
+          .join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
  };
 
  /// @name annotation
