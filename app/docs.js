@@ -177,7 +177,7 @@ var docs = (function(){
           .map(line => line.slice(
            content.join("\n") // converts content to string to string
             .match(/^\s*/gm) // gets the extra whitespace at the begining of the line and returns a map of the spaces
-            .sort((a, b) => a.length - b.length)[0].length; // sorts the spaces array from smallest to largest and then checks returns the length of the first item in the array
+            .sort((a, b) => a.length - b.length)[0].length // sorts the spaces array from smallest to largest and then checks returns the length of the first item in the array
           )) // remove extra whitespace from the begining of each line
           .join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
  };
