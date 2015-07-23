@@ -1,7 +1,7 @@
 "use strict";
 
 import markdown from "marked";
-import {Deferred, fs, path, glob, to_string, is} from "./utils.js";
+import {Deferred, fs, path, glob, is} from "./utils.js";
 import paths from "./paths.js";
 
 ////
@@ -168,7 +168,7 @@ var docs = (function(){
  /// @arg {array, string} content - The array of lines that will be normalized
  /// @returns {string} - The normalized string
  _.normalize = content => {
-  content = is.string(content) ? content.split(/\n/) : content;
+  content = is.string(content) ? content.split("\n") : content;
 
   // remove trailing blank lines
   for(let i = content.length; i-- && content[i].length === 0;){
@@ -397,8 +397,6 @@ var docs = (function(){
   // @description Parses each block in blocks
   // @returns {array}
   parse_blocks = function(){
-   const annotation_keys = Object.getOwnPropertyNames(annotations);
-
    // @description Used as a helper function because this action is performed in two spots
    // @arg {object} annotation - information of the current annotation block
    // @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
@@ -505,7 +503,7 @@ var docs = (function(){
         // redefines resets the current annotation to be blank
         _annotation = {
          name: name_of_annotation, // sets the current annotation name
-         line: line.slice(prefix_index + 1 + name_of_annotation.length).trim(), // removes the current annotation name and it's prefix from the first line
+         line: line.slice(prefix_index + 1 + name_of_annotation.length), // removes the current annotation name and it's prefix from the first line
          contents: [],
          start: i, // sets the starting line of the annotation
          end: 0
@@ -604,11 +602,7 @@ var docs = (function(){
      /// @arg {number,\t,\s} spacing [1] - The spacing you want the file to have.
      /// @returns {this}
      write(location, spacing){
-      fs.writeFile(location, JSON.stringify(this.data, null, !is.undefined(spacing) ? spacing : 1), err => {
-       if(err){
-        throw err;
-       }
-      });
+      fs.writeJson(temp_file, this.data, (err) => err && console.error(err));
       return this;
      },
 
@@ -797,6 +791,7 @@ docs.annotation("markup", function(){
  // add regex for `{language} [settings] - description`
  return this.annotation.contents;
 });
+
 
 
 export default docs;

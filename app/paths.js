@@ -18,7 +18,7 @@ export default function paths(globs, changed){
           result = [];
 
       // converts the string to an array so it can be looped over
-      if(Object.prototype.toString.call(files) === "[object String]"){
+      if(is.string(files)){
        files = [files];
       }
 
@@ -53,7 +53,7 @@ export default function paths(globs, changed){
         // a) copies source file into the target directory and returns the source
         if(target_stats === void 0 || (target_stats.mtime < source_stats.mtime)){
          // copies new files over.
-         fs.copy(source, target, (err) => err && console.log(err));
+         fs.fake_copy(source, target, (err) => err && console.log(err));
          return deferred.resolve(source);
         }
 
