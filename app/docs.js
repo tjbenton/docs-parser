@@ -482,17 +482,16 @@ var docs = (function(){
     // loop over each block
     for(let a = 0, blocks_length = blocks.length; a < blocks_length; a++){
      let block = blocks[a],
-         comment = block.comment.contents,
          _annotation = {};
 
      this.annotations_in_block = {};
-
-     block.comment.contents = _.normalize(block.comment.contents);
-     block.code.contents = _.normalize(block.code.contents);
+     // console.log("before =", block.comment.contents);
+     block.comment.contents = _.normalize(block.comment.contents).split("\n");
+     block.code.contents = _.normalize(block.code.contents).split("\n");
 
      // loop over each line in the comment block
-     for(let i = 0, l = comment.length; i < l; i++){
-      let line = comment[i],
+     for(let i = 0, l = block.comment.contents.length; i < l; i++){
+      let line = block.comment.contents[i],
           prefix_index = line.indexOf(setting.annotation_prefix);
 
       // a) there is an index of the annotation prefix
