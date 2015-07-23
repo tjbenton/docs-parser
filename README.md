@@ -368,7 +368,22 @@ This type of comment can only occur **once** per file. Any annotations that are 
     }
    ```
    These types of comments are fairly common throughout any development procces for temp code that's for debugging or notes to come back and fix the issue. The number that is passed to `#{2}` is referring to the number of lines after the comment.
- - Figure out why the F description isn't showing up in all the languages.
+ - Figure out a way to have nested comment blocks so the nested comment blocks can be tied to the initial comment block.
+   ```js
+   /// @name parse_blocks
+   /// @description Parses each block in blocks
+   /// @returns {array}
+   parse_blocks = function(){
+    /// @name this.merge
+    /// @description Used as a helper function because this action is performed in two spots
+    /// @arg {object} annotation - information of the current annotation block
+    /// @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
+    /// @returns {object}
+    this.merge = (annotation, info) => {
+      ...
+    };
+   };
+   ```
  - Instead of returning
  ```json
  "cs": {
