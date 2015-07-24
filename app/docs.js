@@ -121,23 +121,25 @@ var docs = (function(){
  /// @returns {object} the settings to use
  _.settings = filetype => {
   let defaults = {
-   // file level comment block identifier
-   file_comment: {
+   file_comment: { // file level comment block identifier
     start: "////",
     line: "///",
     end: "////"
    },
-
-   // block level comment block identifier
-   block_comment: {
+   block_comment: { // block level comment block identifier
+    // @todo {5}
+    // add in a fix so that someone can extend onto another language
+    // and then overwrite specific peices of what was defined.
+    // If `start: ""` and `end: ""` exist then it breaks the parser.
+    // start: "",
     line: "///"
+    // end: ""
    },
-
-   // the start of the annotation id(this should probably never be changed)
-   annotation_prefix: "@"
-  }
+   annotation_prefix: "@", // annotation identifier(this should probably never be changed)
+   single_line_prefix: "#" // single line prefix for comments inside of the code below the comment block
+  };
   return !is.undefined(_.file_specific_settings[filetype]) ? _.extend(defaults, _.file_specific_settings[filetype]) : defaults;
- }
+ };
 
  /// @name setting
  /// @description Allows you to specify settings for specific file types
@@ -147,7 +149,7 @@ var docs = (function(){
   return _.extend(_.file_specific_settings, {
    [extention]: obj
   });
- }
+ };
 
  // the annotations object
  _.all_annotations = {};
