@@ -60,15 +60,21 @@ const to = {
  // It converts multiple arrays into a single array
  // @arg {array, string, object, number} - The item you want to be converted to array
  // @returns {array}
- array: (...args) => {
-  let result = [],
-      glue = is.regexp(args[args.length - 1]) ? args.pop() : "\n";
+ // array: (arg, glue = "\n") => is.array(arg) ? arg : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : [],
 
-  for(let arg of args){
-   result.concat(to.array(arg));
+ array: function(arg, ...args){
+  let glue = args.length > 0 && is.regexp(args[args.length - 1]) ? args.pop() : "\n",
+      to_array = arg => is.array(arg) ? arg : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : [],
+      result = to_array(arg);
+
+  if(args.length > 0){
+   for(let i = 0, l = args.length; i < l; i++){
+    let arg = args[i];
+    result = result.concat();
+   }
   }
 
-  return is.array(arg) ? arg : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : [];
+  return result;
  },
 
  // @name to.merge
