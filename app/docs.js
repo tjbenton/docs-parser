@@ -34,7 +34,9 @@ var docs = (function(){
         /// @description
         /// Helper function to convert markdown text to html
         /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
-        markdown
+        markdown,
+        to,
+        is
        };
 
  // the settings object that holds the file specific settings as well as the base settings
