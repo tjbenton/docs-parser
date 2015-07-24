@@ -211,12 +211,12 @@ var docs = (function(){
  /// @arg {string} - The path to the file you're wanting to parse
  /// @returns {array} - Array of parsed blocks
  _.parse_file = file_path => {
-  let get_blocks,
-      parse_blocks,
-      filetype = path.extname(file_path).replace(".", ""),
-      setting = _.settings(filetype),
-      annotations = _.annotations(filetype),
-      annotation_keys = Object.getOwnPropertyNames(annotations),
+  let get_blocks, // function to get the blocks in the file
+      parse_blocks, // function to parse the blocks that're returned from `get_blocks`
+      filetype = path.extname(file_path).replace(".", ""), // the filetype of the current file
+      setting = _.settings(filetype), // gets the settings for this file
+      annotations = _.annotations(filetype), // gets the annotations to use on this file
+      annotation_keys = Object.getOwnPropertyNames(annotations), // stores the annotation names for this file in an array
 
       // The ` + ""` converts the file from a buffer to a string
       //
@@ -227,11 +227,11 @@ var docs = (function(){
       file = (fs.readFileSync(file_path) + "").replace(/(?:\\[rn]|[\r\n]+)+/g, "\n"),
       _obj = {
        file: {
-        contents: file,
-        path: file_path,
-        type: filetype,
-        start: 0,
-        end: file.split("\n").length - 1
+        contents: file, // all of the contents of the file
+        path: file_path, // path of the file
+        type: filetype, // filetype of the file
+        start: 0, // starting point of the file
+        end: file.split("\n").length - 1 // ending point of the file
        }
       };
 
