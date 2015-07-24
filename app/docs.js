@@ -489,20 +489,14 @@ var docs = (function(){
    // @arg {object, array} - The block/blocks you want to have parsed
    // @returns {array} of parsed blocks
    this.parse = blocks_to_parse => {
-    let to_array,
-        _parse_blocks,
+    let _parse_blocks,
         _parse_content;
-    // @description
-    // This converts an object or string to an array. If it's already an array, then it returns it's self
-    // @arg {array, string, object} - The item you want to be converted to array
-    // @returns {array}
-    to_array = (arg) => is.array(arg) ? arg : is.string(arg) ? arg.split("\n") : is.object(arg) ? [arg] : [];
 
     _parse_blocks = (blocks = blocks_to_parse) => {
      let parsed_blocks = [];
 
       // if it's an object then convert it to an array.
-     blocks = to_array(blocks);
+     blocks = to.array(blocks);
 
      // loop over each block
      for(let a = 0, blocks_length = blocks.length; a < blocks_length; a++){
@@ -532,7 +526,7 @@ var docs = (function(){
     // for this file type or the default function.
     // @arg {string, array} - The contents to loop over
     _parse_content = (contents, prefix = setting.annotation_prefix, restrict_lines = false) => {
-     contents = to_array(contents);
+     contents = to.array(contents);
 
      let current_annotation = {}; // holds the current annotation
 
