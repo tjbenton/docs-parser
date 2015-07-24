@@ -46,6 +46,118 @@ fs.fake_copy = (source, target, callback) => {
 
 const to_string = arg => Object.prototype.toString.call(arg);
 
+const to = {
+ // @name to.string
+ // @description
+ // Converts an object, array, number, or boolean to a string
+ // @arg {string, object, array, number, boolean}
+ // @returns {string}
+ string: (arg, glue = "\n") => is.string(arg) ? arg : is.object(arg) ? Object.prototype.toString.call(arg) : is.array(arg) ? arg.join(glue) : is.number(arg) || is.boolean(arg) ? arg.toString() : "'" + arg + "'",
+
+ // @name to.array
+ // @description
+ // Converts `...args` to array
+ // It converts multiple arrays into a single array
+ // @arg {array, string, object, number} - The item you want to be converted to array
+ // @returns {array}
+ array: (...args) => {
+  let result = [],
+      glue = is.regexp(args[args.length - 1]) ? args.pop() : "\n";
+
+  for(let arg of args){
+   result.concat(to.array(arg));
+  }
+
+  return is.array(arg) ? arg : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : [];
+ },
+
+ // @name to.merge
+ // @description
+ // This merges the last argument in the list with the 2nd to last argument.
+ //
+ // If the `name` **doesn't** exist then it adds it.
+ //
+ // If the `name` **does** exist
+ //  - If it **isn't** an `Array` then it converts the current value to an
+ //    array and adds the new item to that array.
+ //  - If it's already an array then it pushes `to_merge` onto it.
+ //
+ // @arg {object} - The object that you want to merge onto
+ // @arg {...argsList, string} keys - Name of the annotation to merge
+ // @args {string} name - the 2nd to last argument in the `...argsList`
+ // @arg {*} to_merge - The item to merge
+ // @returns {object} - The updated `obj`
+ merge: (obj, ...args/*, name, to_merge */) => {
+  let current = obj,
+      to_merge = args.pop(),
+      name = args.pop();
+
+
+
+  if(args.length > 0){
+   for(let i = 0, l = args.length; i < l; i++){
+    let arg = current[args[i]];
+    if(is.undefined(current[args[i]])){
+     current[args[i]] = {};
+    }
+   }
+  }
+
+  // a) the current item being merged is already defined in the base
+  // b) define the target
+  if(!is.undefined(current[name])){
+   // a) convert the target to an array
+   // b) add item to the current target array
+   if(!is.array(current[name])){
+    current[name] = [current[name], to_merge];
+   }else{
+    current[name].push(to_merge);
+   }
+  }else{
+   current[name] = to_merge;
+  }
+
+  return current;
+ },
+
+ // @name to.regex
+ // @description
+ // Converts `...args` to regex
+ // @returns {string}
+ //
+ // @markup {js}
+ // new RegExp(":((" + to.regex(")|(", "link", "visited", "hover") + "))", "gi");
+ regex: (glue, ...args) => to.array(args).join(glue),
+
+ // @name to.boolean
+ // @description
+ // Converts `arg` to boolean
+ // @arg {boolean, array, object, string, number}
+ // @returns {boolean}
+ boolean: (arg) => is.boolean(arg) ? arg : is.array(arg) ? !!arg.length : is.object(arg) ? is.empty(arg) : is.number(arg) ? arg > 0 ? !!arg : !!0 : !!arg,
+
+ // @name to.number
+ // @description
+ // Converts `arg` to number
+ // @arg {number, array, object, string, boolean}
+ // @returns {number}
+ number: (arg) => is.number(arg) ? arg : is.array(arg) ? arg.length : is.object(arg) ? Object.getOwnPropertyNames(arg).length : ~~arg,
+
+ // @name to.abs
+ // @description
+ // Converts `arg` to a positive number
+ // @arg {number, array, object, string, boolean}
+ // @returns {number}
+ abs: (arg) => Math.abs(to.number(arg)),
+
+ // @name to.neg
+ // @description
+ // Converts `arg` to a negative number
+ // @arg {number, array, object, string, boolean}
+ // @returns {number}
+ neg: (arg) => ~to.abs(arg)
+};
+
 const is = {
   // @description is a given value function?
   // @arg {*} value - The item to check
@@ -111,4 +223,4 @@ Array.prototype.contains = function(i){
  return this.indexOf(i) >= 0;
 };
 
-export {Deferred, fs, path, glob, to_string, is, Array};
+export {Deferred, fs, path, glob, is, to, Array};
