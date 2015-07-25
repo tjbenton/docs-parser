@@ -26,7 +26,6 @@
 	/// @name Something else
 	/// @description
 	/// This is another normal multi-line comment.
-
 	$color = "red";
 	echo "My car is " . $color . "<br>";
 	echo "My house is " . $COLOR . "<br>";
