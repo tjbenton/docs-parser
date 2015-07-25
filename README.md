@@ -310,7 +310,8 @@ This type of comment can only occur **once** per file. Any annotations that are 
 # Todo
  - Add the ability to add aliases
    - Take into account the ability to specify alias and file types. For example being able to extend something onto the `name` but use the `scss` specific filetype callback.
- - Filter out files that haven't changed, and only pass through the new files.
+ - ~~Filter out files that haven't changed, and only pass through the new files.~~
+ - Refactor the function that get's the blocks to be seperate functions so it can reused for both header level comments and body comments.
  - Ability to add single line notations, or allow the user to define how many lines they want to return. The way it would work is to have a special identifier after the opening comments(eg `/**#{2} @remove */`) for laguages that use them, or after the single line comment(`///#{5}`). If you didn't want to return multiple lines, then you could just write `///#` and it would return everything before the comment. Note that `///#` is different that `///#{1}` because the `{2}` telling the parser to return the next 2 lines. There couldn't be any spaces inbetween the specified comment style and the special character that's used to identify this type of comment. Having this ability would allow you to do things like the following.
 
    ###### Returning a single line example
@@ -446,6 +447,15 @@ This type of comment can only occur **once** per file. Any annotations that are 
      }
    }
    ```
+  - Look into adding a callback function that runs after the block has been completely parsed this would be run after the single line comments are parsed. I'm not sure how useful this would be but it's a thought.
+    - This could allow you to create your own data structure.
+  - Come up with a name for the project
+  - Auto generate the site's navigation based off of `@page`.
+  - Create a styleguide site based off the JSON output. This will be in a seperate repo to keep the parser functionality seperate from the themes. As of now It will be written in angular because to my knowledge it's the easiest to implement. The parser and the theme will probably not come packaged together because it would make it harder to add themes.
+    - Navigation
+    - Search
+    - Include language parsing
+    - Include `@state` replacement.
 
 <!-- Document Generators -->
 [sass-doc]: https://github.com/SassDoc/sassdoc
