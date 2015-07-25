@@ -310,10 +310,12 @@ This type of comment can only occur **once** per file. Any annotations that are 
 # Todo
  - Add the ability to add aliases
    - Take into account the ability to specify alias and file types. For example being able to extend something onto the `name` but use the `scss` specific filetype callback.
- - Filter out files that haven't changed, and only pass through the new files.
+ - ~~Filter out files that haven't changed, and only pass through the new files.~~
+ - Refactor the function that get's the blocks to be seperate functions so it can reused for both header level comments and body comments.
  - Ability to add single line notations, or allow the user to define how many lines they want to return. The way it would work is to have a special identifier after the opening comments(eg `/**#{2} @remove */`) for laguages that use them, or after the single line comment(`///#{5}`). If you didn't want to return multiple lines, then you could just write `///#` and it would return everything before the comment. Note that `///#` is different that `///#{1}` because the `{2}` telling the parser to return the next 2 lines. There couldn't be any spaces inbetween the specified comment style and the special character that's used to identify this type of comment. Having this ability would allow you to do things like the following.
 
    ###### Returning a single line example
+
    ```css
     .foo{
      background: blue;
@@ -324,6 +326,7 @@ This type of comment can only occur **once** per file. Any annotations that are 
       background: black;
     }
    ```
+
    ```scss
    .foo{
     background: blue;
@@ -335,13 +338,15 @@ This type of comment can only occur **once** per file. Any annotations that are 
     }
    }
    ```
+
    ```js
     function foo(){
      console.log(arguments); ///# @remove
     }
    ```
 
-   ###### Returning a specified number of lines.
+   ###### Returning a specified number of lines.<br>
+
    ```css
     .foo{
      margin: 10px;
@@ -351,6 +356,7 @@ This type of comment can only occur **once** per file. Any annotations that are 
      outline: 1px solid red;
     }
    ```
+
    ```scss
    .foo{
      margin: 10px;
@@ -360,6 +366,7 @@ This type of comment can only occur **once** per file. Any annotations that are 
      outline: 1px solid red;
     }
    ```
+
    ```js
     function foo(){
      ///#{2} @remove
@@ -367,67 +374,88 @@ This type of comment can only occur **once** per file. Any annotations that are 
      console.log(arguments[0]);
     }
    ```
+
    These types of comments are fairly common throughout any development procces for temp code that's for debugging or notes to come back and fix the issue. The number that is passed to `#{2}` is referring to the number of lines after the comment.
+
  - Figure out a way to have nested comment blocks so the nested comment blocks can be tied to the initial comment block.
+
    ```js
    /// @name parse_blocks
    /// @description Parses each block in blocks
    /// @returns {array}
    parse_blocks = function(){
-    /// @name this.merge
-    /// @description Used as a helper function because this action is performed in two spots
-    /// @arg {object} annotation - information of the current annotation block
-    /// @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
-    /// @returns {object}
-    this.merge = (annotation, info) => {
-      ...
-    };
+     /// @name this.merge
+     /// @description Used as a helper function because this action is performed in two spots
+     /// @arg {object} annotation - information of the current annotation block
+     /// @arg {object} info - information about the current comment block, the code after the comment block and the full file contents
+     /// @returns {object}
+     this.merge = (annotation, info) => {
+       ...
+     };
    };
    ```
+
  - Instead of returning
- ```json
- "cs": {
-  "/Users/tylerbenton/ui-development/docs/tests/lib/c#/test.cs": [
-   {
-    "author": "Tyler Benton",
-    "page": "tests/c#-file",
-    "name": "main"
-   },
-   {
-    "author": "Tyler Benton",
-    "page": "tests/c#-file",
-    "name": "Something"
-   },
-   {
-    "author": "Tyler Benton",
-    "page": "tests/c#-file",
-    "name": "Something else"
+
+   ```json
+   "cs": {
+     "/Users/tylerbenton/ui-development/docs/tests/lib/c#/test.cs": [
+       {
+         "author": "Tyler Benton",
+         "page": "tests/c#-file",
+         "name": "main",
+         "description": "<p>Rerum exercitationem tenetur iure facere, iusto dolores cumque repudiandae. Voluptate repudiandae soluta, deleniti, repellat explicabo placeat id maxime ea veniam error quasi!</p>"
+       },
+       {
+         "author": "Tyler Benton",
+         "page": "tests/c#-file",
+         "name": "Something",
+         "description": "<p>Rerum exercitationem tenetur iure facere, iusto dolores cumque repudiandae. Voluptate repudiandae soluta, deleniti, repellat explicabo placeat id maxime ea veniam error quasi!</p>"
+       },
+       {
+         "author": "Tyler Benton",
+         "page": "tests/c#-file",
+         "name": "Something else",
+         "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>"
+       }
+     ]
    }
-  ]
- }
- ```
- change to return
- ```json
- "cs": {
-  "/Users/tylerbenton/ui-development/docs/tests/lib/c#/test.cs": {
-   file: {
-    "author": "Tyler Benton",
-    "page": "tests/c#-file",
-   },
-   blocks: [
-    {
-     "name": "main"
-    },
-    {
-     "name": "Something"
-    },
-    {
-     "name": "Something else"
-    }
-   ]
-  }
- }
- ```
+   ```
+
+   change to return
+
+   ```json
+   "cs": {
+     "/Users/tylerbenton/ui-development/docs/tests/lib/c#/test.cs": {
+       "header": {
+         "author": "Tyler Benton",
+         "page": "tests/c#-file",
+         "description": "<p>Rerum exercitationem tenetur iure facere, iusto dolores cumque repudiandae. Voluptate repudiandae soluta, deleniti, repellat explicabo placeat id maxime ea veniam error quasi!</p>"
+       },
+       "body": [
+         {
+          "name": "main"
+         },
+         {
+          "name": "Something"
+         },
+         {
+          "name": "Something else",
+          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>"
+         }
+       ]
+     }
+   }
+   ```
+  - Look into adding a callback function that runs after the block has been completely parsed this would be run after the single line comments are parsed. I'm not sure how useful this would be but it's a thought.
+    - This could allow you to create your own data structure.
+  - Come up with a name for the project
+  - Auto generate the site's navigation based off of `@page`.
+  - Create a styleguide site based off the JSON output. This will be in a seperate repo to keep the parser functionality seperate from the themes. As of now It will be written in angular because to my knowledge it's the easiest to implement. The parser and the theme will probably not come packaged together because it would make it harder to add themes.
+    - Navigation
+    - Search
+    - Include language parsing
+    - Include `@state` replacement.
 
 <!-- Document Generators -->
 [sass-doc]: https://github.com/SassDoc/sassdoc
