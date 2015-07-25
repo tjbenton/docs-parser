@@ -188,22 +188,20 @@ var docs = (function(){
       setting = _.settings(filetype), // gets the settings for this file
       annotations = _.annotations(filetype), // gets the annotations to use on this file
       annotation_keys = Object.getOwnPropertyNames(annotations), // stores the annotation names for this file in an array
-
       // The ` + ""` converts the file from a buffer to a string
       //
       // The `replace` fixes a extremily stupid issue with strings, that is caused by shitty microsoft computers.
       // It removes`\r` and replaces it with `\n` from the end of the line. If this isn't here then when `match`
       // runs it will return 1 more item in the matched array than it should(in the normalize function)
       // http://stackoverflow.com/questions/20023625/javascript-replace-not-replacing-text-containing-literal-r-n-strings
-      file = (fs.readFileSync(file_path) + "").replace(/(?:\\[rn]|[\r\n]+)+/g, "\n"),
-      _obj = {
-       file: {
-        contents: file, // all of the contents of the file
-        path: file_path, // path of the file
-        type: filetype, // filetype of the file
-        start: 0, // starting point of the file
-        end: file.split("\n").length - 1 // ending point of the file
-       }
+      contents = (fs.readFileSync(file_path) + "").replace(/(?:\\[rn]|[\r\n]+)+/g, "\n"),
+      lines = to.array(contents), // all the lines in the file
+      file = {
+       contents, // all of the contents of the file
+       path: file_path, // path of the file
+       type: filetype, // filetype of the file
+       start: 0, // starting point of the file
+       end: lines.length - 1 // ending point of the file
       };
 
   // @name get_blocks
@@ -215,24 +213,24 @@ var docs = (function(){
    // @arg {number} i - The start line of the comment block
    // @returns {object}
    const new_block = i => {
-    return extend({
-      comment: {
-       contents: [],
-       start: i,
-       end: -1
-      },
-      code: {
-       contents: [],
-       start: -1,
-       end: -1
-      }
-     }, _obj);
+    return {
+     comment: {
+      contents: [],
+      start: i,
+      end: -1
+     },
+     code: {
+      contents: [],
+      start: -1,
+      end: -1
+     },
+     file
+    };
    };
 
-   let _blocks = [], // holds all the blocks
-       _file_block = new_block(-1), // holds the file level comment block
+   let header = new_block(-1), // holds the file level comment block
+       body = [], // holds all the blocks
        block_info, // holds the current block information
-       lines = _obj.file.contents.split("\n"), // all the lines in the file
 
        // file specific variables
        is_start_and_end_file_comment = !is.undefined(setting.file_comment.start) && !is.undefined(setting.file_comment.end), // determins if the file comment has a start and end style or is line by line
@@ -248,7 +246,7 @@ var docs = (function(){
        l = lines.length; // the length of the lines array
 
    // a) file level comment exists
-   if(is_start_and_end_file_comment ? !is.false(is.included(_obj.file.contents, setting.file_comment.start)) : setting.file_comment.line !== setting.block_comment.line ? !is.false(is.included(_obj.file.contents, setting.file_comment.line)) : false){
+   if(is_start_and_end_file_comment ? !is.false(is.included(file.contents, setting.file_comment.start)) : setting.file_comment.line !== setting.block_comment.line ? !is.false(is.included(file.contents, setting.file_comment.line)) : false){
     // loop over each line to look for file level comments
     for(; i < l; i++){
      let line = lines[i],
@@ -259,9 +257,9 @@ var docs = (function(){
          };
 
      // a) is the start and end style or there was an instance of a comment line
-     if(!is.false(file_comment.start) && _file_block.comment.start === -1 || !in_file_comment && !is.false(file_comment.line)){
+     if(!is.false(file_comment.start) && header.comment.start === -1 || !in_file_comment && !is.false(file_comment.line)){
       in_file_comment = true;
-      _file_block.comment.start = i;
+      header.comment.start = i;
      }
 
      // a) adds this line to block_info comment contents
@@ -270,13 +268,13 @@ var docs = (function(){
       if(!is.false(file_comment.line)){
        line = line.slice(file_comment.line + setting.file_comment.line.length);
       }
-      _file_block.comment.contents.push(line);
+      header.comment.contents.push(line);
      }
 
      // a) check for the end of the file level comment
-     if((is_start_and_end_file_comment && _file_block.comment.start !== i && !is.false(file_comment.end)) || (!is_start_and_end_file_comment && !is.false(is.included(lines[i + 1], setting.file_comment.line)))){
+     if((is_start_and_end_file_comment && header.comment.start !== i && !is.false(file_comment.end)) || (!is_start_and_end_file_comment && !is.false(is.included(lines[i + 1], setting.file_comment.line)))){
       in_file_comment = false;
-      _file_block.comment.end = i;
+      header.comment.end = i;
       i++; // added 1 more to `i` so that the next loop starts on the next line
       break; // ensures that the loop stops because there's only 1 file level comment per file
      }
@@ -301,7 +299,7 @@ var docs = (function(){
       // a) There was block that has already been processed
       if(!is.undefined(block_info)){ // holds the current block information
        block_info.code.end = i - 1;
-       _blocks.push(block_info);
+       body.push(block_info);
       }
 
       // reset the `block_info` to use on the new block
@@ -339,7 +337,7 @@ var docs = (function(){
      // a) The last line in the file is a commment
      if(in_comment && (is_start_and_end && !is.false(comment_index.end) ? i === l : i === l - 1)){
       block_info.comment.end = is_start_and_end ? i - 1 : i;
-      _blocks.push(block_info);
+      body.push(block_info);
       break; // ensures that the loop stops because it's the last line in the file
      }
     } // end comment code
@@ -356,17 +354,17 @@ var docs = (function(){
      // adds this line to block code contents
      block_info.code.contents.push(line);
 
-     // a) pushes the last block onto the _blocks
+     // a) pushes the last block onto the body
      if(i === l - 1){
       block_info.code.end = i;
-      _blocks.push(block_info);
+      body.push(block_info);
      }
     }
    } // end loop
 
    return {
-    file: _file_block,
-    general: _blocks // I have no idea what the key for this should be named but it probabaly shouldn't be `general`
+    header, // the header for the file
+    body // the blocks in the rest of the file
    };
   };
 
@@ -476,9 +474,7 @@ var docs = (function(){
       this.block.code.contents = _.normalize(this.block.code.contents);
 
       let parsed_block = _parse_content(this.block.comment.contents);
-      console.log("parsed_block =", parsed_block);
-      console.log("this.block_annotations =", this.block_annotations);
-      console.log("");console.log("");console.log("");
+
       if(!is.empty(this.block_annotations)){
        parsed_blocks.push(this.block_annotations);
       }
@@ -547,8 +543,8 @@ var docs = (function(){
    };
 
    // parses the file and gets the results
-   let file_annotations = !is.empty(this.file) ? this.parse(this.file)[0] : false,
-       parsed_blocks = this.parse(this.general);
+   let file_annotations = !is.empty(this.header) ? this.parse(this.header)[0] : false,
+       parsed_blocks = this.parse(this.body);
 
    // a) loop over each parsed blocks and set the file level annotations
    // @todo {5} - remove this so code doesn't get duplicated.
