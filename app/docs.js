@@ -1,7 +1,7 @@
 "use strict";
 
 import markdown from "marked";
-import {Deferred, fs, path, glob, is, to} from "./utils.js";
+import {Deferred, fs, path, is, to, extend} from "./utils.js";
 import paths from "./paths.js";
 
 ////
@@ -86,37 +86,6 @@ var docs = (function(){
  }
  _.file_specific_settings.py = _.file_specific_settings.rb;
 
- /// @name extend
- /// @description
- /// Extend object `b` onto `a`
- /// http://jsperf.com/deep-extend-comparison
- /// @arg {object} a - Source object.
- /// @arg {object} b - Object to extend with.
- /// @returns {object} The extended object.
- _.extend = (a, b) => {
-  // Don't touch 'null' or 'undefined' objects.
-  if(!a || !b){
-   return a;
-  }
-
-  for(let i = 0, keys = Object.keys(b), l = keys.length; i < l; i++){
-   let key = keys[i];
-
-   // Detect object without array, date or null.
-   if(is.object(b[key])){
-    if(!is.object(a[key])){
-     a[key] = b[key];
-    }else{
-     a[key] = _.extend(a[key], b[key]);
-    }
-   }else{
-    a[key] = b[key];
-   }
-  }
-
-  return a;
- };
-
  /// @name settings
  /// @description Merges the default settings with the file specific settings
  /// @arg {string} filetype - the current filetype that is being parsed
@@ -140,7 +109,7 @@ var docs = (function(){
    annotation_prefix: "@", // annotation identifier(this should probably never be changed)
    single_line_prefix: "#" // single line prefix for comments inside of the code below the comment block
   };
-  return !is.undefined(_.file_specific_settings[filetype]) ? _.extend(defaults, _.file_specific_settings[filetype]) : defaults;
+  return !is.undefined(_.file_specific_settings[filetype]) ? extend(defaults, _.file_specific_settings[filetype]) : defaults;
  };
 
  /// @name setting
@@ -148,7 +117,7 @@ var docs = (function(){
  /// @arg {string} extention - the file extention you want to target
  /// @arg {object} obj - the settings you want to adjust for this file type
  _.setting = (extention, obj) => {
-  return _.extend(_.file_specific_settings, {
+  return extend(_.file_specific_settings, {
    [extention]: obj
   });
  };
@@ -162,7 +131,7 @@ var docs = (function(){
  /// Basically the file specific annotations get extended onto the default annotations
  /// @arg {string} filetype - the current filetype that is being parsed
  /// @returns {object} the settings to use
- _.annotations = filetype => !is.undefined(_.all_annotations[filetype]) ? _.extend(_.extend({}, _.all_annotations.default), _.all_annotations[filetype]) : _.all_annotations.default;
+ _.annotations = filetype => !is.undefined(_.all_annotations[filetype]) ? extend(extend({}, _.all_annotations.default), _.all_annotations[filetype]) : _.all_annotations.default;
 
  /// @name normalize
  /// @description
@@ -198,8 +167,8 @@ var docs = (function(){
   }
 
   for(var item in obj){
-   _.extend(_.all_annotations, {
-    [item]: _.extend(_.all_annotations[item] || {}, {
+   extend(_.all_annotations, {
+    [item]: extend(_.all_annotations[item] || {}, {
      [name]: obj[item]
     })
    });
@@ -246,7 +215,7 @@ var docs = (function(){
    // @arg {number} i - The start line of the comment block
    // @returns {object}
    const new_block = i => {
-    return _.extend({
+    return extend({
       comment: {
        contents: [],
        start: i,
@@ -421,7 +390,7 @@ var docs = (function(){
     annotation.line = _.normalize(annotation.line);
 
     // Merges the data together so it can be used to run all the annotations
-    to_call = _.extend({
+    to_call = extend({
      annotation: annotation, // sets the annotation block information to be in it's own namespace of `annotation`
 
      /// @name this.add
@@ -443,7 +412,7 @@ var docs = (function(){
 
     // a) add the default annotation function to the object so it can be called in the file specific annotation functions if needed
     if(!is.undefined(_.all_annotations[this.block.file.type]) && !is.undefined(_.all_annotations[this.block.file.type][name])){
-     _.extend(to_call, {
+     extend(to_call, {
       default: () => _.all_annotations.default[name].call(to_call)
      });
     }
@@ -586,7 +555,7 @@ var docs = (function(){
    if(!is.false(file_annotations)){
     let _blocks = [];
     for(let i = 0, l = parsed_blocks.length; i < l; i++){
-     _blocks.push(_.extend(_.extend({}, file_annotations), parsed_blocks[i]));
+     _blocks.push(extend(extend({}, file_annotations), parsed_blocks[i]));
     }
     parsed_blocks = _blocks;
    }

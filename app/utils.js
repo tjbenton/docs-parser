@@ -1,3 +1,4 @@
+// I would like to remove the need for a third party lib for deferreds and create a simple one.
 function defer(){
   let resolve, reject;
 
@@ -13,13 +14,13 @@ function defer(){
   };
 }
 
-
-import * as fs from "fs-extra";
 import path from "path";
-import Deferred from "deferred-js";
+export {path};
+
 import glob from "glob";
+export {glob};
 
-
+import Deferred from "deferred-js";
 // extends the functionality of deffered to accept an array of deffereds
 Deferred.when.all = function(deferreds){
  let deferred = new Deferred();
@@ -32,6 +33,9 @@ Deferred.when.all = function(deferreds){
  return deferred;
 };
 
+export {Deferred};
+
+import * as fs from "fs-extra";
 // creates an empty file temp file in the `.tmp/`
 fs.fake_copy = (source, target, callback) => {
  var cbCalled = false,
@@ -43,10 +47,33 @@ fs.fake_copy = (source, target, callback) => {
   fs.writeFile(path.join(target.dir, target.base), "", () => callback && callback());
  });
 };
+export {fs};
+
+
+/// @name extend
+/// @description
+/// Extend object `b` onto `a`
+/// http://jsperf.com/deep-extend-comparison
+/// @arg {object} a - Source object.
+/// @arg {object} b - Object to extend with.
+/// @returns {object} The extended object.
+export function extend(a, b){
+ // Don't touch `null` or `undefined` objects.
+ if(!a || !b){
+  return a;
+ }
+
+ for(let i = 0, keys = Object.getOwnPropertyNames(b), l = keys.length; i < l; i++){
+  let k = keys[i];
+  a[k] = is.object(b[k]) && is.object(a[k]) ? extend(a[k], b[k]) : b[k]
+ }
+
+ return a;
+}
 
 const to_string = arg => Object.prototype.toString.call(arg);
 
-const to = {
+export const to = {
  // @name to.string
  // @description
  // Converts an object, array, number, or boolean to a string
@@ -164,7 +191,7 @@ const to = {
  neg: (arg) => ~to.abs(arg)
 };
 
-const is = {
+export const is = {
   // @description is a given value function?
   // @arg {*} value - The item to check
   // @returns {boolean} - The result of the test
@@ -224,9 +251,3 @@ const is = {
   promise: arg => arg && is.function(arg.then),
   stream: arg => arg && is.function(arg.pipe)
 };
-
-Array.prototype.contains = function(i){
- return this.indexOf(i) >= 0;
-};
-
-export {Deferred, fs, path, glob, is, to, Array};
