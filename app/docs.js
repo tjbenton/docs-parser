@@ -168,7 +168,7 @@ var docs = (function(){
   let filetype = path.extname(file_path).replace(".", ""), // the filetype of the current file
       setting = _.settings(filetype), // gets the settings for this file
       annotations = _.annotations(filetype), // gets the annotations to use on this file
-      annotation_keys = Object.getOwnPropertyNames(annotations), // stores the annotation names for this file in an array
+      annotation_keys = to.keys(annotations), // stores the annotation names for this file in an array
       // The ` + ""` converts the file from a buffer to a string
       //
       // The `replace` fixes a extremily stupid issue with strings, that is caused by shitty microsoft computers.
