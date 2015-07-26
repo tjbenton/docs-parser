@@ -26,9 +26,9 @@ Deferred.when.all = function(deferreds){
  let deferred = new Deferred();
  Deferred.when.apply(null, deferreds)
   .then(function(){
-   deferred.resolve(Array.prototype.slice.call(arguments))
+   deferred.resolve(to.array(arguments))
   }, function(){
-   deferred.fail(Array.prototype.slice.call(arguments))
+   deferred.fail(to.array(arguments))
   });
  return deferred;
 };
