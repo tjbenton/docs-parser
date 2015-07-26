@@ -273,6 +273,10 @@ export const is = {
   // @returns {boolean} - The result of the test
   argument: (arg) => !is.null(arg) && (to_string.call(arg) === "[object Arguments]" || (typeof arg === "object" && "callee" in arg)),
 
+  // @description is a given arg regex expression?
+  // @arg {*} arg - The item to check
+  // @returns {boolean} - The result of the test
+  regex: (value) => to_string.call(value) === "[object RegExp]",
 
   // @description is a given arg function?
   // @arg {*} arg - The item to check
