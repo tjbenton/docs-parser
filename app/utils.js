@@ -71,7 +71,8 @@ export function extend(a, b){
  return a;
 }
 
-const to_string = arg => Object.prototype.toString.call(arg);
+const to_string = arg => Object.prototype.toString.call(arg),
+      array_slice = arg => Array.prototype.slice.call(arg);
 
 export const to = {
  // @name to.string
@@ -192,62 +193,196 @@ export const to = {
 };
 
 export const is = {
-  // @description is a given value function?
-  // @arg {*} value - The item to check
+  // placeholder for the interfaces
+  not: {},
+  all: {},
+  any: {},
+
+  // @description is a given arg Arguments?
+  // fallback check is for IE
+  argslist: (arg) => !is.null(arg) && (to_string.call(arg) === "[object Arguments]" || (typeof arg === "object" && "callee" in arg)),
+
+
+  // @description is a given arg function?
+  // @arg {*} arg - The item to check
   // @returns {boolean} - The result of the test
   function: arg => to_string(arg) === "[object Function]" || typeof arg === "function",
 
-  // @description is a given value Array?
-  // @arg {*} value - The item to check
+  // @description is a given arg Array?
+  // @arg {*} arg - The item to check
   // @returns {boolean} - The result of the test
   array: arg => to_string(arg) === "[object Array]",
 
-  // @description is a given value Boolean?
-  // @arg {*} value - The item to check
+  // @description is a given arg Boolean?
+  // @arg {*} arg - The item to check
   // @returns {boolean} - The result of the test
   boolean: arg => arg === true || arg === false || to_string(arg) === "[object Boolean]",
 
-  // @description is a given value object?
-  // @arg {*} value - The item to check
+  // @description is a given arg object?
+  // @arg {*} arg - The item to check
   // @returns {boolean} - The result of the test
   object: arg => to_string(arg) === "[object Object]",
 
-  // @description is a given value empty? Objects, arrays, strings
-  // @arg {object, array, string} value - What you want to check to see if it's empty
+  // @description is a given arg empty? Objects, arrays, strings
+  // @arg {object, array, string} arg - What you want to check to see if it's empty
   // @returns {boolean} - determins if the item you passes was empty or not
-  empty: arg => is.object(arg) ? Object.getOwnPropertyNames(arg).length === 0 : is.array(arg) ? arg.length > 0 : arg === "",
+  empty: (arg) => {
+   var type = typeof arg;
+   if(is.falsy(arg)){
+    return true;
+   }
+   else if(type === "function" || type === "object" && !!arg){
+    let num = Object.getOwnPropertyNames(arg).length;
+    return (num === 0 || (num === 1 && is.array(arg)) || (num === 2 && is.argslist(arg))) ? true : false;
+   }
+   else{
+    return arg === "";
+   }
+  },
 
-  // @description is a given value String?
-  // @arg {*} value - The item to check
+  // @description is a given arg String?
+  // @arg {*} arg - The item to check
   // @returns {boolean} - The result of the test
   string: arg => to_string(arg) === "[object String]",
 
-  // @description is a given value undefined?
-  // @arg {*} value - The item to check
+  // @description is a given arg undefined?
+  // @arg {*} arg - The item to check
   // @returns {boolean}
   undefined: arg => arg === void 0,
 
   // @description is a given string include parameter substring?
   // @arg {string} str - string to match against
   // @arg {string} substr - string to look for in `str`
+  // @todo {1} update this to work with arrays
+  // @todo {1} change name to be `index` because it still makes sense and it's shorter
   // @returns {number, boolean}
   included: (str, substr) => !is.empty(str) && !is.empty(substr) ? str.indexOf(substr) > -1 ? str.indexOf(substr) : false : false,
+  // included: (str, substr) => is.truthy(str) && is.truthy(substr) && !is.empty(str) && !is.empty(substr) ? str.indexOf(substr) > -1 ? str.indexOf(substr) : false : false,
 
-  // @description is a given value false
-  // @arg {*} value - value to check if it is false
+  // @description is a given arg false
+  // @arg {*} arg - arg to check if it is false
   // @returns {boolean}
   false: arg => arg === false,
 
-  // @description is a given value truthy?
-  // @arg {*} value - the item you want to check and see if it's truthy
+  // @description is a given arg truthy?
+  // @arg {*} arg
   // @returns {boolean}
   truthy: arg => arg !== null && arg !== undefined && arg !== false && !(arg !== arg) && arg !== "" && arg !== 0,
 
-  // @description is given value falsy?
-  // @arg {*} value - the item you want to check and see if it's falsy
+  // @description is given arg falsy?
+  // @arg {*} arg
   // @returns {boolean}
   falsy: arg => !is.truthy(arg),
 
+  // NaN is number :) Also it is the only arg which does not equal itself
+  nan: (arg) => arg !== arg,
+
+  // @description is given arg a number?
+  // @arg {*} arg
+  // @returns {boolean}
+  number: (arg) => is.not.nan(arg) && to_string(arg) === "[object Number]",
+
+  // is a given number within minimum and maximum parameters?
+  between: (arg, min = 0, max = Infinity) => is.all.number(arg, min, max) && arg > min && arg < max,
+
+  // @description is a given number positive?
+  // @arg {*} arg
+  // @returns {boolean}
+  positive: (arg) => is.number(arg) && arg > 0,
+
+  // @description is a given number negative?
+  // @arg {*} arg
+  // @returns {boolean}
+  negative: (arg) => is.number(arg) && arg < 0,
+
+  // @description is a given number above minimum parameter?
+  // @arg {*} arg
+  // @returns {boolean}
+  above: (arg, min = -1) => is.all.number(arg, min) && arg > min,
+
+  // @description is a given number above maximum parameter?
+  // @arg {*} arg
+  // @returns {boolean}
+  under: (arg, max = 100) => is.all.number(arg, max) && arg < max,
+
+  // @description is a given arg null?
+  // @arg {*} arg - the item you want to check and see if it's `null`
+  // @returns {boolean}
+  null: (arg) => arg === null,
+
   promise: arg => arg && is.function(arg.then),
+
   stream: arg => arg && is.function(arg.pipe)
 };
+
+// included method does not support `all` and `any` interfaces
+is.included.api = ["not"];
+
+// within method does not support `all` and `any` interfaces
+is.between.api = ["not"];
+
+// `above` method does not support `all` and `any` interfaces
+is.above.api = ['not'];
+
+// least method does not support `all` and `any` interfaces
+is.under.api = ['not'];
+
+const not = (func) => () => !func.apply(null, array_slice(arguments)),
+      all = (func) => {
+       return () => {
+        let parameters = array_slice(arguments),
+            length = parameters.length;
+
+        // support array
+        if(length === 1 && is.array(parameters[0])){
+         parameters = parameters[0];
+         length = parameters.length;
+        }
+
+        for(let i = 0, l = length; i < length; i++){
+         if(!func.call(null, parameters[i])){
+          return false;
+         }
+        }
+
+        return true;
+       };
+      },
+      any = (func) => {
+       return function(){
+        let parameters = array_slice(arguments),
+            length = parameters.length;
+
+        // support array
+        if(length === 1 && is.array(parameters[0])){
+         parameters = parameters[0];
+         length = parameters.length;
+        }
+
+        for(var i = 0, l = length; i < l; i++){
+         if(func.call(null, parameters[i])){
+          return true;
+         }
+        }
+        return false;
+       };
+      },
+      setInterfaces = () => {
+      var options = is;
+      for(var option in options){
+       if(hasOwnProperty.call(options, option) && is.function(options[option])){
+        var interfaces = options[option].api || ["not", "all", "any"];
+        for (var i = 0; i < interfaces.length; i++){
+         if(interfaces[i] === "not"){
+          is.not[option] = not(is[option]);
+         }
+         if(interfaces[i] === "all"){
+          is.all[option] = all(is[option]);
+         }
+         if(interfaces[i] === "any"){
+          is.any[option] = any(is[option]);
+         }
+        }
+       }
+      }
+     }();
