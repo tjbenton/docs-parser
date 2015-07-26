@@ -59,7 +59,7 @@ export const to = {
  // Converts an object, array, number, or boolean to a string
  // @arg {string, object, array, number, boolean}
  // @returns {string}
- string: (arg, glue = "\n") => is.string(arg) ? arg : is.object(arg) ? Object.prototype.toString.call(arg) : is.array(arg) ? arg.join(glue) : is.number(arg) || is.boolean(arg) ? arg.toString() : "'" + arg + "'",
+ string: (arg, glue = "\n") => is.string(arg) ? arg : is.object(arg) ? to_string(arg) : is.array(arg) ? arg.join(glue) : is.number(arg) || is.boolean(arg) ? arg.toString() : arg + "",
 
  // The ` + ""` converts the file from a buffer to a string
  //
