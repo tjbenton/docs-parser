@@ -456,6 +456,28 @@ This type of comment can only occur **once** per file. Any annotations that are 
     - Search
     - Include language parsing
     - Include `@state` replacement.
+ - Look into being able to reference a different language comment style withing the existing language.
+   For example this would allow you to write JS documentation inside of an HTML document
+   ```html
+   <script>
+   <!---{js}
+    @name something awesome
+    @description
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae praesentium voluptates beatae ducimus dolore velit excepturi maiores delectus doloribus labore totam odio culpa, magni reprehenderit est similique aspernatur dolor rerum?
+   /--->
+   </script>
+   ```
+    ###### Need to figure out
+    - Treat the block as it's own file and re-run `get_blocks`
+    - How to store the information?
+      - Does it go along with the HTML it was found in? If so does it go under other?
+        ```
+        {
+         header,
+         body,
+         other
+        }
+        ```
 
 <!-- Document Generators -->
 [sass-doc]: https://github.com/SassDoc/sassdoc
