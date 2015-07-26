@@ -389,9 +389,20 @@ export const is = {
   // @returns {boolean}
   null: (arg) => arg === null,
 
+  // @description is a given arg a promise?
+  // @arg {*} arg - the item you want to check and see if it's a `Promise`
+  // @returns {boolean}
   promise: arg => arg && is.function(arg.then),
 
-  stream: arg => arg && is.function(arg.pipe)
+  // @description is a given arg a stream?
+  // @arg {*} arg - the item you want to check and see if it's a `stream`
+  // @returns {boolean}
+  stream: arg => arg && is.function(arg.pipe),
+
+  // @description is a given arg a stream?
+  // @arg {*} arg - the item you want to check and see if it's a `stream`
+  // @returns {boolean}
+  buffer: arg => Buffer.isBuffer(arg)
 };
 
 // included method does not support `all` and `any` interfaces
