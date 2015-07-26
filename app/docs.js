@@ -1,7 +1,7 @@
 "use strict";
 
 import markdown from "marked";
-import {Deferred, fs, path, is, to, extend, normalize} from "./utils.js";
+import {Deferred, fs, path, is, to} from "./utils.js";
 import paths from "./paths.js";
 
 ////
@@ -41,10 +41,8 @@ var docs = (function(){
         /// Helper function to convert markdown text to html
         /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
         markdown,
-        normalize,
-        extend,
-        to,
         is,
+        to
        };
 
  // the settings object that holds the file specific settings as well as the base settings
@@ -114,7 +112,7 @@ var docs = (function(){
    annotation_prefix: "@", // annotation identifier(this should probably never be changed)
    single_line_prefix: "#" // single line prefix for comments inside of the code below the comment block
   };
-  return !is.undefined(_.file_specific_settings[filetype]) ? extend(defaults, _.file_specific_settings[filetype]) : defaults;
+  return !is.undefined(_.file_specific_settings[filetype]) ? to.extend(defaults, _.file_specific_settings[filetype]) : defaults;
  };
 
  /// @name setting
@@ -122,7 +120,7 @@ var docs = (function(){
  /// @arg {string} extention - the file extention you want to target
  /// @arg {object} obj - the settings you want to adjust for this file type
  _.setting = (extention, obj) => {
-  return extend(_.file_specific_settings, {
+  return to.extend(_.file_specific_settings, {
    [extention]: obj
   });
  };
@@ -136,7 +134,7 @@ var docs = (function(){
  /// Basically the file specific annotations get extended onto the default annotations
  /// @arg {string} filetype - the current filetype that is being parsed
  /// @returns {object} the settings to use
- _.annotations = filetype => !is.undefined(_.all_annotations[filetype]) ? extend(extend({}, _.all_annotations.default), _.all_annotations[filetype]) : _.all_annotations.default;
+ _.annotations = filetype => !is.undefined(_.all_annotations[filetype]) ? to.extend(to.extend({}, _.all_annotations.default), _.all_annotations[filetype]) : _.all_annotations.default;
 
  /// @name annotation
  /// @description Used to define the new annotations
@@ -150,14 +148,13 @@ var docs = (function(){
   }
 
   for(var item in obj){
-   extend(_.all_annotations, {
-    [item]: extend(_.all_annotations[item] || {}, {
+   to.extend(_.all_annotations, {
+    [item]: to.extend(_.all_annotations[item] || {}, {
      [name]: obj[item]
     })
    });
   }
  }
-
 
  /// @name parse_file
  /// @description
@@ -404,13 +401,13 @@ var docs = (function(){
     annotation.contents.shift();
 
     // normalizes the current annotation contents
-    annotation.contents = _.normalize(annotation.contents);
+    annotation.contents = to.normalize(annotation.contents);
 
     // normalizes the current annotation line
-    annotation.line = _.normalize(annotation.line);
+    annotation.line = to.normalize(annotation.line);
 
     // Merges the data together so it can be used to run all the annotations
-    to_call = extend({
+    to_call = to.extend({
      annotation: annotation, // sets the annotation block information to be in it's own namespace of `annotation`
 
      /// @name this.add
@@ -422,7 +419,7 @@ var docs = (function(){
       str = str.split("\n");
       return this.call_annotation({
               name: name,
-              line: _.normalize(str[0]),
+              line: to.normalize(str[0]),
               contents: str,
               start: null,
               end: null
@@ -432,7 +429,7 @@ var docs = (function(){
 
     // a) add the default annotation function to the object so it can be called in the file specific annotation functions if needed
     if(!is.undefined(_.all_annotations[this.block.file.type]) && !is.undefined(_.all_annotations[this.block.file.type][name])){
-     extend(to_call, {
+     to.extend(to_call, {
       default: () => _.all_annotations.default[name].call(to_call)
      });
     }
@@ -492,8 +489,8 @@ var docs = (function(){
       this.block = blocks[a]
       this.block_annotations = {};
 
-      this.block.comment.contents = _.normalize(this.block.comment.contents);
-      this.block.code.contents = _.normalize(this.block.code.contents);
+      this.block.comment.contents = to.normalize(this.block.comment.contents);
+      this.block.code.contents = to.normalize(this.block.code.contents);
 
       let parsed_block = _parse_content(this.block.comment.contents);
 
@@ -573,7 +570,7 @@ var docs = (function(){
    if(!is.false(file_annotations)){
     let _blocks = [];
     for(let i = 0, l = parsed_blocks.length; i < l; i++){
-     _blocks.push(extend(extend({}, file_annotations), parsed_blocks[i]));
+     _blocks.push(to.extend(to.extend({}, file_annotations), parsed_blocks[i]));
     }
     parsed_blocks = _blocks;
    }

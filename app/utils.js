@@ -50,51 +50,6 @@ fs.fake_copy = (source, target, callback) => {
 export {fs};
 
 
-/// @name extend
-/// @description
-/// Extend object `b` onto `a`
-/// http://jsperf.com/deep-extend-comparison
-/// @arg {object} a - Source object.
-/// @arg {object} b - Object to extend with.
-/// @returns {object} The extended object.
-export function extend(a, b){
- // Don't touch `null` or `undefined` objects.
- if(!a || !b){
-  return a;
- }
-
- for(let i = 0, keys = Object.getOwnPropertyNames(b), l = keys.length; i < l; i++){
-  let k = keys[i];
-  a[k] = is.object(b[k]) && is.object(a[k]) ? extend(a[k], b[k]) : b[k]
- }
-
- return a;
-}
-
-/// @name normalize
-/// @description
-/// Removes extra whitespace before all the lines that are passed
-/// Removes all whitespace at the end of each line
-/// Removes trailing blank lines
-/// @arg {array, string} content - The array of lines that will be normalized
-/// @returns {string} - The normalized string
-export function normalize(content){
- content = to.array(content); // this allows arrays and strings to be passed
-
- // remove trailing blank lines
- for(let i = content.length; i-- && content[i].length === 0; content.pop());
-
- return content
-         .map(line => line.slice(
-          content.join("\n") // converts content to string to string
-           .match(/^\s*/gm) // gets the extra whitespace at the begining of the line and returns a map of the spaces
-           .sort((a, b) => a.length - b.length)[0].length // sorts the spaces array from smallest to largest and then checks returns the length of the first item in the array
-         )) // remove extra whitespace from the begining of each line
-         .join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
-};
-
-
-
 const to_string = arg => Object.prototype.toString.call(arg),
       array_slice = arg => Array.prototype.slice.call(arg);
 
@@ -119,6 +74,49 @@ export const to = {
  // @arg {object}
  // @returns {json object}
  json: (arg, spacing = 2) => is.object(arg) && JSON.stringify(arg, null, spacing),
+
+ /// @name normalize
+ /// @description
+ /// Removes extra whitespace before all the lines that are passed
+ /// Removes all whitespace at the end of each line
+ /// Removes trailing blank lines
+ /// @arg {array, string} content - The array of lines that will be normalized
+ /// @returns {string} - The normalized string
+ normalize: (content) => {
+  content = to.array(content); // this allows arrays and strings to be passed
+
+  // remove trailing blank lines
+  for(let i = content.length; i-- && content[i].length === 0; content.pop());
+
+  return content
+          .map(line => line.slice(
+           content.join("\n") // converts content to string to string
+            .match(/^\s*/gm) // gets the extra whitespace at the begining of the line and returns a map of the spaces
+            .sort((a, b) => a.length - b.length)[0].length // sorts the spaces array from smallest to largest and then checks returns the length of the first item in the array
+          )) // remove extra whitespace from the begining of each line
+          .join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
+ },
+
+ /// @name extend
+ /// @description
+ /// Extend object `b` onto `a`
+ /// http://jsperf.com/deep-extend-comparison
+ /// @arg {object} a - Source object.
+ /// @arg {object} b - Object to extend with.
+ /// @returns {object} The extended object.
+ extend: (a, b) => {
+  // Don't touch `null` or `undefined` objects.
+  if(!a || !b){
+   return a;
+  }
+
+  for(let i = 0, keys = to.keys(b), l = keys.length; i < l; i++){
+   let k = keys[i];
+   a[k] = is.object(b[k]) && is.object(a[k]) ? to.extend(a[k], b[k]) : b[k]
+  }
+
+  return a;
+ },
 
  object: (arg) => is.json(arg),
 
