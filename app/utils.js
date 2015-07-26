@@ -138,7 +138,7 @@ export const to = {
 
  array: function(arg, ...args){
   let glue = args.length > 0 && is.regexp(args[args.length - 1]) ? args.pop() : "\n",
-      to_array = arg => is.array(arg) ? arg : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : [],
+      to_array = arg => is.array(arg) ? arg : is.argument(arg) ? array_slice(arg) : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : [],
       result = to_array(arg);
 
   if(args.length > 0){
@@ -308,7 +308,7 @@ export const is = {
    }
    else if(type === "function" || type === "object" && !!arg){
     let num = Object.getOwnPropertyNames(arg).length;
-    return (num === 0 || (num === 1 && is.array(arg)) || (num === 2 && is.argslist(arg))) ? true : false;
+    return (num === 0 || (num === 1 && is.array(arg)) || (num === 2 && is.argument(arg))) ? true : false;
    }
    else{
     return arg === "";
