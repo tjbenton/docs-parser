@@ -71,6 +71,30 @@ export function extend(a, b){
  return a;
 }
 
+/// @name normalize
+/// @description
+/// Removes extra whitespace before all the lines that are passed
+/// Removes all whitespace at the end of each line
+/// Removes trailing blank lines
+/// @arg {array, string} content - The array of lines that will be normalized
+/// @returns {string} - The normalized string
+export function normalize(content){
+ content = to.array(content); // this allows arrays and strings to be passed
+
+ // remove trailing blank lines
+ for(let i = content.length; i-- && content[i].length === 0; content.pop());
+
+ return content
+         .map(line => line.slice(
+          content.join("\n") // converts content to string to string
+           .match(/^\s*/gm) // gets the extra whitespace at the begining of the line and returns a map of the spaces
+           .sort((a, b) => a.length - b.length)[0].length // sorts the spaces array from smallest to largest and then checks returns the length of the first item in the array
+         )) // remove extra whitespace from the begining of each line
+         .join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
+};
+
+
+
 const to_string = arg => Object.prototype.toString.call(arg),
       array_slice = arg => Array.prototype.slice.call(arg);
 

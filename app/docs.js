@@ -1,7 +1,7 @@
 "use strict";
 
 import markdown from "marked";
-import {Deferred, fs, path, is, to, extend} from "./utils.js";
+import {Deferred, fs, path, is, to, extend, normalize} from "./utils.js";
 import paths from "./paths.js";
 
 ////
@@ -35,8 +35,10 @@ var docs = (function(){
         /// Helper function to convert markdown text to html
         /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
         markdown,
+        normalize,
+        extend,
         to,
-        is
+        is,
        };
 
  // the settings object that holds the file specific settings as well as the base settings
@@ -132,28 +134,6 @@ var docs = (function(){
  /// @arg {string} filetype - the current filetype that is being parsed
  /// @returns {object} the settings to use
  _.annotations = filetype => !is.undefined(_.all_annotations[filetype]) ? extend(extend({}, _.all_annotations.default), _.all_annotations[filetype]) : _.all_annotations.default;
-
- /// @name normalize
- /// @description
- /// Removes extra whitespace before all the lines that are passed
- /// Removes all whitespace at the end of each line
- /// Removes trailing blank lines
- /// @arg {array, string} content - The array of lines that will be normalized
- /// @returns {string} - The normalized string
- _.normalize = content => {
-  content = is.string(content) ? content.split("\n") : content; // this allows arrays and strings to be passed
-
-  // remove trailing blank lines
-  for(let i = content.length; i-- && content[i].length === 0; content.pop());
-
-  return content
-          .map(line => line.slice(
-           content.join("\n") // converts content to string to string
-            .match(/^\s*/gm) // gets the extra whitespace at the begining of the line and returns a map of the spaces
-            .sort((a, b) => a.length - b.length)[0].length // sorts the spaces array from smallest to largest and then checks returns the length of the first item in the array
-          )) // remove extra whitespace from the begining of each line
-          .join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
- };
 
  /// @name annotation
  /// @description Used to define the new annotations
