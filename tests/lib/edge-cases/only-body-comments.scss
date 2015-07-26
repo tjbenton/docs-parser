@@ -1,0 +1,52 @@
+/// @author Tyler Benton
+/// @page components/buttons
+///
+/// @description Your standard form button.
+///
+/// @state :hover
+/// @state :active
+/// @state :disabled - Dims the button when disabled.
+/// @state .c-btn--mini - A mini button
+/// @state .c-btn--tiny - A tiny button
+/// @state .c-btn--medium - A medium button
+/// @state .c-btn--large - A large button
+/// @state .c-btn--primary - Primary action
+/// @state .c-btn--primary:hover
+/// @state .c-btn--primary:active
+/// @state .c-btn--secondary - Secondary action
+/// @state .c-btn--secondary:hover
+/// @state .c-btn--secondary:active
+/// @state .c-btn--tertiary - Tertiary action
+/// @state .c-btn--tertiary:hover
+/// @state .c-btn--tertiary:active
+/// @state .c-btn--text - It's a text link as a button
+/// @state .c-btn--text:hover
+/// @state .c-btn--text:active
+///
+/// @markup
+/// <div class="c-btn-group">
+///  <a href="#" class="c-btn @state">Button (a.button)</a>
+///  <button class="c-btn @state">Button (button)</button>
+///  <input class="c-btn @state" type="button" value="Button (input.button)">
+/// </div>
+
+/// @name Button group
+/// @description
+/// Used when there's a group of buttons that need to be on the same line.
+///
+/// @markup
+/// <div class="c-btn-group">
+///  <a href="#" class="c-btn">Button (a.button)</a>
+///  <button class="c-btn">Button (button)</button>
+///  <input class="c-btn" type="button" value="Button (input.button)">
+/// </div>
+
+/// @name Test
+/// @state .state-1
+/// @state .state-2
+/// @state .state-3
+/// @description
+/// Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+/// Quasi omnis facilis vero architecto perferendis, debitis dignissimos tempore
+/// dolorem amet. Delectus, voluptatum, distinctio. Voluptas officiis
+/// iste nostrum vel, culpa iure. Adipisci.
