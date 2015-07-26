@@ -166,7 +166,7 @@ var docs = (function(){
       setting = _.settings(filetype), // gets the settings for this file
       annotations = _.annotations(filetype), // gets the annotations to use on this file
       annotation_keys = to.keys(annotations), // stores the annotation names for this file in an array
-      contents = to.normal_string(fs.readFileSync(file_path) + ""), // The ` + ""` converts the file from a buffer to a string
+      contents = to.normal_string(to.string(fs.readFileSync(file_path))), // the contents of the file
       lines = to.array(contents), // all the lines in the file
       file = {
        contents, // all of the contents of the file
