@@ -106,6 +106,22 @@ export const to = {
  // @returns {string}
  string: (arg, glue = "\n") => is.string(arg) ? arg : is.object(arg) ? Object.prototype.toString.call(arg) : is.array(arg) ? arg.join(glue) : is.number(arg) || is.boolean(arg) ? arg.toString() : "'" + arg + "'",
 
+ // @name to.keys
+ // @description
+ // Converts an object to an array of it's key names
+ // @arg {object}
+ // @returns {array}
+ keys: (arg) => is.object(arg) && Object.getOwnPropertyNames(arg),
+
+ // @name to.json
+ // @description
+ // Converts an object to a json string
+ // @arg {object}
+ // @returns {json object}
+ json: (arg, spacing = 2) => is.object(arg) && JSON.stringify(arg, null, spacing),
+
+ object: (arg) => is.json(arg),
+
  // @name to.array
  // @description
  // Converts `...args` to array
@@ -126,6 +142,29 @@ export const to = {
    }
   }
 
+  return result;
+ },
+
+ // @name to.sort
+ // @description
+ // Sorts an array or object based off your callback function. If one is provided.
+ // @arg {array, object}
+ // @returns {array, object} - The sorted version
+ sort: (arg, callback) => {
+  let run_sort = (obj) => is.function(callback) ? obj.sort.apply(null, callback) : obj.sort(),
+      result;
+  if(is.object(arg)){
+   let sorted = {},
+       keys = run_sort(to.keys(arg));
+
+   for(let i = 0, l = keys.length; i < l; i++){
+    sorted[keys[i]] = arg[keys[i]];
+   }
+
+   result = sorted;
+  }else if(is.array(arg)){
+   result = run_sort(callback);
+  }
   return result;
  },
 
@@ -199,7 +238,7 @@ export const to = {
  // Converts `arg` to number
  // @arg {number, array, object, string, boolean}
  // @returns {number}
- number: (arg) => is.number(arg) ? arg : is.array(arg) ? arg.length : is.object(arg) ? Object.getOwnPropertyNames(arg).length : ~~arg,
+ number: (arg) => is.number(arg) ? arg : is.array(arg) ? arg.length : is.object(arg) ? to.keys(arg).length : ~~arg,
 
  // @name to.abs
  // @description
@@ -245,7 +284,11 @@ export const is = {
   // @description is a given arg object?
   // @arg {*} arg - The item to check
   // @returns {boolean} - The result of the test
-  object: arg => to_string(arg) === "[object Object]",
+  // object: arg => to_string(arg) === "[object Object]",
+  object: arg => typeof arg === "object" && !!arg && arg !== null,
+
+  // is given value a pure JSON object?
+  json: (arg) => to_string(arg) === "[object Object]",
 
   // @description is a given arg empty? Objects, arrays, strings
   // @arg {object, array, string} arg - What you want to check to see if it's empty
