@@ -1,0 +1,11 @@
+/// @name Preserve blank lines
+/// @markup
+/// <a href="#" class="c-btn @state">Button (a.button)</a>
+///
+///
+///
+/// <button class="c-btn @state">Button (button)</button>
+///
+///
+///
+/// <input class="c-btn @state" type="button" value="Button (input.button)">
