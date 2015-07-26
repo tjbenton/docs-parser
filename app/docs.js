@@ -166,15 +166,7 @@ var docs = (function(){
       setting = _.settings(filetype), // gets the settings for this file
       annotations = _.annotations(filetype), // gets the annotations to use on this file
       annotation_keys = to.keys(annotations), // stores the annotation names for this file in an array
-      // The ` + ""` converts the file from a buffer to a string
-      //
-      // The `replace` fixes a extremily stupid issue with strings, that is caused by shitty microsoft computers.
-      // It removes`\r` and replaces it with `\n` from the end of the line. If this isn't here then when `match`
-      // runs it will return 1 more item in the matched array than it should(in the normalize function)
-      // http://stackoverflow.com/questions/20023625/javascript-replace-not-replacing-text-containing-literal-r-n-strings
-      // contents = (fs.readFileSync(file_path) + "").replace(/(?:\\[rn]|[\r\n]+)+/g, "\n"),
-      // @todo - this needs to be updated because the replace function above removes ALLLLLL empty lines and tha throws off the start and end file output
-      contents = (fs.readFileSync(file_path) + "").replace(/(?:\\[rn]+)+/g, "\n"),
+      contents = to.normal_string(fs.readFileSync(file_path) + ""), // The ` + ""` converts the file from a buffer to a string
       lines = to.array(contents), // all the lines in the file
       file = {
        contents, // all of the contents of the file

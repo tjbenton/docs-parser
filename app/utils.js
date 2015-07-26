@@ -61,6 +61,14 @@ export const to = {
  // @returns {string}
  string: (arg, glue = "\n") => is.string(arg) ? arg : is.object(arg) ? Object.prototype.toString.call(arg) : is.array(arg) ? arg.join(glue) : is.number(arg) || is.boolean(arg) ? arg.toString() : "'" + arg + "'",
 
+ // The ` + ""` converts the file from a buffer to a string
+ //
+ // The `replace` fixes a extremily stupid issue with strings, that is caused by shitty microsoft computers.
+ // It removes`\r` and replaces it with `\n` from the end of the line. If this isn't here then when `match`
+ // runs it will return 1 more item in the matched array than it should(in the normalize function)
+ // http://stackoverflow.com/questions/20023625/javascript-replace-not-replacing-text-containing-literal-r-n-strings
+ normal_string: (str) => (is.string(str) ? str : to.string(str)).replace(/(?:\\[rn]+)+/g, "\n"),
+
  // @name to.keys
  // @description
  // Converts an object to an array of it's key names
