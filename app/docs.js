@@ -11,6 +11,12 @@ import paths from "./paths.js";
 /// This is used to parse any filetype that you want to and gets the documentation for it and returns an {} of the document data
 ////
 var docs = (function(){
+
+ // Stores the project directory to use later
+ let __project_dir = process.cwd(),
+    project_dir = __project_dir.split(path.sep); // splits the project dir by the system specific delimiter
+ project_dir = project_dir[project_dir.length - 1]; // gets the working directory
+
  // the main object to return
  // a small object to help with reading and writing the temp data.
  const root = process.cwd() + "/",
@@ -87,6 +93,7 @@ var docs = (function(){
   }
  }
  _.file_specific_settings.py = _.file_specific_settings.rb;
+ // _.file_specific_settings.coffee = _.file_specific_settings.rb;
 
  /// @name settings
  /// @description Merges the default settings with the file specific settings
@@ -100,13 +107,9 @@ var docs = (function(){
     end: "////"
    },
    block_comment: { // block level comment block identifier
-    // @todo {5}
-    // add in a fix so that someone can extend onto another language
-    // and then overwrite specific peices of what was defined.
-    // If `start: ""` and `end: ""` exist then it breaks the parser.
-    // start: "",
-    line: "///"
-    // end: ""
+    start: "",
+    line: "///",
+    end: ""
    },
    annotation_prefix: "@", // annotation identifier(this should probably never be changed)
    single_line_prefix: "#" // single line prefix for comments inside of the code below the comment block
@@ -162,9 +165,7 @@ var docs = (function(){
  /// @arg {string} - The path to the file you're wanting to parse
  /// @returns {array} - Array of parsed blocks
  _.parse_file = file_path => {
-  let get_blocks, // function to get the blocks in the file
-      parse_blocks, // function to parse the blocks that're returned from `get_blocks`
-      filetype = path.extname(file_path).replace(".", ""), // the filetype of the current file
+  let filetype = path.extname(file_path).replace(".", ""), // the filetype of the current file
       setting = _.settings(filetype), // gets the settings for this file
       annotations = _.annotations(filetype), // gets the annotations to use on this file
       annotation_keys = Object.getOwnPropertyNames(annotations), // stores the annotation names for this file in an array
@@ -174,11 +175,14 @@ var docs = (function(){
       // It removes`\r` and replaces it with `\n` from the end of the line. If this isn't here then when `match`
       // runs it will return 1 more item in the matched array than it should(in the normalize function)
       // http://stackoverflow.com/questions/20023625/javascript-replace-not-replacing-text-containing-literal-r-n-strings
-      contents = (fs.readFileSync(file_path) + "").replace(/(?:\\[rn]|[\r\n]+)+/g, "\n"),
+      // contents = (fs.readFileSync(file_path) + "").replace(/(?:\\[rn]|[\r\n]+)+/g, "\n"),
+      // @todo - this needs to be updated because the replace function above removes ALLLLLL empty lines and tha throws off the start and end file output
+      contents = (fs.readFileSync(file_path) + "").replace(/(?:\\[rn]+)+/g, "\n"),
       lines = to.array(contents), // all the lines in the file
       file = {
        contents, // all of the contents of the file
-       path: file_path, // path of the file
+       path: path.join(project_dir, path.relative(__project_dir, file_path)) || file_path, // path of the file
+       name: path.basename(file_path, "." + filetype), // name of the file
        type: filetype, // filetype of the file
        start: 0, // starting point of the file
        end: lines.length - 1 // ending point of the file
@@ -187,7 +191,7 @@ var docs = (function(){
   // @name get_blocks
   // @description Parses the file and returns the comment blocks in an array
   // @returns {array} of the comment blocks
-  get_blocks = () => {
+  const get_blocks = () => {
    // @name new_block
    // @description Used to create new placeholder for each block
    // @arg {number} i - The start line of the comment block
@@ -208,139 +212,177 @@ var docs = (function(){
     };
    };
 
-   let header = new_block(-1), // holds the file level comment block
-       body = [], // holds all the blocks
-       block_info, // holds the current block information
+   let debug = {};
+   debug.get_blocks = false;
 
-       // file specific variables
-       is_start_and_end_file_comment = !is.undefined(setting.file_comment.start) && !is.undefined(setting.file_comment.end), // determins if the file comment has a start and end style or is line by line
-       in_file_comment = false, // used to determin if you're in a file level comment or not
+   // @todo {5} - add a line offest argument to this so that you can call parse content on other language types.
+   const parse_content = (config, restrict = true, start_at = 0) => {
+    start_at = is.number(start_at) ? start_at : 0;
+    let parsed_blocks = [],
+        block_info,
+        is_start_and_end = is.truthy(config.start) && is.truthy(config.end),
+        in_comment = false, // used to determin that you are in a comment
+        in_code = false; // used to determin if you are in the code after the comment block
+    // a) The file doesn't contain any header level comments, or body level comments
+    debug.get_blocks && console.log("");
+    debug.get_blocks && console.log("");
+    debug.get_blocks && console.log("");
+    debug.get_blocks && console.log("");
+    debug.get_blocks && console.log("file =", JSON.stringify(file, null, 2));
+    debug.get_blocks && console.log("start_at =", start_at);
+    debug.get_blocks && console.log("starting line =", lines[start_at]);
+    debug.get_blocks && console.log("is_start_and_end =", is_start_and_end);
+    debug.get_blocks && console.log("config.start check =", is.included(file.contents, config.start));
+    debug.get_blocks && console.log("config.line check =", is.included(file.contents, config.line));
+    debug.get_blocks && console.log("");
 
-       // block specific variables
-       is_start_and_end = !is.undefined(setting.block_comment.start) && !is.undefined(setting.block_comment.end), // determins if the block comment has a start and end style or is line by line
-       in_comment = false, // used to determin that you are in a comment
-       in_code = false, // used to determin if you are in the code after the comment block
+    if((is.truthy(is_start_and_end) && is.false(is.included(file.contents, config.start)) ||
+        is.falsy(is_start_and_end) && is.false(is.included(file.contents, config.line))) ||
+        is.between(start_at, 0, lines.length - 1) ){
+     debug.get_blocks && console.log("WELL SHIT FIRE, FILE DOESN'T CONTAIN ANY COMMENTS");
+     return [];
+    }
 
-       // variables that are shared between the two loops
-       i = 0, // current array item
-       l = lines.length; // the length of the lines array
-
-   // a) file level comment exists
-   if(is_start_and_end_file_comment ? !is.false(is.included(file.contents, setting.file_comment.start)) : setting.file_comment.line !== setting.block_comment.line ? !is.false(is.included(file.contents, setting.file_comment.line)) : false){
-    // loop over each line to look for file level comments
-    for(; i < l; i++){
+    for(let i = start_at, l = lines.length; i < l; i++){
      let line = lines[i],
-         file_comment = {
-          line: is.included(line, setting.file_comment.line),
-          start: is_start_and_end_file_comment ? is.included(line, setting.file_comment.start) : false,
-          end: is_start_and_end_file_comment ? is.included(line, setting.file_comment.end) : false
+         comment_index = {
+          start: is_start_and_end ? is.included(line, config.start) : false,
+          line: is.included(line, config.line),
+          end: is_start_and_end ? is.included(line, config.end) : false
          };
+     debug.get_blocks && console.log("line", i, "=", line);
+     debug.get_blocks && console.log("length")
+     // a) The line isn't empty so parse it.
+     if(!is.empty(line)){
+      // a) is the start and end style or there was an instance of a comment line
+      if(is_start_and_end && (!is.false(comment_index.start) || in_comment) || !is.false(comment_index.line)){
+       debug.get_blocks && console.log("IN COMMENT", "{", "start:", comment_index.start, ", line:", comment_index.line, ", end:", comment_index.end, "}");
 
-     // a) is the start and end style or there was an instance of a comment line
-     if(!is.false(file_comment.start) && header.comment.start === -1 || !in_file_comment && !is.false(file_comment.line)){
-      in_file_comment = true;
-      header.comment.start = i;
-     }
+       // a) is the start of a new block
+       if(!is.false(comment_index.start) || !is_start_and_end && !in_comment){
+        debug.get_blocks && console.log("START OF A NEW BLOCK ---------------------------------------------------------------");
+        in_code = false;
 
-     // a) adds this line to block_info comment contents
-     if(in_file_comment && is.false(file_comment.start) && is.false(file_comment.end)){
-      // a) removes the `setting.file_comment.line` from the line
-      if(!is.false(file_comment.line)){
-       line = line.slice(file_comment.line + setting.file_comment.line.length);
+        // a) There was block that has already been processed
+        if(!is.undefined(block_info)){ // holds the current block information
+         debug.get_blocks && console.log("BLOCK WAS PUSHED TO PARSED_BLOCKS");
+         // console.log("BLOCK INFO IS NOT UNDEFINED =", block_info);
+
+         block_info.code.end = i - 1; // @todo check to make sure this is correct
+         parsed_blocks.push(block_info);
+
+         // Stops the loop after the first comment block
+         // has been parsed. This is for file header comments
+         if(restrict){
+          debug.get_blocks && console.log("IS RESTRICTED FIRST INSTANCE !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!");
+          block_info.comment.end = i;
+          return parsed_blocks;
+         }
+        }
+
+        // reset the `block_info` to use on the new block
+        block_info = new_block(i);
+
+        in_comment = true;
+       }
+
+       // a) check for the end comment
+       if(is_start_and_end && block_info.comment.start !== i && !is.false(comment_index.end)){
+        debug.get_blocks && console.log("LAST LINE IN COMMENT");
+        in_comment = false;
+        block_info.comment.end = i; // sets the end line in the comment block
+
+        // @todo might need to remove this
+        i++; // skips end comment line
+        line = lines[i]; // updates to be the next line
+        comment_index.end = is.included(config.end); // updates the index
+       }
+
+       // a) adds this line to block_info comment contents
+       if(in_comment && is.false(comment_index.start) && is.false(comment_index.end)){
+        debug.get_blocks && console.log("LINE ADDED TO BLOCK COMMENT CONTENTS");
+        // a) removes the `config.line` from the line.
+        if(!is.false(comment_index.line)){
+         line = line.slice(comment_index.line + config.line.length);
+        }
+
+        block_info.comment.contents.push(line);
+       }
+
+       // a) check the next line for an instance of the a line comment
+       if(!is_start_and_end && is.false(is.included(lines[i + 1], config.line))){
+        debug.get_blocks && console.log("NEXT 'LINE' IS A COMMENT && NOT START AND END STYLE");
+        in_comment = false;
+        block_info.comment.end = i; // sets the end line in the comment block
+        i++; // skips end comment line // @todo why does this need to be skipped?
+        line = lines[i]; // updates to be the next line
+       }
+
+       // a) The last line in the file is a commment
+       if(in_comment && (is_start_and_end && !is.false(comment_index.end) ? i === l : i === l - 1)){
+        debug.get_blocks && console.log("LAST LINE IN THE FILE IS A COMMENT");
+        block_info.comment.end = is_start_and_end ? i - 1 : i;
+        parsed_blocks.push(block_info);
+        break; // ensures that the loop stops because it's the last line in the file
+       }
       }
-      header.comment.contents.push(line);
-     }
 
-     // a) check for the end of the file level comment
-     if((is_start_and_end_file_comment && header.comment.start !== i && !is.false(file_comment.end)) || (!is_start_and_end_file_comment && !is.false(is.included(lines[i + 1], setting.file_comment.line)))){
-      in_file_comment = false;
-      header.comment.end = i;
-      i++; // added 1 more to `i` so that the next loop starts on the next line
-      break; // ensures that the loop stops because there's only 1 file level comment per file
-     }
-    }
-   }
+      // a) add code to current block_info
+      if(!in_comment && is.false(comment_index.end) && !is.undefined(block_info)){
+       // Stops the loop after the first comment block
+       // has been parsed. This is for file header comments
+       if(restrict){
+        debug.get_blocks && console.log("IS RESTRICTED SECOND INSTANCE !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!");
+        parsed_blocks.push(block_info);
+        break;
+       }
+       debug.get_blocks && console.log("IN CODE")
+       // a) The previous line was a comment
+       if(!in_code){
+        debug.get_blocks && console.log("THE PREVIOUS LINE WAS A COMMENT");
+        in_code = true;
+        block_info.code.start = i;
+       }
 
-   // loop over each line in the file and gets the comment blocks
-   for(; i < l; i++){
-    let line = lines[i],
-        comment_index = {
-         line: is.included(line, setting.block_comment.line),
-         start: is_start_and_end ? is.included(line, setting.block_comment.start) : false,
-         end: is_start_and_end ? is.included(line, setting.block_comment.end) : false
-        };
+       // adds this line to block code contents
+       block_info.code.contents.push(line);
 
-    // a) is the start and end style or there was an instance of a comment line
-    if(is_start_and_end || !is.false(comment_index.line)){
-     // a) is the start of a new block
-     if(!is.false(comment_index.start) || !is_start_and_end && !in_comment){
-      in_code = false;
-
-      // a) There was block that has already been processed
-      if(!is.undefined(block_info)){ // holds the current block information
-       block_info.code.end = i - 1;
-       body.push(block_info);
+       // a) pushes the last block onto the body
+       if(i === l - 1){
+        debug.get_blocks && console.log("LAST LINE IN THE FILE IS CODE");
+        block_info.code.end = i;
+        parsed_blocks.push(block_info);
+       }
       }
-
-      // reset the `block_info` to use on the new block
-      block_info = new_block(i);
-
-      in_comment = true;
+     }
+     // the last line in the file was an empty line.
+     else if(i === l - 1 && is.truthy(block_info)){
+      block_info[is.between(block_info.comment.end) ? "comment" : "code"].end = i;
+      parsed_blocks.push(block_info);
+      debug.get_blocks && console.log("LINE WAS EMPTY");
      }
 
-     // a) check for the end comment
-     if(is_start_and_end && !is.false(comment_index.end)){
-      in_comment = false;
-      block_info.comment.end = i; // sets the end line in the comment block
-      i++; // skips end comment line
-      line = lines[i]; // updates to be the next line
-      comment_index.end = is.included(setting.block_comment.end); // updates the index
-     }
+     debug.get_blocks && console.log("");
+    } // end loop
 
-     // a) adds this line to block_info comment contents
-     if(in_comment && is.false(comment_index.start) && is.false(comment_index.end)){
-      // a) removes the `setting.block_comment.line` from the line
-      if(!is.false(comment_index.line)){
-       line = line.slice(comment_index.line + setting.block_comment.line.length);
-      }
-      block_info.comment.contents.push(line);
-     }
+    return parsed_blocks;
+   };
 
-     // a) check the next line for an instance of the a line comment
-     if(!is_start_and_end && is.false(is.included(lines[i + 1], setting.block_comment.line))){
-      in_comment = false;
-      block_info.comment.end = i; // sets the end line in the comment block
-      i++; // skips end comment line
-      line = lines[i]; // updates to be the next line
-     }
+   let header = [],
+       body = [];
 
-     // a) The last line in the file is a commment
-     if(in_comment && (is_start_and_end && !is.false(comment_index.end) ? i === l : i === l - 1)){
-      block_info.comment.end = is_start_and_end ? i - 1 : i;
-      body.push(block_info);
-      break; // ensures that the loop stops because it's the last line in the file
-     }
-    } // end comment code
-
-
-    // a) add code to current block_info
-    if(!in_comment && is.false(comment_index.end) && !is.undefined(block_info)){
-     // a) The previous line was a comment
-     if(!in_code){
-      in_code = true;
-      block_info.code.start = i;
-     }
-
-     // adds this line to block code contents
-     block_info.code.contents.push(line);
-
-     // a) pushes the last block onto the body
-     if(i === l - 1){
-      block_info.code.end = i;
-      body.push(block_info);
-     }
-    }
-   } // end loop
+   debug.get_blocks && console.log("");
+   debug.get_blocks && console.log("");
+   debug.get_blocks && console.log("");
+   debug.get_blocks && console.log("");
+   debug.get_blocks && console.log("");
+   // lines = lines.slice(header.comment.end);
+   header = parse_content(setting.file_comment);
+   debug.get_blocks && console.log("header =", !is.empty(header) && header[0].comment.contents);
+   debug.get_blocks && console.log("");
+   debug.get_blocks && console.log("");
+   body = parse_content(setting.block_comment, false, !is.empty(header) && header[0].comment.end + 1);
+   debug.get_blocks && console.log("body =", body);
 
    return {
     header, // the header for the file
@@ -349,9 +391,9 @@ var docs = (function(){
   };
 
   // @name parse_blocks
-  // @description Parses each block in blocks
+  // @description Parse the blocks that're returned from `get_blocks`
   // @returns {array}
-  parse_blocks = function(){
+  const parse_blocks = function(){
    // @name this.call_annotation
    // @arg {object} annotation - the information for the annotation to be called(name, line, content, start, end)
    this.call_annotation = (annotation) => {
