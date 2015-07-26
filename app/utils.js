@@ -269,7 +269,9 @@ export const is = {
 
   // @description is a given arg Arguments?
   // fallback check is for IE
-  argslist: (arg) => !is.null(arg) && (to_string.call(arg) === "[object Arguments]" || (typeof arg === "object" && "callee" in arg)),
+  // @arg {*} arg - The item to check
+  // @returns {boolean} - The result of the test
+  argument: (arg) => !is.null(arg) && (to_string.call(arg) === "[object Arguments]" || (typeof arg === "object" && "callee" in arg)),
 
 
   // @description is a given arg function?
