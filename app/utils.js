@@ -1,42 +1,47 @@
-// I would like to remove the need for a third party lib for deferreds and create a simple one.
-function defer(){
-  let resolve, reject;
-
-  let promise = new Promise((resolve_, reject_) => {
-    resolve = resolve_;
-    reject = reject_;
-  });
-
-  return {
-    promise,
-    resolve,
-    reject,
-  };
-}
-
+// import and export `path` so all general
+// utils can be imported from this file
 import path from "path";
 export {path};
 
-import glob from "glob";
-export {glob};
+// Stores the project directory to use later
+let info = {};
+info.root = process.cwd(); // gets the root directory
 
-import Deferred from "deferred-js";
-// extends the functionality of deffered to accept an array of deffereds
-Deferred.when.all = function(deferreds){
- let deferred = new Deferred();
- Deferred.when.apply(null, deferreds)
-  .then(function(){
-   deferred.resolve(to.array(arguments))
-  }, function(){
-   deferred.fail(to.array(arguments))
+info.dir = info.root.split(path.sep); // splits the project dir by the system specific delimiter
+info.dir = info.dir[info.dir.length - 1]; // gets the working directory
+
+info.temp = {};
+info.temp.folder = path.join(info.root, ".tmp");
+info.temp.file = path.join(info.temp.folder, "data.json");
+export {info};
+
+// @name denodeify
+// @description
+// Takes functions that takes callbacks
+// and converts it into a promise.
+// @returns {promise}
+// @markup {js}
+// import fs from "fs";
+// fs.readFile = denodeify(fs.readFile);
+function denodeify(func){
+ return function (...args){
+  return new Promise((resolve, reject) => {
+   func(...args, (err, ...args) => err ? reject(err) : resolve(...args));
   });
- return deferred;
+ };
 };
 
-export {Deferred};
+export {denodeify};
 
+
+
+
+// File System
 import * as fs from "fs-extra";
-// creates an empty file temp file in the `.tmp/`
+// @name fs.fake_copy
+// @description
+// Creates an empty file temp file in the `.tmp/`. This is so that I can
+// check to see if the source file has been updated.
 fs.fake_copy = (source, target, callback) => {
  var cbCalled = false,
      source = path.parse(source),
@@ -47,13 +52,39 @@ fs.fake_copy = (source, target, callback) => {
   fs.writeFile(path.join(target.dir, target.base), "", () => callback && callback());
  });
 };
+
+// The functions below are converted into promises
+fs.readJson = denodeify(fs.readJson);
+fs.outputJson = denodeify(fs.outputJson);
+fs.stat = denodeify(fs.stat);
 export {fs};
 
+
+
+export function defer(){
+ this.promise = new Promise((function(resolve, reject){
+  this.resolve = resolve;
+  this.reject = reject;
+ }).bind(this));
+
+ this.when = function(){
+  let def = new defer()
+  Promise.all.apply(this, arguments).then(function(){
+   alert('all promises complete!');
+  });
+ };
+};
+
+
+// can't use `import` from es6 because it
+// returns an error saying "glob" is read only
+let glob = denodeify(require("glob"));
+export {glob};
 
 const to_string = arg => Object.prototype.toString.call(arg),
       array_slice = arg => Array.prototype.slice.call(arg);
 
-export const to = {
+export let to = {
  // @name to.string
  // @description
  // Converts an object, array, number, or boolean to a string
@@ -135,8 +166,7 @@ export const to = {
  // @arg {array, string, object, number} - The item you want to be converted to array
  // @returns {array}
  // array: (arg, glue = "\n") => is.array(arg) ? arg : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : [],
-
- array: function(arg, ...args){
+ array: (arg, ...args) => {
   let glue = args.length > 0 && is.regexp(args[args.length - 1]) ? args.pop() : "\n",
       to_array = arg => is.array(arg) ? arg : is.argument(arg) ? array_slice(arg) : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : [],
       result = to_array(arg);
@@ -261,7 +291,31 @@ export const to = {
  neg: (arg) => ~to.abs(arg)
 };
 
-export const is = {
+// @name to.array.flat
+// @description
+// Flattens an array, and arrays inside of it into a single array
+// @arg {array}
+// @returnes {array}
+to.array.flat = (arg) => [].concat.apply([], to.array(arg));
+
+// @name to.array.unique
+// @description
+// Removes duplicate values from an array
+// @arg {array}
+// @returns {array}
+to.array.unique = (arg) => {
+ arg = to.array(arg);
+ var o = {}, i, l = arg.length, r = [];
+ for(var i = 0; i < l; i++) o[arg[i]] = arg[i];
+ for(i in o) r.push(o[i]);
+ return r;
+};
+
+// to.array.flat.unique = (arg) => to.array.unique(to.array.flat(arg));
+
+// var seen = new Set();
+//   return a.filter((x) => !seen.has(x) && seen.add(x))
+export let is = {
   // placeholder for the interfaces
   not: {},
   all: {},

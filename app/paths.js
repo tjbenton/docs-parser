@@ -1,97 +1,118 @@
 "use strict";
-import {Deferred, fs, path, glob, to_string, is} from "./utils.js";
+import {Deferred, fs, path, info, glob, is, to} from "./utils.js";
 
-export default function paths(globs, changed){
- // a) sets changed to be true by default
- if(changed === undefined){
-  changed = true;
- }
+// @name paths
+// @description
+// Filters out changed files, `.md` files, and paths that aren't files
+// @promise
+// @args {array, string}
+// @returns {array} - Filtered file paths
+export default function paths(globs, changed = true){
+ globs = to.array(globs); // Converts globs into an array if it's not already.
+ let time = 0,
+     timer = setInterval(() => {
+      time += 1;
+     }, 1)
 
- var base = process.cwd() + "/",
-     write_folder = ".tmp/",
+ let debug = {};
 
      // @name Files
      // @description
+     // @arg {array} - of file paths
+     // @promise
      // Converts `files` into a deferred so ti can get the
-     paths = files => {
-      var deferred = new Deferred(),
-          result = [];
-
-      // converts the string to an array so it can be looped over
-      if(is.string(files)){
-       files = [files];
-      }
-
-      // get the files paths using glob
-      for(var i = 0, l = files.length; i < l; i++){
-       result.push.apply(result, glob.sync(files[i]));
-       if(i === l - 1){
-        deferred.resolve(result);
+ let get_paths = files => {
+      return new Promise((resolve, reject) => {
+       let globs = [];
+       // get the files paths using glob
+       for(let i = 0, l = files.length; i < l; i++){
+        globs.push(glob(files[i]));
        }
-      }
-      return deferred.promise();
+
+       Promise.all(globs)
+        .then((result) => resolve(to.array.flat(result)))
+        .catch(err => {
+         throw err
+        });
+      });
      },
 
      // @name check
      // @description
      // checks the status of the file to see if it has changed or not.
+     // @arg {string} - path to file
+     // @promise
      // @returns {boolean}
      check = file => {
-      var deferred = new Deferred(),
-          source = base + file,
-          target = base + write_folder + file;
-
-      // gets the status of the source file
-      fs.stat(source, (err, source_stats) => {
-       // a) returns an error
-       if(err){
-        return deferred.reject(err);
-       }
-
-       // gets the status of the target file
-       fs.stat(target, (err, target_stats) => {
-        // a) copies source file into the target directory and returns the source
-        if(target_stats === void 0 || (target_stats.mtime < source_stats.mtime)){
-         // copies new files over.
-         fs.fake_copy(source, target, (err) => err && console.log(err));
-         return deferred.resolve(source);
+      var source = path.join(info.root, file),
+          target = path.join(info.temp.folder, file);
+      return new Promise((resolve, reject) => {
+       Promise.all([fs.stat(source), fs.stat(target)])
+       .then(function(stats){
+        // a) copies source file into the target directory because it's newer
+        if(stats[0].mtime > stats[1].mtime){
+         resolve(source);
+         fs.fake_copy(source, target); // copies new files over.
+        }else{
+         resolve(Promise.resolve(""));
         }
-
-        return deferred.resolve(false);
-       });
+       })
+       .catch((err) => {
+        fs.fake_copy(source, target); // copies new files over.
+        resolve(source);
+       })
       });
-
-      return deferred.promise();
      },
 
      // @name filter
      // @description
-     // Checks the file and if it was changed then that file
-     // gets returned in the array
+     // Filters out
+     //  - changed files if `changed` is true,
+     //  - `.md` files(always)
+     //  - any paths that are files
      //
-     // @returns {array} - Array of changed files
+     // @arg {array} of globs
+     // @promise
+     // @returns {array} - Array of file paths
      filter = files => {
-      var deferred = new Deferred(),
-          changed_paths = [];
+      files = files.filter(obj => {
+       let ext = path.extname(obj).toLowerCase();
+       return ext !== ".md" && ext.charAt(0) === ".";
+      });
 
-      // loops over all the files and filters out the files that haven't changed
-      for(var i = 0, l = files.length; i < l; i++){
-       var file = files[i];
-       changed_paths.push(check(file));
+      return new Promise((resolve, reject) => {
+       let to_check = changed ? [] : [Promise.resolve(files)];
 
-       // a) filters out the changed files
-       if(i === l - 1){
-        Deferred.when.all(changed_paths)
-         .done(result => deferred.resolve(result.filter(obj => obj && obj.indexOf(".") > -1)));
+       if(changed){
+        // loops over all the files and filters out the files that haven't changed
+        for(let i = 0, l = files.length; i < l; i++){
+         to_check.push(check(files[i]));
+        }
        }
-      }
 
-      return deferred.promise();
-     },
-     result = new Deferred();
+       Promise.all(to_check)
+        .then(to_filter => resolve(to.array.unique(to_filter)))
+        .catch((err) => {
+         resolve([])
+         throw err;
+        });
+      });
+     };
 
- Deferred.when(paths(globs))
-  .done(files => !changed ? result.resolve(files) : Deferred.when(filter(files)).done(filtered_files => result.resolve(filtered_files)));
-
- return result.promise();
+ return new Promise((resolve, reject) => {
+   get_paths(globs)
+    .then(files => {
+     return filter(files);
+    })
+    .then(filtered_files => {
+     resolve(filtered_files);
+    })
+    .then(() => {
+     clearInterval(timer);
+     console.log("TIME TO GET PATHS:", `${time}ms`);
+    })
+    .catch((err) => {
+     throw err;
+    });
+ });
 };

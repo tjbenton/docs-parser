@@ -1,7 +1,7 @@
 "use strict";
 
 import markdown from "marked";
-import {Deferred, fs, path, is, to} from "./utils.js";
+import {info, fs, path, is, to} from "./utils.js";
 import paths from "./paths.js";
 
 ////
@@ -11,28 +11,26 @@ import paths from "./paths.js";
 /// This is used to parse any filetype that you want to and gets the documentation for it and returns an {} of the document data
 ////
 var docs = (function(){
-
- // Stores the project directory to use later
- let __project_dir = process.cwd(),
-    project_dir = __project_dir.split(path.sep); // splits the project dir by the system specific delimiter
- project_dir = project_dir[project_dir.length - 1]; // gets the working directory
-
  // the main object to return
  // a small object to help with reading and writing the temp data.
- const root = process.cwd() + "/",
-       temp_file = path.join(root, ".tmp/data.json"),
-       temp_data = {
+ const temp_data = {
         get(){
-         let def = new Deferred();
-
-         // a) Create `temp_file`
-         // b) Resolve with data from `temp_file`
-         fs.readJson(temp_file, (err, data) => err ? fs.outputJson(temp_file, {}, () => def.resolve({})) : def.resolve(data));
-
-         return def.promise();
+         return new Promise((resolve, reject) => {
+          fs.readJson(info.temp.file)
+           .then((err, data) => {
+            // a) Resolve with empty object
+            // b) Resolve with `data`
+            resolve(err || data);
+           })
+           .catch((err) => {
+            resolve({});
+            // creates the temp json file, so it can be written to later
+            // fs.outputJson(info.temp.file, {}, null, 1);
+           })
+         });
         },
         write(data){
-         fs.writeJson(temp_file, data, (err) => err && console.error(err));
+         fs.outputJson(info.temp.file, data, {spaces: 2}, 1);
         }
        },
        _ = {
@@ -109,6 +107,7 @@ var docs = (function(){
     line: "///",
     end: ""
    },
+   blank_lines: 4, // @todo this stops the current block from adding lines if there're `n` blank line lines between code, and starts a new block.
    annotation_prefix: "@", // annotation identifier(this should probably never be changed)
    single_line_prefix: "#" // single line prefix for comments inside of the code below the comment block
   };
@@ -170,7 +169,7 @@ var docs = (function(){
       lines = to.array(contents), // all the lines in the file
       file = {
        contents, // all of the contents of the file
-       path: path.join(project_dir, path.relative(__project_dir, file_path)) || file_path, // path of the file
+       path: path.join(info.dir, path.relative(info.root, file_path)) || file_path, // path of the file
        name: path.basename(file_path, "." + filetype), // name of the file
        type: filetype, // filetype of the file
        start: 0, // starting point of the file
@@ -577,63 +576,64 @@ var docs = (function(){
  /// @description Takes the contents of a file and parses it
  /// @arg {string, array} files - file paths to parse
  /// @arg {boolean} changed [true] - If true it will only parse changed files
+ /// @promise
  /// @returns {object} - the data that was parsed
  _.parse = (files, changed) => {
-  let def = new Deferred();
-  Deferred.when.all([paths(files, changed), temp_data.get()])
-   .done(deferreds => {
-    let file_paths = deferreds[0],
-        json = deferreds[1];
-    // loops over all the files that return
-    for(let i = 0, l = file_paths.length; i < l; i++){
-     let file_path = file_paths[i],
-         filetype = path.extname(file_path).replace(".", ""),
-         parsed_data = _.parse_file(file_path);
+  return new Promise((resolve, reject) => {
+   Promise.all([paths(files, changed), temp_data.get()])
+    .then(promises => {
+     let [file_paths, json] = promises;
+     console.log("FILE_PATHS:", file_paths);
+     console.log("JSON:", json);
+     // loops over all the files that return
+     for(let i = 0, l = file_paths.length; i < l; i++){
+      let file_path = file_paths[i],
+          filetype = path.extname(file_path).replace(".", ""),
+          parsed_data = _.parse_file(file_path);
 
-     // temp data stuff ------------------------------------------------------------
+      // temp data stuff ------------------------------------------------------------
 
-     // a) if the current block is undefined in the json objected then create it
-     if(is.undefined(json[filetype])){
-      json[filetype] = {};
+      // a) if the current block is undefined in the json objected then create it
+      if(is.undefined(json[filetype])){
+       json[filetype] = {};
+      }
+
+      // a) creates array for the filepath
+      if(is.undefined(json[filetype][file_path])){
+       json[filetype][file_path] = [];
+      }
+
+      // merges the existing array with the new blocks arrays
+      json[filetype][file_path].push.apply(json[filetype][file_path], parsed_data);
      }
 
-     // a) creates array for the filepath
-     if(is.undefined(json[filetype][file_path])){
-      json[filetype][file_path] = [];
-     }
+     // updates the temp file
+     temp_data.write(json);
 
-     // merges the existing array with the new blocks arrays
-     json[filetype][file_path].push.apply(json[filetype][file_path], parsed_data);
-    }
+     resolve({
+      /// @name parse().data
+      /// @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
+      data: json,
 
-    // updates the temp file
-    temp_data.write(json);
+      /// @name parse().write
+      /// @description Helper function to write out the data to a json file
+      /// @arg {string} location - The location to write the file too
+      /// @arg {number,\t,\s} spacing [1] - The spacing you want the file to have.
+      /// @returns {this}
+      write(location, spacing){
+       fs.writeJson(temp_file, this.data, (err) => err && console.error(err));
+       return this;
+      },
 
-    def.resolve({
-     /// @name parse().data
-     /// @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
-     data: json,
-
-     /// @name parse().write
-     /// @description Helper function to write out the data to a json file
-     /// @arg {string} location - The location to write the file too
-     /// @arg {number,\t,\s} spacing [1] - The spacing you want the file to have.
-     /// @returns {this}
-     write(location, spacing){
-      fs.writeJson(temp_file, this.data, (err) => err && console.error(err));
-      return this;
-     },
-
-     // @todo {tylerb} - Add a way to documentize the files
-     // This should be apart of it's own code base so it doesn't pollute this one.
-     // @returns {this}
-     documentize(){
-      console.log("documentize");
-     }
+      // @todo {tylerb} - Add a way to documentize the files
+      // This should be apart of it's own code base so it doesn't pollute this one.
+      // @returns {this}
+      documentize(){
+       console.log("documentize");
+      }
+     });
     });
-   });
-
-  return def.promise();
+  });
  };
 
  return _;

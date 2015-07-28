@@ -18,10 +18,9 @@
     "url": "https://github.com/tjbenton/docs/issues"
   },
   "dependencies": {
-    "deferred-js": "^1.0.2",
+    "fs-extra": "^0.22.1",
     "glob": "^5.0.6",
-    "marked": "^0.3.3",
-    "fs-extra": "^0.22.1"
+    "marked": "^0.3.3"
   },
   "keywords": [
     "css",
