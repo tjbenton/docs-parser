@@ -72,9 +72,6 @@
  "requireCommaBeforeLineBreak": true,
  "disallowYodaConditions": true,
  "requireOperatorBeforeLineBreak": ["?", "=", "+", "-", "/", "*", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
- "requirePaddingNewLinesBeforeLineComments": {
-  "allExcept": "firstAfterCurly"
- },
  "requireSpaceBeforeBinaryOperators": true,
  "requirePaddingNewLinesInObjects": true,
  "requireSpaceBeforeObjectValues": true,

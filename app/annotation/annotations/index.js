@@ -1,0 +1,30 @@
+
+// Exports out all the annotations in this folder
+// Thanks, sassdoc for the idea
+module.exports = [
+ require("./name.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+ // require("./.js"),
+];
