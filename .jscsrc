@@ -8,8 +8,6 @@
  "disallowMultipleSpaces": true,
  "disallowPaddingNewlinesInBlocks": true,
  "disallowPaddingNewlinesBeforeKeywords": [
-  "else",
-  "else if",
   "case",
   "catch",
   "void",
