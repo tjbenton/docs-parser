@@ -23,17 +23,13 @@ export {info};
 // @markup {js}
 // import fs from "fs";
 // fs.readFile = denodeify(fs.readFile);
-function denodeify(func){
+export function denodeify(func){
  return function (...args){
   return new Promise((resolve, reject) => {
    func(...args, (err, ...args) => err ? reject(err) : resolve(...args));
   });
  };
 };
-
-export {denodeify};
-
-
 
 
 // File System
