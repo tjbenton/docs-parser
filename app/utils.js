@@ -407,6 +407,11 @@ export let is = {
    }
   },
 
+  // @description is a given value existy?
+  // @arg {*} arg - The item to check
+  // @returns {boolean} - The result of the test
+  existy: (arg) => arg !== null && arg !== undefined,
+
   // @description is a given arg String?
   // @arg {*} arg - The item to check
   // @returns {boolean} - The result of the test
@@ -418,12 +423,24 @@ export let is = {
   undefined: arg => arg === void 0,
 
   // @description is a given string include parameter substring?
-  // @arg {string} str - string to match against
-  // @arg {string} substr - string to look for in `str`
+  // @arg {string, array} a - string to match against
+  // @arg {string, array} b - string to look for in `str`
   // @todo {1} update this to work with arrays
   // @todo {1} change name to be `index` because it still makes sense and it's shorter
   // @returns {number, boolean}
-  included: (str, substr) => !is.empty(str) && !is.empty(substr) ? str.indexOf(substr) > -1 ? str.indexOf(substr) : false : false,
+  included: (a, b) => !is.empty(a) && !is.empty(b) && a.indexOf(b) > -1 ? a.indexOf(b) : false,
+
+
+  // @description is the `value` in `obj`?
+  // @arg {array, string, object} obj - the item to check against
+  // @arg {*} value - the value to look for in the `obj`
+  // @returns {boolean}
+  in: (obj, value) => {
+   if(is.object(obj)){
+    obj = to.keys(obj);
+   }
+   return is.included(obj, value) !== false;
+  },
 
   // @description is a given arg false
   // @arg {*} arg - arg to check if it is false
@@ -503,6 +520,29 @@ is.above.api = ['not'];
 
 // least method does not support `all` and `any` interfaces
 is.under.api = ['not'];
+
+
+is.in.api = ["not"];
+
+is.all.in = (obj, ...values) => {
+ values = to.array.flat(values);
+ for(let i in values){
+  if(!is.in(obj, values[i])){
+   return false;
+  }
+  return true;
+ }
+};
+
+is.any.in = (obj, ...values) => {
+ values = to.array.flat(values);
+ for(let i in values){
+  if(!is.in(obj, values[i])){
+   return true;
+  }
+  return false;
+ }
+};
 
 const not = (func) => () => !func.apply(null, array_slice(arguments)),
       all = (func) => {
