@@ -383,10 +383,11 @@ export let is = {
   // @description is a given arg object?
   // @arg {*} arg - The item to check
   // @returns {boolean} - The result of the test
-  // object: arg => to_string(arg) === "[object Object]",
   object: arg => typeof arg === "object" && !!arg && arg !== null,
 
-  // is given value a pure JSON object?
+  // @description is given value a pure JSON object?
+  // @arg {*} arg - The item to check
+  // @returns {boolean} - The result of the test
   json: (arg) => to_string(arg) === "[object Object]",
 
   // @description is a given arg empty? Objects, arrays, strings
@@ -423,7 +424,6 @@ export let is = {
   // @todo {1} change name to be `index` because it still makes sense and it's shorter
   // @returns {number, boolean}
   included: (str, substr) => !is.empty(str) && !is.empty(substr) ? str.indexOf(substr) > -1 ? str.indexOf(substr) : false : false,
-  // included: (str, substr) => is.truthy(str) && is.truthy(substr) && !is.empty(str) && !is.empty(substr) ? str.indexOf(substr) > -1 ? str.indexOf(substr) : false : false,
 
   // @description is a given arg false
   // @arg {*} arg - arg to check if it is false
@@ -545,21 +545,21 @@ const not = (func) => () => !func.apply(null, array_slice(arguments)),
        };
       },
       setInterfaces = () => {
-      var options = is;
-      for(var option in options){
-       if(hasOwnProperty.call(options, option) && is.function(options[option])){
-        var interfaces = options[option].api || ["not", "all", "any"];
-        for (var i = 0; i < interfaces.length; i++){
-         if(interfaces[i] === "not"){
-          is.not[option] = not(is[option]);
-         }
-         if(interfaces[i] === "all"){
-          is.all[option] = all(is[option]);
-         }
-         if(interfaces[i] === "any"){
-          is.any[option] = any(is[option]);
+       var options = is;
+       for(var option in options){
+        if(hasOwnProperty.call(options, option) && is.function(options[option])){
+         var interfaces = options[option].api || ["not", "all", "any"];
+         for(let i in interfaces){
+          if(interfaces[i] === "not"){
+           is.not[option] = not(is[option]);
+          }
+          if(interfaces[i] === "all"){
+           is.all[option] = all(is[option]);
+          }
+          if(interfaces[i] === "any"){
+           is.any[option] = any(is[option]);
+          }
          }
         }
        }
-      }
-     }();
+      }();
