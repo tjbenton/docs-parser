@@ -90,7 +90,7 @@ export let to = {
 
  // The ` + ""` converts the file from a buffer to a string
  //
- // The `replace` fixes a extremily stupid issue with strings, that is caused by shitty microsoft computers.
+ // The `replace` fixes a extremely stupid issue with strings, that is caused by shitty microsoft computers.
  // It removes`\r` and replaces it with `\n` from the end of the line. If this isn't here then when `match`
  // runs it will return 1 more item in the matched array than it should(in the normalize function)
  // http://stackoverflow.com/questions/20023625/javascript-replace-not-replacing-text-containing-literal-r-n-strings
@@ -110,13 +110,13 @@ export let to = {
  // @returns {json object}
  json: (arg, spacing = 2) => is.object(arg) && JSON.stringify(arg, null, spacing),
 
- /// @name normalize
- /// @description
- /// Removes extra whitespace before all the lines that are passed
- /// Removes all whitespace at the end of each line
- /// Removes trailing blank lines
- /// @arg {array, string} content - The array of lines that will be normalized
- /// @returns {string} - The normalized string
+/// @name to.normalize
+/// @description
+/// Removes trailing blank lines. Removes extra whitespace before all the lines that
+/// are passed without affecting the formatting of the passes string. Then removes
+/// all whitespace at the end of each line.
+/// @arg {string, array} content - The content you want to be normalized
+/// @returns {string} - The normalized string
  normalize: (content) => {
   content = to.array(content); // this allows arrays and strings to be passed
 
@@ -126,9 +126,9 @@ export let to = {
   return content
           .map(line => line.slice(
            content.join("\n") // converts content to string to string
-            .match(/^\s*/gm) // gets the extra whitespace at the begining of the line and returns a map of the spaces
+            .match(/^\s*/gm) // gets the extra whitespace at the beginning of the line and returns a map of the spaces
             .sort((a, b) => a.length - b.length)[0].length // sorts the spaces array from smallest to largest and then checks returns the length of the first item in the array
-          )) // remove extra whitespace from the begining of each line
+          )) // remove extra whitespace from the beginning of each line
           .join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
  },
 
