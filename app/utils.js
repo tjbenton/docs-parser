@@ -151,6 +151,14 @@ export let to = {
 
   return a;
  },
+
+ /// @name to.clone
+ /// @description
+ /// This will clone argument so the passed arg doesn't change
+ ///
+ /// @arg {*} - The item you want to clone
+ /// @returns {*} - The copied result
+ clone: (arg) => is.object(arg) ? to.extend({}, arg) : is.array(arg) ? [].concat(arg) : [].concat(arg)[0],
   }
 
   return a;
