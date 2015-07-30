@@ -145,9 +145,12 @@ export let to = {
    return a;
   }
 
-  for(let i = 0, keys = to.keys(b), l = keys.length; i < l; i++){
-   let k = keys[i];
-   a[k] = is.object(b[k]) && is.object(a[k]) ? to.extend(a[k], b[k]) : b[k]
+  for(let k in b){
+   a[k] = is.object(b[k]) ? is.object(a[k]) ? to.extend(a[k], b[k]) : b[k] : b[k];
+  }
+
+  return a;
+ },
   }
 
   return a;
