@@ -159,6 +159,81 @@ export let to = {
  /// @arg {*} - The item you want to clone
  /// @returns {*} - The copied result
  clone: (arg) => is.object(arg) ? to.extend({}, arg) : is.array(arg) ? [].concat(arg) : [].concat(arg)[0],
+
+ /// @name to.merge
+ /// @description
+ /// This is similar to `to.extend` except in `to.extend` the values
+ /// in `a` are replaced with the values in `b`. This function will
+ /// not only merge the objects together, it also merges the values of
+ /// the objects together.
+ ///
+ /// If the value in `b` is a function **or** the value of `a` is undefined
+ /// it will just set the value of `a` to be the value of `b`
+ ///
+ /// If the value in `a` is an array, then the value in `b` gets pushed
+ /// onto the value in `a`.
+ ///
+ /// If the value in `a` is an object then it checks the value in `b` to
+ /// see if it's an object and if it is then it calls `to.merge` again on
+ /// those objects for recursion. If the value in `b` isn't an object then
+ /// the value in `a` get's replaced by the value in `b`.
+ ///
+ /// If the value in `a` is anything else, then it converts it into an array
+ /// and adds the value in `b` to it.(`[a[key], b[key]]`)
+ ///
+ /// @arg {object} - The object to be modified
+ /// @arg {object} - The object that has the updates
+ /// @arg {boolean} - If true every array will be flattend to a single dimensional array, and will remove duplicate values
+ ///
+ /// @markeup {js} **Example:**
+ /// let a = { foo: { bar: "1", baz: ["3", "4"], qux: "one", quux: { garply: { waldo: "one" } }, waldo: "" } },
+ ///     b = { foo: { bar: "2", baz: ["5", "6"], qux: ["two", "three"], quux: { garply: { waldo: "two" } }, waldo: function(){ return this; }, garply: "item" } };
+ ///
+ /// to.merge(a, b);
+ ///
+ /// @markup {js} **Output:**
+ /// {
+ ///  foo: {
+ ///   bar: [ "1", "2" ], // started as a string and converted to an array
+ ///   baz: [ "3", "4", "5", "6" ], // merged two arrays together
+ ///   qux: [ "one", "two", "three" ], // started as a string and merged the array with the string
+ ///   quux: { garply: { waldo: [ "one", "two" ] } }, // `foo.quux.garply.waldo` started as string and converted to an array
+ ///   waldo: function(){ return this; }, // started as a string and changed to be a function
+ ///   garply: "item" // didn't exist before so it stays as a string
+ ///  }
+ /// }
+ merge: (a, b, unique = true) => {
+  // a) Don't touch `null` or `undefined` objects.
+  if(!a || !b){
+   return a;
+  }
+
+  // loop over each key in the second map
+  for(let k in b){
+   // a) Set the value of `a` to be the value in `b` because it was either
+   //    a function or it didn't exsit already in `a`
+   // c) Push the value in `b` into the `a` values array
+   // b) The recursive functionality happends here
+   //    a) Call the merge function go further into the object
+   //    b) Sets the value of `a` to be the value of `b`
+   // d) Convert the a value to be an array, and add the `b` value to it
+   if(is.function(b[k]) || is.undefined(a[k])){
+    a[k] = b[k];
+   }
+   else if(is.array(a[k])){
+    a[k].push(b[k]);
+   }
+   else if(is.object(a[k])){
+    a[k] = is.object(b[k]) ? to.merge(a[k], b[k]) : b[k];
+   }
+   else{
+    a[k] = [a[k], b[k]];
+   }
+
+   // a) Flatten the array, and filter out duplicates
+   if(unique && is.array(a[k])){
+    a[k] = to.array.unique([].concat.apply([], a[k]));
+   }
   }
 
   return a;
@@ -209,55 +284,6 @@ export let to = {
    result = run_sort(callback);
   }
   return result;
- },
-
- // @name to.merge
- // @description
- // This merges the last argument in the list with the 2nd to last argument.
- //
- // If the `name` **doesn't** exist then it adds it.
- //
- // If the `name` **does** exist
- //  - If it **isn't** an `Array` then it converts the current value to an
- //    array and adds the new item to that array.
- //  - If it's already an array then it pushes `to_merge` onto it.
- //
- // @arg {object} - The object that you want to merge onto
- // @arg {...argsList, string} keys - Name of the annotation to merge
- // @args {string} name - the 2nd to last argument in the `...argsList`
- // @arg {*} to_merge - The item to merge
- // @returns {object} - The updated `obj`
- merge: (obj, ...args/*, name, to_merge */) => {
-  let current = obj,
-      to_merge = args.pop(),
-      name = args.pop();
-
-
-
-  if(args.length > 0){
-   for(let i = 0, l = args.length; i < l; i++){
-    let arg = current[args[i]];
-    if(is.undefined(current[args[i]])){
-     current[args[i]] = {};
-    }
-   }
-  }
-
-  // a) the current item being merged is already defined in the base
-  // b) define the target
-  if(!is.undefined(current[name])){
-   // a) convert the target to an array
-   // b) add item to the current target array
-   if(!is.array(current[name])){
-    current[name] = [current[name], to_merge];
-   }else{
-    current[name].push(to_merge);
-   }
-  }else{
-   current[name] = to_merge;
-  }
-
-  return current;
  },
 
  // @name to.regex
