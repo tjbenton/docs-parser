@@ -91,7 +91,7 @@ export default function paths(globs, changed = true){
        }
 
        Promise.all(to_check)
-        .then(to_filter => resolve(to.array.unique(to_filter)))
+        .then(to_filter => resolve(to.array.unique(to.array(to_filter))))
         .catch((err) => {
          resolve([])
          throw err;
