@@ -337,10 +337,10 @@ to.array.flat = (arg) => [].concat.apply([], to.array(arg));
 // @arg {array}
 // @returns {array}
 to.array.unique = (arg) => {
- arg = to.array(arg);
- var o = {}, i, l = arg.length, r = [];
- for(var i = 0; i < l; i++) o[arg[i]] = arg[i];
- for(i in o) r.push(o[i]);
+ let o = {},
+     r = [];
+ for(let i in arg) o[arg[i]] = arg[i];
+ for(let i in o) r.push(o[i]);
  return r;
 };
 
