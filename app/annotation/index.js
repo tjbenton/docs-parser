@@ -45,26 +45,36 @@ export default class AnnotationApi{
    }
   };
 
-  // the list of all the annotations
-  this.list = {};
+  // the list of all the annotations names
+  this.annotation_names = [];
+
+  // object of the all the annotation
+  this.annotations = {};
+
+  // stores all annotations that have an alias
+  // this way it doesn't have to happen in the parser
+  this.has_alias = {};
+
+  // stores all the annoation aliases
+  this.annotation_aliases = [];
 
   // adds the default annotations to the list
   this.add_annotations(annotations);
  };
 
- // @name add
- // @description
- // Adds a single annotation to the list
- //
- // @arg {string, array} annotation - Name of the annotation
- // @arg {function, object} callbacks [annotation_base.callbacks] - Functions
- // @arg {string} ...alias - the rest of the arguments are alias
- //
- // @returns {this}
- //
- // @markup **Example:**
- // annotation_api
- //  .add()
+ /// @name add
+ /// @description
+ /// Adds a single annotation to the list
+ ///
+ /// @arg {string, array} annotation - Name of the annotation
+ /// @arg {function, object} callbacks [annotation_base.callbacks] - Functions
+ /// @arg {string} ...alias - the rest of the arguments are alias
+ ///
+ /// @returns {this}
+ ///
+ /// @markup **Example:**
+ /// annotation_api
+ ///  .add()
  add(annotation, callbacks = this.annotation_base.callbacks, ...alias){
   // a) run the each annotation through the annotations
   // b) log an error
@@ -105,28 +115,57 @@ export default class AnnotationApi{
   //    with the base settings for a callback
   if(!is.empty(callbacks)){
    for(let item in callbacks){
-    callbacks[item] = to.extend(to.clone(base.callbacks.default), callbacks[item]);
+    callbacks[item] = to.extend(to.clone(this.annotation_base.callbacks.default), callbacks[item]);
    }
   }
 
+  // add the annotation name to the names list
+  this.annotation_names.push(annotation);
+
   // merge the passed annotation with the
-  // global list of annoations
-  to.merge(this.list, {
+  // global list of annotation
+  to.merge(this.annotations, {
    [annotation]: {
     alias,
-    callbacks: callbacks
+    callbacks
    }
   });
 
+  // a) Merge the current annotation with the `has_alias` object,
+  //    and push the alias array onto the global alias array
+  if(!is.empty(alias)){
+   this.annotation_aliases.push(...alias);
+   to.merge(this.has_alias, {
+    [annotation]: alias
+   });
+  }
+
   return this;
+ };
+
+ /// @description
+ /// Add an array of annotations
+ /// @arg {array} annotations - Annotation objects
+ add_annotations(annotations){
+  for(let i in annotations){
+   this.add(annotations[i]);
+  }
  };
 
  // @name annotations_list
  // @description
  // Gets the list of annotations
- get annotations_list(){
-  return this.list;
- }
+ get list(){
+  // this.alias_check();
+  return this.annotations;
+ };
+
+ // @name annotations_list
+ // @description
+ // Gets the list of annotations
+ get names(){
+  return this.annotation_names;
+ };
 
  // @name filetype
  // @description
@@ -136,12 +175,13 @@ export default class AnnotationApi{
   this.filetype = filetype;
  };
 
- // @description
- // Add an array of annotations
- // @arg {array} annotations - Annotation objects
- add_annotations(annotations){
-  for(let i in annotations){
-   this.add(annotations[i]);
+ alias_check(){
+  for(let i in this.annotation_names){
+   let name = this.annotation_names[i];
+   if(is.in(this.annotation_aliases, name)){
+    throw new Error(`${name} is already declared as an annotation`);
+    return;
+   }
   }
- };
-}
+ }
+};
