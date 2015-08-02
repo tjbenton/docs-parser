@@ -5,42 +5,6 @@ import {is, to} from "../utils.js";
 
 export default class AnnotationApi{
  constructor(){
-  // stores the current annotation that is being added
-  // to the annotations list.
-  // the name of the annotation is always the key
-  this.config = {
-   // this declares where this annotation get's applied
-   filetypes: ["default"],
-
-   // holds an array of aliases for the given annotation
-   alias: [],
-
-   // This function runs when the parser gets
-   // the annotations information
-   callback: function(){
-    return this.annotation.line;
-   },
-
-   // Runs when the each annotation in the block has been
-   // parsed. If the annotation doesn't exist and the autofill
-   // is set to be a function then autofill get's called, and
-   // the block and file info are accessible within `this` if
-   // it is a function.`. **Note** this will not run if the
-   // annotation exists
-   autofill: false,
-
-   // Runs after the callback and/or autofill runs the contents
-   // of `this` is what was returned by the callback and/or autofill.
-   // It's used to fixed data that was returned by callback.
-   // It helps when members on your team pass in the wrong keyword(s)
-   // and let's you resolve them here in the data instead of resolving
-   // the issues on the client side. It's also useful if you want want
-   // to ensure the data always returns an `array`.
-   resolve: false
-  };
-  // stores the keys in the default config
-  this.config_keys = to.keys(this.config);
-
   // object of the all the annotation
   // This object holds all the annotations
   this.annotations = {
@@ -110,6 +74,40 @@ export default class AnnotationApi{
  ///  }
  /// });
  add(name, config){
+  // stores the current annotation that is being added
+  // to the annotations list.
+  // the name of the annotation is always the key
+  const base_config = {
+   // this declares where this annotation get's applied
+   filetypes: ["default"],
+
+   // holds an array of aliases for the given annotation
+   alias: [],
+
+   // This function runs when the parser gets
+   // the annotations information
+   callback: function(){
+    return this.annotation.line;
+   },
+
+   // Runs when the each annotation in the block has been
+   // parsed. If the annotation doesn't exist and the autofill
+   // is set to be a function then autofill get's called, and
+   // the block and file info are accessible within `this` if
+   // it is a function.`. **Note** this will not run if the
+   // annotation exists
+   autofill: false,
+
+   // Runs after the callback and/or autofill runs the contents
+   // of `this` is what was returned by the callback and/or autofill.
+   // It's used to fixed data that was returned by callback.
+   // It helps when members on your team pass in the wrong keyword(s)
+   // and let's you resolve them here in the data instead of resolving
+   // the issues on the client side. It's also useful if you want want
+   // to ensure the data always returns an `array`.
+   resolve: false
+  };
+
   // a) throw an error
   if(!is.string(name)){
    throw new Error("name must be a string");
@@ -130,7 +128,7 @@ export default class AnnotationApi{
     callback: config
    };
   }
-  else if(is.object(config) && !is.empty(config) && !!is.any.in(config, ...this.config_keys)){
+  else if(is.object(config) && !is.empty(config) && !!is.any.in(config, ...to.keys(base_config))){
    // loop through each filetype in the passed
    // object and rerun the add function
    for(let filetype in config){
@@ -145,19 +143,16 @@ export default class AnnotationApi{
    return;
   }
 
-  // extend the `config` onto the defaults to
-  // ensure all settings are defined.
-  config = to.extend(to.clone(this.config), config);
-
-  // ensures the filetype is an flat array
-  config.filetypes = to.array.flat(config.filetypes);
+  // merge the passed `config` with the base config
+  // to ensure all settings are defined.
+  to.merge(base_config, config);
 
   // merge the passed annotation with the
   // global list of annotations by filetype/default
-  for(var filetype in config.filetypes){
+  for(var filetype in base_config.filetypes){
    to.merge(this.annotations, {
-    [is.falsy(config.filetypes[filetype]) ? "default" : config.filetypes[filetype]]: {
-     [name]: config
+    [is.falsy(base_config.filetypes[filetype]) ? "default" : base_config.filetypes[filetype]]: {
+     [name]: base_config
     }
    });
   }
