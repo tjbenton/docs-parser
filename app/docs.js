@@ -17,14 +17,10 @@ var docs = (function(){
          return new Promise((resolve, reject) => {
           fs.readJson(info.temp.file)
            .then((err, data) => {
-            // a) Resolve with empty object
-            // b) Resolve with `data`
             resolve(err || data);
            })
            .catch((err) => {
             resolve({});
-            // creates the temp json file, so it can be written to later
-            // fs.outputJson(info.temp.file, {}, null, 1);
            });
          });
         },
@@ -121,37 +117,6 @@ var docs = (function(){
   });
  };
 
- // the annotations object
- _.all_annotations = {};
-
- /// @name annotations
- /// @description
- /// This gets the annotations to use for the current filetype.
- /// Basically the file specific annotations get extended onto the default annotations
- /// @arg {string} filetype - the current filetype that is being parsed
- /// @returns {object} the settings to use
- _.annotations = filetype => !is.undefined(_.all_annotations[filetype]) ? to.extend(to.extend({}, _.all_annotations.default), _.all_annotations[filetype]) : _.all_annotations.default;
-
- /// @name annotation
- /// @description Used to define the new annotations
- /// @arg {string} name - The name of the variable
- /// @arg {object} obj - The callback to be executed at parse time
- _.annotation = (name, obj) => {
-  if(is.function(obj)){
-   obj = {
-    default: obj
-   };
-  }
-
-  for(var item in obj){
-   to.extend(_.all_annotations, {
-    [item]: to.extend(_.all_annotations[item] || {}, {
-     [name]: obj[item]
-    })
-   });
-  }
- };
-
  /// @name parse_file
  /// @description
  /// Parses a single file
@@ -160,7 +125,7 @@ var docs = (function(){
  _.parse_file = file_path => {
   let filetype = path.extname(file_path).replace(".", ""), // the filetype of the current file
       setting = _.settings(filetype), // gets the settings for this file
-      annotations = _.annotations(filetype), // gets the annotations to use on this file
+      annotations = _.annotation.list(filetype), // gets the annotations to use on this file
       annotation_keys = to.keys(annotations), // stores the annotation names for this file in an array
       contents = to.normal_string(to.string(fs.readFileSync(file_path))), // the contents of the file
       lines = to.array(contents), // all the lines in the file
