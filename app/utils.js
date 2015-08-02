@@ -24,7 +24,7 @@ export {info};
 // import fs from "fs";
 // fs.readFile = denodeify(fs.readFile);
 export function denodeify(func){
- return function (...args){
+ return function(...args){
   return new Promise((resolve, reject) => {
    func(...args, (err, ...args) => err ? reject(err) : resolve(...args));
   });
@@ -55,23 +55,6 @@ fs.outputJson = denodeify(fs.outputJson);
 fs.stat = denodeify(fs.stat);
 export {fs};
 
-
-
-export function defer(){
- this.promise = new Promise((function(resolve, reject){
-  this.resolve = resolve;
-  this.reject = reject;
- }).bind(this));
-
- this.when = function(){
-  let def = new defer()
-  Promise.all.apply(this, arguments).then(function(){
-   alert('all promises complete!');
-  });
- };
-};
-
-
 // can't use `import` from es6 because it
 // returns an error saying "glob" is read only
 let glob = denodeify(require("glob"));
@@ -80,7 +63,15 @@ export {glob};
 const to_string = arg => Object.prototype.toString.call(arg),
       array_slice = arg => Array.prototype.slice.call(arg);
 
+import markdown from "marked";
+
 export let to = {
+ /// @name markdown
+ /// @description
+ /// Helper function to convert markdown text to html
+ /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
+ markdown,
+
  // @name to.string
  // @description
  // Converts an object, array, number, or boolean to a string
@@ -110,18 +101,20 @@ export let to = {
  // @returns {json object}
  json: (arg, spacing = 2) => is.object(arg) && JSON.stringify(arg, null, spacing),
 
-/// @name to.normalize
-/// @description
-/// Removes trailing blank lines. Removes extra whitespace before all the lines that
-/// are passed without affecting the formatting of the passes string. Then removes
-/// all whitespace at the end of each line.
-/// @arg {string, array} content - The content you want to be normalized
-/// @returns {string} - The normalized string
+ /// @name to.normalize
+ /// @description
+ /// Removes trailing blank lines. Removes extra whitespace before all the lines that
+ /// are passed without affecting the formatting of the passes string. Then removes
+ /// all whitespace at the end of each line.
+ /// @arg {string, array} content - The content you want to be normalized
+ /// @returns {string} - The normalized string
  normalize: (content) => {
   content = to.array(content); // this allows arrays and strings to be passed
 
   // remove trailing blank lines
-  for(let i = content.length; i-- && content[i].length === 0; content.pop());
+  for(let i = content.length; i-- && content[i].length === 0;){
+   content.pop();
+  };
 
   return content
           .map(line => line.slice(
@@ -339,8 +332,12 @@ to.array.flat = (arg) => [].concat.apply([], to.array(arg));
 to.array.unique = (arg) => {
  let o = {},
      r = [];
- for(let i in arg) o[arg[i]] = arg[i];
- for(let i in o) r.push(o[i]);
+ for(let i in arg){
+  o[arg[i]] = arg[i];
+ }
+ for(let i in o){
+  r.push(o[i]);
+ }
  return r;
 };
 
@@ -349,164 +346,164 @@ to.array.unique = (arg) => {
 // var seen = new Set();
 //   return a.filter((x) => !seen.has(x) && seen.add(x))
 export let is = {
-  // placeholder for the interfaces
-  not: {},
-  all: {},
-  any: {},
+ // placeholder for the interfaces
+ not: {},
+ all: {},
+ any: {},
 
-  // @description is a given arg Arguments?
-  // fallback check is for IE
-  // @arg {*} arg - The item to check
-  // @returns {boolean} - The result of the test
-  argument: (arg) => !is.null(arg) && (to_string.call(arg) === "[object Arguments]" || (typeof arg === "object" && "callee" in arg)),
+ // @description is a given arg Arguments?
+ // fallback check is for IE
+ // @arg {*} arg - The item to check
+ // @returns {boolean} - The result of the test
+ argument: (arg) => !is.null(arg) && (to_string.call(arg) === "[object Arguments]" || (typeof arg === "object" && "callee" in arg)),
 
-  // @description is a given arg regex expression?
-  // @arg {*} arg - The item to check
-  // @returns {boolean} - The result of the test
-  regex: (value) => to_string.call(value) === "[object RegExp]",
+ // @description is a given arg regex expression?
+ // @arg {*} arg - The item to check
+ // @returns {boolean} - The result of the test
+ regex: (value) => to_string.call(value) === "[object RegExp]",
 
-  // @description is a given arg function?
-  // @arg {*} arg - The item to check
-  // @returns {boolean} - The result of the test
-  function: arg => to_string(arg) === "[object Function]" || typeof arg === "function",
+ // @description is a given arg function?
+ // @arg {*} arg - The item to check
+ // @returns {boolean} - The result of the test
+ function: arg => to_string(arg) === "[object Function]" || typeof arg === "function",
 
-  // @description is a given arg Array?
-  // @arg {*} arg - The item to check
-  // @returns {boolean} - The result of the test
-  array: arg => to_string(arg) === "[object Array]",
+ // @description is a given arg Array?
+ // @arg {*} arg - The item to check
+ // @returns {boolean} - The result of the test
+ array: arg => to_string(arg) === "[object Array]",
 
-  // @description is a given arg Boolean?
-  // @arg {*} arg - The item to check
-  // @returns {boolean} - The result of the test
-  boolean: arg => arg === true || arg === false || to_string(arg) === "[object Boolean]",
+ // @description is a given arg Boolean?
+ // @arg {*} arg - The item to check
+ // @returns {boolean} - The result of the test
+ boolean: arg => arg === true || arg === false || to_string(arg) === "[object Boolean]",
 
-  // @description is a given arg object?
-  // @arg {*} arg - The item to check
-  // @returns {boolean} - The result of the test
-  object: arg => typeof arg === "object" && !!arg && arg !== null,
+ // @description is a given arg object?
+ // @arg {*} arg - The item to check
+ // @returns {boolean} - The result of the test
+ object: arg => typeof arg === "object" && !!arg && arg !== null,
 
-  // @description is given value a pure JSON object?
-  // @arg {*} arg - The item to check
-  // @returns {boolean} - The result of the test
-  json: (arg) => to_string(arg) === "[object Object]",
+ // @description is given value a pure JSON object?
+ // @arg {*} arg - The item to check
+ // @returns {boolean} - The result of the test
+ json: (arg) => to_string(arg) === "[object Object]",
 
-  // @description is a given arg empty? Objects, arrays, strings
-  // @arg {object, array, string} arg - What you want to check to see if it's empty
-  // @returns {boolean} - determins if the item you passes was empty or not
-  empty: (arg) => {
-   var type = typeof arg;
-   if(is.falsy(arg)){
-    return true;
-   }
-   else if(type === "function" || type === "object" && !!arg){
-    let num = Object.getOwnPropertyNames(arg).length;
-    return (num === 0 || (num === 1 && is.array(arg)) || (num === 2 && is.argument(arg))) ? true : false;
-   }
-   else{
-    return arg === "";
-   }
-  },
+ // @description is a given arg empty? Objects, arrays, strings
+ // @arg {object, array, string} arg - What you want to check to see if it's empty
+ // @returns {boolean} - determins if the item you passes was empty or not
+ empty: (arg) => {
+  var type = typeof arg;
+  if(is.falsy(arg)){
+   return true;
+  }
+  else if(type === "function" || type === "object" && !!arg){
+   let num = Object.getOwnPropertyNames(arg).length;
+   return (num === 0 || (num === 1 && is.array(arg)) || (num === 2 && is.argument(arg))) ? true : false;
+  }
+  else{
+   return arg === "";
+  }
+ },
 
-  // @description is a given value existy?
-  // @arg {*} arg - The item to check
-  // @returns {boolean} - The result of the test
-  existy: (arg) => arg !== null && arg !== undefined,
+ // @description is a given value existy?
+ // @arg {*} arg - The item to check
+ // @returns {boolean} - The result of the test
+ existy: (arg) => arg !== null && arg !== undefined,
 
-  // @description is a given arg String?
-  // @arg {*} arg - The item to check
-  // @returns {boolean} - The result of the test
-  string: arg => to_string(arg) === "[object String]",
+ // @description is a given arg String?
+ // @arg {*} arg - The item to check
+ // @returns {boolean} - The result of the test
+ string: arg => to_string(arg) === "[object String]",
 
-  // @description is a given arg undefined?
-  // @arg {*} arg - The item to check
-  // @returns {boolean}
-  undefined: arg => arg === void 0,
+ // @description is a given arg undefined?
+ // @arg {*} arg - The item to check
+ // @returns {boolean}
+ undefined: arg => arg === void 0,
 
-  // @description is a given string include parameter substring?
-  // @arg {string, array} a - string to match against
-  // @arg {string, array} b - string to look for in `str`
-  // @todo {1} update this to work with arrays
-  // @todo {1} change name to be `index` because it still makes sense and it's shorter
-  // @returns {number, boolean}
-  included: (a, b) => !is.empty(a) && !is.empty(b) && a.indexOf(b) > -1 ? a.indexOf(b) : false,
+ // @description is a given string include parameter substring?
+ // @arg {string, array} a - string to match against
+ // @arg {string, array} b - string to look for in `str`
+ // @todo {1} update this to work with arrays
+ // @todo {1} change name to be `index` because it still makes sense and it's shorter
+ // @returns {number, boolean}
+ included: (a, b) => !is.empty(a) && !is.empty(b) && a.indexOf(b) > -1 ? a.indexOf(b) : false,
 
 
-  // @description is the `value` in `obj`?
-  // @arg {array, string, object} obj - the item to check against
-  // @arg {*} value - the value to look for in the `obj`
-  // @returns {boolean}
-  in: (obj, value) => {
-   if(is.object(obj)){
-    obj = to.keys(obj);
-   }
-   return is.included(obj, value) !== false;
-  },
+ // @description is the `value` in `obj`?
+ // @arg {array, string, object} obj - the item to check against
+ // @arg {*} value - the value to look for in the `obj`
+ // @returns {boolean}
+ in: (obj, value) => {
+  if(is.object(obj)){
+   obj = to.keys(obj);
+  }
+  return is.included(obj, value) !== false;
+ },
 
-  // @description is a given arg false
-  // @arg {*} arg - arg to check if it is false
-  // @returns {boolean}
-  false: arg => arg === false,
+ // @description is a given arg false
+ // @arg {*} arg - arg to check if it is false
+ // @returns {boolean}
+ false: arg => arg === false,
 
-  // @description is a given arg truthy?
-  // @arg {*} arg
-  // @returns {boolean}
-  truthy: arg => arg !== null && arg !== undefined && arg !== false && !(arg !== arg) && arg !== "" && arg !== 0,
+ // @description is a given arg truthy?
+ // @arg {*} arg
+ // @returns {boolean}
+ truthy: arg => arg !== null && arg !== undefined && arg !== false && !(arg !== arg) && arg !== "" && arg !== 0,
 
-  // @description is given arg falsy?
-  // @arg {*} arg
-  // @returns {boolean}
-  falsy: arg => !is.truthy(arg),
+ // @description is given arg falsy?
+ // @arg {*} arg
+ // @returns {boolean}
+ falsy: arg => !is.truthy(arg),
 
-  // NaN is number :) Also it is the only arg which does not equal itself
-  nan: (arg) => arg !== arg,
+ // NaN is number :) Also it is the only arg which does not equal itself
+ nan: (arg) => arg !== arg,
 
-  // @description is given arg a number?
-  // @arg {*} arg
-  // @returns {boolean}
-  number: (arg) => is.not.nan(arg) && to_string(arg) === "[object Number]",
+ // @description is given arg a number?
+ // @arg {*} arg
+ // @returns {boolean}
+ number: (arg) => is.not.nan(arg) && to_string(arg) === "[object Number]",
 
-  // is a given number within minimum and maximum parameters?
-  between: (arg, min = 0, max = Infinity) => is.all.number(arg, min, max) && arg > min && arg < max,
+ // is a given number within minimum and maximum parameters?
+ between: (arg, min = 0, max = Infinity) => is.all.number(arg, min, max) && arg > min && arg < max,
 
-  // @description is a given number positive?
-  // @arg {*} arg
-  // @returns {boolean}
-  positive: (arg) => is.number(arg) && arg > 0,
+ // @description is a given number positive?
+ // @arg {*} arg
+ // @returns {boolean}
+ positive: (arg) => is.number(arg) && arg > 0,
 
-  // @description is a given number negative?
-  // @arg {*} arg
-  // @returns {boolean}
-  negative: (arg) => is.number(arg) && arg < 0,
+ // @description is a given number negative?
+ // @arg {*} arg
+ // @returns {boolean}
+ negative: (arg) => is.number(arg) && arg < 0,
 
-  // @description is a given number above minimum parameter?
-  // @arg {*} arg
-  // @returns {boolean}
-  above: (arg, min = -1) => is.all.number(arg, min) && arg > min,
+ // @description is a given number above minimum parameter?
+ // @arg {*} arg
+ // @returns {boolean}
+ above: (arg, min = -1) => is.all.number(arg, min) && arg > min,
 
-  // @description is a given number above maximum parameter?
-  // @arg {*} arg
-  // @returns {boolean}
-  under: (arg, max = 100) => is.all.number(arg, max) && arg < max,
+ // @description is a given number above maximum parameter?
+ // @arg {*} arg
+ // @returns {boolean}
+ under: (arg, max = 100) => is.all.number(arg, max) && arg < max,
 
-  // @description is a given arg null?
-  // @arg {*} arg - the item you want to check and see if it's `null`
-  // @returns {boolean}
-  null: (arg) => arg === null,
+ // @description is a given arg null?
+ // @arg {*} arg - the item you want to check and see if it's `null`
+ // @returns {boolean}
+ null: (arg) => arg === null,
 
-  // @description is a given arg a promise?
-  // @arg {*} arg - the item you want to check and see if it's a `Promise`
-  // @returns {boolean}
-  promise: arg => arg && is.function(arg.then),
+ // @description is a given arg a promise?
+ // @arg {*} arg - the item you want to check and see if it's a `Promise`
+ // @returns {boolean}
+ promise: arg => arg && is.function(arg.then),
 
-  // @description is a given arg a stream?
-  // @arg {*} arg - the item you want to check and see if it's a `stream`
-  // @returns {boolean}
-  stream: arg => arg && is.function(arg.pipe),
+ // @description is a given arg a stream?
+ // @arg {*} arg - the item you want to check and see if it's a `stream`
+ // @returns {boolean}
+ stream: arg => arg && is.function(arg.pipe),
 
-  // @description is a given arg a stream?
-  // @arg {*} arg - the item you want to check and see if it's a `stream`
-  // @returns {boolean}
-  buffer: arg => Buffer.isBuffer(arg)
+ // @description is a given arg a stream?
+ // @arg {*} arg - the item you want to check and see if it's a `stream`
+ // @returns {boolean}
+ buffer: arg => Buffer.isBuffer(arg)
 };
 
 // included method does not support `all` and `any` interfaces
@@ -516,10 +513,10 @@ is.included.api = ["not"];
 is.between.api = ["not"];
 
 // `above` method does not support `all` and `any` interfaces
-is.above.api = ['not'];
+is.above.api = ["not"];
 
 // least method does not support `all` and `any` interfaces
-is.under.api = ['not'];
+is.under.api = ["not"];
 
 
 is.in.api = ["not"];
@@ -584,7 +581,7 @@ const not = (func) => () => !func.apply(null, array_slice(arguments)),
         return false;
        };
       },
-      setInterfaces = () => {
+      setInterfaces = (() => {
        var options = is;
        for(var option in options){
         if(hasOwnProperty.call(options, option) && is.function(options[option])){
@@ -602,4 +599,4 @@ const not = (func) => () => !func.apply(null, array_slice(arguments)),
          }
         }
        }
-      }();
+      })();

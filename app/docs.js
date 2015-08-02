@@ -26,11 +26,13 @@ var docs = (function(){
             resolve({});
             // creates the temp json file, so it can be written to later
             // fs.outputJson(info.temp.file, {}, null, 1);
-           })
+           });
          });
         },
         write(data){
-         fs.outputJson(info.temp.file, data, {spaces: 2}, 1);
+         fs.outputJson(info.temp.file, data, {
+          spaces: 2
+         }, 1);
         }
        },
        _ = {
@@ -87,7 +89,7 @@ var docs = (function(){
     end: "/--->"
    }
   }
- }
+ };
  _.file_specific_settings.py = _.file_specific_settings.rb;
  // _.file_specific_settings.coffee = _.file_specific_settings.rb;
 
@@ -153,7 +155,7 @@ var docs = (function(){
     })
    });
   }
- }
+ };
 
  /// @name parse_file
  /// @description
@@ -239,7 +241,7 @@ var docs = (function(){
           end: is_start_and_end ? is.included(line, config.end) : false
          };
      debug.get_blocks && console.log("line", i, "=", line);
-     debug.get_blocks && console.log("length")
+     debug.get_blocks && console.log("length");
      // a) The line isn't empty so parse it.
      if(!is.empty(line)){
       // a) is the start and end style or there was an instance of a comment line
@@ -324,7 +326,7 @@ var docs = (function(){
         parsed_blocks.push(block_info);
         break;
        }
-       debug.get_blocks && console.log("IN CODE")
+       debug.get_blocks && console.log("IN CODE");
        // a) The previous line was a comment
        if(!in_code){
         debug.get_blocks && console.log("THE PREVIOUS LINE WAS A COMMENT");
@@ -376,12 +378,12 @@ var docs = (function(){
     header, // the header for the file
     body // the blocks in the rest of the file
    };
-  };
+  },
 
   // @name parse_blocks
   // @description Parse the blocks that're returned from `get_blocks`
   // @returns {array}
-  const parse_blocks = function(){
+  parse_blocks = function(){
    // @name this.call_annotation
    // @arg {object} annotation - the information for the annotation to be called(name, line, content, start, end)
    this.call_annotation = (annotation) => {
@@ -426,7 +428,7 @@ var docs = (function(){
     }
     // run the annotation function and merge it with the other annotations in the block
     return this.merge(name, annotations[name].call(to_call));
-   }
+   };
 
    // @name this.merge
    // @description
@@ -472,12 +474,12 @@ var docs = (function(){
     _parse_blocks = (blocks = blocks_to_parse) => {
      let parsed_blocks = [];
 
-      // if it's an object then convert it to an array.
+     // if it's an object then convert it to an array.
      blocks = to.array(blocks);
 
      // loop over each block
      for(let a = 0, blocks_length = blocks.length; a < blocks_length; a++){
-      this.block = blocks[a]
+      this.block = blocks[a];
       this.block_annotations = {};
 
       this.block.comment.contents = to.normalize(this.block.comment.contents);
