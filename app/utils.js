@@ -210,7 +210,7 @@ export let to = {
    //    a) Call the merge function go further into the object
    //    b) Sets the value of `a` to be the value of `b`
    // d) Convert the a value to be an array, and add the `b` value to it
-   if(is.function(b[k]) || is.undefined(a[k])){
+   if(is.function(b[k]) || is.function(a[k]) || is.undefined(a[k])){
     a[k] = b[k];
    }
    else if(is.array(a[k])){
