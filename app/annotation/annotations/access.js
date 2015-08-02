@@ -1,10 +1,9 @@
-/// @name page
+/// @name access
 /// @page annotations
-/// @description The page you want the documented item to be on
+/// @description Access of the documented item
 /// @returns {string}
 export default {
- page: {
-  alias: ["group"],
+ access: {
   callback: function(){
    return this.annotation.line;
   }

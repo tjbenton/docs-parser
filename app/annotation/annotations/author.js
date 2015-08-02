@@ -1,6 +1,7 @@
 /// @name author
 /// @page annotations
-/// @description A note about the documented item
-export default function author(){
- return this.annotation.line || this.annotation.contents;
+/// @description Author of the documented item
+/// @returns {string}
+export default {
+ author: {}
 };

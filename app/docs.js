@@ -1,6 +1,7 @@
 "use strict";
 import {info, fs, path, is, to} from "./utils.js";
 import paths from "./paths.js";
+import AnnotationApi from "./annotation";
 
 ////
 /// @name docs.js
@@ -35,7 +36,8 @@ var docs = (function(){
        },
        _ = {
         is,
-        to
+        to,
+        annotation: new AnnotationApi()
        };
 
  // the settings object that holds the file specific settings as well as the base settings
@@ -633,177 +635,6 @@ var docs = (function(){
 
  return _;
 })();
-
-// base annotations
-
-/// @name name
-/// @page annotations
-/// @description Name of the documented item
-/// @returns {string}
-docs.annotation("name", function(){
- return this.annotation.line;
-});
-
-/// @name page
-/// @page annotations
-/// @description The page you want the documented item to be on
-/// @returns {string}
-docs.annotation("page", function(){ // group
- return this.annotation.line;
-});
-
-/// @name author
-/// @page annotations
-/// @description A note about the documented item
-docs.annotation("author", function(){
- return this.annotation.line || this.annotation.contents;
-});
-
-/// @name description
-/// @page annotations
-/// @description Description of the documented item
-/// @note Runs through markdown
-/// @returns {string}
-docs.annotation("description", function(){
- return docs.markdown(this.annotation.line ? this.annotation.line + "\n" + this.annotation.contents : this.annotation.contents);
-});
-
-/// @name note
-/// @page annotations
-/// @description A note about the documented item
-/// @returns {object}
-docs.annotation("note", function(){
- // add regex for `{7} - A note`
- return this.annotation.line;
-});
-
-/// @name access
-/// @page annotations
-/// @description Access of the documented item
-/// @returns {string}
-docs.annotation("access", function(){
- return this.annotation.line;
-});
-
-/// @name alias
-/// @page annotations
-/// @description Whether the documented item is an alias of another item
-/// @returns {string}
-docs.annotation("alias", function(){
- return this.annotation.line;
-});
-
-/// @name returns
-/// @page annotations
-/// @description Return from the documented function
-/// @returns {string}
-docs.annotation("returns", function(){ // return
- // add regex for `{type} - description`. Also ensure it supports multiple lines
- return this.annotation.line;
-});
-
-/// @name arg
-/// @page annotations
-/// @description Parameters from the documented function/mixin
-/// @note Description runs through markdown
-/// @returns {object}
-docs.annotation("arg", function(){ // argument, param, parameter
- // add regex for `{type} name-of-variable [default value] - description`
- // make sure it supports multiple lines
- return this.annotation.line;
-});
-
-/// @name type
-/// @page annotations
-/// @description Describes the type of a variable
-/// @returns {string}
-docs.annotation("type", function(){
- // add regex for `{type} - description`
- return this.annotation.line;
-});
-
-/// @name deprecated
-/// @page annotations
-/// @description Lets you know that a mixin/function has been depricated
-/// @returns {string}
-docs.annotation("deprecated", function(){
- // add regex for `{version} - description`
- return this.annotation.line;
-});
-
-/// @name chainable
-/// @page annotations
-/// @description Used to notate that a function is chainable
-/// @returns {boolean}
-docs.annotation("chainable", function(){
- return true;
-});
-
-/// @name readonly
-/// @page annotations
-/// @description To note that a property is readonly
-/// @returns {boolean}
-docs.annotation("readonly", function(){
- return true;
-});
-
-/// @name constructor
-/// @page annotations
-/// @description Describes the type of a variable
-/// @returns {boolean}
-docs.annotation("constructor", function(){
- return true;
-});
-
-/// @name version
-/// @page annotations
-/// @description Describes the type of a variable
-/// @returns {string}
-docs.annotation("version", function(){
- // add regex for `{type} - description`
- return this.annotation.line;
-});
-
-/// @name todo
-/// @page annotations
-/// @description Things to do related to the documented item
-/// @returns {object}
-docs.annotation("todo", function(){
- // add regex for {5} [assignee-one, assignee-two] - Task to be done
- // make sure it supports multiple lines
- return this.annotation.line;
-});
-
-/// @name requires
-/// @page annotations
-/// @description Requirements from the documented item
-/// @returns {object}
-docs.annotation("requires", function(){ // require
- // add regex for {type} item - description
- return this.annotation.line;
-});
-
-/// @name state
-/// @page annotations
-/// @description A state of a the documented item
-/// @returns {object}
-docs.annotation("state", function(){
- // add regex for `modifier - description`
- // should consider supporting multiple lines
- // should `modifier` change to be `{modifier}` since it's sorta like `type`?
- return this.annotation.line;
-});
-
-/// @name markup
-/// @page annotations
-/// @description Code for the documented item
-/// @note Description is parsed as markdown
-/// @returns {object}
-docs.annotation("markup", function(){
- // add regex for `{language} [settings] - description`
- return this.annotation.contents;
-});
-
 
 
 export default docs;

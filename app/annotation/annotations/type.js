@@ -1,11 +1,11 @@
-/// @name page
+/// @name type
 /// @page annotations
-/// @description The page you want the documented item to be on
+/// @description Describes the type of a variable
 /// @returns {string}
 export default {
- page: {
-  alias: ["group"],
+ type: {
   callback: function(){
+   // add regex for `{type} - description`
    return this.annotation.line;
   }
  }
