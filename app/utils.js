@@ -537,7 +537,7 @@ is.all.in = (obj, ...values) => {
 is.any.in = (obj, ...values) => {
  values = to.array.flat(values);
  for(let i in values){
-  if(!is.in(obj, values[i])){
+  if(is.in(obj, values[i])){
    return true;
   }
   return false;

@@ -8,55 +8,52 @@ export default class AnnotationApi{
   // stores the current annotation that is being added
   // to the annotations list.
   // the name of the annotation is always the key
-  this.annotation_base = {
-   alias: [], // holds an array of aliases for the given annotation
-   // stores all the callback functions for the different filetypes
-   callbacks: {
-    default: { // stores the default function
-     // This function runs when the parser gets
-     // the annotations information
-     callback: function(){
-      return this.annotation.line;
-     },
+  this.config = {
+   // this declares where this annotation get's applied
+   filetypes: ["default"],
 
-     // Runs when the each annotation in the block has been
-     // parsed. If the annotation doesn't exist and the autofill
-     // is set to be a function then autofill get's called, and
-     // the block and file info are accessible within `this` if
-     // it is a function.`. **Note** this will not run if the
-     // annotation exists
-     autofill: false,
+   // holds an array of aliases for the given annotation
+   alias: [],
 
-     // Runs after the callback and/or autofill runs the contents
-     // of `this` is what was returned by the callback and/or autofill.
-     // It's used to fixed data that was returned by callback.
-     // It helps when members on your team pass in the wrong keyword(s)
-     // and let's you resolve them here in the data instead of resolving
-     // the issues on the client side
-     resolve: false
-    }
-    // You can add file specific overrides if you need to. All you have
-    // to do is specific the filetype as the key(aka replace default with the filetype)
-    // js: {
-    //  callback: ...,
-    //  autofill: ...,
-    //  resolve: ...,
-    // }
-   }
+   // This function runs when the parser gets
+   // the annotations information
+   callback: function(){
+    return this.annotation.line;
+   },
+
+   // Runs when the each annotation in the block has been
+   // parsed. If the annotation doesn't exist and the autofill
+   // is set to be a function then autofill get's called, and
+   // the block and file info are accessible within `this` if
+   // it is a function.`. **Note** this will not run if the
+   // annotation exists
+   autofill: false,
+
+   // Runs after the callback and/or autofill runs the contents
+   // of `this` is what was returned by the callback and/or autofill.
+   // It's used to fixed data that was returned by callback.
+   // It helps when members on your team pass in the wrong keyword(s)
+   // and let's you resolve them here in the data instead of resolving
+   // the issues on the client side. It's also useful if you want want
+   // to ensure the data always returns an `array`.
+   resolve: false
   };
-
-  // the list of all the annotations names
-  this.annotation_names = [];
+  // stores the keys in the default config
+  this.config_keys = to.keys(this.config);
 
   // object of the all the annotation
-  this.annotations = {};
-
-  // stores all annotations that have an alias
-  // this way it doesn't have to happen in the parser
-  this.has_alias = {};
-
-  // stores all the annoation aliases
-  this.annotation_aliases = [];
+  // This object holds all the annotations
+  this.annotations = {
+   default: {
+    // holds all default annotations for all filetypes that aren't
+    // specific to an individual filetype.
+   }
+   // You can add file specific overrides if you need to. All you have
+   // to do is specific the filetype as the key(aka replace default with the filetype)
+   // js: {
+   //  annotation
+   // }
+  };
 
   // adds the default annotations to the list
   this.add_annotations(annotations);
@@ -72,71 +69,96 @@ export default class AnnotationApi{
  ///
  /// @returns {this}
  ///
- /// @markup **Example:**
- /// annotation_api
- ///  .add()
- add(annotation, callbacks = this.annotation_base.callbacks, ...alias){
-  // a) run the each annotation through the annotations
-  // b) log an error
-  if(is.array(annotation)){
-   this.add_annotations(annotation);
-   return; // stops this function from running;
-  }
-  else if(is.object(annotation)){
-   alias = to.array(annotation.alias || []);
-   callbacks = annotation.callbacks || callbacks;
-   annotation = annotation.name || "";
-  }
-
-  if(!is.string(annotation) || is.string(annotation) && is.empty(annotation)){
-   throw new Error("annotation must be a string or array of annotations");
+ /// @markup {js} **Example:** Declaring a basic annotation
+ /// docs.annotation.add("name", function(){
+ ///  return this.annotation.line;
+ /// });
+ ///
+ /// @markup {js} **Example:** Declaring a annotation with more options
+ /// docs.annotation.add("name", {
+ ///  alias: ["title", "heading"],
+ ///  callback: function(){
+ ///   return this.annotation.line;
+ ///  },
+ ///  autofill: false,
+ ///  resolve: false
+ /// });
+ ///
+ /// @markup {js} **Example** Specifing a file specific annotation
+ /// docs.annotation.add("promise", {
+ ///  // the filetypes passed will use the `callback` and the other
+ ///  // settings in the config. It can be a string or an array of
+ ///  // filetypes. Note that if a filetype isn't specificed it defaults
+ ///  // to be `"default"` which will apply to all files.
+ ///  filetype: ["js", "jsx", "es", "es6", "es7"],
+ ///  callback: function(){
+ ///   return this.annotation.line;
+ ///  },
+ ///  ...
+ /// });
+ ///
+ /// @markup {js} **Example** Specifing a file specific annotation(Option 2)
+ /// This is very useful
+ /// docs.annotation.add("name", {
+ ///  default: { // for all filetypes that aren't defined for this annotation
+ ///   callback: function(){
+ ///    return this.annotation.line;
+ ///   },
+ ///   ...
+ ///  },
+ ///  js: { // use the file extention
+ ///  }
+ /// });
+ add(name, config){
+  // a) throw an error
+  if(!is.string(name)){
+   throw new Error("name must be a string");
    return;
   }
 
-  // a) Add the callbacks to the alias and set callbacks to be an empty object
-  // b) Set the passed function as the default for this annotation namespace
-  // c) Throw an error because
-  if(is.string(callbacks) || is.array(callbacks)){
-   alias = to.array.flat([alias, callbacks]);
-   callbacks = {};
-  }
-  else if(is.function(callbacks) || is.object(callbacks) && is.in(callbacks, "callback", "autofill", "resolve")){
-   callbacks = {
-    default: {
-     callback: callbacks
-    }
+  // a) set the passed `array` as the `alias`
+  // b) set the passed `function` as the `callback` function
+  // c) it's a filetype specific `object`
+  // d) throw an error
+  if(is.array(config)){
+   config = {
+    alias: config
    };
   }
-  else if(!is.object(callbacks)){
-   throw new Error("callbacks must me a function, object. If a string is passed it's treated as an alias");
+  else if(is.function(config)){
+   config = {
+    callback: config
+   };
   }
-
-  // a) loop over each of the callbacks and extend them
-  //    with the base settings for a callback
-  if(!is.empty(callbacks)){
-   for(let item in callbacks){
-    callbacks[item] = to.extend(to.clone(this.annotation_base.callbacks.default), callbacks[item]);
+  else if(is.object(config) && !is.empty(config) && !!is.any.in(config, ...this.config_keys)){
+   // loop through each filetype in the passed
+   // object and rerun the add function
+   for(let filetype in config){
+    let obj = config[filetype];
+    obj.filetypes = is.in(obj, "filetype") ? to.array.flat([filetype, config.filetype]) : to.array(filetype);
+    this.add(name, obj);
    }
+   return;
+  }
+  else if(!is.object(config)){
+   throw new Error("config must be a function or object");
+   return;
   }
 
-  // add the annotation name to the names list
-  this.annotation_names.push(annotation);
+  // extend the `config` onto the defaults to
+  // ensure all settings are defined.
+  config = to.extend(to.clone(this.config), config);
+
+  // ensures the filetype is an flat array
+  config.filetypes = to.array.flat(config.filetypes);
 
   // merge the passed annotation with the
-  // global list of annotation
-  to.merge(this.annotations, {
-   [annotation]: {
-    alias,
-    callbacks
-   }
-  });
-
-  // a) Merge the current annotation with the `has_alias` object,
-  //    and push the alias array onto the global alias array
-  if(!is.empty(alias)){
-   this.annotation_aliases.push(...alias);
-   to.merge(this.has_alias, {
-    [annotation]: alias
+  // global list of annotations by filetype/default
+  for(var filetype in config.filetypes){
+   to.merge(this.annotations, {
+    [is.falsy(config.filetypes[filetype]) ? "default" : config.filetypes[filetype]]: {
+     [name]: config
+    }
    });
   }
 
@@ -147,24 +169,16 @@ export default class AnnotationApi{
  /// Add an array of annotations
  /// @arg {array} annotations - Annotation objects
  add_annotations(annotations){
-  for(let i in annotations){
-   this.add(annotations[i]);
+  for(let name in annotations){
+   this.add(name, annotations[name]);
   }
  };
 
- // @name annotations_list
+ // @name list
  // @description
  // Gets the list of annotations
  get list(){
-  // this.alias_check();
   return this.annotations;
- };
-
- // @name annotations_list
- // @description
- // Gets the list of annotations
- get names(){
-  return this.annotation_names;
  };
 
  // @name filetype
