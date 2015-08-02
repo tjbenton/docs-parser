@@ -1,6 +1,4 @@
 "use strict";
-
-import markdown from "marked";
 import {info, fs, path, is, to} from "./utils.js";
 import paths from "./paths.js";
 
@@ -36,11 +34,6 @@ var docs = (function(){
         }
        },
        _ = {
-        /// @name markdown
-        /// @description
-        /// Helper function to convert markdown text to html
-        /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
-        markdown,
         is,
         to
        };
