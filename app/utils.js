@@ -527,8 +527,8 @@ is.all.in = (obj, ...values) => {
   if(!is.in(obj, values[i])){
    return false;
   }
-  return true;
  }
+ return true;
 };
 
 is.any.in = (obj, ...values) => {
@@ -537,8 +537,8 @@ is.any.in = (obj, ...values) => {
   if(is.in(obj, values[i])){
    return true;
   }
-  return false;
  }
+ return false;
 };
 
 const not = (func) => () => !func.apply(null, array_slice(arguments)),
