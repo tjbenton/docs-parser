@@ -128,7 +128,7 @@ export default class AnnotationApi{
     callback: config
    };
   }
-  else if(is.object(config) && !is.empty(config) && !!is.any.in(config, ...to.keys(base_config))){
+  else if(is.object(config) && !is.empty(config) && !is.any.in(config, ...to.keys(base_config))){
    // loop through each filetype in the passed
    // object and rerun the add function
    for(let filetype in config){
@@ -169,19 +169,20 @@ export default class AnnotationApi{
   }
  };
 
- // @name list
- // @description
- // Gets the list of annotations
- get list(){
-  return this.annotations;
+ /// @name list
+ /// @description
+ /// This gets the annotations to use for the current filetype.
+ /// Basically the file specific annotations get extended onto the default annotations
+ /// @returns {object} - the annotations to use for the current file
+ list(filetype){
+  return !is.undefined(this.annotations[filetype]) ? to.extend(to.clone(this.annotations.default), this.annotations[filetype]) : this.annotations.default;
  };
 
- // @name filetype
- // @description
- // This is used to set the current filetype
- // @arg {string}
- set filetype(filetype){
-  this.filetype = filetype;
+ /// @name file_list
+ /// @description Gets the full list of annotations by filetype
+ /// @returns {object}
+ get file_list(){
+  return this.annotations;
  };
 
  alias_check(){

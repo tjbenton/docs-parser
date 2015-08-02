@@ -347,9 +347,6 @@ var docs = (function(){
    // @name this.call_annotation
    // @arg {object} annotation - the information for the annotation to be called(name, line, content, start, end)
    this.call_annotation = (annotation) => {
-    let name = annotation.name,
-        to_call;
-
     // removes the first line because it's the "line" of the annotation
     annotation.contents.shift();
 
@@ -360,7 +357,7 @@ var docs = (function(){
     annotation.line = to.normalize(annotation.line);
 
     // Merges the data together so it can be used to run all the annotations
-    to_call = to.extend({
+    let result = to.extend({
      annotation: annotation, // sets the annotation block information to be in it's own namespace of `annotation`
 
      /// @name this.add
@@ -381,45 +378,17 @@ var docs = (function(){
     }, !is.undefined(this.block) ? this.block : {});
 
     // a) add the default annotation function to the object so it can be called in the file specific annotation functions if needed
-    if(!is.undefined(_.all_annotations[this.block.file.type]) && !is.undefined(_.all_annotations[this.block.file.type][name])){
-     to.extend(to_call, {
-      default: () => _.all_annotations.default[name].call(to_call)
-     });
+    if(is.truthy(_.annotation.file_list[filetype] && _.annotation.file_list[filetype][annotation.name]) && is.truthy(_.annotation.file_list.default[annotation.name])){
+     result.default = _.annotation.file_list.default[annotation.name].call(result);
     }
+
+
+    result = annotations[annotation.name].callback.call(result);
+
     // run the annotation function and merge it with the other annotations in the block
-    return this.merge(name, annotations[name].call(to_call));
-   };
-
-   // @name this.merge
-   // @description
-   // This merges a single annotation with the other annotations in the current block(`this.block_annotations`).
-   //
-   // If the annotation(`name`) **doesn't** exist then it adds it.
-   //
-   // If the annotation(`name`) **does** exist
-   //  - If it **isn't** an `Array` then it converts the current value to an
-   //    array and adds the new item to that array.
-   //  - If it's already an array then it pushes `to_merge` onto it.
-   //
-   // @arg {string} name - Name of the annotation to merge
-   // @arg {*} to_merge - The result from calling the annotation.
-   // @returns {object} - `this.block_annotations`
-   this.merge = (name, to_merge) => {
-    // a) the current item being merged is already defined in the base
-    // b) define the target
-    if(!is.undefined(this.block_annotations[name])){
-     // a) convert the target to an array
-     // b) add item to the current target array
-     if(!is.array(this.block_annotations[name])){
-      this.block_annotations[name] = [this.block_annotations[name], to_merge];
-     }else{
-      this.block_annotations[name].push(to_merge);
-     }
-    }else{
-     this.block_annotations[name] = to_merge;
-    }
-
-    return this.block_annotations;
+    to.merge(this.block_annotations, {
+     [annotation.name]: result
+    });
    };
 
    // @name this.parse
