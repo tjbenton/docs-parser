@@ -432,12 +432,7 @@ export let is = {
  // @arg {array, string, object} obj - the item to check against
  // @arg {*} value - the value to look for in the `obj`
  // @returns {boolean}
- in: (obj, value) => {
-  if(is.object(obj)){
-   obj = to.keys(obj);
-  }
-  return is.included(obj, value) !== false;
- },
+ in: (obj, value) => is.included(is.object(obj) ? to.keys(obj) : obj, value) !== false,
 
  // @description is a given arg false
  // @arg {*} arg - arg to check if it is false
