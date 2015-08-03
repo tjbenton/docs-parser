@@ -463,7 +463,7 @@ export let is = {
  number: (arg) => is.not.nan(arg) && to_string(arg) === "[object Number]",
 
  // is a given number within minimum and maximum parameters?
- between: (arg, min = 0, max = Infinity) => is.all.number(arg, min, max) && arg > min && arg < max,
+ between: (arg, min = 0, max = Infinity) => is.all.number(arg, min, max) && (arg >= min && arg <= max),
 
  // @description is a given number positive?
  // @arg {*} arg
@@ -543,7 +543,7 @@ is.any.in = (obj, ...values) => {
 
 const not = (func) => () => !func.apply(null, array_slice(arguments)),
       all = (func) => {
-       return () => {
+       return function(){
         let parameters = array_slice(arguments),
             length = parameters.length;
 
