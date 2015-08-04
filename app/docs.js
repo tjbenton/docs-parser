@@ -134,23 +134,10 @@ var docs = (function(){
      // loops over all the files that return
      for(let i in file_paths){
       let file_path = file_paths[i],
-          filetype = path.extname(file_path).replace(".", ""), // the filetype of the current file
-          parsed_data = parser(file_path, _.settings(filetype), _.annotation);
+          filetype = path.extname(file_path).replace(".", ""); // the filetype of the current file
 
-      // temp data stuff ------------------------------------------------------------
-
-      // a) if the current block is undefined in the json objected then create it
-      if(is.undefined(json[filetype])){
-       json[filetype] = {};
-      }
-
-      // a) creates array for the filepath
-      if(is.undefined(json[filetype][file_path])){
-       json[filetype][file_path] = [];
-      }
-
-      // merges the existing array with the new blocks arrays
-      json[filetype][file_path].push.apply(json[filetype][file_path], parsed_data);
+      // update the existing data with the new data
+      to.extend(json, parser(file_path, _.settings(filetype), _.annotation));
      }
 
      // updates the temp file
