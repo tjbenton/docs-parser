@@ -5,9 +5,9 @@ import {info, fs, path, is, to} from "./utils.js";
 /// Parses a single file
 /// @arg {string} - The path to the file you're wanting to parse
 /// @returns {array} - Array of parsed blocks
-export default function(file_path, setting, _annotation){
+export default function(file_path, setting, api){
  let filetype = path.extname(file_path).replace(".", ""), // the filetype of the current file
-     annotations = _annotation.list(filetype), // gets the annotations to use on this file
+     annotations = api.list(filetype), // gets the annotations to use on this file
      annotation_keys = to.keys(annotations), // stores the annotation names for this file in an array
      contents = to.normal_string(to.string(fs.readFileSync(file_path))), // the contents of the file
      lines = to.array(contents), // all the lines in the file
@@ -238,8 +238,8 @@ export default function(file_path, setting, _annotation){
    }, !is.undefined(this.block) ? this.block : {});
 
    // a) add the default annotation function to the object so it can be called in the file specific annotation functions if needed
-   if(is.truthy(_annotation.file_list[filetype] && _annotation.file_list[filetype][annotation.name]) && is.truthy(_annotation.file_list.default[annotation.name])){
-    result.default = _annotation.file_list.default[annotation.name].call(result);
+   if(is.truthy(api.file_list[filetype] && api.file_list[filetype][annotation.name]) && is.truthy(api.file_list.default[annotation.name])){
+    result.default = api.file_list.default[annotation.name].call(result);
    }
 
 
