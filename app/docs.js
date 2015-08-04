@@ -40,43 +40,43 @@ var docs = (function(){
  // the settings object that holds the file specific settings as well as the base settings
  _.file_specific_settings = {
   css: {
-   file_comment: {
+   header: {
     start: "/***",
     line: "*",
     end: "***/"
    },
-   block_comment: {
+   body: {
     start: "/**",
     line: "*",
     end: "**/"
    }
   },
   rb: {
-   file_comment: {
+   header: {
     start: "###",
     line: "##",
     end: "###"
    },
-   block_comment: {
+   body: {
     line: "##"
    }
   },
   html: {
-   file_comment: {
+   header: {
     start: "<!----",
     end: "/--->"
    },
-   block_comment: {
+   body: {
     start: "<!---",
     end: "/-->"
    }
   },
   cfm: {
-   file_comment: {
+   header: {
     start: "<!-----",
     end: "/--->"
    },
-   block_comment: {
+   body: {
     start: "<!----",
     end: "/--->"
    }
@@ -91,12 +91,12 @@ var docs = (function(){
  /// @returns {object} the settings to use
  _.settings = filetype => {
   let defaults = {
-   file_comment: { // file level comment block identifier
+   header: { // file level comment block identifier
     start: "////",
     line: "///",
     end: "////"
    },
-   block_comment: { // block level comment block identifier
+   body: { // block level comment block identifier
     start: "",
     line: "///",
     end: ""
