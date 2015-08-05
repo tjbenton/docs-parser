@@ -66,10 +66,16 @@ const to_string = arg => Object.prototype.toString.call(arg),
 import markdown from "marked";
 
 export let to = {
- /// @name markdown
+ /// @name to.log
+ /// @description
+ /// Shortcut for `console.log`
+ log: console.log.bind(console),
+
+ /// @name to.markdown
  /// @description
  /// Helper function to convert markdown text to html
  /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
+ /// @returns {string} of `html`
  markdown,
 
  // @name to.string
