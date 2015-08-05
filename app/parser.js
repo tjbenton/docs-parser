@@ -5,25 +5,16 @@ import {info, fs, path, is, to} from "./utils.js";
 /// Parses a single file
 /// @arg {string} - The path to the file you're wanting to parse
 /// @returns {array} - Array of parsed blocks
-export default function(file_path, setting, api){
+export default function(file_path, settings, api){
  let filetype = path.extname(file_path).replace(".", ""), // the filetype of the current file
+     setting = settings(filetype),
      annotations = api.list(filetype), // gets the annotations to use on this file
      annotation_keys = to.keys(annotations), // stores the annotation names for this file in an array
-     contents = to.normal_string(to.string(fs.readFileSync(file_path))), // the contents of the file
-     lines = to.array(contents), // all the lines in the file
-     file = {
-      contents, // all of the contents of the file
-      path: path.join(info.dir, path.relative(info.root, file_path)) || file_path, // path of the file
-      name: path.basename(file_path, "." + filetype), // name of the file
-      type: filetype, // filetype of the file
-      start: 0, // starting point of the file
-      end: lines.length - 1 // ending point of the file
-     },
+     file = {}, // placeholder to hold the file information that is defined in the return promise
      debug = {
       get_blocks: {},
       parse_blocks: {}
      };
-
  debug.get_blocks.self = false;
  debug.get_blocks.result = false;
  debug.parse_blocks.self = false;
@@ -33,9 +24,10 @@ export default function(file_path, setting, api){
  // @description Parses the file and returns the comment blocks in an array
  // @returns {array} of the comment blocks
  // @todo {5} - add a line offest argument to this so that you can call parse content on other language types.
- function get_blocks(config, restrict = true, start_at = 0){
+ function get_blocks(content, config, restrict = true, start_at = 0){
   start_at = is.number(start_at) ? start_at : 0;
-  let parsed_blocks = [],
+  let lines = to.array(content),
+      parsed_blocks = [],
       block_info,
       is_start_and_end = is.all.truthy(config.start, config.end),
       in_comment = false, // used to determin that you are in a comment
@@ -335,34 +327,52 @@ export default function(file_path, setting, api){
   return parsed_blocks;
  };
 
- debug.get_blocks.result || debug.parse_blocks.result && console.log(""); debug.get_blocks.result || debug.parse_blocks.result && console.log(""); debug.get_blocks.result || debug.parse_blocks.result && console.log(""); debug.get_blocks.result || debug.parse_blocks.result && console.log(""); debug.get_blocks.result || debug.parse_blocks.result && console.log(""); debug.get_blocks.result || debug.parse_blocks.result && console.log("");
+ return new Promise((resolve, reject) => {
+  fs.readFile(file_path)
+   .then(contents => {
+    contents = to.normal_string(to.string(contents)); // normalize the file
+    file = {
+     contents, // all of the contents of the file
+     path: path.join(info.dir, path.relative(info.root, file_path)) || file_path, // path of the file
+     name: path.basename(file_path, "." + filetype), // name of the file
+     type: filetype, // filetype of the file
+     start: 0, // starting point of the file
+     end: to.array(contents).length - 1 // ending point of the file
+    };
 
- let header = get_blocks(setting.header);
- debug.get_blocks.result && console.log("get_blocks(header) =", !is.empty(header) ? header[0].comment.contents : "no header for this file"); debug.get_blocks.result && console.log(""); debug.get_blocks.result && console.log("");
+    debug.get_blocks.result || debug.parse_blocks.result && console.log(""); debug.get_blocks.result || debug.parse_blocks.result && console.log(""); debug.get_blocks.result || debug.parse_blocks.result && console.log(""); debug.get_blocks.result || debug.parse_blocks.result && console.log(""); debug.get_blocks.result || debug.parse_blocks.result && console.log(""); debug.get_blocks.result || debug.parse_blocks.result && console.log("");
 
- let body = get_blocks(setting.body, false, !is.empty(header) ? header[0].comment.end + 1 : 0);
- debug.get_blocks.result && console.log("get_blocks(body) =", body);
+    let header = get_blocks(contents, setting.header);
+    debug.get_blocks.result && console.log("get_blocks(header) =", !is.empty(header) ? header[0].comment.contents : "no header for this file"); debug.get_blocks.result && console.log(""); debug.get_blocks.result && console.log("");
 
+    let body = get_blocks(contents, setting.body, false, !is.empty(header) ? header[0].comment.end + 1 : 0);
+    debug.get_blocks.result && console.log("get_blocks(body) =", body);
 
- debug.parse_blocks.result && debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && debug.parse_blocks.result && console.log("");
+    debug.parse_blocks.result && debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && debug.parse_blocks.result && console.log("");
 
- header = parse_blocks(header)[0];
- debug.parse_blocks.result && console.log("parse_blocks(header) =", header); debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && console.log("");
+    header = parse_blocks(header)[0];
+    debug.parse_blocks.result && console.log("parse_blocks(header) =", header); debug.parse_blocks.result && console.log(""); debug.parse_blocks.result && console.log("");
 
- body = parse_blocks(body);
- debug.parse_blocks.result && console.log("parse_blocks(body) =", body);
+    body = parse_blocks(body);
+    debug.parse_blocks.result && console.log("parse_blocks(body) =", body);
 
- // removes the contents from the file info because it's
- // not something that is needed in the returned data.
- delete file.contents;
+    // removes the contents from the file info because it's
+    // not something that is needed in the returned data.
+    delete file.contents;
 
- return {
-  [file.type]: {
-   [file.path]: {
-    file,
-    header,
-    body
-   }
-  }
- };
+    resolve({
+     [file.type]: {
+      [file.path]: {
+       file,
+       header,
+       body
+      }
+     }
+    });
+   })
+   .catch(err => {
+    console.log(err);
+    reject({});
+   });
+ });
 };

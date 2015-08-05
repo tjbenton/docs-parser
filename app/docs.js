@@ -106,24 +106,48 @@ var docs = (function(){
  /// @promise
  /// @returns {object} - the data that was parsed
  _.parse = (files, changed) => {
+  console.time("total-runtime"); // starts the timer for the total runtime
+
   return new Promise((resolve, reject) => {
-   Promise.all([paths(files, changed), temp_data.get()])
-    .then(promises => {
-     let [file_paths, json] = promises;
-     console.log("FILE_PATHS:", file_paths);
-     console.log("JSON:", json);
-     // loops over all the files that return
-     for(let i in file_paths){
-      let file_path = file_paths[i],
-          filetype = path.extname(file_path).replace(".", ""); // the filetype of the current file
+   paths(files, changed)
+    .then((file_paths) => {
+     console.log("FILE_PATHS:", file_paths.length);
+     console.time("parsing-runtime");
 
-      // update the existing data with the new data
-      to.extend(json, parser(file_path, _.settings(filetype), _.annotation));
-     }
+     // Converts the `file_paths` into an array of parsing files.
+     // Onces they're all parsed then return the array of parsed files.
+     return Promise.all(file_paths.map((file_path) => parser(file_path, _.settings, _.annotation)));
+    })
+    .then((parsed_files) => {
+     console.timeEnd("parsing-runtime");
+     // get the stored data file if it exists, or return an empty object
+     return new Promise((resolve, reject) => {
+      fs.readJson(info.temp.file)
+       .then((json) => json)
+       .catch((err) => {
+        return {};
+       })
+       .then((json) => {
+        // Loop through the parsed files and update the
+        // json data that was stored.
+        for(let data in parsed_files){
+         to.extend(json, parsed_files[data]);
+        }
 
-     // updates the temp file
-     temp_data.write(json);
+        resolve(json);
 
+        // Update the temp json data. Even though this returns a promise
+        // it's not returned below because there's no need to wait for it
+        // to finish writing out the json file before moving on. Because the
+        // `json` object has already been updated.
+        fs.outputJson(info.temp.file, json, {
+         spaces: 2
+        }, 1);
+       });
+     });
+    })
+    .then((json) => {
+     console.timeEnd("total-runtime"); // ends the timer for the total runtime
      resolve({
       /// @name parse().data
       /// @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
@@ -146,6 +170,10 @@ var docs = (function(){
        console.log("documentize");
       }
      });
+    })
+    .catch((err) => {
+     reject({});
+     throw new Error(err);
     });
   });
  };
