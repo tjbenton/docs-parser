@@ -1,15 +1,12 @@
 {
  "disallowEmptyBlocks": true,
  "disallowIdentifierNames": ["foo", "bar", "baz", "qux"],
- "disallowKeywordsOnNewLine": ["else", "else if", "catch"],
  "disallowKeywords": ["with"],
  "disallowMixedSpacesAndTabs": "smart",
  "disallowMultipleLineStrings": true,
  "disallowMultipleSpaces": true,
  "disallowPaddingNewlinesInBlocks": true,
  "disallowPaddingNewlinesBeforeKeywords": [
-  "else",
-  "else if",
   "case",
   "catch",
   "void",
@@ -74,9 +71,6 @@
  "requireCommaBeforeLineBreak": true,
  "disallowYodaConditions": true,
  "requireOperatorBeforeLineBreak": ["?", "=", "+", "-", "/", "*", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
- "requirePaddingNewLinesBeforeLineComments": {
-  "allExcept": "firstAfterCurly"
- },
  "requireSpaceBeforeBinaryOperators": true,
  "requirePaddingNewLinesInObjects": true,
  "requireSpaceBeforeObjectValues": true,
@@ -85,15 +79,13 @@
  "requireSpaceAfterBinaryOperators": true,
  "requireSpaceAfterKeywords": ["return", "typeof", "void"],
  "disallowSpacesInsideObjectBrackets": null,
- "requireDollarBeforejQueryAssignment": true,
- "safeContextKeyword": ["obj", "that", "_this", "self", "_self", "_"],
+ "safeContextKeyword": ["$obj", "obj", "$that", "that", "$elem", "elem", "_this", "self", "_self", "_", "$parent", "parent", "instance", "result", "context"],
  "fileExtensions": [".js", "jscs"],
  "validateQuoteMarks": {
   "mark": "\"",
   "escape": true
  },
  "requireParenthesesAroundIIFE": true,
- "maximumLineLength": 300,
  "validateLineBreaks": "LF",
  "validateIndentation": 1,
  "validateParameterSeparator": ", ",

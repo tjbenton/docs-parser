@@ -31,7 +31,7 @@ This is a normal multi-line coldfusion comment.
 <!--- This is a normal colfusion comment, and shouldn't start a new block --->
 
 <cfscript>
-<!-----
+<!----
 @name Something else
 @description
 This is another multi-line normal Coldfusion

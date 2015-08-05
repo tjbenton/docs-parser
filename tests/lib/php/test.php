@@ -1,16 +1,17 @@
 <?php
 	////
+ /// @name Header
 	/// @author Tyler Benton
  /// @page tests/php-file
 	////
 
 
-	/// @name main
+	/// @name Body block 1
 	/// @description
 	/// main method
 	echo 'This is saying something';
 
-	/// @name Something
+	/// @name Body block 2
 	/// @description
 	/// This is a normal multi-line comment.
     $ch = curl_init();
@@ -23,7 +24,7 @@
 
     curl_close($ch);
 
-	/// @name Something else
+	/// @name Body block 3
 	/// @description
 	/// This is another normal multi-line comment.
 	$color = "red";
