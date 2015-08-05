@@ -65,8 +65,8 @@ export default function paths(globs, changed = true){
  // @description
  // Filters out
  //  - changed files if `changed` is true,
- //  - `.md` files(always)
- //  - any paths that are files
+ //  - `.md`, and `.` files(always)
+ //  - any paths that aren't files
  //
  // @arg {array} of globs
  // @promise
@@ -77,17 +77,14 @@ export default function paths(globs, changed = true){
    return ext !== ".md" && ext.charAt(0) === ".";
   });
 
+  // a) Return all the files that were passed except
+  //    the `.md`, and `.` files.
+  if(!changed){
+   return Promise.resolve(files);
+  }
+
   return new Promise((resolve, reject) => {
-   let to_check = changed ? [] : [Promise.resolve(files)];
-
-   if(changed){
-    // loops over all the files and filters out the files that haven't changed
-    for(let i = 0, l = files.length; i < l; i++){
-     to_check.push(check(files[i]));
-    }
-   }
-
-   Promise.all(to_check)
+   Promise.all(files.map((file) => check(file)))
     .then(to_filter => resolve(to.array.unique(to.array(to_filter))))
     .catch((err) => {
      resolve([]);
