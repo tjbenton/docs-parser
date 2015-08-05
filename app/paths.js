@@ -8,18 +8,16 @@ import {Deferred, fs, path, info, glob, is, to} from "./utils.js";
 // @args {array, string}
 // @returns {array} - Filtered file paths
 export default function paths(globs, changed = true){
+ console.time("paths-runtime");
+
  globs = to.array(globs); // Converts globs into an array if it's not already.
 
- let time = 0,
-     timer = setInterval(() => {
-      time += 1;
-     }, 1);
-
- // @name Files
+ // @name get_paths
  // @description
- // @arg {array} - of file paths
+ // This gets the file paths to check
+ // @arg {array} - of file path globs
  // @promise
- // Converts `files` into a deferred so ti can get the
+ // @returns {array} - the filepaths to return
  function get_paths(files){
   return new Promise((resolve, reject) => {
    let globs = [];
@@ -41,7 +39,7 @@ export default function paths(globs, changed = true){
  // checks the status of the file to see if it has changed or not.
  // @arg {string} - path to file
  // @promise
- // @returns {boolean}
+ // @returns {string} - this will be the filepath or an empty string
  function check(file){
   var source = path.join(info.root, file),
       target = path.join(info.temp.folder, file);
@@ -100,16 +98,9 @@ export default function paths(globs, changed = true){
 
  return new Promise((resolve, reject) => {
   get_paths(globs)
-   .then(files => {
-    return filter(files);
-   })
-   .then(filtered_files => {
-    resolve(filtered_files);
-   })
-   .then(() => {
-    clearInterval(timer);
-    console.log("TIME TO GET PATHS:", `${time}ms`);
-   })
+   .then(files => filter(files))
+   .then(filtered_files => resolve(filtered_files))
+   .then(() => console.timeEnd("paths-runtime"))
    .catch((err) => {
     throw err;
    });
