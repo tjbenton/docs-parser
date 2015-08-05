@@ -12,30 +12,11 @@ import parser from "./parser.js";
 ////
 var docs = (function(){
  // the main object to return
- // a small object to help with reading and writing the temp data.
- const temp_data = {
-        get(){
-         return new Promise((resolve, reject) => {
-          fs.readJson(info.temp.file)
-           .then((err, data) => {
-            resolve(err || data);
-           })
-           .catch((err) => {
-            resolve({});
-           });
-         });
-        },
-        write(data){
-         fs.outputJson(info.temp.file, data, {
-          spaces: 2
-         }, 1);
-        }
-       },
-       _ = {
-        is,
-        to,
-        annotation: new AnnotationApi()
-       };
+ let _ = {
+      is,
+      to,
+      annotation: new AnnotationApi()
+     };
 
  // the settings object that holds the file specific settings as well as the base settings
  _.file_specific_settings = {
