@@ -53,6 +53,7 @@ fs.fake_copy = (source, target, callback) => {
 fs.readJson = denodeify(fs.readJson);
 fs.outputJson = denodeify(fs.outputJson);
 fs.stat = denodeify(fs.stat);
+fs.readFile = denodeify(fs.readFile);
 export {fs};
 
 // can't use `import` from es6 because it
