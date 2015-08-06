@@ -175,6 +175,10 @@ var docs = (function(){
      reject({});
      throw new Error(err);
     });
+  })
+  .catch((err) => {
+   reject({});
+   throw new Error(err);
   });
  };
 
