@@ -3,6 +3,7 @@ import {info, fs, is, to} from "./utils.js";
 import paths from "./paths.js";
 import AnnotationApi from "./annotation";
 import parser from "./parser.js";
+import sorter from "./sorter.js";
 
 ////
 /// @name docs.js
@@ -15,7 +16,8 @@ var docs = (function(){
  let _ = {
       is,
       to,
-      annotation: new AnnotationApi()
+      annotation: new AnnotationApi(),
+      sorter
      };
 
  // the settings object that holds the file specific settings as well as the base settings
@@ -148,6 +150,9 @@ var docs = (function(){
     })
     .then((json) => {
      console.timeEnd("total-runtime"); // ends the timer for the total runtime
+
+     _.sorter(json);
+
      resolve({
       /// @name parse().data
       /// @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
