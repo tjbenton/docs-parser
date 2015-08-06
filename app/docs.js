@@ -131,7 +131,7 @@ var docs = (function(){
         // Loop through the parsed files and update the
         // json data that was stored.
         for(let data in parsed_files){
-         to.extend(json, parsed_files[data]);
+         to.merge(json, parsed_files[data], false);
         }
 
         resolve(json);
