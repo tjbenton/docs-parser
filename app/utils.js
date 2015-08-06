@@ -201,6 +201,67 @@ export let to = {
  /// @returns {array}
  keys: (arg) => (is.object(arg) || is.symbol(arg)) && to.array.flat([Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg)]),
 
+ /// @name to.entries
+ /// @description
+ /// Makes objects, and arrays easier to iterate over!
+ ///
+ /// @returns {Symbol.iterator}
+ ///
+ /// @markup {js} **Example:**
+ /// let obj = {
+ ///  first: "Jane",
+ ///  last: "Doe"
+ /// };
+ ///
+ /// for(let [key, value] of to.entries(obj)){
+ ///  console.log(`${key}: ${value}`);
+ /// }
+ ///
+ /// // Output:
+ /// // first: Jane
+ /// // last: Doe
+ ///
+ /// @markup {js} **Example:**
+ /// let obj = ["Jane", "Doe"];
+ ///
+ /// for(let [index, value] of to.entries(obj)){
+ ///  console.log(`${index}: ${value}`);
+ /// }
+ ///
+ /// // Output:
+ /// // 0: Jane
+ /// // 1: Doe
+ entries: (obj) => {
+  if(is.array(obj)){
+   return obj.entries();
+  }
+
+  let index = 0,
+      // In ES6, you can use strings or symbols as property keys,
+      // Reflect.ownKeys() retrieves both. But the support it is
+      // extremly low at the time of writing this.
+      keys = to.keys(obj);
+
+  return {
+   [Symbol.iterator](){
+    return this;
+   },
+   next(){
+    if(index < keys.length){
+     let key = keys[index];
+     index++;
+     return {
+      value: [key, obj[key]]
+     };
+    }else{
+     return {
+      done: true
+     };
+    }
+   }
+  };
+ },
+
  /// @name to.json
  /// @description
  /// Converts an object to a json string
