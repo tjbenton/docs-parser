@@ -195,10 +195,11 @@ export let to = {
 
  /// @name to.keys
  /// @description
- /// Converts an object to an array of it's key names
+ /// Converts an object to an array of it's key names.
+ /// It also get's symbols if they're set as a key name.
  /// @arg {object}
  /// @returns {array}
- keys: (arg) => is.object(arg) && Object.getOwnPropertyNames(arg),
+ keys: (arg) => (is.object(arg) || is.symbol(arg)) && to.array.flat([Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg)]),
 
  /// @name to.json
  /// @description
