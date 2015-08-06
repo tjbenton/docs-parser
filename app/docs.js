@@ -1,5 +1,5 @@
 "use strict";
-import {info, fs, path, is, to} from "./utils.js";
+import {info, fs, is, to} from "./utils.js";
 import paths from "./paths.js";
 import AnnotationApi from "./annotation";
 import parser from "./parser.js";
