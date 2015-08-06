@@ -361,13 +361,11 @@ export default function(file_path, settings, api){
     delete file.contents;
 
     resolve({
-     [file.type]: {
-      [file.path]: {
-       file,
-       header,
-       body
-      }
-     }
+     [file.type]: [{
+      file,
+      header,
+      body
+     }]
     });
    })
    .catch(err => {
