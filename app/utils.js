@@ -560,6 +560,12 @@ export let is = {
  /// @returns {boolean} - The result of the test
  object: arg => typeof arg === "object" && !!arg && arg !== null,
 
+ /// @name is.symbol
+ /// @description is a given arg a symbol?
+ /// @arg {*} arg - The item to check
+ /// @returns {boolean} - The result of the test
+ symbol: (arg) => typeof arg === "symbol",
+
  /// @name is.json
  /// @description is given value a pure JSON object?
  /// @arg {*} arg - The item to check
