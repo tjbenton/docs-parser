@@ -301,7 +301,7 @@ export let to = {
  ///   garply: "item" // didn't exist before so it stays as a string
  ///  }
  /// }
- merge: (a, b, unique = true) => {
+ merge: (a, b, unique = true, flat = true) => {
   // a) Don't touch `null` or `undefined` objects.
   if(!a || !b){
    return a;
@@ -329,9 +329,17 @@ export let to = {
     a[k] = [a[k], b[k]];
    }
 
-   // a) Flatten the array, and filter out duplicates
-   if(unique && is.array(a[k])){
-    a[k] = to.array.unique([].concat.apply([], a[k]));
+   // a) is array
+   if(is.array(a[k])){
+    // a) Flatten the array
+    if(flat){
+     a[k] = to.array.flat(a[k]);
+    }
+
+    // a) Filter out duplicates
+    if(unique && !is.object(a[k][0])){
+     a[k] = to.array.unique(a[k]);
+    }
    }
   }
 
