@@ -363,7 +363,7 @@ export default function(file_path, settings, api){
     resolve({
      [file.type]: [{
       info: file,
-      header,
+      header: header || {},
       body
      }]
     });
