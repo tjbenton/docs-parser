@@ -55,17 +55,19 @@ export default function(json){
       }
 
       // a) Define the default data set(can't use `page` because it will be overwritten)
-      if(!schema[path_list[length]]){
-       schema[path_list[length]] = {
-        header: {},
-        body: []
+      if(!_pages[path_list[length]]){
+       _pages[path_list[length]] = {
+        page: {
+         header: {},
+         body: []
+        }
        };
       }
 
       if(type === "header"){
-       schema[path_list[length]].header = to.merge(schema[path_list[length]].header, value);
+       _pages[path_list[length]].page.header = to.merge(_pages[path_list[length]].page.header, value);
       }else{
-       schema[path_list[length]].body.push(value);
+       _pages[path_list[length]].page.body.push(value);
       }
      };
 
