@@ -6,7 +6,7 @@ export default {
  page: {
   alias: ["group"],
   callback: function(){
-   return this.annotation.line;
+   return [this.annotation.line];
   }
  }
 };
