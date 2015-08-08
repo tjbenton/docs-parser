@@ -6,11 +6,8 @@ import {info, fs, path, is, to} from "./utils.js";
 /// @arg {object}
 /// @returns {object}
 export default function(json){
- let obj = {},
-     result = {
-      nav: {}, // holds the navigation for the pages
-      pages: {} // holds the pages of documentation
-     },
+ let nav = {}, // holds the navigation for the pages
+     pages = {}, // holds the pages of documentation
      _settings = {
       header: {
        // This can be file "type", "", false if you always
@@ -37,21 +34,22 @@ export default function(json){
       // won't get added to the data
       delete value.page;
 
-      let schema = obj,
+      let _pages = pages,
+          _nav = nav,
           path_list = path.split("/").filter(Boolean), // convert to array, and filter out empty strings
           length = path_list.length - 1;
 
       for(var i = 0; i < length; i++){
        var elem = path_list[i];
-       if(!schema[elem]){
-        schema[elem] = {
+       if(!_pages[elem]){
+        _pages[elem] = {
          page: {
           header: {},
           body: []
          }
         };
        }
-       schema = schema[elem];
+       _pages = _pages[elem];
       }
 
       // a) Define the default data set(can't use `page` because it will be overwritten)
@@ -112,7 +110,8 @@ export default function(json){
   }
  }
 
- console.log(to.json(obj));
-
- return obj;
+ return {
+  nav,
+  pages
+ };
 };
