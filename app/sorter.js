@@ -83,6 +83,11 @@ export default function(json){
     file.header.page = path.join(file.info.type, file.header.page);
    }
 
+   // a) Set the name in the header to be the name of the file
+   if(is.falsy(file.header.name)){
+    file.header.name = to.case.title(file.info.name);
+   }
+
    // set the header for the file
    set(file.header.page, "header", file.header);
 
