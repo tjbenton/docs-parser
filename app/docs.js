@@ -149,9 +149,13 @@ var docs = (function(){
      });
     })
     .then((json) => {
+     console.time("sorter-runtime");
+     return Promise.resolve(_.sorter(json));
+    })
+    .then((json) => {
+     console.timeEnd("sorter-runtime");
      console.timeEnd("total-runtime"); // ends the timer for the total runtime
 
-     _.sorter(json);
 
      resolve({
       /// @name parse().data
@@ -178,11 +182,13 @@ var docs = (function(){
     })
     .catch((err) => {
      reject({});
+     to.log(err);
      throw new Error(err);
     });
   })
   .catch((err) => {
    reject({});
+   to.log(err);
    throw new Error(err);
   });
  };
