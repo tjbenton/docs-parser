@@ -17,7 +17,8 @@ var docs = (function(){
       is,
       to,
       annotation: new AnnotationApi(),
-      sorter
+      sorter,
+      fs
      };
 
  // the settings object that holds the file specific settings as well as the base settings
