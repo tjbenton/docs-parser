@@ -1,5 +1,11 @@
 "use strict";
-import {info, fs, is, to} from "./utils.js";
+
+process.on("uncaughtException", function(err){
+ log.error("An uncaughtException was found:", err.stack);
+ process.exit(1);
+});
+
+import {info, fs, is, to, log} from "./utils.js";
 import paths from "./paths.js";
 import AnnotationApi from "./annotation";
 import parser from "./parser.js";
@@ -109,27 +115,27 @@ var docs = (function(){
  /// @promise
  /// @returns {object} - the data that was parsed
  _.parse = (files, changed) => {
-  console.time("total-runtime"); // starts the timer for the total runtime
-
+  log.time("paths");
+  log.time("total"); // starts the timer for the total runtime
   return new Promise((resolve, reject) => {
    paths(files, changed)
     .then((file_paths) => {
-     console.log("FILE_PATHS:", file_paths.length);
-     console.time("parsing-runtime");
+     let length = file_paths.length,
+         s = length > 1 ? "s" : "";
+     log.timeEnd("paths", `%s completed after %dms with ${length} file${s} to parse`);
+     log.time("parser");
 
      // Converts the `file_paths` into an array of parsing files.
      // Onces they're all parsed then return the array of parsed files.
      return Promise.all(file_paths.map((file_path) => parser(file_path, _.settings, _.annotation)));
     })
     .then((parsed_files) => {
-     console.timeEnd("parsing-runtime");
+     log.timeEnd("parser");
      // get the stored data file if it exists, or return an empty object
      return new Promise((resolve, reject) => {
       fs.readJson(info.temp.file)
        .then((json) => json)
-       .catch((err) => {
-        return {};
-       })
+       .catch((err) => Promise.resolve({}))
        .then((json) => {
         // Loop through the parsed files and update the
         // json data that was stored.
@@ -150,47 +156,25 @@ var docs = (function(){
      });
     })
     .then((json) => {
-     console.time("sorter-runtime");
-     return Promise.resolve(_.sorter(json));
+     log.time("sorter");
+     return [json, Promise.resolve(_.sorter(json))];
     })
-    .then((json) => {
-     console.timeEnd("sorter-runtime");
-     console.timeEnd("total-runtime"); // ends the timer for the total runtime
-
-
+    .then((raw, sorted) => {
+     log.timeEnd("sorter");
+     log.timeEnd("total");
      resolve({
-      /// @name parse().data
-      /// @description Placeholder for the data so if it's manipulated the updated data will be in the other functions
-      data: json,
-
-      /// @name parse().write
-      /// @description Helper function to write out the data to a json file
-      /// @arg {string} location - The location to write the file too
-      /// @arg {number,\t,\s} spacing [1] - The spacing you want the file to have.
-      /// @returns {this}
-      write(location, spacing){
-       fs.writeJson(temp_file, this.data, (err) => err && console.error(err));
-       return this;
-      },
-
-      // @todo {tylerb} - Add a way to documentize the files
-      // This should be apart of it's own code base so it doesn't pollute this one.
-      // @returns {this}
-      documentize(){
-       console.log("documentize");
-      }
+      raw,
+      sorted
      });
     })
     .catch((err) => {
      reject({});
-     to.log(err);
-     throw new Error(err);
+     log.error(err.stack);
     });
   })
   .catch((err) => {
    reject({});
-   to.log(err);
-   throw new Error(err);
+   log.error(err.stack);
   });
  };
 

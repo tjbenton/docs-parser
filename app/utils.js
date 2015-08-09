@@ -67,11 +67,6 @@ const to_string = arg => Object.prototype.toString.call(arg),
 import markdown from "marked";
 
 export let to = {
- /// @name to.log
- /// @description
- /// Shortcut for `console.log`
- log: console.log.bind(console),
-
  /// @name to.markdown
  /// @description
  /// Helper function to convert markdown text to html
@@ -807,3 +802,57 @@ const not = (func) => () => !func.apply(null, array_slice(arguments)),
         }
        }
       })();
+
+
+
+
+import {format as _format} from "util";
+import chalk from "chalk";
+
+let _times = {},
+    chevron = "\xBB",
+    check = "\u2713",
+    warning = "\u26A0",
+    error = "\u2326";
+
+// @name Log
+// @description
+// A better console.log
+export function log(...args){
+ console.log(_format(`${chalk.green(chevron)} ${args.shift()}`, ...args));
+};
+
+log.warning = (...args) => {
+ console.log(_format(`${chalk.yellow(warning, chalk.bold.yellow("[WARNING]"))} ${args.shift()}`, ...args), "\n");
+};
+
+log.error = (...args) => {
+ console.log(_format(`${chalk.red(error, chalk.bold.red("[ERROR]"))} ${args.shift()}`, ...args), "\n");
+};
+
+log.time = (label) => {
+ _times[label] = Date.now();
+};
+
+log.timeEnd = (label, format = "%s completed after %dms") => {
+ let time = _times[label];
+
+ if(!time){
+  throw new Error(`No such label: ${label}`);
+ }
+
+ let duration = Date.now() - time;
+ console.log(_format(`${chalk.green(check)} ${format}`, label, duration));
+};
+
+log.debug = (...args) => {
+ args = args.map(f => {
+  if(f instanceof Function){
+   return f();
+  }
+
+  return f;
+ });
+
+ console.log(_format(`${chalk.styles.grey.open}${arrow} [DEBUG] ${args.shift()}`, ...args, chalk.styles.grey.close), "\n");
+};

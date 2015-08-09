@@ -1,5 +1,4 @@
 {
- "disallowEmptyBlocks": true,
  "disallowIdentifierNames": ["foo", "bar", "baz", "qux"],
  "disallowKeywords": ["with"],
  "disallowMixedSpacesAndTabs": "smart",
