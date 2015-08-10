@@ -37,19 +37,27 @@ export default function(json){
       let _pages = pages,
           _nav = nav,
           path_list = path.split("/").filter(Boolean), // convert to array, and filter out empty strings
+          // 1 less than the link so the last item in the `path_list` is what
+          // the passed value will be set to
           length = path_list.length - 1;
 
-      for(var i = 0; i < length; i++){
-       var elem = path_list[i];
-       if(!_pages[elem]){
-        _pages[elem] = {
+      // loop over all the pages in in the `path_list` except the
+      // last one and create the `page`, and `nav` if they don't exist.
+      for(let i = 0; i < length; i++){
+       let page = path_list[i];
+       if(!_pages[page]){
+        _pages[page] = {
          page: {
           header: {},
           body: []
          }
+         // {
+         //  page: "Home",
+         //  link: ""
+         // }
         };
        }
-       _pages = _pages[elem];
+       _pages = _pages[page];
       }
 
       // a) Define the default data set(can't use `page` because it will be overwritten)

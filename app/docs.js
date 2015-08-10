@@ -157,9 +157,10 @@ var docs = (function(){
     })
     .then((json) => {
      log.time("sorter");
-     return [json, Promise.resolve(_.sorter(json))];
+     return [json, _.sorter(json)];
     })
-    .then((raw, sorted) => {
+    .then((data) => {
+     let [raw, sorted] = data;
      log.timeEnd("sorter");
      log.timeEnd("total");
      resolve({

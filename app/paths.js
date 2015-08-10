@@ -8,8 +8,6 @@ import {Deferred, fs, path, info, glob, is, to} from "./utils.js";
 // @args {array, string}
 // @returns {array} - Filtered file paths
 export default function paths(globs, changed = true){
- console.time("paths-runtime");
-
  globs = to.array(globs); // Converts globs into an array if it's not already.
 
  // @name get_paths
@@ -97,7 +95,6 @@ export default function paths(globs, changed = true){
   get_paths(globs)
    .then(files => filter(files))
    .then(filtered_files => resolve(filtered_files))
-   .then(() => console.timeEnd("paths-runtime"))
    .catch((err) => {
     throw err;
    });
