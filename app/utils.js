@@ -266,7 +266,7 @@ export let to = {
 
  /// @name to.normalize
  /// @description
- /// Removes trailing blank lines. Removes extra whitespace before all the lines that
+ /// Removes trailing/leading blank lines. Removes extra whitespace before all the lines that
  /// are passed without affecting the formatting of the passes string. Then removes
  /// all whitespace at the end of each line.
  /// @arg {string, array} content - The content you want to be normalized
@@ -274,10 +274,11 @@ export let to = {
  normalize: (content) => {
   content = to.array(content); // this allows arrays and strings to be passed
 
+  // remove leading blank lines
+  while(!!!content[0].trim().length) content.shift();
+
   // remove trailing blank lines
-  for(let i = content.length; i-- && content[i].length === 0;){
-   content.pop();
-  };
+  while(!!!content[content.length - 1].trim().length) content.pop();
 
   return content
           .map(line => line.slice(
@@ -285,7 +286,7 @@ export let to = {
             .match(/^\s*/gm) // gets the extra whitespace at the beginning of the line and returns a map of the spaces
             .sort((a, b) => a.length - b.length)[0].length // sorts the spaces array from smallest to largest and then checks returns the length of the first item in the array
           )) // remove extra whitespace from the beginning of each line
-          .join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces
+          .join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces from each line
  },
 
  /// @name to.extend
