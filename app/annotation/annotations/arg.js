@@ -4,12 +4,12 @@
 /// @note Description runs through markdown
 /// @returns {object}
 export default {
- arg: {
-  alias: ["argument", "param", "parameter"],
-  callback: function(){ //
-   // add regex for `{type} name-of-variable [default value] - description`
-   // make sure it supports multiple lines
-   return this.annotation.line;
+  arg: {
+    alias: ["argument", "param", "parameter"],
+    callback() { //
+      // add regex for `{type} name-of-variable [default value] - description`
+      // make sure it supports multiple lines
+      return this.annotation.line;
+    }
   }
- }
 };

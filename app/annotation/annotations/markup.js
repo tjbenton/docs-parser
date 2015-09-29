@@ -4,10 +4,10 @@
 /// @note Description is parsed as markdown
 /// @returns {object}
 export default {
- markup: {
-  callback: function(){
-   // add regex for `{language} [settings] - description`
-   return this.annotation.contents;
+  markup: {
+    callback() {
+      // add regex for `{language} [settings] - description`
+      return this.annotation.contents;
+    }
   }
- }
 };

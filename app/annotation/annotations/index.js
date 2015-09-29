@@ -24,8 +24,8 @@ let result = {},
      require("./version.js"),
     ];
 
-for(let i in annotations){
- to.extend(result, annotations[i]);
+for (let i in annotations) {
+  to.extend(result, annotations[i]);
 }
 
 module.exports = result;

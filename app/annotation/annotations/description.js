@@ -5,9 +5,9 @@ import {to} from "../../utils.js";
 /// @note Runs through markdown
 /// @returns {string}
 export default {
- description: {
-  callback: function(){
-   return to.markdown(this.annotation.line ? this.annotation.line + "\n" + this.annotation.contents : this.annotation.contents);
+  description: {
+    callback() {
+      return to.markdown(this.annotation.line ? this.annotation.line + "\n" + this.annotation.contents : this.annotation.contents);
+    }
   }
- }
 };

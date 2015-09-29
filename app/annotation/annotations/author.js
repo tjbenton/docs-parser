@@ -3,5 +3,5 @@
 /// @description Author of the documented item
 /// @returns {string}
 export default {
- author: {}
+  author: {}
 };
