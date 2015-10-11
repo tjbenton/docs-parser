@@ -820,7 +820,7 @@ export function log(...args) {
   console.log(_format(`${chalk.green(chevron)} ${args.shift()}`, ...args));
 };
 
-log.warning = (...args) => {
+log.warn = (...args) => {
   console.log(_format(`${chalk.yellow(warning, chalk.bold.yellow("[WARNING]"))} ${args.shift()}`, ...args), "\n");
 };
 
