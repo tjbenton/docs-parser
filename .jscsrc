@@ -20,7 +20,6 @@
     "switch",
     "case",
     "try",
-    "catch",
     "void",
     "while",
     "with",
@@ -34,8 +33,7 @@
  "requireParenthesesAroundArrowParam": true,
  "disallowSpaceBeforeKeywords": [
   "for",
-  "while",
-  "catch"
+  "while"
  ],
  "requireCurlyBraces": [
   "if",
@@ -46,7 +44,6 @@
   "case",
   "default"
  ],
- "requireMultipleVarDecl": true,
  "requireLineBreakAfterVariableAssignment": true,
  "disallowSpaceAfterObjectKeys": "ignoreSingleLine",
  "disallowSpaceAfterPrefixUnaryOperators": ["++", "--", "+", "-", "~", "!", "!!", "~~"],
@@ -72,16 +69,14 @@
  "disallowYodaConditions": true,
  "requireOperatorBeforeLineBreak": ["?", "=", "+", "-", "/", "*", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
  "requireSpaceBeforeBinaryOperators": true,
- "requirePaddingNewLinesInObjects": true,
  "requireSpaceBeforeObjectValues": true,
  "requireSpaceBetweenArguments": true,
- "requireSemicolons": true,
  "requireSpaceAfterBinaryOperators": true,
  "disallowSpacesInsideObjectBrackets": null,
  "safeContextKeyword": ["$obj", "obj", "$that", "that", "$elem", "elem", "_this", "self", "_self", "_", "$parent", "parent", "instance", "result", "context"],
  "fileExtensions": [".js", "jscs"],
  "validateQuoteMarks": {
-  "mark": "\"",
+  "mark": "'",
   "escape": true
  },
  "requireSpaceBeforeBlockStatements": true,
