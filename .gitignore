@@ -1,7 +1,6 @@
 node_modules/
 **/nmp-debug.log
-build/
-build.zip
+dist/
 .tmp
 .DS_Store
 .sass-cache
