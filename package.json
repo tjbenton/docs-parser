@@ -4,6 +4,11 @@
   "author": {
     "name": "Tyler Benton",
     "email": "tjbenton21@gmail.com"
+  "scripts": {
+    "watch": "babel app/ -d ./dist --stage 0 --optional runtime --watch",
+    "deploy": "npm run test && git push origin master && npm publish",
+    "build": "babel app/ -d ./dist --optional runtime --stage 0",
+    "prepublish": "npm run build"
   },
   "version": "0.1.0",
   "license": {
@@ -73,7 +78,5 @@
   "devDependencies": {
     "babel": "^5.5.4"
   },
-  "scripts": {
-    "postinstall": "make postinstall"
   }
 }
