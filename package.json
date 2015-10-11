@@ -1,23 +1,27 @@
 {
   "name": "docs",
-  "description": "Documentation chameleon, addapts to any language and will help you document all the things.",
-  "author": {
-    "name": "Tyler Benton",
-    "email": "tjbenton21@gmail.com"
+  "description": "Documentation chameleon, adapts to any language and will help you document all the things.",
+  "author": "Tyler Benton",
+  "version": "0.0.0beta1",
   "scripts": {
     "watch": "babel app/ -d ./dist --stage 0 --optional runtime --watch",
     "deploy": "npm run test && git push origin master && npm publish",
     "build": "babel app/ -d ./dist --optional runtime --stage 0",
     "prepublish": "npm run build"
   },
-  "version": "0.1.0",
+  "main": "dist/index.js",
+  "files": [
+    "dist/",
+    "bin/",
+    "LICENSE"
+  ],
   "license": {
     "type": "MIT",
     "url": "http://opensource.org/licenses/MIT"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tjbenton/docs"
+    "url": "git+https://github.com/tjbenton/docs.git"
   },
   "bugs": {
     "url": "https://github.com/tjbenton/docs/issues"
@@ -76,8 +80,7 @@
     "node": ">=0.10.0"
   },
   "devDependencies": {
-    "babel": "^5.5.4"
-  },
+    "babel": "^5.8.23",
     "babel-runtime": "^5.8.25"
   }
 }
