@@ -36,12 +36,11 @@
   "while"
  ],
  "requireCurlyBraces": [
-  "if",
   "else",
+  "else if",
   "do",
   "try",
   "catch",
-  "case",
   "default"
  ],
  "requireLineBreakAfterVariableAssignment": true,
