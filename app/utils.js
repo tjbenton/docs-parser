@@ -63,7 +63,7 @@ let _glob = denodeify(require('glob'));
 
 import co from 'co'
 
-export let glob = co.wrap(function *(globs, ignored_globs = []) {
+export const glob = co.wrap(function *(globs, ignored_globs = []) {
   globs = to.array(globs)
   ignored_globs = to.array(ignored_globs)
 
@@ -87,10 +87,6 @@ export let glob = co.wrap(function *(globs, ignored_globs = []) {
   matched_globs = yield Promise.all(matched_globs).then((result) => to.flat_array(result))
   matched_ignored_globs = yield Promise.all(matched_ignored_globs).then((result) => to.flat_array(result))
 
-  console.log('matched_globs:', matched_globs);
-  console.log('matched_ignored_globs:', matched_ignored_globs);
-  console.log('');
-
   // prevents extra functions from running if they don't need to
   if (!matched_ignored_globs.length) {
     return matched_globs;
@@ -106,7 +102,7 @@ export let glob = co.wrap(function *(globs, ignored_globs = []) {
     }
     return true;
   })
-});
+})
 
 const to_string = (arg) => Object.prototype.toString.call(arg),
       array_slice = (arg) => Array.prototype.slice.call(arg);
