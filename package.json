@@ -4,9 +4,9 @@
   "author": "Tyler Benton",
   "version": "0.0.0beta1",
   "scripts": {
-    "watch": "babel app/ -d ./dist --stage 0 --optional runtime --watch",
+    "watch": "rm -rf ./dist; babel app/ -d ./dist --stage 0 --optional runtime --watch",
     "deploy": "npm run test && git push origin master && npm publish",
-    "build": "babel app/ -d ./dist --optional runtime --stage 0",
+    "build": "rm -rf ./dist; babel app/ -d ./dist --optional runtime --stage 0",
     "prepublish": "npm run build"
   },
   "main": "dist/index.js",
