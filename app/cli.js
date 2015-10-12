@@ -1,115 +1,40 @@
-let doc = `
-Usage:
-  sassdoc - [options]
-  sassdoc <src>... [options]
-Arguments:
-  <src>  Path to your Sass folder.
-Options:
-  -h, --help            Bring help.
-  --version             Show version.
-  -v, --verbose         Enable verbose mode.
-  -d, --dest=<dir>      Documentation folder.
-  -c, --config=<path>   Path to JSON/YAML configuration file.
-  -t, --theme=<name>    Theme to use.
-  -p, --parse           Parse the input and output JSON data to stdout.
-  --no-update-notifier  Disable update notifier check.
-  --strict              Turn warnings into errors.
-  --debug               Output debugging information.
-`;
-
-// import Environment from './environment';
-// import Logger from './logger';
-// import sassdoc, { parse } from './sassdoc';
-// import * as errors from './errors';
-// import source from 'vinyl-source-stream';
-
-import pkg from '../package.json';
-import path from 'path';
-import {info} from './utils.js';
-import program from 'commander';
-import config from './config.js';
+import pkg from '../package.json'
+import path from 'path'
+import {info, fs} from './utils.js'
+import program from 'commander'
+import docs from './docs.js'
+import {base_config} from './config.js'
 
 export default function cli(argv) {
+  // helper functions to parse passed options
+  const to_list = (str) => str.replace(/\s/g, '').split(',')
+  const to_boolean = (str) => str !== 'false' ? true : false
+  const to_number = (str) => ~~str
+
   program
     .version(pkg.version)
     .usage('docs [options]')
     .description('Parse all your documentation, and output a json file')
-    .option('-c, --config=<path>', 'Path to configuration file (default is `./docs.js`)')
-    .option('-f, --files <globs>', 'The files to be parsed', function(val) {
-      return val.split(',');
-    })
-    .option('-d, --dest=<dir>', 'Documentation folder.')
-    .parse(process.argv);
+    .option('-c, --config [path]', `Path to configuration file (default is \`${base_config.config}\`)`)
+    .option('-f, --files <glob1,[glob2,...]>', `Paths to parsed (default \`${base_config.config}\`)`, to_list)
+    .option('-i, --ignore <glob1,[glob2,...]>', `Paths to ignore (default \`${base_config.ignore}\`)`, to_list)
+    .option('-a, --changed [boolean]', `Parse changed files (default \`${base_config.changed}\`)`, to_boolean)
+    .option('-b, --blank-lines [number]', `Stops parsing lines after <x> consecutive blank lines (default \`${base_config.blank_lines}\`)`, to_number)
+    .option('-d, --dest [path]', 'Documentation folder. (default `./docs/docs.json`)')
+    .parse(process.argv)
 
-  //
-  // if (!options['-'] && !options['<src>'].length) {
-  //   // Trigger help display.
-  //   docopt(doc, { version: pkg.version, argv: ['--help'] });
-  // }
-  //
-  // let logger = new Logger(options['--verbose'], options['--debug'] || process.env.SASSDOC_DEBUG);
-  // let env = new Environment(logger, options['--strict']);
-  //
-  // logger.debug('argv:', () => JSON.stringify(argv));
-  //
-  // env.on('error', error => {
-  //   if (error instanceof errors.Warning) {
-  //     process.exit(2);
-  //   }
-  //
-  //   process.exit(1);
-  // });
-  //
-  // env.load(options['--config']);
-  //
-  // // Ensure CLI options.
-  // ensure(env, options, {
-  //   dest: '--dest',
-  //   theme: '--theme',
-  //   noUpdateNotifier: '--no-update-notifier',
-  // });
-  //
-  // env.postProcess();
-  //
-  // // Run update notifier if not explicitely disabled.
-  // if (!env.noUpdateNotifier) {
-  //   require('./notifier')(pkg, logger);
-  // }
-  //
-  // let handler, cb;
-  //
-  // // Whether to parse only or to documentize.
-  // if (!options['--parse']) {
-  //   handler = sassdoc;
-  //   cb = () => {};
-  // } else {
-  //   handler = parse;
-  //   cb = data => console.log(JSON.stringify(data, null, 2));
-  // }
-  //
-  // if (options['-']) {
-  //   return process.stdin
-  //     .pipe(source())
-  //     .pipe(handler(env))
-  //     .on('data', cb);
-  // }
-  //
-  // handler(options['<src>'], env).then(cb);
-}
+  let {
+    dest = `${info.root}/docs/docs.json`,
+    config = base_config.config,
+    files = base_config.files,
+    ignore = base_config.ignore,
+    changed = base_config.changed,
+    blankLines: blank_lines = base_config.blank_lines
+  } = program
 
-/**
- * Ensure that CLI options take precedence over configuration values.
- *
- * For each name/option tuple, if the option is set, override configuration
- * value.
- */
-function ensure(env, options, names) {
-  for (let k of Object.keys(names)) {
-    let v = names[k];
+  let cli_options = { config, files, ignore, changed, blank_lines }
 
-    if (options[v]) {
-      env[k] = options[v];
-      env[k + 'Cwd'] = true;
-    }
-  }
+  // @todo update docs function to work like this
+  // docs({ config, files, ignore, changed, blank_lines })
+  //   .then((parsed) => fs.outputJson(dest, parsed))
 }
