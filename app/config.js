@@ -39,7 +39,7 @@ let comments = {
   }
 }
 
-export default function config(options = `${info.root}/dos.js`) {
+export default function config(options = `${info.root}/docs.js`) {
   let base_config = {
     ...default_options,
     comments
@@ -49,17 +49,17 @@ export default function config(options = `${info.root}/dos.js`) {
   if (is.string(options)) {
     try {
       options = require(options)
-
-      // ensures `ignore` is always an array
-      if (options.ignore) {
-        options.ignore = to.array(options.ignore)
-      }
     } catch(err) {
       options = {}
     }
   }
 
   if (is.object(options)) {
+    // ensures `ignore` is always an array
+    if (options.ignore) {
+      options.ignore = to.array(options.ignore)
+    }
+
     // merge the default options with the user options
     options = to.extend(base_config, ensure_valid_config(options))
 
