@@ -1,12 +1,12 @@
-"use strict";
-import {Deferred, fs, path, info, glob, is, to} from "./utils.js";
+'use strict';
+import {Deferred, fs, path, info, glob, is, to} from './utils.js';
 
 // @name paths
 // @description
 // Filters out changed files, `.md` files, and paths that aren't files
 // @promise
 // @args {array, string}
-// @returns {array} - Filtered file paths
+// @returns {promise, array} - Filtered file paths
 export default function paths(globs, changed = true) {
   globs = to.array(globs); // Converts globs into an array if it's not already.
 
@@ -49,7 +49,7 @@ export default function paths(globs, changed = true) {
             resolve(source);
             fs.fake_copy(source, target); // copies new files over.
           } else {
-            resolve(Promise.resolve(""));
+            resolve(Promise.resolve(''));
           }
         })
         .catch((err) => {
@@ -72,7 +72,7 @@ export default function paths(globs, changed = true) {
   function filter(files) {
     files = files.filter((obj) => {
       let ext = path.extname(obj).toLowerCase();
-      return ext !== ".md" && ext.charAt(0) === ".";
+      return ext !== '.md' && ext.charAt(0) === '.';
     });
 
     // a) Return all the files that were passed except
