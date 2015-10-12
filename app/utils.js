@@ -1,6 +1,6 @@
 // import and export `path` so all general
 // utils can be imported from this file
-import path from "path";
+import path from 'path';
 export {path};
 
 // Stores the project directory to use later
@@ -11,8 +11,8 @@ info.dir = info.root.split(path.sep); // splits the project dir by the system sp
 info.dir = info.dir[info.dir.length - 1]; // gets the working directory
 
 info.temp = {};
-info.temp.folder = path.join(info.root, ".tmp");
-info.temp.file = path.join(info.temp.folder, "data.json");
+info.temp.folder = path.join(info.root, '.tmp');
+info.temp.file = path.join(info.temp.folder, 'data.json');
 export {info};
 
 // @name denodeify
@@ -33,7 +33,7 @@ export function denodeify(func) {
 
 
 // File System
-import * as fs from "fs-extra";
+import * as fs from 'fs-extra';
 
 // @name fs.fake_copy
 // @description
@@ -46,7 +46,7 @@ fs.fake_copy = (source, target, callback) => {
 
   // creates the directory path if it doesn't exist
   fs.mkdirp(path.resolve(source.dir, path.relative(source.dir, target.dir)), () => {
-    fs.writeFile(path.join(target.dir, target.base), "", () => callback && callback());
+    fs.writeFile(path.join(target.dir, target.base), '', () => callback && callback());
   });
 };
 
@@ -63,7 +63,7 @@ let _glob = denodeify(require('glob'));
 
 import co from 'co'
 
-export const glob = co.wrap(function *(globs, ignored_globs = []) {
+export const glob = co.wrap(function*(globs, ignored_globs = []) {
   globs = to.array(globs)
   ignored_globs = to.array(ignored_globs)
 
@@ -107,7 +107,7 @@ export const glob = co.wrap(function *(globs, ignored_globs = []) {
 const to_string = (arg) => Object.prototype.toString.call(arg),
       array_slice = (arg) => Array.prototype.slice.call(arg);
 
-import markdown from "marked";
+import markdown from 'marked';
 
 export let to = {
   /// @name to.markdown
@@ -122,7 +122,7 @@ export let to = {
   /// Converts an object, array, number, or boolean to a string
   /// @arg {string, object, array, number, boolean}
   /// @returns {string}
-  string: (arg, glue = "\n") => is.string(arg) ? arg : is.buffer(arg) ? arg + "" : is.object(arg) ? to_string(arg) : is.array(arg) ? arg.join(glue) : is.number(arg) || is.boolean(arg) ? arg.toString() : arg + "",
+  string: (arg, glue = '\n') => is.string(arg) ? arg : is.buffer(arg) ? arg + '' : is.object(arg) ? to_string(arg) : is.array(arg) ? arg.join(glue) : is.number(arg) || is.boolean(arg) ? arg.toString() : arg + '',
 
   case: {
     /// @name to.case.clean
@@ -133,8 +133,8 @@ export let to = {
     /// @arg {string}
     /// @return {string}
     clean(str) {
-      let unseparate = (str) => str.replace(/[\W_]+(.|$)/g, (m, next) => next ? " " + next : ""),
-          uncamelize = (str) => str.replace(/(.)([A-Z]+)/g, (m, previous, uppers) => previous + " " + uppers.toLowerCase().split(" ").join(" "));
+      let unseparate = (str) => str.replace(/[\W_]+(.|$)/g, (m, next) => next ? ' ' + next : ''),
+          uncamelize = (str) => str.replace(/(.)([A-Z]+)/g, (m, previous, uppers) => previous + ' ' + uppers.toLowerCase().split(' ').join(' '));
 
       // a) has spaces
       // b) has separator
@@ -150,7 +150,7 @@ export let to = {
       var smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i;
 
       return str.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, function(match, index, title) {
-        if (index > 0 && index + match.length !== title.length && match.search(smallWords) > -1 && title.charAt(index - 2) !== ":" && (title.charAt(index + match.length) !== "-" || title.charAt(index - 1) === "-") && title.charAt(index - 1).search(/[^\s-]/) < 0) {
+        if (index > 0 && index + match.length !== title.length && match.search(smallWords) > -1 && title.charAt(index - 2) !== ':' && (title.charAt(index + match.length) !== '-' || title.charAt(index - 1) === '-') && title.charAt(index - 1).search(/[^\s-]/) < 0) {
           return match.toLowerCase();
         }
 
@@ -184,31 +184,31 @@ export let to = {
     /// @description Replaces camel case, dot, and dash cases with a space
     /// @arg {string}
     /// @returns {string}
-    space: (str) => to.case.clean(str).replace(/[\W_]+(.|$)/g, (matches, match) => match ? " " + match : ""),
+    space: (str) => to.case.clean(str).replace(/[\W_]+(.|$)/g, (matches, match) => match ? ' ' + match : ''),
 
     /// @name to.case.snake
     /// @description Converts a string to snake case
     /// @arg {string}
     /// @returns {string}
-    snake: (str) => to.case.space(str).replace(/\s/g, "_"),
+    snake: (str) => to.case.space(str).replace(/\s/g, '_'),
 
     /// @name to.case.dash
     /// @description Converts a string to dash case
     /// @arg {string}
     /// @returns {string}
-    dash: (str) => to.case.space(str).replace(/\s/g, "-"),
+    dash: (str) => to.case.space(str).replace(/\s/g, '-'),
 
     /// @name to.case.dot
     /// @description Converts a string to dot case
     /// @arg {string}
     /// @returns {string}
-    dot: (str) => to.case.space(str).replace(/\s/g, "."),
+    dot: (str) => to.case.space(str).replace(/\s/g, '.'),
 
     /// @name to.case.swap
     /// @description Converts capital letters to lower case and vice versa
     /// @arg {string}
     /// @returns {string}
-    swap: (str) => str.split("").map((c) => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join("")
+    swap: (str) => str.split('').map((c) => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('')
   },
 
 
@@ -223,7 +223,7 @@ export let to = {
   ///
   /// @arg {*}
   /// @returns {string} That has microsoft crap removed from it
-  normal_string: (str) => to.string(str).replace(/(?:\\[rn]+)+/g, "\n"),
+  normal_string: (str) => to.string(str).replace(/(?:\\[rn]+)+/g, '\n'),
 
   /// @name to.keys
   /// @description
@@ -318,11 +318,11 @@ export let to = {
     while (content.length && !!!(content[content.length - 1].trim()).length) content.pop();
 
     return content.map((line) => line.slice(
-             content.join("\n") // converts content to string to string
+             content.join('\n') // converts content to string to string
                .match(/^\s*/gm) // gets the extra whitespace at the beginning of the line and returns a map of the spaces
                .sort((a, b) => a.length - b.length)[0].length // sorts the spaces array from smallest to largest and then checks returns the length of the first item in the array
              )) // remove extra whitespace from the beginning of each line
-             .join("\n").replace(/[^\S\r\n]+$/gm, ""); // convert to string and remove all trailing white spaces from each line
+             .join('\n').replace(/[^\S\r\n]+$/gm, ''); // convert to string and remove all trailing white spaces from each line
   },
 
   /// @name to.extend
@@ -453,7 +453,7 @@ export let to = {
   /// @returns {array}
   /// array: (arg, glue = "\n") => is.array(arg) ? arg : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : [],
   array: (arg, ...args) => {
-    let glue = args.length > 0 && is.regexp(args[args.length - 1]) ? args.pop() : "\n",
+    let glue = args.length > 0 && is.regexp(args[args.length - 1]) ? args.pop() : '\n',
         to_array = (arg) => is.array(arg) ? arg : is.argument(arg) ? array_slice(arg) : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : [],
         result = to_array(arg);
 
@@ -571,49 +571,49 @@ export let is = {
   /// fallback check is for IE
   /// @arg {*} arg - The item to check
   /// @returns {boolean} - The result of the test
-  argument: (arg) => !is.null(arg) && (to_string.call(arg) === "[object Arguments]" || (typeof arg === "object" && "callee" in arg)),
+  argument: (arg) => !is.null(arg) && (to_string.call(arg) === '[object Arguments]' || (typeof arg === 'object' && 'callee' in arg)),
 
   /// @name is.regex
   /// @description is a given arg regex expression?
   /// @arg {*} arg - The item to check
   /// @returns {boolean} - The result of the test
-  regex: (value) => to_string.call(value) === "[object RegExp]",
+  regex: (value) => to_string.call(value) === '[object RegExp]',
 
   /// @name is.function
   /// @description is a given arg function?
   /// @arg {*} arg - The item to check
   /// @returns {boolean} - The result of the test
-  function: (arg) => to_string(arg) === "[object Function]" || typeof arg === "function",
+  function: (arg) => to_string(arg) === '[object Function]' || typeof arg === 'function',
 
   /// @name is.array
   /// @description is a given arg Array?
   /// @arg {*} arg - The item to check
   /// @returns {boolean} - The result of the test
-  array: (arg) => to_string(arg) === "[object Array]",
+  array: (arg) => to_string(arg) === '[object Array]',
 
   /// @name is.boolean
   /// @description is a given arg Boolean?
   /// @arg {*} arg - The item to check
   /// @returns {boolean} - The result of the test
-  boolean: (arg) => arg === true || arg === false || to_string(arg) === "[object Boolean]",
+  boolean: (arg) => arg === true || arg === false || to_string(arg) === '[object Boolean]',
 
   /// @name is.object
   /// @description is a given arg object?
   /// @arg {*} arg - The item to check
   /// @returns {boolean} - The result of the test
-  object: (arg) => typeof arg === "object" && !!arg && arg !== null,
+  object: (arg) => typeof arg === 'object' && !!arg && arg !== null,
 
   /// @name is.symbol
   /// @description is a given arg a symbol?
   /// @arg {*} arg - The item to check
   /// @returns {boolean} - The result of the test
-  symbol: (arg) => typeof arg === "symbol",
+  symbol: (arg) => typeof arg === 'symbol',
 
   /// @name is.json
   /// @description is given value a pure JSON object?
   /// @arg {*} arg - The item to check
   /// @returns {boolean} - The result of the test
-  json: (arg) => to_string(arg) === "[object Object]",
+  json: (arg) => to_string(arg) === '[object Object]',
 
   /// @name is.empty
   /// @description is a given arg empty? Objects, arrays, strings
@@ -623,11 +623,11 @@ export let is = {
     var type = typeof arg;
     if (is.falsy(arg)) {
       return true;
-    } else if (type === "function" || type === "object" && !!arg) {
+    } else if (type === 'function' || type === 'object' && !!arg) {
       let num = Object.getOwnPropertyNames(arg).length;
       return (num === 0 || (num === 1 && is.array(arg)) || (num === 2 && is.argument(arg))) ? true : false;
     } else {
-      return arg === "";
+      return arg === '';
     }
   },
 
@@ -641,7 +641,7 @@ export let is = {
   /// @description is a given arg String?
   /// @arg {*} arg - The item to check
   /// @returns {boolean} - The result of the test
-  string: (arg) => to_string(arg) === "[object String]",
+  string: (arg) => to_string(arg) === '[object String]',
 
   /// @name is.undefined
   /// @description is a given arg undefined?
@@ -675,7 +675,7 @@ export let is = {
   /// @description is a given arg truthy?
   /// @arg {*} arg
   /// @returns {boolean}
-  truthy: (arg) => arg !== null && arg !== undefined && arg !== false && !(arg !== arg) && arg !== "" && arg !== 0,
+  truthy: (arg) => arg !== null && arg !== undefined && arg !== false && !(arg !== arg) && arg !== '' && arg !== 0,
 
   /// @name is.falsy
   /// @description is given arg falsy?
@@ -693,7 +693,7 @@ export let is = {
   /// @description is given arg a number?
   /// @arg {*} arg
   /// @returns {boolean}
-  number: (arg) => is.not.nan(arg) && to_string(arg) === "[object Number]",
+  number: (arg) => is.not.nan(arg) && to_string(arg) === '[object Number]',
 
   /// @name is.between
   /// @description is a given number within minimum and maximum parameters?
@@ -755,19 +755,19 @@ export let is = {
 };
 
 // included method does not support `all` and `any` interfaces
-is.included.api = ["not"];
+is.included.api = ['not'];
 
 // within method does not support `all` and `any` interfaces
-is.between.api = ["not"];
+is.between.api = ['not'];
 
 // `above` method does not support `all` and `any` interfaces
-is.above.api = ["not"];
+is.above.api = ['not'];
 
 // least method does not support `all` and `any` interfaces
-is.under.api = ["not"];
+is.under.api = ['not'];
 
 
-is.in.api = ["not"];
+is.in.api = ['not'];
 
 is.all.in = (obj, ...values) => {
   values = to.array.flat(values);
@@ -834,15 +834,15 @@ const not = (func) => () => !func.apply(null, array_slice(arguments)),
         var options = is;
         for (var option in options) {
           if (hasOwnProperty.call(options, option) && is.function(options[option])) {
-            var interfaces = options[option].api || ["not", "all", "any"];
+            var interfaces = options[option].api || ['not', 'all', 'any'];
             for (let i in interfaces) {
-              if (interfaces[i] === "not") {
+              if (interfaces[i] === 'not') {
                 is.not[option] = not(is[option]);
               }
-              if (interfaces[i] === "all") {
+              if (interfaces[i] === 'all') {
                 is.all[option] = all(is[option]);
               }
-              if (interfaces[i] === "any") {
+              if (interfaces[i] === 'any') {
                 is.any[option] = any(is[option]);
               }
             }
@@ -853,14 +853,14 @@ const not = (func) => () => !func.apply(null, array_slice(arguments)),
 
 
 
-import {format as _format} from "util";
-import chalk from "chalk";
+import {format as _format} from 'util';
+import chalk from 'chalk';
 
 let _times = {},
-    chevron = "\xBB",
-    check = "\u2713",
-    warning = "\u26A0",
-    error = "\u2326";
+    chevron = '\xBB',
+    check = '\u2713',
+    warning = '\u26A0',
+    error = '\u2326';
 
 // @name Log
 // @description
@@ -870,19 +870,19 @@ export function log(...args) {
 };
 
 log.warn = (...args) => {
-  console.log(_format(`${chalk.yellow(warning, chalk.bold.yellow("[WARNING]"))} ${args.shift()}`, ...args), "\n");
+  console.log(_format(`${chalk.yellow(warning, chalk.bold.yellow('[WARNING]'))} ${args.shift()}`, ...args), '\n');
 };
 
 log.error = (...args) => {
   console.trace(...args);
-  console.log(_format(`${chalk.red(error, chalk.bold.red("[ERROR]"))} ${args.shift()}`, ...args), "\n");
+  console.log(_format(`${chalk.red(error, chalk.bold.red('[ERROR]'))} ${args.shift()}`, ...args), '\n');
 };
 
 log.time = (label) => {
   _times[label] = Date.now();
 };
 
-log.timeEnd = (label, format = "%s completed after %dms") => {
+log.timeEnd = (label, format = '%s completed after %dms') => {
   let time = _times[label];
 
   if (!time) {
@@ -902,5 +902,5 @@ log.debug = (...args) => {
     return f;
   });
 
-  console.log(_format(`${chalk.styles.grey.open}${arrow} [DEBUG] ${args.shift()}`, ...args, chalk.styles.grey.close), "\n");
+  console.log(_format(`${chalk.styles.grey.open}${arrow} [DEBUG] ${args.shift()}`, ...args, chalk.styles.grey.close), '\n');
 };
