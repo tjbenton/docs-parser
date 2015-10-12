@@ -1,8 +1,8 @@
 import pkg from '../package.json'
 import path from 'path'
-import {info, fs} from './utils.js'
+import {info, fs} from './utils'
 import program from 'commander'
-import docs from './docs.js'
+// import docs from './docs.js'
 import {base_config} from './config.js'
 
 export default function cli(argv) {

@@ -1,4 +1,5 @@
-import {info, fs, path, is, to} from "./utils.js";
+import {info, fs, is, to} from "./utils"
+import path from 'path'
 
 /// @name parse_file
 /// @description

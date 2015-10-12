@@ -1,4 +1,4 @@
-import {info, fs, is, to, log} from './utils.js'
+import {info, fs, is, to, log} from './utils'
 
 // changed by `options` key
 const default_options = {

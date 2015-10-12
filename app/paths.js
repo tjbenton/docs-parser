@@ -1,5 +1,6 @@
 'use strict';
-import {Deferred, fs, path, info, glob, is, to} from './utils.js';
+import {fs, info, glob, is, to} from './utils'
+import path from 'path'
 
 // @name paths
 // @description

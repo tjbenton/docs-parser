@@ -1,4 +1,4 @@
-import {info, fs, path, is, to, log} from "./utils.js";
+import {info, fs, path, is, to, log} from "./utils";
 
 /// @name sort
 /// @description

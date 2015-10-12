@@ -5,7 +5,7 @@ process.on("uncaughtException", function(err) {
   process.exit(1);
 });
 
-import {info, fs, is, to, log} from "./utils.js";
+import {info, fs, is, to, log} from "./utils";
 import paths from "./paths.js";
 import AnnotationApi from "./annotation";
 import parser from "./parser.js";
