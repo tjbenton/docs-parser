@@ -5,11 +5,10 @@ process.on("uncaughtException", function(err) {
   process.exit(1);
 });
 
-import {info, fs, is, to, log} from "./utils";
-import paths from "./paths.js";
-import AnnotationApi from "./annotation";
-import parser from "./parser.js";
-import sorter from "./sorter.js";
+import {info, fs, is, to, log, glob} from './utils'
+import AnnotationApi from './annotation'
+import parser from './parser'
+import sorter from './sorter'
 
 ////
 /// @name docs.js

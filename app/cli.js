@@ -2,8 +2,8 @@ import pkg from '../package.json'
 import path from 'path'
 import {info, fs} from './utils'
 import program from 'commander'
-// import docs from './docs.js'
-import {base_config} from './config.js'
+import docs from './docs'
+import {base_config} from './config'
 
 export default function cli(argv) {
   // helper functions to parse passed options
