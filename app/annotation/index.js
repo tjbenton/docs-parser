@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import annotations from "./annotations";
-import {is, to} from "../utils.js";
+import annotations from './annotations';
+import {is, to} from '../utils';
 
 export default class AnnotationApi{
  constructor() {
@@ -79,7 +79,7 @@ export default class AnnotationApi{
    // the name of the annotation is always the key
    const base_config = {
      // this declares where this annotation get's applied
-     filetypes: ["default"],
+     filetypes: ['default'],
 
      // holds an array of aliases for the given annotation
      alias: [],
@@ -110,7 +110,7 @@ export default class AnnotationApi{
 
    // a) throw an error
    if (!is.string(name)) {
-     throw new Error("name must be a string");
+     throw new Error('name must be a string');
      return;
    }
 
@@ -133,13 +133,13 @@ export default class AnnotationApi{
      // object and rerun the add function
      for (let filetype in config) {
        let obj = config[filetype];
-       obj.filetypes = is.in(obj, "filetype") ? to.array.flat([filetype, config.filetype]) : to.array(filetype);
+       obj.filetypes = is.in(obj, 'filetype') ? to.array.flat([filetype, config.filetype]) : to.array(filetype);
        this.add(name, obj);
      }
      return;
    }
    else if (!is.object(config)) {
-     throw new Error("config must be a function or object");
+     throw new Error('config must be a function or object');
      return;
    }
 
@@ -151,7 +151,7 @@ export default class AnnotationApi{
    // global list of annotations by filetype/default
    for (var filetype in base_config.filetypes) {
      to.merge(this.annotations, {
-       [is.falsy(base_config.filetypes[filetype]) ? "default" : base_config.filetypes[filetype]]: {
+       [is.falsy(base_config.filetypes[filetype]) ? 'default' : base_config.filetypes[filetype]]: {
          [name]: base_config
        }
      });

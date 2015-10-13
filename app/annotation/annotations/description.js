@@ -1,4 +1,4 @@
-import {to} from "../../utils.js";
+import markdown from 'marked'
 /// @name description
 /// @page annotations
 /// @description Description of the documented item
@@ -7,7 +7,7 @@ import {to} from "../../utils.js";
 export default {
   description: {
     callback() {
-      return to.markdown(this.annotation.line ? this.annotation.line + "\n" + this.annotation.contents : this.annotation.contents);
+      return markdown(this.annotation.line ? this.annotation.line + '\n' + this.annotation.contents : this.annotation.contents)
     }
   }
 };
