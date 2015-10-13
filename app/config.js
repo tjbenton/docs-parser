@@ -7,6 +7,8 @@ const default_options = {
   ignore: ['.*', 'node_modules/', 'bower_components/', 'jspm_packages/'], // files to be ignored
   changed: true, // determins if only changed files should be parsed or not
   blank_lines: 4, // @todo this stops the current block from adding lines if there're `n` blank line lines between code, and starts a new block.
+  debug: true,
+  timestamps: true,
   annotations: {}
 }
 
