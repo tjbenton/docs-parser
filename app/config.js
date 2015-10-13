@@ -83,8 +83,15 @@ export default function config(options = {}) {
     for (let lang in option) comments[option[lang]] = value
   }
 
-  options.comments = comments
+  // ensures each comment as all the required comment settings
+  // this makes it easier later on when parsing
+  for (let [lang, value] of to.entries(comments)) {
+    if (lang !== '_') {
+      comments[lang] = to.extend(JSON.parse(JSON.stringify(default_comment)), value)
+    }
+  }
 
+  options.comments = comments
 
   return options
 }
