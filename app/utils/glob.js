@@ -1,48 +1,51 @@
-// can't use `import` from es6 because it
-// returns an error saying "glob" is read only
-import to from './to.js'
+import to from './to'
+import is from './is'
+import array from './array'
 import denodeify from './denodeify'
 import co from 'co'
 
+// can't use `import` from es6 because it
+// returns an error saying "glob" is read only
 let _glob = denodeify(require('glob'))
 
-export default co.wrap(function*(globs, ignored_globs = []) {
-  globs = to.array(globs)
-  ignored_globs = to.array(ignored_globs)
 
-  let matched_globs = []
+// @description
+// This is a better version of glob. It is built as a generator
+// that has the ability to ignore files. As well as the ability to run
+// a callback filter on the matched files. The callback can be async as well.
+//
+// @arg {string, array} files - Glob patterns to get
+// @arg {string, array} ignore [[]] - Glob patterns to ignore
+// @arg {function, boolean} filter - Filter to run on the files
+const glob = co.wrap(function*(files, ignore = [], filter) {
+  files = array(to.array(files)).map((file) => _glob(file));
+  ignore = array(to.array(ignore)).map((file) => _glob(file.replace(/!/, '')))
 
-  // get the files paths using glob
-  for (let [i, file] of to.entries(globs)) {
-    if (file.substr(0, 1) !== '!') {
-      matched_globs.push(_glob(file).then((data) => data))
-    } else {
-      ignored_globs.push(file)
-    }
-  }
+  files = to.flat_array(yield files)
+  ignore = to.flat_array(yield ignore)
 
-  let matched_ignored_globs = []
-  // get the ignored_globs file paths
-  for (let [i, file] of to.entries(ignored_globs)) {
-    matched_ignored_globs.push(_glob(file.replace(/!/, '')))
-  }
-
-  matched_globs = yield Promise.all(matched_globs).then((result) => to.flat_array(result))
-  matched_ignored_globs = yield Promise.all(matched_ignored_globs).then((result) => to.flat_array(result))
-
-  // prevents extra functions from running if they don't need to
-  if (!matched_ignored_globs.length) {
-    return matched_globs
-  }
-
-  // return filtered files
-  return matched_globs.filter((file) => {
-    for (let i in matched_ignored_globs) {
-      if (file.indexOf(matched_ignored_globs[i]) > -1) {
-        return false
-        break
+  // removed any files that are supposed to be ignored
+  if (ignore.length) {
+    files = files.filter((file) => {
+      for (let i in ignore) {
+        if (file.indexOf(ignore[i]) > -1) {
+          return false
+          break
+        }
       }
+      return true
+    })
+  }
+
+  if (is.func(filter)) {
+    if (is.promise(filter())) {
+      return yield array(files).filter(filter)
     }
-    return true
-  })
+
+    return files.filter(filter)
+  }
+
+  return files
 })
+
+export default glob
