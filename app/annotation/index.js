@@ -123,7 +123,7 @@ export default class AnnotationApi{
        alias: config
      };
    }
-   else if (is.function(config)) {
+   else if (is.func(config)) {
      config = {
        callback: config
      };

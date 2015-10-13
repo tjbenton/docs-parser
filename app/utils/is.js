@@ -22,11 +22,11 @@ let is = {
   /// @returns {boolean} - The result of the test
   regex: (value) => to_string.call(value) === '[object RegExp]',
 
-  /// @name is.function
+  /// @name is.func
   /// @description is a given arg function?
   /// @arg {*} arg - The item to check
   /// @returns {boolean} - The result of the test
-  function: (arg) => to_string(arg) === '[object Function]' || typeof arg === 'function',
+  func: (arg) => to_string(arg) === '[object Function]' || typeof arg === 'function',
 
   /// @name is.array
   /// @description is a given arg Array?
@@ -182,13 +182,13 @@ let is = {
   /// @description is a given arg a promise?
   /// @arg {*} arg - the item you want to check and see if it's a `Promise`
   /// @returns {boolean}
-  promise: (arg) => arg && is.function(arg.then),
+  promise: (arg) => arg && is.func(arg.then),
 
   /// @name is.stream
   /// @description is a given arg a stream?
   /// @arg {*} arg - the item you want to check and see if it's a `stream`
   /// @returns {boolean}
-  stream: (arg) => arg && is.function(arg.pipe),
+  stream: (arg) => arg && is.func(arg.pipe),
 
   /// @name is.buffer
   /// @description is a given arg a stream?
@@ -279,7 +279,7 @@ const any = (func) => {
 ;(function setInterfaces() {
   let options = is
   for (var option in options) {
-    if (hasOwnProperty.call(options, option) && is.function(options[option])) {
+    if (hasOwnProperty.call(options, option) && is.func(options[option])) {
       var interfaces = options[option].api || ['not', 'all', 'any']
       for (let i in interfaces) {
         if (interfaces[i] === 'not') {

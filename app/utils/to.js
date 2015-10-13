@@ -311,7 +311,7 @@ let to = {
       //    a) Call the merge function go further into the object
       //    b) Sets the value of `a` to be the value of `b`
       // d) Convert the a value to be an array, and add the `b` value to it
-      if (is.function(b[k]) || is.function(a[k]) || is.undefined(a[k])) {
+      if (is.func(b[k]) || is.func(a[k]) || is.undefined(a[k])) {
         a[k] = b[k]
       } else if (is.array(a[k])) {
         a[k].push(b[k])
@@ -375,7 +375,7 @@ let to = {
   /// @arg {array, object}
   /// @returns {array, object} - The sorted version
   sort: (arg, callback) => {
-    let run_sort = (obj) => is.function(callback) ? obj.sort.apply(null, callback) : obj.sort()
+    let run_sort = (obj) => is.func(callback) ? obj.sort.apply(null, callback) : obj.sort()
     let result
     if (is.object(arg)) {
       let sorted = {}
