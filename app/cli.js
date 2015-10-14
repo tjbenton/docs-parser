@@ -29,13 +29,22 @@ export default function cli(argv) {
     .option('-d, --dest [path]', 'Documentation folder', `${info.root}/docs/docs.json`)
     .parse(process.argv)
 
-  // @todo update docs function to work like this
-  // docs({
-  //   config,
-  //   files,
-  //   ignore,
-  //   changed,
-  //   blankLines: blank_lines
-  // } = program)
-  //   .then((parsed) => fs.outputJson(dest, parsed))
+  let {
+    dest,
+    config,
+    files,
+    ignore,
+    changed,
+    blankLines: blank_lines
+  } = program;
+
+  return docs({
+    config,
+    files,
+    ignore,
+    changed,
+    blank_lines
+  })
+    .then((parsed) => fs.outputJson(dest, parsed, { spaces: 2 }))
+    .catch((err) => console.error(err.stack))
 }
