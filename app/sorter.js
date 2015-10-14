@@ -6,19 +6,7 @@ import {info, fs, path, is, to, log} from "./utils";
 /// @arg {object}
 /// @returns {object}
 export default function(json) {
-  let nav, pages,
-     _settings = {
-       header: {
-         // This can be file "type", "", false if you always
-         // want to go with what's declared in the page.
-         prepend_type: true
-       },
-       body: {
-         // same as `header.page_prepend` but this is for body comment blocks
-         prepend_type: false
-       }
-       // todo: true, // create a todo page with ALL the todo comments listed
-     };
+  let nav, pages;
 
   /// @name pages
   /// @description
@@ -84,12 +72,7 @@ export default function(json) {
       for (let file of files) {
         // a) Ensures there's only one page defined in the header
         // b) There wasn't a page defined so set it to general
-        file.header.page = file.header.page ? file.header.page[0] : "general";
-
-        // a) Prepend the filetype to the page
-        if (is.truthy(_settings.header.prepend_type)) {
-          file.header.page = path.join(file.info.type, file.header.page);
-        }
+        file.header.page = file.header.page ? file.header.page[0] : 'general';
 
         // a) Set the name in the header to be the name of the file
         if (is.falsy(file.header.name)) {
