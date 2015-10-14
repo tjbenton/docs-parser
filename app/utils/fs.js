@@ -23,5 +23,6 @@ fs.readJson = denodeify(fs.readJson)
 fs.outputJson = denodeify(fs.outputJson)
 fs.stat = denodeify(fs.stat)
 fs.readFile = denodeify(fs.readFile)
+fs.ensureFile = denodeify(fs.ensureFile)
 
 export default fs
