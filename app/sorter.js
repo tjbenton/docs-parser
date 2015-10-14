@@ -1,4 +1,4 @@
-import {info, fs, path, is, to, log} from "./utils";
+import {info, fs, path, is, to, log} from './utils';
 
 /// @name sort
 /// @description
@@ -29,7 +29,7 @@ export default function(json) {
       delete value.page;
 
       let _pages = result,
-          path_list = path.split("/").filter(Boolean), // convert to array, and filter out empty strings
+          path_list = path.split('/').filter(Boolean), // convert to array, and filter out empty strings
           // 1 less than the link so the last item in the `path_list` is what
           // the passed value will be set to
           length = path_list.length - 1;
@@ -59,7 +59,7 @@ export default function(json) {
         };
       }
 
-      if (type === "header") {
+      if (type === 'header') {
         _pages[path_list[length]].page.header = to.merge(_pages[path_list[length]].page.header, value);
       } else {
         _pages[path_list[length]].page.body.push(value);
@@ -80,7 +80,7 @@ export default function(json) {
         }
 
         // set the header for the file
-        set(file.header.page, "header", file.header);
+        set(file.header.page, 'header', file.header);
 
         // loop over each block in the body of the file
         for (let block of file.body) {
@@ -89,13 +89,13 @@ export default function(json) {
           if (block.page) {
             for (let page of block.page) {
               if (page !== file.header.page) {
-                set(page, "body", block);
+                set(page, 'body', block);
               }
             }
           }
 
           // add the block to the page
-          set(file.header.page, "body", block);
+          set(file.header.page, 'body', block);
         }
       }
     }
@@ -141,7 +141,7 @@ export default function(json) {
     /// @returns {object}
     function set(a, b) {
       for (let [key, value] of to.entries(b)) {
-        if (key !== "page") {
+        if (key !== 'page') {
           let nav_item = {
             title: is.truthy(value.page.header.name) ? value.page.header.name : to.case.title(to.case.space(key)),
             href: `${a.href}/${key}`,
