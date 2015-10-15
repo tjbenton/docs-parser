@@ -5,7 +5,7 @@ process.on('uncaughtException', function(err) {
   process.exit(1)
 })
 
-import {info, fs, is, to, log, glob} from './utils'
+import {info, fs, to, log, glob, array} from './utils'
 import AnnotationApi from './annotation'
 import parser from './parser'
 import sorter from './sorter'
