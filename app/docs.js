@@ -14,173 +14,96 @@ import sorter from './sorter'
 /// @name docs.js
 /// @author Tyler Benton
 /// @description
-/// This is used to parse any filetype that you want to and gets the documentation for it and returns an {} of the document data
+/// This is used to parse any filetype that you want to and gets the
+/// documentation for it  and returns an `{}` of the document data
 ////
-var docs = (function() {
-  // the main object to return
-  let _ = {
-    is,
-    to,
-    annotation: new AnnotationApi(),
-    sorter,
-    fs
-  };
 
-  // the settings object that holds the file specific settings as well as the base settings
-  _.file_specific_settings = {
-    css: {
-      header: {
-        start: '/***',
-        line: '*',
-        end: '***/'
-      },
-      body: {
-        start: '/**',
-        line: '*',
-        end: '**/'
-      }
-    },
-    rb: {
-      header: {
-        start: '###',
-        line: '##',
-        end: '###'
-      },
-      body: {
-        line: '##'
-      }
-    },
-    html: {
-      header: {
-        start: '<!----',
-        end: '/--->'
-      },
-      body: {
-        start: '<!---',
-        end: '/-->'
-      }
-    },
-    cfm: {
-      header: {
-        start: '<!-----',
-        end: '/--->'
-      },
-      body: {
-        start: '<!----',
-        end: '/--->'
-      }
-    }
-  }
-  _.file_specific_settings.py = _.file_specific_settings.rb
-  // _.file_specific_settings.coffee = _.file_specific_settings.rb;
+import get_config from './config'
+import co from 'co'
+import path from 'path'
 
-  /// @name settings
-  /// @description Merges the default settings with the file specific settings
-  /// @arg {string} filetype - the current filetype that is being parsed
-  /// @returns {object} the settings to use
-  _.settings = (filetype) => {
-    let defaults = {
-      header: { // file level comment block identifier
-        start: '////',
-        line: '///',
-        end: '////'
-      },
-      body: { // block level comment block identifier
-        start: '',
-        line: '///',
-        end: ''
-      },
-      blank_lines: 4, // @todo this stops the current block from adding lines if there're `n` blank line lines between code, and starts a new block.
-      annotation_prefix: '@', // annotation identifier(this should probably never be changed)
-      single_line_prefix: '#' // single line prefix for comments inside of the code below the comment block
-    }
-    return !is.undefined(_.file_specific_settings[filetype]) ? to.extend(defaults, _.file_specific_settings[filetype]) : defaults
-  }
+const docs = co.wrap(function*(user_config = {}) {
+  log.time('total')
+  let {
+    files,
+    ignore,
+    changed,
+    blank_lines,
+    debug,
+    timestamps,
+    annotations,
+    comments,
+  } = yield get_config(user_config);
 
-  /// @name setting
-  /// @description Allows you to specify settings for specific file types
-  /// @arg {string} extention - the file extention you want to target
-  /// @arg {object} obj - the settings you want to adjust for this file type
-  _.setting = (extention, obj) => {
-    return to.extend(_.file_specific_settings, {
-      [extention]: obj
-    })
-  }
+  let api = new AnnotationApi()
 
-  /// @name parse
-  /// @description Takes the contents of a file and parses it
-  /// @arg {string, array} files - file paths to parse
-  /// @arg {boolean} changed [true] - If true it will only parse changed files
-  /// @promise
-  /// @returns {object} - the data that was parsed
-  _.parse = (files, changed) => {
+  try {
+    yield fs.ensureFile(info.temp.file)
+    let json = fs.readFile(info.temp.file)
+
     log.time('paths')
-    log.time('total') // starts the timer for the total runtime
-    return new Promise((resolve, reject) => {
-      paths(files, changed)
-        .then((file_paths) => {
-          let length = file_paths.length
-          let s = length > 1 ? 's' : ''
-          log.timeEnd('paths', `%s completed after %dms with ${length} file${s} to parse`)
-          log.time('parser')
+    files = yield glob(files, ignore, changed ? has_file_changed : false)
+    log.timeEnd('paths', `%s completed after %dms with ${files.length} file${files.length > 1 ? 's': ''} to parse`)
 
-          // Converts the `file_paths` into an array of parsing files.
-          // Onces they're all parsed then return the array of parsed files.
-          return Promise.all(file_paths.map((file_path) => parser(file_path, _.settings, _.annotation)))
-        })
-        .then((parsed_files) => {
-          log.timeEnd('parser')
-          // get the stored data file if it exists, or return an empty object
-          return new Promise((resolve, reject) => {
-            fs.readJson(info.temp.file)
-              .then((json) => json)
-              .catch((err) => Promise.resolve({}))
-              .then((json) => {
-                // Loop through the parsed files and update the
-                // json data that was stored.
-                for (let data in parsed_files) {
-                  to.merge(json, parsed_files[data], false)
-                }
+    log.time('parser')
+    files = yield array(files).map((file_path) => parser({ file_path, comments, api }))
+    log.timeEnd('parser')
 
-                resolve(json)
+    // converts json to a readable JS object
+    json = to.string(yield json)
+    json = !!json ? JSON.parse(json) : {}
 
-                // Update the temp json data. Even though this returns a promise
-                // it's not returned below because there's no need to wait for it
-                // to finish writing out the json file before moving on. Because the
-                // `json` object has already been updated.
-                fs.outputJson(info.temp.file, json, {
-                  spaces: 2
-                }, 1)
-              })
-          })
-        })
-        .then((json) => {
-          log.time('sorter')
-          return [json, _.sorter(json)]
-        })
-        .then((data) => {
-          let [raw, sorted] = data
-          log.timeEnd('sorter')
-          log.timeEnd('total')
-          resolve({
-            raw,
-            sorted
-          })
-        })
-        .catch((err) => {
-          reject({})
-          log.error(err.stack)
-        })
-    })
-    .catch((err) => {
-      reject({})
-      log.error(err.stack)
-    });
-  };
+    // Loop through the parsed files and update the
+    // json data that was stored.
+    for (let i in files) {
+      to.merge(json, files[i], false)
+    }
 
-  return _
-})()
+    // Update the temp json data. Even though this returns a promise
+    // it's not returned below because there's no need to wait for it
+    // to finish writing out the json file before moving on. Because the
+    // `json` object has already been updated.
+    fs.outputJson(info.temp.file, json, { spaces: 2 })
+      .catch((err) => log.error(err.stack))
+
+    log.time('sorter')
+    json = sorter(json)
+    log.timeEnd('sorter')
+    log.timeEnd('total')
+    return json
+  } catch(err) {
+    log.error(err.stack)
+  }
+});
 
 
 
-export default docs;
+export default docs
+
+// @name has_file_changed
+// @access private
+// @description
+// checks the status of the file to see if it has changed or not.
+// @arg {string} - path to file
+// @async
+// @returns {boolean}
+async function has_file_changed(file) {
+  let source = path.join(info.root, file)
+  let target = path.join(info.temp.folder, file)
+
+  try {
+    let stats = await array([source, target]).map((_path) => fs.stat(_path))
+
+    // copies new files over because it's changed
+    if (stats[0].mtime > stats[1].mtime) {
+      fs.fake_copy(source, target)
+      return true
+    } else {
+      return false
+    }
+  } catch(err) {
+    // copies new files over because it doesn't exist in the temp target directory
+    fs.fake_copy(source, target);
+    return true
+  }
+};
