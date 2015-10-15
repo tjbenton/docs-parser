@@ -1,5 +1,5 @@
 node_modules/
-**/nmp-debug.log
+nmp-debug.log
 dist/
 .tmp
 .DS_Store
