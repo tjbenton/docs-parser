@@ -4,7 +4,10 @@ import {info, fs, is, to, log} from './utils'
 const default_options = {
   config: `${info.root}/docsfile.js`,
   files: ['app/**/*'], // files to search
-  ignore: ['.*', 'node_modules/', 'bower_components/', 'jspm_packages/'], // files to be ignored
+  ignore: ['.*', 'node_modules/', 'bower_components/', 'jspm_packages/', 'dist/', 'build/', 'docs/'], // files to be ignored
+  // add gitignore files to the ignore list. Depending on ignored files it
+  // could cause things to ge parsed slower, that's why it's defaulted to `false`
+  gitignore: false,
   changed: true, // determins if only changed files should be parsed or not
   blank_lines: 4, // @todo this stops the current block from adding lines if there're `n` blank line lines between code, and starts a new block.
   debug: true,
