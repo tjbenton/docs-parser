@@ -1,4 +1,5 @@
 import {info, fs, is, to, log} from './utils'
+import path from 'path'
 
 // changed by `options` key
 const default_options = {
@@ -51,7 +52,7 @@ export const base_config = {
   comments
 }
 
-export default function config(options = {}) {
+export default async function config(options = {}) {
   let config_file = (options.config ? options : base_config).config
 
   // try to get the `docsfile.js` so the user config can be merged
@@ -67,6 +68,17 @@ export default function config(options = {}) {
 
   // merge options with base_config so there's a complete list of settings
   options = to.extend(to.clone(base_config), options)
+
+  if (options.gitignore) {
+    try {
+      options.ignore = to.flat_array([
+        options.ignore,
+        to.array(to.string(await fs.readFile(path.join(info.root, '.gitignore'))))
+      ])
+
+    } catch(err){}
+  }
+
 
   // ensures `files`, `ignore` is always an array this way no
   // more checks have to happen for it
