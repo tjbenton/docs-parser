@@ -1,4 +1,4 @@
-import {info, fs, path, is, to, log} from './utils';
+import {is, to} from './utils'
 
 /// @name sort
 /// @description
@@ -6,14 +6,14 @@ import {info, fs, path, is, to, log} from './utils';
 /// @arg {object}
 /// @returns {object}
 export default function(json) {
-  let nav, pages;
+  let nav, pages
 
   /// @name pages
   /// @description
   /// This function loops over the json that was passed and creates a organized structure
   /// based on the `@pages` annotations that were passed.
   pages = (() => {
-    let result = {};
+    let result = {}
     // @name set
     // @description
     // creates a structure from an array, and adds the passed object to
@@ -22,31 +22,33 @@ export default function(json) {
     // @returns {object} - The nested object with the set value
     function set(path, type, value) {
       // ensures values won't change in the passed value
-      value = to.clone(value);
+      value = to.clone(value)
 
       // deletes the page from the value so it
       // won't get added to the data
-      delete value.page;
+      delete value.page
 
-      let _pages = result,
-          path_list = path.split('/').filter(Boolean), // convert to array, and filter out empty strings
-          // 1 less than the link so the last item in the `path_list` is what
-          // the passed value will be set to
-          length = path_list.length - 1;
+      let _pages = result
+      // convert to array, and filter out empty strings
+      let path_list = path.split('/').filter(Boolean)
+
+      // 1 less than the link so the last item in the `path_list` is what
+      // the passed value will be set to
+      let length = path_list.length - 1
 
       // loop over all the pages in in the `path_list` except the
       // last one and create the `page`, and `nav` if they don't exist.
       for (let i = 0; i < length; i++) {
-        let page = path_list[i];
+        let page = path_list[i]
         if (!_pages[page]) {
           _pages[page] = {
             page: {
               header: {},
               body: []
             }
-          };
+          }
         }
-        _pages = _pages[page];
+        _pages = _pages[page]
       }
 
       // a) Define the default data set(can't use `page` because it will be overwritten)
@@ -56,15 +58,15 @@ export default function(json) {
             header: {},
             body: []
           }
-        };
+        }
       }
 
       if (type === 'header') {
-        _pages[path_list[length]].page.header = to.merge(_pages[path_list[length]].page.header, value);
+        _pages[path_list[length]].page.header = to.merge(_pages[path_list[length]].page.header, value)
       } else {
-        _pages[path_list[length]].page.body.push(value);
+        _pages[path_list[length]].page.body.push(value)
       }
-    };
+    }
 
     // loop over each filetype in the json object to create the pages structure
     for (let [filetype, files] of to.entries(json)) {
@@ -72,15 +74,15 @@ export default function(json) {
       for (let file of files) {
         // a) Ensures there's only one page defined in the header
         // b) There wasn't a page defined so set it to general
-        file.header.page = file.header.page ? file.header.page[0] : 'general';
+        file.header.page = file.header.page ? file.header.page[0] : 'general'
 
         // a) Set the name in the header to be the name of the file
         if (is.falsy(file.header.name)) {
-          file.header.name = to.case.title(file.info.name);
+          file.header.name = to.case.title(file.info.name)
         }
 
         // set the header for the file
-        set(file.header.page, 'header', file.header);
+        set(file.header.page, 'header', file.header)
 
         // loop over each block in the body of the file
         for (let block of file.body) {
@@ -89,25 +91,25 @@ export default function(json) {
           if (block.page) {
             for (let page of block.page) {
               if (page !== file.header.page) {
-                set(page, 'body', block);
+                set(page, 'body', block)
               }
             }
           }
 
           // add the block to the page
-          set(file.header.page, 'body', block);
+          set(file.header.page, 'body', block)
         }
       }
     }
 
-    return result;
-  })();
+    return result
+  })()
 
   /// @name nav
   /// @description
   /// This function builds the navigation based of how the pages were built.
   nav = ((pages) => {
-    let result = []; // placeholder to store the result
+    let result = [] // placeholder to store the result
 
     /// @name body_names
     /// @description Helper function to get the name of each block in the body
@@ -115,19 +117,19 @@ export default function(json) {
     /// @arg {array} - the body of the page
     /// @returns {array}
     function body_names(href, body) {
-      let body_names = [];
+      let _body_names = []
       // loop over each block in the body
       for (let block of body) {
         // a) Add the name to the body_names
         if (is.existy(block.name)) {
-          body_names.push({
+          _body_names.push({
             title: block.name,
             href: `${href}#${to.case.dash(block.name)}`
-          });
+          })
         }
       }
 
-      return body_names;
+      return _body_names
     }
 
 
@@ -147,22 +149,22 @@ export default function(json) {
             href: `${a.href}/${key}`,
             body: [],
             subpages: []
-          };
+          }
 
           // add the name of each block in the body
-          nav_item.body = body_names(nav_item.href, value.page.body);
+          nav_item.body = body_names(nav_item.href, value.page.body)
 
           // a) Call `set` again because it's not the last level
           if (to.keys(value).length > 1) { // the reason it's `> 1` is because `page` will always be defined.
-            nav_item = set(nav_item, value);
+            nav_item = set(nav_item, value)
           }
 
-          a.subpages.push(nav_item);
+          a.subpages.push(nav_item)
         }
       }
 
-      return a;
-    };
+      return a
+    }
 
     // loop over the pages structure to create the navigation
     for (let [key, value] of to.entries(pages)) {
@@ -171,14 +173,14 @@ export default function(json) {
         href: `/${key}`,
         body: body_names(`/${key}`, value.page.body),
         subpages: []
-      }, value));
+      }, value))
     }
 
-    return result;
-  })(pages);
+    return result
+  })(pages)
 
   return {
     nav,
     pages
-  };
-};
+  }
+}
