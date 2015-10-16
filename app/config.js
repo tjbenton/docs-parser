@@ -5,7 +5,13 @@ import path from 'path'
 const default_options = {
   config: `${info.root}/docsfile.js`,
   files: ['app/**/*'], // files to search
-  ignore: ['.*', 'node_modules/', 'bower_components/', 'jspm_packages/', 'dist/', 'build/', 'docs/'], // files to be ignored
+  // files to be ignored
+  ignore: [
+    '.*', // all dot files
+    'node_modules/', 'bower_components/', 'jspm_packages/', // package managers
+    'dist/', 'build/', 'docs/', // normal folders
+    'tests/', 'coverage/' // unit tests and coverage results
+  ],
   // add gitignore files to the ignore list. Depending on ignored files it
   // could cause things to ge parsed slower, that's why it's defaulted to `false`
   gitignore: false,
