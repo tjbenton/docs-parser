@@ -17,7 +17,7 @@ let to = {
   /// Converts an object, array, number, or boolean to a string
   /// @arg {string, object, array, number, boolean}
   /// @returns {string}
-  string: (arg, glue = '\n') => is.string(arg) ? arg : is.buffer(arg) ? arg + '' : is.object(arg) ? to_string(arg) : is.array(arg) ? arg.join(glue) : is.number(arg) || is.boolean(arg) ? arg.toString() : arg + '',
+  string: (arg, glue = '\n') => is.string(arg) ? arg : is.buffer(arg) ? arg + '' : is.plain_object(arg) ? to_string(arg) : is.array(arg) ? arg.join(glue) : is.number(arg) || is.boolean(arg) ? arg.toString() : arg + '',
 
   case: {
     /// @name to.case.clean
@@ -126,7 +126,7 @@ let to = {
   /// It also get's symbols if they're set as a key name.
   /// @arg {object}
   /// @returns {array}
-  keys: (arg) => (is.object(arg) || is.symbol(arg)) && to.array.flat([Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg)]),
+  keys: (arg) => (is.plain_object(arg) || is.symbol(arg)) && to.array.flat([Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg)]),
 
   /// @name to.entries
   /// @description
@@ -194,7 +194,7 @@ let to = {
   /// Converts an object to a json string
   /// @arg {object}
   /// @returns {json object}
-  json: (arg, spacing = 2) => is.object(arg) && JSON.stringify(arg, null, spacing),
+  json: (arg, spacing = 2) => is.plain_object(arg) && JSON.stringify(arg, null, spacing),
 
   /// @name to.normalize
   /// @description
@@ -236,11 +236,11 @@ let to = {
     let k = to.keys(b)
 
     for (let i = 0, l = k.length; i < l; i++) {
-      a[k[i]] = is.object(b[k[i]]) ? is.object(a[k[i]]) ? to.extend(a[k[i]], b[k[i]]) : b[k[i]] : b[k[i]]
+      a[k[i]] = is.plain_object(b[k[i]]) ? is.plain_object(a[k[i]]) ? to.extend(a[k[i]], b[k[i]]) : b[k[i]] : b[k[i]]
     }
 
     // for (let k in b) {
-    //   a[k] = is.object(b[k]) ? is.object(a[k]) ? to.extend(a[k], b[k]) : b[k] : b[k]
+    //   a[k] = is.plain_object(b[k]) ? is.plain_object(a[k]) ? to.extend(a[k], b[k]) : b[k] : b[k]
     // }
 
     return a
@@ -252,7 +252,7 @@ let to = {
   ///
   /// @arg {*} - The item you want to clone
   /// @returns {*} - The copied result
-  clone: (arg) => is.object(arg) ? to.extend({}, arg) : is.array(arg) ? [].concat(arg) : [].concat(arg)[0],
+  clone: (arg) => is.plain_object(arg) ? to.extend({}, arg) : is.array(arg) ? [].concat(arg) : [].concat(arg)[0],
 
   /// @name to.merge
   /// @description
@@ -311,12 +311,12 @@ let to = {
       //    a) Call the merge function go further into the object
       //    b) Sets the value of `a` to be the value of `b`
       // d) Convert the a value to be an array, and add the `b` value to it
-      if (is.func(b[k]) || is.func(a[k]) || is.undefined(a[k])) {
+      if (is.fn(b[k]) || is.fn(a[k]) || is.undefined(a[k])) {
         a[k] = b[k]
       } else if (is.array(a[k])) {
         a[k].push(b[k])
-      } else if (is.object(a[k])) {
-        a[k] = is.object(b[k]) ? to.merge(a[k], b[k]) : b[k]
+      } else if (is.plain_object(a[k])) {
+        a[k] = is.plain_object(b[k]) ? to.merge(a[k], b[k]) : b[k]
       } else {
         a[k] = [a[k], b[k]]
       }
@@ -329,7 +329,7 @@ let to = {
         }
 
         // a) Filter out duplicates
-        if (unique && !is.object(a[k][0])) {
+        if (unique && !is.plain_object(a[k][0])) {
           a[k] = to.array.unique(a[k])
         }
       }
@@ -346,10 +346,10 @@ let to = {
   /// It converts multiple arrays into a single array
   /// @arg {array, string, object, number} - The item you want to be converted to array
   /// @returns {array}
-  /// array: (arg, glue = "\n") => is.array(arg) ? arg : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : [],
+  /// array: (arg, glue = "\n") => is.array(arg) ? arg : is.string(arg) ? arg.split(glue) : is.plain_object(arg) || is.number(arg) ? [arg] : [],
   array: (arg, ...args) => {
     let glue = args.length > 0 && is.regexp(args[args.length - 1]) ? args.pop() : '\n'
-    let to_array = (arg) => is.array(arg) ? arg : is.argument(arg) ? array_slice(arg) : is.string(arg) ? arg.split(glue) : is.object(arg) || is.number(arg) ? [arg] : []
+    let to_array = (arg) => is.array(arg) ? arg : is.arguments(arg) ? array_slice(arg) : is.string(arg) ? arg.split(glue) : is.plain_object(arg) || is.number(arg) ? [arg] : []
     let result = to_array(arg)
 
     if (args.length > 0) {
@@ -375,9 +375,9 @@ let to = {
   /// @arg {array, object}
   /// @returns {array, object} - The sorted version
   sort: (arg, callback) => {
-    let run_sort = (obj) => is.func(callback) ? obj.sort.apply(null, callback) : obj.sort()
+    let run_sort = (obj) => is.fn(callback) ? obj.sort.apply(null, callback) : obj.sort()
     let result
-    if (is.object(arg)) {
+    if (is.plain_object(arg)) {
       let sorted = {}
       let keys = run_sort(to.keys(arg))
 
@@ -406,14 +406,14 @@ let to = {
   /// Converts `arg` to boolean
   /// @arg {boolean, array, object, string, number}
   /// @returns {boolean}
-  boolean: (arg) => is.boolean(arg) ? arg : is.array(arg) ? !!arg.length : is.object(arg) ? is.empty(arg) : is.number(arg) ? arg > 0 ? !!arg : !!0 : !!arg,
+  boolean: (arg) => is.boolean(arg) ? arg : is.array(arg) ? !!arg.length : is.plain_object(arg) ? is.empty(arg) : is.number(arg) ? arg > 0 ? !!arg : !!0 : !!arg,
 
   /// @name to.number
   /// @description
   /// Converts `arg` to number
   /// @arg {number, array, object, string, boolean}
   /// @returns {number}
-  number: (arg) => is.number(arg) ? arg : is.array(arg) ? arg.length : is.object(arg) ? to.keys(arg).length : ~~arg,
+  number: (arg) => is.number(arg) ? arg : is.array(arg) ? arg.length : is.plain_object(arg) ? to.keys(arg).length : ~~arg,
 
   /// @name to.abs
   /// @description

@@ -43,7 +43,7 @@ const glob = co.wrap(function*(files, ignore = [], filter, files_only = true) {
     files = files.filter((file) => path.extname(file).indexOf('.') > -1)
   }
 
-  if (is.func(filter)) {
+  if (is.fn(filter)) {
     if (is.promise(filter())) {
       return yield array(files).filter(filter)
     }
