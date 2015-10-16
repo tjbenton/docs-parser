@@ -121,7 +121,7 @@ let valid_comment_options = to.keys(default_comment)
 /// @access private
 function ensure_valid_config(user_config) {
   for (let key in user_config) {
-    if (!is.included(valid_options, key)) {
+    if (!is.in(valid_options, key)) {
       log.warn(`'${key}' is not a valid option, see docs options for more details`) //# @todo add link to the doc options
     }
   }
@@ -130,7 +130,7 @@ function ensure_valid_config(user_config) {
   if (user_config.comments) {
     for (let lang in user_config.comments) {
       for (let type in lang) {
-        if (!is.included(valid_comment_options, type)) {
+        if (!is.in(valid_comment_options, type)) {
           log.warn(`'${type}' is not a valid comment option in '${lang}', must be 'header', or 'body'`)
         }
       }
