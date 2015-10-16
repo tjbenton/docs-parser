@@ -1,5 +1,5 @@
 export denodeify from './denodeify'
-export emmitter from './emmiter'
+export emmiter from './emmiter'
 export fs from './fs'
 export glob from './glob'
 export info from './info'
