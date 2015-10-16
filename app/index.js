@@ -14,5 +14,5 @@ if (typeof exports !== 'undefined') {
     return docs;
   });
 } else {
-  root['docs'] = docs;
+  root.docs = docs;
 }

@@ -35,54 +35,54 @@ export default function(args = {}) {
     let in_comment = false // used to determin that you are in a comment
     let in_code = false // used to determin if you are in the code after the comment block
     // a) The file doesn't contain any header level comments, or body level comments
-    debug.get_blocks.self && console.log('');
-    debug.get_blocks.self && console.log('');
-    debug.get_blocks.self && console.log('');
-    debug.get_blocks.self && console.log('');
-    // debug.get_blocks.self && console.log("file =", to.json(file));
-    debug.get_blocks.self && console.log('start_at =', start_at);
-    debug.get_blocks.self && console.log('starting line =', lines[start_at]);
-    debug.get_blocks.self && console.log('is_start_and_end =', is_start_and_end);
-    debug.get_blocks.self && console.log('config.start check =', is.in(file.contents, config.start));
-    debug.get_blocks.self && console.log('');
-    debug.get_blocks.self && console.log('test 1:', is.truthy(is_start_and_end) ? !is.in(file.contents, config.start) : !is.in(file.contents, config.line));
-    debug.get_blocks.self && console.log('test 2:', !is.between(start_at, 0, lines.length - 1));
+    if (debug.get_blocks.self) console.log('');
+    if (debug.get_blocks.self) console.log('');
+    if (debug.get_blocks.self) console.log('');
+    if (debug.get_blocks.self) console.log('');
+    if (// debug.get_blocks.self) console.log("file =", to.json(file));
+    if (debug.get_blocks.self) console.log('start_at =', start_at);
+    if (debug.get_blocks.self) console.log('starting line =', lines[start_at]);
+    if (debug.get_blocks.self) console.log('is_start_and_end =', is_start_and_end);
+    if (debug.get_blocks.self) console.log('config.start check =', is.in(file.contents, config.start));
+    if (debug.get_blocks.self) console.log('');
+    if (debug.get_blocks.self) console.log('test 1:', is.truthy(is_start_and_end) ? !is.in(file.contents, config.start) : !is.in(file.contents, config.line));
+    if (debug.get_blocks.self) console.log('test 2:', !is.between(start_at, 0, lines.length - 1));
 
     if ((is.truthy(is_start_and_end) ? !is.in(file.contents, config.start) : !is.in(file.contents, config.line)) || !is.between(start_at, 0, lines.length - 1)) {
-      debug.get_blocks.self && console.log("WELL SHIT FIRE, FILE DOESN'T CONTAIN ANY COMMENTS");
+      if (debug.get_blocks.self) console.log("WELL SHIT FIRE, FILE DOESN'T CONTAIN ANY COMMENTS");
       return [];
     }
 
     for (let i = start_at, l = lines.length; i < l; i++) {
       let line = lines[i]
       let comment_index = {
-            start: is_start_and_end ? is.included(line, config.start) : false,
-            line: is.included(line, config.line),
-            end: is_start_and_end ? is.included(line, config.end) : false
+            start: is_start_and_end && is.in(line, config.start) ? line.indexOf(config.start) : false,
+            line: is.in(line, config.line) ? line.indexOf(config.line) : false,
+            end: is_start_and_end && is.in(line, config.end) ? line.indexOf(config.end) : false
           }
-      debug.get_blocks.self && console.log('line', i, '=', line);
-      debug.get_blocks.self && console.log('length');
+      if (debug.get_blocks.self) console.log('line', i, '=', line);
+      if (debug.get_blocks.self) console.log('length');
       // a) The line isn't empty so parse it.
       if (!is.empty(line)) {
         // a) is the start and end style or there was an instance of a comment line
         if (is_start_and_end && (!is.false(comment_index.start) || in_comment) || !is.false(comment_index.line)) {
-          debug.get_blocks.self && console.log('IN COMMENT', '{', 'start:', comment_index.start, ', line:', comment_index.line, ', end:', comment_index.end, '}');
+          if (debug.get_blocks.self) console.log('IN COMMENT', '{', 'start:', comment_index.start, ', line:', comment_index.line, ', end:', comment_index.end, '}');
 
           // a) is the start of a new block
           if (!is.false(comment_index.start) || !is_start_and_end && !in_comment) {
-            debug.get_blocks.self && console.log('START OF A NEW BLOCK ---------------------------------------------------------------');
+            if (debug.get_blocks.self) console.log('START OF A NEW BLOCK ---------------------------------------------------------------');
             in_code = false;
 
             // a) There was block that has already been processed
             if (!is.undefined(block_info)) { // holds the current block information
-              debug.get_blocks.self && console.log('BLOCK WAS PUSHED TO PARSED_BLOCKS');
+              if (debug.get_blocks.self) console.log('BLOCK WAS PUSHED TO PARSED_BLOCKS');
               block_info.code.end = i - 1; // @todo check to make sure this is correct
               parsed_blocks.push(block_info);
 
               // Stops the loop after the first comment block
               // has been parsed. This is for file header comments
               if (restrict) {
-                debug.get_blocks.self && console.log('IS RESTRICTED FIRST INSTANCE !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!');
+                if (debug.get_blocks.self) console.log('IS RESTRICTED FIRST INSTANCE !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!');
                 block_info.comment.end = i;
                 return parsed_blocks;
               }
@@ -108,7 +108,7 @@ export default function(args = {}) {
 
           // a) check for the end comment
           if (is_start_and_end && block_info.comment.start !== i && !is.false(comment_index.end)) {
-            debug.get_blocks.self && console.log('LAST LINE IN COMMENT');
+            if (debug.get_blocks.self) console.log('LAST LINE IN COMMENT');
             in_comment = false;
             block_info.comment.end = i; // sets the end line in the comment block
 
@@ -116,11 +116,13 @@ export default function(args = {}) {
             i++; // skips end comment line
             line = lines[i]; // updates to be the next line
             comment_index.end = is.included(config.end); // updates the index
+
+            // comment_index.end = is.in(line, config.end) ? line.indexOf(config.end) : false;
           }
 
           // a) adds this line to block_info comment contents
           if (in_comment && is.false(comment_index.start) && is.false(comment_index.end)) {
-            debug.get_blocks.self && console.log('LINE ADDED TO BLOCK COMMENT CONTENTS');
+            if (debug.get_blocks.self) console.log('LINE ADDED TO BLOCK COMMENT CONTENTS');
             // a) removes the `config.line` from the line.
             if (!is.false(comment_index.line)) {
               line = line.slice(comment_index.line + config.line.length);
@@ -130,8 +132,8 @@ export default function(args = {}) {
           }
 
           // a) check the next line for an instance of the a line comment
-          if (!is_start_and_end && is.false(is.included(lines[i + 1], config.line))) {
-            debug.get_blocks.self && console.log("NEXT 'LINE' IS A COMMENT && NOT START AND END STYLE");
+          if (!is_start_and_end && !is.in(lines[i + 1], config.line)) {
+            if (debug.get_blocks.self) console.log("NEXT 'LINE' IS A COMMENT && NOT START AND END STYLE");
             in_comment = false;
             block_info.comment.end = i; // sets the end line in the comment block
             i++; // skips end comment line // @todo why does this need to be skipped?
@@ -140,7 +142,7 @@ export default function(args = {}) {
 
           // a) The last line in the file is a commment
           if (in_comment && (is_start_and_end && !is.false(comment_index.end) ? i === l : i === l - 1)) {
-            debug.get_blocks.self && console.log('LAST LINE IN THE FILE IS A COMMENT');
+            if (debug.get_blocks.self) console.log('LAST LINE IN THE FILE IS A COMMENT');
             block_info.comment.end = is_start_and_end ? i - 1 : i;
             parsed_blocks.push(block_info);
             break; // ensures that the loop stops because it's the last line in the file
@@ -152,14 +154,14 @@ export default function(args = {}) {
           // Stops the loop after the first comment block
           // has been parsed. This is for file header comments
           if (restrict) {
-            debug.get_blocks.self && console.log('IS RESTRICTED SECOND INSTANCE !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!');
+            if (debug.get_blocks.self) console.log('IS RESTRICTED SECOND INSTANCE !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!');
             parsed_blocks.push(block_info);
             break;
           }
-          debug.get_blocks.self && console.log('IN CODE');
+          if (debug.get_blocks.self) console.log('IN CODE');
           // a) The previous line was a comment
           if (!in_code) {
-            debug.get_blocks.self && console.log('THE PREVIOUS LINE WAS A COMMENT');
+            if (debug.get_blocks.self) console.log('THE PREVIOUS LINE WAS A COMMENT');
             in_code = true;
             block_info.code.start = i;
           }
@@ -169,7 +171,7 @@ export default function(args = {}) {
 
           // a) pushes the last block onto the body
           if (i === l - 1) {
-            debug.get_blocks.self && console.log('LAST LINE IN THE FILE IS CODE');
+            if (debug.get_blocks.self) console.log('LAST LINE IN THE FILE IS CODE');
             block_info.code.end = i;
             parsed_blocks.push(block_info);
           }
@@ -179,14 +181,14 @@ export default function(args = {}) {
       else if (i === l - 1 && is.truthy(block_info)) {
         block_info[is.between(block_info.comment.end) ? 'comment' : 'code'].end = i;
         parsed_blocks.push(block_info);
-        debug.get_blocks.self && console.log('LINE WAS EMPTY');
+        if (debug.get_blocks.self) console.log('LINE WAS EMPTY');
       }
 
-      debug.get_blocks.self && console.log('');
+      if (debug.get_blocks.self) console.log('');
     } // end loop
 
     return parsed_blocks;
-  };
+  }
 
   // @name this.run_annotation
   // @arg {object} annotation - the information for the annotation to be called(name, line, content, start, end)
@@ -230,7 +232,7 @@ export default function(args = {}) {
     result = annotations[annotation.name].callback.call(result);
 
     return result;
-  };
+  }
 
   // @name parsed_blocks
   // @description
@@ -239,12 +241,12 @@ export default function(args = {}) {
   // @returns {array} of parsed blocks
   function parse_blocks(blocks) {
     if (is.empty(blocks)) {
-      return [];
+      return []
     }
     // if it's an object then convert it to an array.
     // blocks = to.array(blocks);
 
-    let parsed_blocks = [];
+    let parsed_blocks = []
 
     // @name parse_block
     // @description
@@ -254,30 +256,30 @@ export default function(args = {}) {
     // for this file type or the default function.
     // @arg {object} - The blocks to parse
     const parse_block = (block, prefix = comment.prefix, restrict_lines = false) => {
-      let contents = to.array(block.comment.contents),
-          block_annotations = {},
-          current = {}; // holds the current annotation
+      let contents = to.array(block.comment.contents)
+      let block_annotations = {}
+      let current = {} // holds the current annotation
 
       // loop over each line in the comment block
       for (let i = 0, l = contents.length; i < l; i++) {
-        let line = contents[i],
-            prefix_index = line.indexOf(prefix);
+        let line = contents[i]
+        let prefix_index = line.indexOf(prefix)
 
         // a) there is an index of the annotation prefix
         if (prefix_index >= 0) {
-          let first_space = line.indexOf(' ', prefix_index),
-              name_of_annotation = line.slice(prefix_index + 1, first_space >= 0 ? first_space : line.length);
+          let first_space = line.indexOf(' ', prefix_index)
+          let name_of_annotation = line.slice(prefix_index + 1, first_space >= 0 ? first_space : line.length)
 
           // a) the name is one of the annotation names
           if (annotation_keys.indexOf(name_of_annotation) >= 0) {
             // a) parse the current annotation
             if (!is.empty(current)) {
-              current.end = i - 1;
+              current.end = i - 1
 
               // run the annotation function and merge it with the other annotations in the block
               to.merge(block_annotations, {
                 [current.name]: run_annotation(current, block)
-              });
+              })
             }
 
             // redefines resets the current annotation to be blank
@@ -287,44 +289,44 @@ export default function(args = {}) {
               contents: [],
               start: i, // sets the starting line of the annotation
               end: 0
-            };
+            }
           }
         }
 
         // a) adds the current line to the contents
         if (!is.empty(current) && restrict_lines === false) {
-          current.contents.push(line);
+          current.contents.push(line)
         }
 
         // a) is the last line in the comment block
         if (i === l - 1 && !is.empty(current)) {
-          current.end = i;
+          current.end = i
           // run the annotation function and merge it with the other annotations in the block
           to.merge(block_annotations, {
             [current.name]: run_annotation(current, block)
-          });
+          })
         }
       } // end block loop
 
-      return block_annotations;
-    };
+      return block_annotations
+    }
 
 
     // loop over each block
     for (let i in blocks) {
-      let block = blocks[i];
+      let block = blocks[i]
 
-      block.comment.contents = to.normalize(block.comment.contents);
-      block.code.contents = to.normalize(block.code.contents);
+      block.comment.contents = to.normalize(block.comment.contents)
+      block.code.contents = to.normalize(block.code.contents)
 
-      let parsed_block = parse_block(block);
+      let parsed_block = parse_block(block)
 
       if (!is.empty(parsed_block)) {
-        parsed_blocks.push(parsed_block);
+        parsed_blocks.push(parsed_block)
       }
     } // end blocks loop
 
-    debug.parse_blocks.self && console.log('parsed_blocks', parsed_blocks);
+    if (debug.parse_blocks.self) console.log('parsed_blocks', parsed_blocks)
 
     return parsed_blocks;
   };
@@ -342,21 +344,43 @@ export default function(args = {}) {
           end: to.array(contents).length - 1 // ending point of the file
         };
 
-        debug.get_blocks.result || debug.parse_blocks.result && console.log(''); debug.get_blocks.result || debug.parse_blocks.result && console.log(''); debug.get_blocks.result || debug.parse_blocks.result && console.log(''); debug.get_blocks.result || debug.parse_blocks.result && console.log(''); debug.get_blocks.result || debug.parse_blocks.result && console.log(''); debug.get_blocks.result || debug.parse_blocks.result && console.log('');
+        if (debug.get_blocks.result || debug.parse_blocks.result) {
+          console.log('');
+          console.log('');
+          console.log('');
+          console.log('');
+        }
 
         let header = get_blocks(contents, comment.header);
-        debug.get_blocks.result && console.log('get_blocks(header) =', !is.empty(header) ? header[0].comment.contents : 'no header for this file'); debug.get_blocks.result && console.log(''); debug.get_blocks.result && console.log('');
 
-        let body = get_blocks(contents, comment.body, false, !is.empty(header) ? header[0].comment.end + 1 : 0);
-        debug.get_blocks.result && console.log('get_blocks(body) =', body);
+        if (debug.get_blocks.result) {
+          console.log('get_blocks(header) =', !is.empty(header) ? header[0].comment.contents : 'no header for this file')
+          console.log('')
+          console.log('')
+        }
 
-        debug.parse_blocks.result && debug.parse_blocks.result && console.log(''); debug.parse_blocks.result && debug.parse_blocks.result && console.log(''); debug.parse_blocks.result && debug.parse_blocks.result && console.log(''); debug.parse_blocks.result && debug.parse_blocks.result && console.log(''); debug.parse_blocks.result && debug.parse_blocks.result && console.log(''); debug.parse_blocks.result && debug.parse_blocks.result && console.log('');
+        let body = get_blocks(contents, comment.body, false, !is.empty(header) ? header[0].comment.end + 1 : 0)
+
+        if(debug.get_blocks.result) console.log('get_blocks(body) =', body);
+
+        if (debug.parse_blocks.result && debug.parse_blocks.result) {
+          console.log('')
+          console.log('')
+          console.log('')
+          console.log('')
+        }
 
         header = parse_blocks(header)[0];
-        debug.parse_blocks.result && console.log('parse_blocks(header) =', header); debug.parse_blocks.result && console.log(''); debug.parse_blocks.result && console.log('');
+
+        if (debug.parse_blocks.result) {
+          console.log('parse_blocks(header) =', header)
+          console.log('')
+          console.log('')
+        }
 
         body = parse_blocks(body);
-        debug.parse_blocks.result && console.log('parse_blocks(body) =', body);
+
+        if (debug.parse_blocks.result) console.log('parse_blocks(body) =', body)
 
         // removes the contents from the file info because it's
         // not something that is needed in the returned data.
@@ -368,11 +392,11 @@ export default function(args = {}) {
             header: header || {},
             body
           }]
-        });
+        })
       })
       .catch((err) => {
         console.log(err);
         reject({});
       });
-  });
-};
+  })
+}
