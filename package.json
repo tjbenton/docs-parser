@@ -3,6 +3,7 @@
   "description": "Documentation chameleon, adapts to any language and will help you document all the things.",
   "author": "Tyler Benton <tjbenton21@gmail.com>",
   "version": "0.0.0beta1",
+  "main": "dist/index.js",
   "scripts": {
     "test": "istanbul test | tape tests/**/* | tap-spec",
     "watch": "rm -rf ./dist; babel app/ -d ./dist --stage 0 --optional runtime --watch",
@@ -10,16 +11,12 @@
     "build": "rm -rf ./dist; babel app/ -d ./dist --optional runtime --stage 0",
     "prepublish": "npm run build"
   },
-  "main": "dist/index.js",
   "files": [
     "dist/",
     "bin/",
     "LICENSE"
   ],
-  "license": {
-    "type": "MIT",
-    "url": "http://opensource.org/licenses/MIT"
-  },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tjbenton/docs.git"
