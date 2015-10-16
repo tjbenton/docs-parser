@@ -1,9 +1,11 @@
-node_modules/
-nmp-debug.log
-dist/
+node_modules
+bower_components
+jspm_packages
+dist
 .tmp
 .DS_Store
 .sass-cache
-bower_components/
 *.map
 docs/docs.json
+coverage
+.nyc_output
