@@ -1,7 +1,7 @@
 {
   "name": "docs",
   "description": "Documentation chameleon, adapts to any language and will help you document all the things.",
-  "author": "Tyler Benton",
+  "author": "Tyler Benton <tjbenton21@gmail.com>",
   "version": "0.0.0beta1",
   "scripts": {
     "test": "istanbul test | tape tests/**/* | tap-spec",
