@@ -20,9 +20,20 @@ let to = {
   /// Converts an object, array, number, or boolean to a string
   /// @arg {string, object, array, number, boolean}
   /// @returns {string}
+  string(arg, glue = '\n') {
+    if (is.string(arg)) {
+      return arg
+    }
 
     if (is.plain_object(arg)) {
+      return to_string(arg)
+    }
 
+    if (is.array(arg)) {
+      return arg.join(glue)
+    }
+
+    return arg + ''
   },
 
 
@@ -45,7 +56,7 @@ let to = {
   /// It also get's symbols if they're set as a key name.
   /// @arg {object}
   /// @returns {array}
-  keys: (arg) => (is.plain_object(arg) || is.symbol(arg)) && to.array.flat([Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg)]),
+  keys: (arg) => (is.plain_object(arg) || is.symbol(arg)) && to.flat_array([Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg)]),
 
   /// @name to.entries
   /// @description
@@ -236,7 +247,7 @@ let to = {
   ///   garply: "item" // didn't exist before so it stays as a string
   ///  }
   /// }
-  merge: (a, b, unique = true, flat = true) => {
+  merge(a, b, unique = true, flat = true) {
     // a) Don't touch `null` or `undefined` objects.
     if (!a || !b) {
       return a
@@ -265,12 +276,12 @@ let to = {
       if (is.array(a[k])) {
         // a) Flatten the array
         if (flat) {
-          a[k] = to.array.flat(a[k])
+          a[k] = to.flat_array(a[k])
         }
 
         // a) Filter out duplicates
         if (unique && !is.plain_object(a[k][0])) {
-          a[k] = to.array.unique(a[k])
+          a[k] = to.unique_array(a[k])
         }
       }
     }
@@ -297,21 +308,7 @@ let to = {
   /// It converts multiple arrays into a single array
   /// @arg {array, string, object, number} - The item you want to be converted to array
   /// @returns {array}
-  /// array: (arg, glue = "\n") => is.array(arg) ? arg : is.string(arg) ? arg.split(glue) : is.plain_object(arg) || is.number(arg) ? [arg] : [],
-  array: (arg, ...args) => {
-    let glue = args.length > 0 && is.regexp(args[args.length - 1]) ? args.pop() : '\n'
-    let to_array = (arg) => is.array(arg) ? arg : is.arguments(arg) ? array_slice(arg) : is.string(arg) ? arg.split(glue) : is.plain_object(arg) || is.number(arg) ? [arg] : []
-    let result = to_array(arg)
-
-    if (args.length > 0) {
-      for (let i = 0, l = args.length; i < l; i++) {
-        let arg = args[i]
-        result = result.concat()
-      }
-    }
-
-    return result
-  },
+  array: (arg, glue = '\n') => is.array(arg) ? arg : is.arguments(arg) ? array_slice(arg) : is.string(arg) ? arg.split(glue) : is.plain_object(arg) || is.number(arg) ? [arg] : [],
 
   /// @name to.flat_array
   /// @description
@@ -319,6 +316,22 @@ let to = {
   /// @arg {array}
   /// @returnes {array} - single dimensional
   flat_array: (arg) => is.array(arg) ? [].concat(...arg.map(to.flat_array)) : arg,
+
+  /// @name to.unique_array
+  /// @description
+  /// Removes duplicate values from an array
+  /// @arg {array}
+  /// @returns {array} - without duplicates
+  unique_array(arg){
+    let o = {}
+    let r = []
+
+    for (let i in arg) o[arg[i]] = arg[i]
+
+    for (let i in o) r.push(o[i])
+
+    return r
+  },
 
   /// @name to.sort
   /// @description
@@ -343,65 +356,12 @@ let to = {
     return result
   },
 
-  /// @name to.regex
-  /// @description
-  /// Converts `...args` to regex
-  /// @returns {string}
-  ///
-  /// @markup {js}
-  /// new RegExp(":((" + to.regex(")|(", "link", "visited", "hover") + "))", "gi")
-  regex: (glue, ...args) => to.array(args).join(glue),
-
-  /// @name to.boolean
-  /// @description
-  /// Converts `arg` to boolean
-  /// @arg {boolean, array, object, string, number}
-  /// @returns {boolean}
-  boolean: (arg) => is.boolean(arg) ? arg : is.array(arg) ? !!arg.length : is.plain_object(arg) ? is.empty(arg) : is.number(arg) ? arg > 0 ? !!arg : !!0 : !!arg,
-
   /// @name to.number
   /// @description
   /// Converts `arg` to number
   /// @arg {number, array, object, string, boolean}
   /// @returns {number}
-  number: (arg) => is.number(arg) ? arg : is.array(arg) ? arg.length : is.plain_object(arg) ? to.keys(arg).length : ~~arg,
-
-  /// @name to.abs
-  /// @description
-  /// Converts `arg` to a positive number
-  /// @arg {number, array, object, string, boolean}
-  /// @returns {number}
-  abs: (arg) => Math.abs(to.number(arg)),
-
-  /// @name to.neg
-  /// @description
-  /// Converts `arg` to a negative number
-  /// @arg {number, array, object, string, boolean}
-  /// @returns {number}
-  neg: (arg) => ~to.abs(arg)
-}
-
-/// @name to.array.flat
-/// @description
-/// Flattens an array, and arrays inside of it into a single array
-/// @arg {array}
-/// @returnes {array} - single dimensional
-to.array.flat = (arg) => [].concat.apply([], to.array(arg))
-
-/// @name to.array.unique
-/// @description
-/// Removes duplicate values from an array
-/// @arg {array}
-/// @returns {array} - without duplicates
-to.array.unique = (arg) => {
-  let o = {}
-  let r = []
-
-  for (let i in arg) o[arg[i]] = arg[i]
-
-  for (let i in o) r.push(o[i])
-
-  return r
+  number: (arg) => is.number(arg) ? arg : is.array(arg) ? arg.length : is.plain_object(arg) ? to.keys(arg).length : ~~arg
 }
 
 export default to
