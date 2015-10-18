@@ -81,8 +81,7 @@ export default async function config(options = {}) {
         options.ignore,
         to.array(to.string(await fs.readFile(path.join(info.root, '.gitignore'))))
       ])
-
-    } catch(err){}
+    } catch(err) {}
   }
 
 
@@ -97,7 +96,7 @@ export default async function config(options = {}) {
   let comments = {}
 
   // ensures comments are a normal structure (aka not `'rb, py': {...}`)
-  for (let [option, value] of to.entries(options.comments)){
+  for (let [option, value] of to.entries(options.comments)) {
     // converts option into an array so multiple languages can be declared at the same time
     option = option.replace(/\s/g, '').split(',')
 
@@ -108,7 +107,7 @@ export default async function config(options = {}) {
   // this makes it easier later on when parsing
   for (let [lang, value] of to.entries(comments)) {
     if (lang !== '_') {
-      comments[lang] = to.extend(JSON.parse(JSON.stringify(default_comment)), value)
+      comments[lang] = to.extend(to.clone(default_comment), value)
     }
   }
 

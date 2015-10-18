@@ -39,7 +39,7 @@ export default function(args = {}) {
     if (debug.get_blocks.self) console.log('');
     if (debug.get_blocks.self) console.log('');
     if (debug.get_blocks.self) console.log('');
-    if (// debug.get_blocks.self) console.log("file =", to.json(file));
+    if (debug.get_blocks.self) console.log('file =', to.json(file));
     if (debug.get_blocks.self) console.log('start_at =', start_at);
     if (debug.get_blocks.self) console.log('starting line =', lines[start_at]);
     if (debug.get_blocks.self) console.log('is_start_and_end =', is_start_and_end);
@@ -49,7 +49,7 @@ export default function(args = {}) {
     if (debug.get_blocks.self) console.log('test 2:', !is.between(start_at, 0, lines.length - 1));
 
     if ((is.truthy(is_start_and_end) ? !is.in(file.contents, config.start) : !is.in(file.contents, config.line)) || !is.between(start_at, 0, lines.length - 1)) {
-      if (debug.get_blocks.self) console.log("WELL SHIT FIRE, FILE DOESN'T CONTAIN ANY COMMENTS");
+      if (debug.get_blocks.self) console.log('WELL SHIT FIRE, FILE DOESN\'T CONTAIN ANY COMMENTS');
       return [];
     }
 
