@@ -185,7 +185,7 @@ let to = {
 
     // Filter out special objects.
     let Constructor = arg.constructor;
-    switch (Constructor) {
+    switch(Constructor) {
       // Implement other special objects here.
       case RegExp:
         clone = new Constructor(arg);
