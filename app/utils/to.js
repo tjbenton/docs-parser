@@ -2,6 +2,7 @@ const to_string = (arg) => Object.prototype.toString.call(arg)
 const array_slice = (arg) => Array.prototype.slice.call(arg)
 
 import markdown from 'marked'
+import changeCase from 'change-case'
 import is from './is.js'
 
 let to = {
@@ -12,98 +13,16 @@ let to = {
   /// @returns {string} of `html`
   markdown,
 
+  ...changeCase,
+
   /// @name to.string
   /// @description
   /// Converts an object, array, number, or boolean to a string
   /// @arg {string, object, array, number, boolean}
   /// @returns {string}
-  string: (arg, glue = '\n') => is.string(arg) ? arg : is.buffer(arg) ? arg + '' : is.plain_object(arg) ? to_string(arg) : is.array(arg) ? arg.join(glue) : is.number(arg) || is.boolean(arg) ? arg.toString() : arg + '',
 
-  case: {
-    /// @name to.case.clean
-    /// @description
-    /// Remove any starting case from a `string`, like camel or snake, but keep
-    /// spaces and punctuation that may be important otherwise.
-    ///
-    /// @arg {string}
-    /// @return {string}
-    clean(str) {
-      let unseparate = (str) => str.replace(/[\W_]+(.|$)/g, (m, next) => next ? ' ' + next : '')
-      let uncamelize = (str) => str.replace(/(.)([A-Z]+)/g, (m, previous, uppers) => previous + ' ' + uppers.toLowerCase().split(' ').join(' '))
+    if (is.plain_object(arg)) {
 
-      // a) has spaces
-      // b) has separator
-      return (/\s/.test(str) ? str : /[\W_]/.test(str) ? (unseparate(str) || str) : uncamelize(str)).toLowerCase()
-    },
-
-    /// @name to.case.title
-    /// @description Converts a string to title case
-    /// @arg {string}
-    /// @returns {string}
-    title(str) {
-      // https://github.com/gouch/to-title-case/blob/master/to-title-case.js
-      var smallWords = /^(a|an|and|as|at|but|by|en|for|if|in|nor|of|on|or|per|the|to|vs?\.?|via)$/i
-
-      return str.replace(/[A-Za-z0-9\u00C0-\u00FF]+[^\s-]*/g, function(match, index, title) {
-        if (index > 0 && index + match.length !== title.length && match.search(smallWords) > -1 && title.charAt(index - 2) !== ':' && (title.charAt(index + match.length) !== '-' || title.charAt(index - 1) === '-') && title.charAt(index - 1).search(/[^\s-]/) < 0) {
-          return match.toLowerCase()
-        }
-
-        if (match.substr(1).search(/[A-Z]|\../) > -1) {
-          return match
-        }
-
-        return match.charAt(0).toUpperCase() + match.substr(1)
-      })
-    },
-
-    /// @name to.case.lower
-    /// @description Converts a string to lower case(aka `str.toLowerCase()`)
-    /// @arg {string}
-    /// @returns {string}
-    lower: (str) => str.toLowerCase(),
-
-    /// @name to.case.upper
-    /// @description Converts a string to upper case(aka `str.toUpperCase()`)
-    /// @arg {string}
-    /// @returns {string}
-    upper: (str) => str.toUpperCase(),
-
-    /// @name to.case.sentence
-    /// @description Converts a string to sentence case
-    /// @arg {string}
-    /// @returns {string}
-    sentence: (str) => to.case.clean(str).replace(/[a-z]/i, (letter) => letter.toUpperCase()),
-
-    /// @name to.case.space
-    /// @description Replaces camel case, dot, and dash cases with a space
-    /// @arg {string}
-    /// @returns {string}
-    space: (str) => to.case.clean(str).replace(/[\W_]+(.|$)/g, (matches, match) => match ? ' ' + match : ''),
-
-    /// @name to.case.snake
-    /// @description Converts a string to snake case
-    /// @arg {string}
-    /// @returns {string}
-    snake: (str) => to.case.space(str).replace(/\s/g, '_'),
-
-    /// @name to.case.dash
-    /// @description Converts a string to dash case
-    /// @arg {string}
-    /// @returns {string}
-    dash: (str) => to.case.space(str).replace(/\s/g, '-'),
-
-    /// @name to.case.dot
-    /// @description Converts a string to dot case
-    /// @arg {string}
-    /// @returns {string}
-    dot: (str) => to.case.space(str).replace(/\s/g, '.'),
-
-    /// @name to.case.swap
-    /// @description Converts capital letters to lower case and vice versa
-    /// @arg {string}
-    /// @returns {string}
-    swap: (str) => str.split('').map((c) => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('')
   },
 
 
