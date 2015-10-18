@@ -171,7 +171,35 @@ let to = {
   ///
   /// @arg {*} - The item you want to clone
   /// @returns {*} - The copied result
-  clone: (arg) => is.plain_object(arg) ? to.extend({}, arg) : is.array(arg) ? [].concat(arg) : [].concat(arg)[0],
+  clone(arg) {
+    // Basis.
+    if (!(arg instanceof Object)) {
+      return arg;
+    }
+
+    let clone;
+
+    // Filter out special objects.
+    let Constructor = arg.constructor;
+    switch (Constructor) {
+      // Implement other special objects here.
+      case RegExp:
+        clone = new Constructor(arg);
+        break;
+      case Date:
+        clone = new Constructor(arg.getTime());
+        break;
+      default:
+        clone = new Constructor();
+    }
+
+    // Clone each property.
+    for (var prop in arg) {
+      clone[prop] = to.clone(arg[prop]);
+    }
+
+    return clone;
+  },
 
   /// @name to.merge
   /// @description
