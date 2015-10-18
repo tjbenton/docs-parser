@@ -78,7 +78,7 @@ export default function(json) {
 
         // a) Set the name in the header to be the name of the file
         if (is.falsy(file.header.name)) {
-          file.header.name = to.case.title(file.info.name)
+          file.header.name = to.titleCase(file.info.name)
         }
 
         // set the header for the file
@@ -124,7 +124,7 @@ export default function(json) {
         if (is.existy(block.name)) {
           _body_names.push({
             title: block.name,
-            href: `${href}#${to.case.dash(block.name)}`
+            href: `${href}#${to.paramCase(block.name)}`
           })
         }
       }
@@ -145,7 +145,7 @@ export default function(json) {
       for (let [key, value] of to.entries(b)) {
         if (key !== 'page') {
           let nav_item = {
-            title: is.truthy(value.page.header.name) ? value.page.header.name : to.case.title(to.case.space(key)),
+            title: is.truthy(value.page.header.name) ? value.page.header.name : to.titleCase(to.sentenceCase(key)),
             href: `${a.href}/${key}`,
             body: [],
             subpages: []
@@ -169,7 +169,7 @@ export default function(json) {
     // loop over the pages structure to create the navigation
     for (let [key, value] of to.entries(pages)) {
       result.push(set({
-        title: to.case.title(to.case.space(key)),
+        title: to.titleCase(to.sentenceCase(key)),
         href: `/${key}`,
         body: body_names(`/${key}`, value.page.body),
         subpages: []

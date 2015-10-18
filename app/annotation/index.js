@@ -133,7 +133,7 @@ export default class AnnotationApi{
       // object and rerun the add function
       for (let filetype in config) {
         let obj = config[filetype];
-        obj.filetypes = is.in(obj, 'filetype') ? to.array.flat([filetype, config.filetype]) : to.array(filetype)
+        obj.filetypes = is.in(obj, 'filetype') ? to.flat_array([filetype, config.filetype]) : to.array(filetype)
         this.add(name, obj);
       }
       return

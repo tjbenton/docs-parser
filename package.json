@@ -40,8 +40,9 @@
   "dependencies": {
     "babel-runtime": "^5.8.25",
     "chalk": "^1.1.0",
+    "change-case": "^2.3.0",
     "co": "^4.6.0",
-    "commander": "^2.8.1",
+    "commander": "^2.9.0",
     "fs-extra": "^0.24.0",
     "glob": "^5.0.6",
     "is_js": "^0.7.4",
