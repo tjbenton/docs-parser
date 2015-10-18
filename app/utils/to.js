@@ -108,13 +108,6 @@ let to = {
     }
   },
 
-  /// @name to.json
-  /// @description
-  /// Converts an object to a json string
-  /// @arg {object}
-  /// @returns {json object}
-  json: (arg, spacing = 2) => is.plain_object(arg) && JSON.stringify(arg, null, spacing),
-
   /// @name to.normalize
   /// @description
   /// Removes trailing/leading blank lines. Removes extra whitespace before all the lines that
@@ -285,7 +278,18 @@ let to = {
     return a
   },
 
-  object: (arg) => is.json(arg),
+  /// @name to.object
+  /// @description Converts a json object to a plain object
+  /// @arg {json} - The json to parse
+  /// @returns {object}
+  object: (arg) => is.json(arg) ? JSON.parse(arg) : arg,
+
+  /// @name to.json
+  /// @description Converts an object to a json string
+  /// @arg {object} - The object to convert
+  /// @arg {number} - The spacing to use
+  /// @returns {json}
+  json: (arg, spacing = 2) => is.object(arg) && JSON.stringify(arg, null, spacing),
 
   /// @name to.array
   /// @description
