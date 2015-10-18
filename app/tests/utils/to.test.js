@@ -2,12 +2,15 @@ import test from 'tape';
 import to from '../../utils/to.js'
 import fs from '../../utils/fs.js'
 import info from '../../utils/info.js'
+import is from 'is_js'
+
 const string = 'yo this is a string'
 const array = ['one', 'two', 'three']
 const object = {one: 1, two: 2, three: 3}
 const buffer = new Buffer(string)
 const number = 4
 const boolean = false
+
 
 test('to.string', (t) => {
   t.is(typeof to.string(string), 'string',
@@ -24,6 +27,7 @@ test('to.string', (t) => {
     '`boolean` should be converted to a typeof string')
   t.end()
 })
+
 
 test('to.normal_string', async (t) => {
   try{
@@ -42,6 +46,7 @@ test('to.normal_string', async (t) => {
   }
 })
 
+
 test('to.keys', (t) => {
   const keys = to.keys(object)
   t.is(keys[0], 'one', 'should return one')
@@ -50,6 +55,7 @@ test('to.keys', (t) => {
   t.end()
 })
 
+
 test('to.entries', (t) => {
   for (let [i, item] of to.entries(array)) {
     t.ok(typeof i, 'number', '`i` should be a number')
@@ -57,6 +63,7 @@ test('to.entries', (t) => {
   }
   t.end()
 })
+
 
 test('to.normalize', (t) => {
   const actual = `
@@ -71,6 +78,7 @@ test('to.normalize', (t) => {
   t.is(to.normalize(actual).split('\n')[1].length, 19, 'should be 19')
   t.end()
 })
+
 
 test('to.extend', (t) => {
   let temp = to.extend({}, object);
@@ -109,7 +117,6 @@ test('to.merge', (t) => {
   t.end()
 })
 
-import is from 'is_js'
 
 test('to.object', async (t) => {
   try{
@@ -122,6 +129,7 @@ test('to.object', async (t) => {
   }
 })
 
+
 test('to.json', (t) => {
   let obj = { foo: 'foo', bar: 'foo' }
   t.is(typeof obj, 'object',
@@ -130,6 +138,7 @@ test('to.json', (t) => {
     'should be a json string')
   t.end()
 })
+
 
 test('to.array', (t) => {
   t.ok(Array.isArray(array),
@@ -151,17 +160,20 @@ test('to.array', (t) => {
   t.end()
 })
 
+
 test('to.flat_array', (t) => {
   t.is(to.flat_array([[[array]]])[0], 'one',
     'the array should be flattend and the first value should be one')
   t.end()
 })
 
+
 test('to.unique_array', (t) => {
   t.is(to.unique_array(['one', 'one', 'two', 'two']).length, 2,
     'should have a length of 2')
   t.end()
 })
+
 
 test('to.sort', (t) => {
   let actual = {
@@ -176,6 +188,7 @@ test('to.sort', (t) => {
     'a should be the first key in the object after it\'s sorted')
   t.end()
 })
+
 
 test('to.number', (t) => {
   t.is(to.number(4), 4,
