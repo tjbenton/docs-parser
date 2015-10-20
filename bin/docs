@@ -2,5 +2,5 @@
 
 'use strict';
 
-require('../dist/cli.js')(process.argv.slice(2));
+require('../dist/cli.js')();
 
