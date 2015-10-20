@@ -5,10 +5,14 @@ process.on('uncaughtException', function(err) {
   process.exit(1)
 })
 
+import co from 'co'
+import path from 'path'
 import { info, fs, is, to, glob, array, Logger } from './utils'
 import parser from './parser'
 import sorter from './sorter'
 import reporter from './reporter'
+import get_config from './config'
+
 let log = new Logger();
 reporter.call(log)
 
@@ -19,13 +23,9 @@ reporter.call(log)
 /// This is used to parse any filetype that you want to and gets the
 /// documentation for it  and returns an `{}` of the document data
 ////
-
-import get_config from './config'
-import co from 'co'
-import path from 'path'
-
-const docs = co.wrap(function*(user_config = {}) {
-  log.time('total')
+const docs = co.wrap(function*(options = {}) {
+  log.emit('start', 'total')
+  options = yield get_config(options)
   let {
     files,
     ignore,
@@ -35,9 +35,8 @@ const docs = co.wrap(function*(user_config = {}) {
     timestamps,
     annotations,
     comments,
-  } = yield get_config(user_config);
+  } = options
 
-  let api = new AnnotationApi()
 
   try {
     yield fs.ensureFile(info.temp.file)
@@ -52,7 +51,7 @@ const docs = co.wrap(function*(user_config = {}) {
 
     // converts json to a readable JS object
     json = to.string(yield json)
-    json = !!json ? JSON.parse(json) : {}
+    json = !!json ? to.object(json) : {}
 
     // Loop through the parsed files and update the
     // json data that was stored.
