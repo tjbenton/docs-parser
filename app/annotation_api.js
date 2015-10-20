@@ -1,10 +1,9 @@
 'use strict';
 
-import annotations from './annotations'
-import {is, to} from '../utils'
+import { is, to } from './utils'
 
-export default class AnnotationApi{
-  constructor() {
+export default class AnnotationApi {
+  constructor(annotations) {
     // object of the all the annotation
     // This object holds all the annotations
     this.annotations = {
@@ -17,9 +16,10 @@ export default class AnnotationApi{
       // js: {
       //  annotation
       // }
+
     }
 
-    // adds the default annotations to the list
+    // add the inital annotations
     this.add_annotations(annotations)
   }
 
