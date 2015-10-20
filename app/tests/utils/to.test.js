@@ -121,7 +121,7 @@ test('to.merge', (t) => {
 test('to.object', async (t) => {
   try{
     let json = await fs.readFile(`${info.root}/package.json`)
-    t.notOk(is.json(to.object(json)),
+    t.ok(to.object(json).author,
       'the passed json should now be an object')
     t.end()
   } catch(err) {
