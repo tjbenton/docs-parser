@@ -55,9 +55,7 @@ const docs = co.wrap(function*(options = {}) {
 
     // Loop through the parsed files and update the
     // json data that was stored.
-    for (let i in files) {
-      to.merge(json, files[i], false)
-    }
+    for (let i in files) to.extend(json, files[i])
 
     // Update the temp json data. Even though this returns a promise
     // it's not returned below because there's no need to wait for it
