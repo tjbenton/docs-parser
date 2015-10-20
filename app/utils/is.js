@@ -73,7 +73,6 @@ is.included = (a, b) => !is.empty(a) && !is.empty(b) && a.indexOf(b) > -1 ? a.in
 /// @returns {boolean} - The result of the test
 is.symbol = (arg) => typeof arg === 'symbol'
 
-
 is.all.in = (obj, ...values) => {
   values = to.flat_array(values)
   for (let i in values) {
@@ -96,8 +95,3 @@ is.any.in = (obj, ...values) => {
 
 
 export default is
-
-
-
-
-

@@ -5,7 +5,6 @@ process.on('uncaughtException', function(err) {
   process.exit(1)
 })
 
-import AnnotationApi from './annotation'
 import { info, fs, is, to, glob, array, Logger } from './utils'
 import parser from './parser'
 import sorter from './sorter'
@@ -73,9 +72,7 @@ const docs = co.wrap(function*(user_config = {}) {
   } catch(err) {
     log.error(err.stack)
   }
-});
-
-
+})
 
 export default docs
 
@@ -102,7 +99,7 @@ async function has_file_changed(file) {
     }
   } catch(err) {
     // copies new files over because it doesn't exist in the temp target directory
-    fs.fake_copy(source, target);
+    fs.fake_copy(source, target)
     return true
   }
-};
+}
