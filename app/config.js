@@ -1,5 +1,7 @@
 import {info, fs, is, to, log} from './utils'
 import path from 'path'
+import annotations from './annotations'
+import AnnotationApi from './annotation_api'
 
 // changed by `options` key
 const default_options = {
@@ -19,7 +21,7 @@ const default_options = {
   blank_lines: 4, // @todo this stops the current block from adding lines if there're `n` blank line lines between code, and starts a new block.
   debug: true,
   timestamps: true,
-  annotations: {}
+  annotations
 }
 
 const default_comment = {
@@ -112,6 +114,8 @@ export default async function config(options = {}) {
   }
 
   options.comments = comments
+
+  options.annotations = new AnnotationApi(options.annotations)
 
   return options
 }
