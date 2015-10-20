@@ -5,10 +5,13 @@ process.on('uncaughtException', function(err) {
   process.exit(1)
 })
 
-import {info, fs, to, log, glob, array} from './utils'
 import AnnotationApi from './annotation'
+import { info, fs, is, to, glob, array, Logger } from './utils'
 import parser from './parser'
 import sorter from './sorter'
+import reporter from './reporter'
+let log = new Logger();
+reporter.call(log)
 
 ////
 /// @name docs.js
@@ -40,14 +43,13 @@ const docs = co.wrap(function*(user_config = {}) {
   try {
     yield fs.ensureFile(info.temp.file)
     let json = fs.readFile(info.temp.file)
-
-    log.time('paths')
+    log.emit('start', 'paths')
     files = yield glob(files, ignore, changed ? has_file_changed : false)
-    log.timeEnd('paths', `%s completed after %dms with ${files.length} file${files.length > 1 ? 's': ''} to parse`)
+    log.emit('complete', 'paths', `%s completed after %dms with ${files.length} file${files.length > 1 ? 's' : ''} to parse`)
 
-    log.time('parser')
-    files = yield array(files).map((file_path) => parser({ file_path, comments, api }))
-    log.timeEnd('parser')
+    log.emit('start', 'parser')
+    files = yield array(files).map((file_path) => parser({ file_path, ...options, log }))
+    log.emit('complete', 'parser')
 
     // converts json to a readable JS object
     json = to.string(yield json)
@@ -66,10 +68,7 @@ const docs = co.wrap(function*(user_config = {}) {
     fs.outputJson(info.temp.file, json, { spaces: 2 })
       .catch((err) => log.error(err.stack))
 
-    log.time('sorter')
-    json = sorter(json)
-    log.timeEnd('sorter')
-    log.timeEnd('total')
+    log.emit('complete', 'total')
     return json
   } catch(err) {
     log.error(err.stack)
