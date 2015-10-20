@@ -73,7 +73,7 @@ export default async function config(options = {}) {
   options = to.extend(options, ensure_valid_config(config_file))
 
   // merge options with base_config so there's a complete list of settings
-  options = to.extend(to.clone(base_config), options)
+  options = to.extend(base_config, options)
 
   if (options.gitignore) {
     try {
