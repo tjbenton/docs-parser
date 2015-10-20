@@ -8,7 +8,7 @@
     "clean": "rm -rf ./dist",
     "compile": "npm run clean; babel app/ -d ./dist --optional runtime --stage 0",
     "watch": "npm run clean; babel app/ -d ./dist --stage 0 --optional runtime --watch",
-    "test": "tape dist/tests/**/*.js | faucet",
+    "test": "tape dist/tests/**/*.js | tap-spec",
     "coverage": "nyc npm test",
     "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "plato": "plato -d coverage/plato dist/index.js",
@@ -93,10 +93,10 @@
   },
   "devDependencies": {
     "babel": "^5.8.23",
-    "faucet": "0.0.1",
     "nyc": "^3.2.2",
     "proxyquire": "^1.7.3",
     "sinon": "^1.17.1",
+    "tap-spec": "^4.1.0",
     "tape": "^4.2.1"
   }
 }
