@@ -1,5 +1,5 @@
 export denodeify from './denodeify'
-export Logger from './logger'
+export {Logger, Reporter} from './logger'
 export fs from './fs'
 export glob from './glob'
 export info from './info'

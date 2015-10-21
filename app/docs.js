@@ -7,14 +7,10 @@ process.on('uncaughtException', function(err) {
 
 import co from 'co'
 import path from 'path'
-import { info, fs, is, to, glob, array, Logger } from './utils'
+import { info, fs, is, to, glob, array, Reporter } from './utils'
 import parser from './parser'
 import sorter from './sorter'
-import reporter from './reporter'
 import get_config from './config'
-
-let log = new Logger();
-reporter.call(log)
 
 ////
 /// @name docs.js
@@ -24,7 +20,6 @@ reporter.call(log)
 /// documentation for it  and returns an `{}` of the document data
 ////
 const docs = co.wrap(function*(options = {}) {
-  log.emit('start', 'total')
   options = yield get_config(options)
   let {
     files,
@@ -37,6 +32,7 @@ const docs = co.wrap(function*(options = {}) {
     comments,
   } = options
 
+  let log = new Reporter({ debug, warnings, timestamps });
 
   try {
     yield fs.ensureFile(info.temp.file)
