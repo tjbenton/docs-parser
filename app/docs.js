@@ -34,6 +34,8 @@ const docs = co.wrap(function*(options = {}) {
 
   let log = new Reporter({ debug, warnings, timestamps });
 
+  log.emit('start', 'total')
+
   try {
     yield fs.ensureFile(info.temp.file)
     let json = fs.readFile(info.temp.file)

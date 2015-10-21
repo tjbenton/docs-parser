@@ -71,8 +71,8 @@ export default async function config(options = {}) {
     config_file = {}
   }
 
-  // merge config file with passed options
-  options = to.extend(options, ensure_valid_config(config_file))
+  // merge the config file with passed options
+  options = to.extend(ensure_valid_config(config_file), options)
 
   // merge options with base_config so there's a complete list of settings
   options = to.extend(base_config, options)
