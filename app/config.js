@@ -1,7 +1,9 @@
-import {info, fs, is, to, log} from './utils'
+import {info, fs, is, to, Reporter} from './utils'
 import path from 'path'
 import annotations from './annotations'
 import AnnotationApi from './annotation_api'
+
+let log = new Reporter();
 
 // changed by `options` key
 const default_options = {
@@ -20,6 +22,7 @@ const default_options = {
   changed: true, // determins if only changed files should be parsed or not
   blank_lines: 4, // @todo this stops the current block from adding lines if there're `n` blank line lines between code, and starts a new block.
   debug: true,
+  warning: true,
   timestamps: true,
   annotations
 }
@@ -131,7 +134,7 @@ let valid_comment_options = to.keys(default_comment)
 function ensure_valid_config(user_config) {
   for (let key in user_config) {
     if (!is.in(valid_options, key)) {
-      log.warn(`'${key}' is not a valid option, see docs options for more details`) //# @todo add link to the doc options
+      log.emit('warning', `'${key}' is not a valid option, see docs options for more details`) //# @todo add link to the doc options
     }
   }
 
@@ -140,7 +143,7 @@ function ensure_valid_config(user_config) {
     for (let lang in user_config.comments) {
       for (let type in lang) {
         if (!is.in(valid_comment_options, type)) {
-          log.warn(`'${type}' is not a valid comment option in '${lang}', must be 'header', or 'body'`)
+          log.emit('warning', `'${type}' is not a valid comment option in '${lang}', must be 'header', or 'body'`)
         }
       }
     }

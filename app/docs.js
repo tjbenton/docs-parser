@@ -27,12 +27,13 @@ const docs = co.wrap(function*(options = {}) {
     changed,
     blank_lines,
     debug,
+    warning,
     timestamps,
     annotations,
     comments,
   } = options
 
-  let log = new Reporter({ debug, warnings, timestamps });
+  let log = new Reporter({ debug, warning, timestamps });
 
   log.emit('start', 'total')
 
