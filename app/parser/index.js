@@ -58,7 +58,7 @@ export default async function parser(options = {}) {
     blocks: header,
     annotations,
     comment
-  })
+  })[0] || {}
 
   body = parse_blocks({
     file,
