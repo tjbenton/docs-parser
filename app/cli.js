@@ -24,34 +24,17 @@ export default function cli() {
     .option('-f, --files <glob1,[glob2,...]>', `Paths to parsed`, to_list, base_config.files)
     .option('-i, --ignore <glob1,[glob2,...]>', `Paths to ignore`, to_list, base_config.ignore)
     .option('-g, --gitignore', 'Add `gitignore` files to the ignored files', base_config.gitignore)
-    .option('-d, --debug', 'Output debugging information', base_config.debug) // @todo add debug information
-    .option('-t, --timestamps', 'Output timestamps of how long it takes to parse the files', base_config.timestamps)
+    .option('-x, --debug [boolean]', 'Output debugging information', to_boolean, base_config.debug)
+    .option('-w, --warning [boolean]', 'Output warning messages', to_boolean, base_config.warning)
+    .option('-t, --timestamps [boolean]', 'Output timestamps of how long it takes to parse the files', to_boolean, base_config.timestamps)
     .option('-a, --changed [boolean]', `Parse changed files`, to_boolean, base_config.changed)
     .option('-b, --blank-lines <n>', `Stops parsing lines after <n> consecutive blank lines`, to_number, base_config.blank_lines)
     .parse(process.argv)
 
-  let {
-    dest,
-    config,
-    files,
-    ignore,
-    gitignore,
-    debug,
-    timestamps,
-    changed,
-    blankLines: blank_lines
-  } = program;
-
   return docs({
-    config,
-    files,
-    ignore,
-    gitignore,
-    debug,
-    timestamps,
-    changed,
-    blank_lines
+    ...program,
+    blank_lines: program.blankLines,
   })
-    .then((parsed) => fs.outputJson(dest, parsed, { spaces: 2 }))
+    .then((parsed) => fs.outputJson(program.dest, parsed, { spaces: 2 }))
     .catch((err) => console.error(err.stack))
 }
