@@ -1,3 +1,4 @@
+import { is, to } from './'
 import {format as _format} from 'util'
 import chalk from 'chalk'
 
@@ -30,16 +31,16 @@ export class Logger {
   }
 
   log(...args) {
-    console.log(_format(`${chalk.green(chevron)} ${args.shift()}`, ...args))
+    console.log(_format(`${chalk.green(chevron)} ${args.shift()}${'\n'}`, ...args), '\n')
   }
 
   warn(...args) {
-    console.log(_format(`${chalk.yellow(warning, chalk.bold.yellow('[WARNING]'))} ${args.shift()}`, ...args), '\n')
+    console.log(_format(`${chalk.yellow(warning, chalk.bold.yellow('[WARNING]\n'))}${args.shift()}`, ...args), '\n')
   }
 
   error(...args) {
     console.trace(...args)
-    console.log(_format(`${chalk.red(error, chalk.bold.red('[ERROR]'))} ${args.shift()}`, ...args), '\n')
+    console.log(_format(`${chalk.red(error, chalk.bold.red('[ERROR]\n'))}${args.shift()}`, awesome_report(...args)), '\n')
   }
 
   time(label) {
@@ -58,16 +59,16 @@ export class Logger {
   }
 
   debug(...args) {
-    args = args.map((f) => {
-      if (f instanceof Function) {
-        return f()
-      }
-
-      return f
-    })
-
-    console.log(_format(`${chalk.styles.grey.open}${arrow} [DEBUG] ${args.shift()}`, ...args, chalk.styles.grey.close), '\n')
+    console.log(_format(`${chalk.styles.grey.open}${chevron} [DEBUG] ${args.shift()}${'\n'}`, awesome_report(...args), chalk.styles.grey.close), '\n')
   }
+}
+
+function awesome_report(...args) {
+  return '\n' + to.normalize(args.map((arg) => {
+    if (is.fn(arg)) {
+      arg = arg()
+    }
+  }).join('\n')) + '\n'
 }
 
 
@@ -85,7 +86,7 @@ export class Reporter extends Logger {
     } = options
 
     this.on('annotation_error', ({ annotation, error }) =>
-        this.error(`with ${annotation}`, error))
+      this.error(`with ${annotation}`, error))
 
     if (timestamps) {
       this
