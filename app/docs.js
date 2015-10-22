@@ -26,6 +26,7 @@ const docs = co.wrap(function*(options = {}) {
     ignore,
     changed,
     blank_lines,
+    page_fallback,
     debug,
     warning,
     timestamps,

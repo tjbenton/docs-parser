@@ -16,6 +16,7 @@ const default_options = {
     'dist/', 'build/', 'docs/', // normal folders
     'tests/', 'coverage/' // unit tests and coverage results
   ],
+  page_fallback: 'general', // used if `@page` isn't defined
   // add gitignore files to the ignore list. Depending on ignored files it
   // could cause things to ge parsed slower, that's why it's defaulted to `false`
   gitignore: false,
