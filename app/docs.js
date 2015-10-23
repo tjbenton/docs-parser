@@ -30,6 +30,7 @@ const docs = co.wrap(function*(options = {}) {
     debug,
     warning,
     timestamps,
+    raw,
     annotations,
     comments,
   } = options
@@ -63,6 +64,12 @@ const docs = co.wrap(function*(options = {}) {
     // `json` object has already been updated.
     fs.outputJson(info.temp.file, json, { spaces: 2 })
       .catch((err) => log.error(err.stack))
+
+    if (!raw) {
+      log.emit('start', 'sorter')
+      json = sorter({ json, page_fallback, log })
+      log.emit('complete', 'sorter')
+    }
 
     log.emit('complete', 'total')
     return json

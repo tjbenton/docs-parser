@@ -25,6 +25,7 @@ const default_options = {
   debug: true,
   warning: true,
   timestamps: true,
+  raw: false, // this will return the raw data by file, aka data won't be sorted
   annotations
 }
 
