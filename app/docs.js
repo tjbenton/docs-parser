@@ -51,7 +51,7 @@ const docs = co.wrap(function*(options = {}) {
     log.emit('complete', 'parser')
 
     // converts json to a readable JS object
-    json = to.string(yield json)
+    json = changed ? to.string(yield json) : false
     json = !!json ? to.object(json) : {}
 
     // Loop through the parsed files and update the
