@@ -93,6 +93,7 @@
   },
   "devDependencies": {
     "babel": "^5.8.23",
+    "coveralls": "^2.11.4",
     "nyc": "^3.2.2",
     "proxyquire": "^1.7.3",
     "sinon": "^1.17.1",
