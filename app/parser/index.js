@@ -4,27 +4,21 @@ import get_blocks from './get_blocks'
 import parse_blocks from './parse_blocks'
 
 export default async function parser(options = {}) {
-  let {
-    file_path,
-    comments,
-    annotations,
-    debug,
-    log
-  } = options
+  let { file_path, comments, annotations, log } = options
 
   // the filetype of the current file
-  let filetype = path.extname(file_path).replace('.', '')
+  let type = path.extname(file_path).replace('.', '')
 
   // gets the comments to use on this file
-  let comment = comments[filetype] ? comments[filetype] : comments._
+  let comment = comments[type] ? comments[type] : comments._
 
   let contents = to.normal_string(await fs.readFile(file_path))
 
   let file = {
     contents, // all of the contents of the file
     path: path.join(info.dir, path.relative(info.root, file_path)) || file_path, // path of the file
-    name: path.basename(file_path, '.' + filetype), // name of the file
-    type: filetype, // filetype of the file
+    name: path.basename(file_path, '.' + type), // name of the file
+    type, // filetype of the file
     comment,
     start: 0, // starting point of the file
     end: to.array(contents).length - 1 // ending point of the file
@@ -68,9 +62,6 @@ export default async function parser(options = {}) {
   })
 
   return {
-    [file.path]: {
-      header,
-      body
-    }
+    [file.path]: { header, body }
   }
 }

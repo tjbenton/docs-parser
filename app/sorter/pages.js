@@ -8,11 +8,9 @@ let result = {}
 /// This function loops over the json that was passed and creates a organized structure
 /// based on the `@pages` annotations that were passed.
 export default function pages(options = {}) {
-  let { json, debug, warning, page_fallback, log } = options
+  let { json, page_fallback, log } = options
 
   for (let { path, header, body } of to.object_entries(json, 'path')) {
-    log.emit('file', path)
-
     if (!is.empty(header)) {
       if (is.falsy(header.page)) {
         if (is.truthy(page_fallback)) {
@@ -39,7 +37,7 @@ export default function pages(options = {}) {
 
     if (!is.empty(body)) {
       for (let block_in_body of body) {
-        let { __start, __end, ...block } = block_in_body
+        let { __start, ...block } = block_in_body
         // warn the user that there isn't a page defined.
         if (is.all.empty(header.page, block.page)) {
           log.emit('warning', `
