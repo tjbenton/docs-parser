@@ -1,5 +1,4 @@
 import { is, to } from './'
-import {format as _format} from 'util'
 import chalk from 'chalk'
 
 let chevron = '\xBB'
@@ -31,16 +30,16 @@ export class Logger {
   }
 
   log(...args) {
-    console.log(_format(`${chalk.green(chevron)} ${args.shift()}${'\n'}`, ...args), '\n')
+    console.log(`${chalk.green(chevron)} ${awesome_report(...args)}`)
   }
 
   warn(...args) {
-    console.log(_format(`${chalk.yellow(warning, chalk.bold.yellow('[WARNING]\n'))}${args.shift()}`, ...args), '\n')
+    console.log(`${chalk.yellow(warning, chalk.bold.yellow('[WARNING]\n'))}${awesome_report(...args)}`)
   }
 
   error(...args) {
     console.trace(...args)
-    console.log(_format(`${chalk.red(error, chalk.bold.red('[ERROR]\n'))}${args.shift()}`, awesome_report(...args)), '\n')
+    console.log(`${chalk.red(error, chalk.bold.red('[ERROR]\n'))}${awesome_report(...args)}`)
   }
 
   time(label) {
@@ -55,20 +54,30 @@ export class Logger {
     }
 
     let duration = Date.now() - time
-    console.log(_format(`${chalk.green(check)} ${format}`, label, duration))
+    console.log(`${chalk.green(check)} ${format}`, label, duration)
   }
 
   debug(...args) {
-    console.log(_format(`${chalk.styles.grey.open}${chevron} [DEBUG] ${args.shift()}${'\n'}`, awesome_report(...args), chalk.styles.grey.close), '\n')
+    console.log(`${chalk.magenta(chevron, '[DEBUG]\n')}${awesome_report(...args)}`)
+  }
+
+  file(file) {
+    console.log('\n\n', chalk.bgBlue.gray('\n', chevron, '[FILE]'), file, '')
   }
 }
 
 function awesome_report(...args) {
-  return '\n' + to.normalize(args.map((arg) => {
+  return args.map((arg) => {
     if (is.fn(arg)) {
       arg = arg()
     }
-  }).join('\n')) + '\n'
+
+    if (is.object(arg)) {
+      return to.normalize(to.json(arg))
+    }
+
+    return to.normalize(to.string(arg))
+  }).join('\n') + '\n'
 }
 
 
@@ -95,7 +104,11 @@ export class Reporter extends Logger {
           this.time_end(name, format))
     }
 
-    if (debug) this.on('debug', (...args) => this.debug(...args))
+    if (debug) {
+      this
+        .on('debug', (...args) => this.debug(...args))
+        .on('file', (...args) => this.file(...args))
+    }
 
     if (warning) this.on('warning', (...args) => this.warn(...args))
   }
