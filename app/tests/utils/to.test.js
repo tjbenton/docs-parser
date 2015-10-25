@@ -30,7 +30,7 @@ test('to.string', (t) => {
 
 
 test('to.normal_string', async (t) => {
-  try{
+  try {
     // this file has some stupid ass characters in it
     // that need to be removed in order to become like the
     // rest of the fucking world. #microsoftBlowsAtStandards
@@ -130,7 +130,7 @@ test('to.merge', (t) => {
 
 
 test('to.object', async (t) => {
-  try{
+  try {
     let json = await fs.readFile(`${info.root}/package.json`)
     t.ok(to.object(json).author,
       'the passed json should now be an object')
