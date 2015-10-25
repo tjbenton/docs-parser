@@ -39,7 +39,7 @@ export default function parse_blocks(options = {}) {
     }
   } // end blocks loop
 
-  return parsed_blocks;
+  return parsed_blocks
 }
 
 
@@ -130,13 +130,13 @@ function run_annotation(options) {
   } = options
 
   // removes the first line because it's the "line" of the annotation
-  annotation.contents.shift();
+  annotation.contents.shift()
 
   // normalizes the current annotation contents
-  annotation.contents = to.normalize(annotation.contents);
+  annotation.contents = to.normalize(annotation.contents)
 
   // normalizes the current annotation line
-  annotation.line = to.normalize(annotation.line);
+  annotation.line = to.normalize(annotation.line)
 
   // Merges the data together so it can be used to run all the annotations
   let result = to.extend({
@@ -148,7 +148,7 @@ function run_annotation(options) {
     /// @arg {string} name - the name of the annotation you want to add
     /// @arg {string} str - information that is passed to the annotation
     add: (name, contents) => {
-      contents = contents.split('\n');
+      contents = contents.split('\n')
       return run_annotation({
         annotations,
         annotation: {
@@ -163,8 +163,10 @@ function run_annotation(options) {
   }, block);
 
   // a) add the default annotation function to the object so it can be called in the file specific annotation functions if needed
-  if (is.truthy(annotations.file_list[file.filetype] && annotations.file_list[file.filetype][annotation.name]) && is.truthy(annotations.file_list.default[annotation.name])) {
-    result.default = annotations.file_list.default[annotation.name].call(result);
+  if (is.all.truthy(
+      (annotations.file_list[file.filetype] || {})[annotation.name],
+      annotations.file_list.default[annotation.name])) {
+    result.default = annotations.file_list.default[annotation.name].call(result)
   }
 
   return annotations.list(file.type)[annotation.name].callback.call(result)
