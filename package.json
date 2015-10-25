@@ -89,7 +89,7 @@
     "comments"
   ],
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=0.12.0"
   },
   "devDependencies": {
     "babel": "^5.8.23",
