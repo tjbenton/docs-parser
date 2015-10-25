@@ -119,6 +119,58 @@ let to = {
     }
   },
 
+  /// @name object entries
+  /// @description
+  /// This function takes advatage of es6 object deconstructing abilities.
+  /// It dramatically simplifies looping over objects, when you know the keys
+  /// you're looping over.
+  ///
+  /// @arg {object} obj - The object you're looping over
+  /// @arg {string} key_name ['key'] - The name of the current key in the object loop
+  /// @arg {string} index_name ['i'] - The name of the current index in the loop
+  ///
+  /// @markup {js} **Example:**
+  /// let example = {
+  ///   foo: {
+  ///     one: 'Item one',
+  ///     two: 'Item two',
+  ///     three: 'Item three'
+  ///   }
+  /// }
+  ///
+  /// for (let { key, one, two, three } of to.object_entries(example)) {
+  ///   // key -> 'foo'
+  ///   // one -> 'Item one'
+  ///   // two -> 'Item two'
+  ///   // three -> 'Item three'
+  /// }
+  object_entries(obj, key_name = 'key', index_name = 'i') {
+    let i = 0
+    let keys = to.keys(obj)
+    let length = keys.length
+
+    return {
+      [Symbol.iterator]() {
+        return this
+      },
+      next() {
+        if (i < length) {
+          let key = keys[i]
+          i++
+          return {
+            value: {
+              [key_name]: key,
+              [index_name]: i - 1,
+              ...obj[key]
+            }
+          }
+        }
+
+        return { done: true }
+      }
+    }
+  },
+
   /// @name to.normalize
   /// @description
   /// Removes trailing/leading blank lines. Removes extra whitespace before all the lines that

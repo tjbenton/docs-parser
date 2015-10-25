@@ -65,6 +65,17 @@ test('to.entries', (t) => {
 })
 
 
+test('to.object_entries', (t) => {
+  for (let { key, one, two, three } of to.object_entries({ test: object })) {
+    t.is(key, 'test', 'The key should be `test`')
+    t.is(one, 1, '`one` should equal 1')
+    t.is(two, 2, '`two` should equal 2')
+    t.is(three, 3, '`three` should equal 3')
+  }
+  t.end()
+})
+
+
 test('to.normalize', (t) => {
   const actual = `
     .foo {
