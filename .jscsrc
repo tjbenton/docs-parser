@@ -13,7 +13,6 @@
     "for",
     "if",
     "else",
-    "switch",
     "case",
     "try",
     "void",
@@ -73,5 +72,5 @@
   "validateLineBreaks": "LF",
   "validateIndentation": 2,
   "validateParameterSeparator": ", ",
-  "excludeFiles": ["node_modules/**/*"]
+  "excludeFiles": ["node_modules/**/*", "app/tests/**/*.js"]
 }
