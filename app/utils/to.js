@@ -25,6 +25,10 @@ let to = {
       return arg
     }
 
+    if (Buffer.isBuffer(arg)) {
+      return arg + ''
+    }
+
     if (is.plain_object(arg)) {
       return to_string(arg)
     }
