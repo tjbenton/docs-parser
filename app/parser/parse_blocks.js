@@ -28,10 +28,14 @@ export default function parse_blocks(options = {}) {
     block.comment.contents = to.normalize(block.comment.contents)
     block.code.contents = to.normalize(block.code.contents)
 
-    let parsed_block = parse_block({ file, block, annotations, comment })
+    let parsed = parse_block({ file, block, annotations, comment })
 
-    if (!is.empty(parsed_block)) {
-      parsed_blocks.push(parsed_block)
+    if (!is.empty(parsed)) {
+      parsed_blocks.push({
+        ...parsed,
+        __start: block.comment.start,
+        __end: block.comment.end
+      })
     }
   } // end blocks loop
 
@@ -102,14 +106,13 @@ function parse_block(options = {}) {
     // a) is the last line in the comment block
     if (i === l - 1 && !is.empty(annotation)) {
       annotation.end = i
+
       // run the annotation function and merge it with the other annotations in the block
       to.merge(block_annotations, {
         [annotation.name]: run_annotation({ annotation, block, annotations, file })
       })
     }
   } // end block loop
-
-
 
   return block_annotations
 }
