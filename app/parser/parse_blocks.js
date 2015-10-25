@@ -144,14 +144,14 @@ function run_annotation(options) {
     /// @description Allows you to add a different annotation from within a annotation
     /// @arg {string} name - the name of the annotation you want to add
     /// @arg {string} str - information that is passed to the annotation
-    add: (name, str) => {
-      str = str.split('\n');
+    add: (name, contents) => {
+      contents = contents.split('\n');
       return run_annotation({
         annotations,
         annotation: {
           name: name,
-          line: to.normalize(str[0]),
-          contents: str,
+          line: to.normalize(contents[0]),
+          contents,
           start: null,
           end: null
         }
