@@ -2,6 +2,7 @@ import { info, fs, is, to } from '../utils'
 import path from 'path'
 import get_blocks from './get_blocks'
 import parse_blocks from './parse_blocks'
+import replace_aliases from './replace_aliases'
 
 export default async function parser(options = {}) {
   let { file_path, comments, annotations, log } = options
@@ -13,6 +14,13 @@ export default async function parser(options = {}) {
   let comment = comments[type] ? comments[type] : comments._
 
   let contents = to.normal_string(await fs.readFile(file_path))
+
+  contents = replace_aliases({
+    contents,
+    annotations: annotations.list(type),
+    comment,
+    log
+  })
 
   let file = {
     contents, // all of the contents of the file
