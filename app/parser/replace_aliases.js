@@ -1,9 +1,10 @@
 import { is, to } from '../utils'
 
-// @name aliases
-// @description
-// This function is used to replace all instances of aliases in a file
-// @returns {string} - The file with the instances of aliases removed
+/// @name aliases
+/// @access private
+/// @description
+/// This function is used to replace all instances of aliases in a file
+/// @returns {string} - The file with the instances of aliases removed
 export default function aliases(options = {}) {
   let { contents, annotations, comment, log } = options
 
@@ -24,7 +25,7 @@ export default function aliases(options = {}) {
     alias_list = alias_list
       .filter((alias) => !is.in(main_annotation_list, alias))
       .sort((a, b) => b.length > a.length ? 1 : 0)
-      
+
     contents = contents.replace(new RegExp(`(?:${comment.prefix})(${alias_list.join('|')})`), comment.prefix + annotation)
   }
 
