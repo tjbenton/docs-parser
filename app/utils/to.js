@@ -394,7 +394,7 @@ let to = {
   /// Sorts an array or object based off your callback function. If one is provided.
   /// @arg {array, object}
   /// @returns {array, object} - The sorted version
-  sort: (arg, callback) => {
+  sort(arg, callback) {
     let run_sort = (obj) => is.fn(callback) ? obj.sort.apply(null, callback) : obj.sort()
     let result
     if (is.plain_object(arg)) {
@@ -409,6 +409,39 @@ let to = {
     } else if (is.array(arg)) {
       result = run_sort(callback)
     }
+    return result
+  },
+
+  map(arg, callback) {
+    if (is.array(arg)) {
+      return arg.map.apply(null, callback)
+    }
+
+    let result = {}
+
+    for (let [key, value] of to.entries(arg)) {
+      let cb_result = callback(value, key)
+      if (is.truthy(cb_result) && !is.empty(cb_result) && is.plain_object(cb_result)) {
+        to.extend(result, cb_result)
+      }
+    }
+
+    return result
+  },
+
+  filter(arg, callback) {
+    if (is.array(arg)) {
+      return arg.filter.apply(null, callback)
+    }
+
+    let result = {}
+
+    for (let [key, value] of to.entries(arg)) {
+      if (is.truthy(callback(value, key, arg))) {
+        to.extend(result, { key: value })
+      }
+    }
+
     return result
   },
 
