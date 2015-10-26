@@ -15,12 +15,13 @@ export default function aliases(options = {}) {
     return false
   })
 
-  for (let [annotation, aliases] of to.entries(annotations)) {
+  for (let [annotation, alias_list] of to.entries(annotations)) {
     // sorts the aliases based off their length. This is to ensure if to two
     // or more aliases are similar they will always get replaced correctly
     // aka `param` and `parameter`
     aliases = aliases.sort((a, b) => b.length > a.length ? 1 : 0)
     contents = contents.replace(new RegExp(`(?:${comment.prefix})(${aliases.join('|')})`), comment.prefix + annotation)
+    contents = contents.replace(new RegExp(`(?:${comment.prefix})(${alias_list.join('|')})`), comment.prefix + annotation)
   }
 
   return contents
