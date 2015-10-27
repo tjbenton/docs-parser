@@ -43,9 +43,9 @@ export default function parse_blocks(options = {}) {
 
     if (!is.empty(parsed)) {
       parsed_blocks.push({
-        ...parsed,
         __start: block.comment.start,
-        __end: block.comment.end
+        __end: block.comment.end,
+        ...parsed
       })
     }
   } // end blocks loop
