@@ -59,14 +59,16 @@ export default async function parser(options = {}) {
     file,
     blocks: header,
     annotations,
-    comment
+    comment,
+    log
   })[0] || {}
 
   body = parse_blocks({
     file,
     blocks: body,
     annotations,
-    comment
+    comment,
+    log
   })
 
   return {
