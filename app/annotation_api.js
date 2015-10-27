@@ -16,7 +16,6 @@ export default class AnnotationApi {
       // js: {
       //  annotation
       // }
-
     }
 
     // add the inital annotations
@@ -176,6 +175,88 @@ export default class AnnotationApi {
   /// @returns {object} - the annotations to use for the current file
   list(filetype) {
     return !is.undefined(this.annotations[filetype]) ? to.extend(to.clone(this.annotations.default), this.annotations[filetype]) : this.annotations.default
+  }
+
+  autofill_list(filetype) {
+    return to.map(this.list(filetype), (annotation, name) => {
+      if (is.truthy(annotation.autofill)) {
+        return { [name]: annotation.autofill }
+      }
+
+      return false
+    })
+  }
+
+  resolve_list(filetype) {}
+
+  /// @name run_annotation
+  /// @access private
+  /// @arg {object} annotation - the information for the annotation to be called(name, line, content, start, end)
+  run(options) {
+    let {
+      annotation,
+      annotations_list,
+      block = {},
+      file,
+      log
+    } = options
+
+    /// @name add
+    /// @page annotation
+    /// @description Allows you to add a different annotation from within a annotation
+    /// @arg {string} name - the name of the annotation you want to add
+    /// @arg {string} str - information that is passed to the annotation
+    const add = (name, contents) => {
+      contents = to.normalize(contents)
+      return this.run({
+        annotation: {
+          name: name,
+          line: to.normalize(contents[0]),
+          contents,
+          start: null,
+          end: null
+        },
+        annotations_list,
+        ...block,
+        log
+      })
+    }
+
+    // removes the first line because it's the "line" of the annotation
+    annotation.contents.shift()
+
+    // normalizes the current annotation contents
+    annotation.contents = to.normalize(annotation.contents)
+
+    // normalizes the current annotation line
+    annotation.line = to.normalize(annotation.line)
+
+    // Merges the data together so it can be used to run all the annotations
+    let result = {
+      // sets the annotation block information to be in it's own namespace of `annotation`
+      annotation,
+
+      // adds the comment, code, and file information
+      ...block,
+
+      add,
+
+      // adds the ability to add logging information
+      log
+    }
+
+    // a) add the default annotation function to the object so it can be called in the file specific annotation functions if needed
+    if (is.all.truthy((this.file_list[file.type] || {})[annotation.name], this.file_list.default[annotation.name])) {
+      result.default = this.file_list.default[annotation.name].call(result)
+    }
+
+    result = annotations_list[annotation.name].callback.call(result)
+
+    if (!is.fn(annotations_list[annotation.name].resolve)) {
+      return result
+    }
+
+    return annotations_list[annotation.name].resolve.call(result)
   }
 
   /// @name file_list

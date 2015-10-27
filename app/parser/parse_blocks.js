@@ -1,4 +1,5 @@
 import { is, to } from '../utils'
+import autofill from './autofill'
 
 // @name parsed_blocks
 // @access private
@@ -11,7 +12,8 @@ export default function parse_blocks(options = {}) {
     file,
     blocks,
     annotations,
-    comment
+    comment,
+    log
   } = options
 
   if (is.empty(blocks)) {
@@ -20,6 +22,7 @@ export default function parse_blocks(options = {}) {
 
   let parsed_blocks = []
 
+  let autofill_list = annotations.autofill_list(file.type)
 
   // loop over each block
   for (let i in blocks) {
@@ -28,7 +31,15 @@ export default function parse_blocks(options = {}) {
     block.comment.contents = to.normalize(block.comment.contents)
     block.code.contents = to.normalize(block.code.contents)
 
-    let parsed = parse_block({ file, block, annotations, comment })
+    let parsed = parse_block({
+      annotations,
+      block,
+      comment,
+      file,
+      log
+    })
+
+    parsed = autofill({ autofill_list, parsed, block, log })
 
     if (!is.empty(parsed)) {
       parsed_blocks.push({
@@ -52,14 +63,16 @@ export default function parse_blocks(options = {}) {
 // @arg {object} - The blocks to parse
 function parse_block(options = {}) {
   let {
-    file,
+    annotations,
     block,
     comment,
-    annotations
+    file,
+    log
   } = options
 
   // gets the annotations to use on this file
-  let keys = to.keys(annotations.list(file.type))
+  let annotations_list = annotations.list(file.type);
+  let keys = to.keys(annotations_list)
 
   let contents = to.array(block.comment.contents)
   let block_annotations = {}
@@ -83,7 +96,13 @@ function parse_block(options = {}) {
 
           // run the annotation function and merge it with the other annotations in the block
           to.merge(block_annotations, {
-            [annotation.name]: run_annotation({ annotation, block, annotations, file })
+            [annotation.name]: annotations.run({
+              annotation,
+              annotations_list,
+              block,
+              file,
+              log
+            })
           })
         }
 
@@ -109,65 +128,16 @@ function parse_block(options = {}) {
 
       // run the annotation function and merge it with the other annotations in the block
       to.merge(block_annotations, {
-        [annotation.name]: run_annotation({ annotation, block, annotations, file })
+        [annotation.name]: annotations.run({
+          annotation,
+          annotations_list,
+          block,
+          file,
+          log
+        })
       })
     }
   } // end block loop
 
   return block_annotations
-}
-
-
-/// @name run_annotation
-/// @access private
-/// @arg {object} annotation - the information for the annotation to be called(name, line, content, start, end)
-function run_annotation(options) {
-  let {
-    annotation,
-    annotations,
-    file,
-    block = {}
-  } = options
-
-  // removes the first line because it's the "line" of the annotation
-  annotation.contents.shift()
-
-  // normalizes the current annotation contents
-  annotation.contents = to.normalize(annotation.contents)
-
-  // normalizes the current annotation line
-  annotation.line = to.normalize(annotation.line)
-
-  // Merges the data together so it can be used to run all the annotations
-  let result = to.extend({
-    annotation, // sets the annotation block information to be in it's own namespace of `annotation`
-
-    /// @name this.add
-    /// @page annotation
-    /// @description Allows you to add a different annotation from within a annotation
-    /// @arg {string} name - the name of the annotation you want to add
-    /// @arg {string} str - information that is passed to the annotation
-    add: (name, contents) => {
-      contents = contents.split('\n')
-      return run_annotation({
-        annotations,
-        annotation: {
-          name: name,
-          line: to.normalize(contents[0]),
-          contents,
-          start: null,
-          end: null
-        }
-      });
-    }
-  }, block);
-
-  // a) add the default annotation function to the object so it can be called in the file specific annotation functions if needed
-  if (is.all.truthy(
-      (annotations.file_list[file.filetype] || {})[annotation.name],
-      annotations.file_list.default[annotation.name])) {
-    result.default = annotations.file_list.default[annotation.name].call(result)
-  }
-
-  return annotations.list(file.type)[annotation.name].callback.call(result)
 }
