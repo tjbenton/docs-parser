@@ -49,7 +49,7 @@ const comments = {
     header: { start: '###', line: '##', end: '###' },
     body: { line: '#' }
   },
-  html: {
+  'html, md, markdown, mark, mdown, mkdn, mdml, mkd, mdwn, mdtxt, mdtext, text': {
     header: { start: '<!----', end: '/--->' },
     body: { start: '<!---', end: '/-->' }
   },
