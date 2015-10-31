@@ -1,4 +1,41 @@
-import { to } from './utils'
+import { is, to } from './utils'
+
+// holds all the base regex expressions for the annotations
+// They're broken down so they can be reused instead of writing the same
+// regexp over and over with slightly different variations
+const types = '(?:{(.*)})?'
+const name = '([^\\s]*)?'
+const space = '(?:\\s*)?'
+const value = '(?:\\[(.*)\\])?'
+const id = '(?:\\((.*)\\))?'
+const description = '(?:\\-?\\s*)?(.*)?'
+
+const regexes = {
+  arg: new RegExp(types + space + name + space + value + space + description, 'i'),
+  deprecated: new RegExp(types + space + description, 'i'),
+  markup: new RegExp(id + space + types + space + value + space + description, 'i'),
+  note: new RegExp(types + space + description, 'i'),
+  requires: new RegExp(types + space + name + description, 'i'),
+  returns: new RegExp(types + space + description, 'i'),
+  state: new RegExp(types + space + description, 'i'),
+  todo: new RegExp(types + space + value + space + description, 'i'),
+  type: new RegExp(types + space + description, 'i'),
+  version: new RegExp(types + space + description, 'i'),
+}
+
+
+function list(str) {
+  return to.array(str, ',').map((item) => item.trim()).filter(Boolean)
+}
+
+function regex(name, str) {
+  return regexes[name].exec(str).slice(1)
+}
+
+function _markdown(...args) {
+  return to.markdown([...args].filter(Boolean).join('\n'))
+}
+
 
 ////
 /// @name Annotations
@@ -7,210 +44,317 @@ import { to } from './utils'
 /// These are the default annotations for the docs
 ////
 const annotations = {
-  /// @name access
-  /// @description Access of the documented item
-  /// @returns {string}
+  /// @name @access
+  /// @description
+  /// Access of the documented item. If access isn't declared then it defaults to public.
+  /// @markup Usage
+  /// /// @access public
+  /// /// @access private
   access: {
-    callback() {
-      return this.annotation.line;
+    autofill() {
+      return 'public'
+    },
+    parse() {
+      if (this.annotation.line === 'private') {
+        return 'private'
+      }
+
+      return 'public'
     }
   },
 
-  /// @name alias
+  /// @name @alias
   /// @description Whether the documented item is an alias of another item
   /// @returns {string}
+  /// @markup Usage
   alias: {
-    callback() {
-      return this.annotation.line;
+    parse() {
+      return list(this.annotation.line)
     }
   },
 
-  /// @name arg
+  /// @name @arg
   /// @page annotations
   /// @description Parameters from the documented function/mixin
   /// @note Description runs through markdown
   /// @returns {object}
   arg: {
     alias: ['argument', 'param', 'parameter'],
-    callback() {
-      // add regex for `{type} name-of-variable [default value] - description`
-      // make sure it supports multiple lines
-      return this.annotation.line;
+    parse() {
+      let [
+        types,
+        name,
+        value,
+        description
+      ] = regex('arg', this.annotation.line)
+
+      return [{
+        types: list(types),
+        name,
+        value,
+        description: _markdown(description, this.annotation.contents)
+      }]
     }
   },
 
-  /// @name author
+  /// @name @author
   /// @page annotations
   /// @description Author of the documented item
   /// @returns {string}
   author: {
-    callback() {
-      return this.annotation.line.split(',').map((author) => author.trim()).filter(Boolean)
+    alias: ['authors'],
+    parse() {
+      return list(this.annotation.line)
     }
   },
 
-  /// @name chainable
+  /// @name @chainable
   /// @page annotations
   /// @description Used to notate that a function is chainable
   /// @returns {boolean}
   chainable: {
-    callback() {
-      return this.annotation.line;
+    parse() {
+      return this.annotation.line
     }
   },
 
-  /// @name deprecated
+  /// @name @deprecated
   /// @page annotations
   /// @description Lets you know that a mixin/function has been depricated
   /// @returns {string}
   deprecated: {
-    callback() {
-      // add regex for `{version} - description`
-      return this.annotation.line;
+    parse() {
+      let [ version, description ] = regex('deprecated', this.annotation.line)
+      return {
+        version: version,
+        description: _markdown(description, this.annotation.contents)
+      }
     }
   },
 
-  /// @name description
+  /// @name @description
   /// @page annotations
   /// @description Description of the documented item
   /// @note Runs through markdown
   /// @returns {string}
   description: {
-    callback() {
-      return to.markdown(this.annotation.line ? this.annotation.line + '\n' + this.annotation.contents : this.annotation.contents)
+    alias: ['desc', 'definition', 'explanation', 'writeup', 'summary', 'summarization'],
+    parse() {
+      return _markdown(this.annotation.line, this.annotation.contents)
     }
   },
 
-  /// @name markup
+  markdown: {
+    filetypes: ['markdown', 'mark', 'mdown', 'mkdn', 'md', 'mdml', 'mkd', 'mdwn', 'mdtxt', 'mdtext', 'text'],
+    parse() {
+      return to.markdown(this.file.contents)
+    }
+  },
+  /// @name @markup
   /// @page annotations
   /// @description Code for the documented item
   /// @note Description is parsed as markdown
   /// @returns {object}
+  /// // markdown - `(id) {language} [settings] - description`
   markup: {
-    callback() {
-      // add regex for `{language} [settings] - description`
-      return this.annotation.contents;
+    alias: ['code', 'example', 'output', 'outputs'],
+    parse() {
+      let escaped_characters = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        '\'': '&#39;'
+      }
+
+      let [
+        id = false,
+        language = this.file.type,
+        settings = {},
+        description
+      ] = regex('markup', this.annotation.line)
+
+      let raw = this.annotation.contents;
+
+      let escaped = raw.split('\n').map((line) => line.replace(/[&<>'"]/g, (m) => escaped_characters[m])).join('\n');
+
+      if (is.string(settings)) {
+        settings = to.object(list(settings).map((setting) => setting.split('=')))
+      }
+
+      return [{
+        id,
+        language,
+        settings,
+        description: _markdown(description),
+        raw,
+        escaped
+      }]
     }
   },
 
-  /// @name name
+  /// @name @name
   /// @page annotations/name
   /// @description Name of the documented item
   /// @returns {string}
   name: {
     alias: ['title', 'heading']
   },
-  /// @name note
+
+  /// @name @note
   /// @page annotations
   /// @description A note about the documented item
   /// @returns {object}
   note: {
-    callback() {
-      // add regex for `{7} - A note`
-      return this.annotation.line;
+    parse() {
+      let [ importance, description ] = regex('note', this.annotation.line)
+
+      return [{
+        importance,
+        description: _markdown(description, this.annotation.contents)
+      }]
     }
   },
 
-  /// @name page
+  /// @name @page
   /// @page annotations
   /// @description The page you want the documented item to be on
   /// @returns {string}
   page: {
     alias: ['group'],
-    callback() {
-      return [this.annotation.line];
+    parse() {
+      return list(this.annotation.line)
     }
   },
 
-  /// @name readonly
+  /// @name @readonly
   /// @page annotations
   /// @description To note that a property is readonly
   /// @returns {boolean}
   readonly: {
-    callback() {
-      return this.annotation.line;
+    parse() {
+      return true
     }
   },
 
-  /// @name requires
+  /// @name @requires
   /// @page annotations
   /// @description Requirements from the documented item
   /// @returns {object}
   requires: {
     alias: ['require'],
-    callback() {
-      // add regex for {type} item - description
-      return this.annotation.line;
+    parse() {
+      let [ types, name, description ] = regex('requires', this.annotation.line)
+
+      return [{
+        types: list(types),
+        name,
+        description: _markdown(description, this.annotation.contents)
+      }]
     }
   },
 
-  /// @name returns
+  /// @name @returns
   /// @page annotations
   /// @description Return from the documented function
   /// @returns {string}
   returns: {
     alias: ['return'],
-    callback() { // return
-      // add regex for `{type} - description`. Also ensure it supports multiple lines
-      return this.annotation.line;
+    parse() {
+      let [ types, description ] = regex('returns', this.annotation.line)
+
+      return {
+        types: list(types),
+        description: _markdown(description, this.annotation.contents)
+      }
     }
   },
 
-  /// @name since
+  /// @name @since
   /// @page annotations
   /// @description Let's you know what version of the project a something was added
   /// @returns {string}
   since: {
-    callback() {
-      // add regex for `{type} - description`
-      return this.annotation.line;
+    parse() {
+      let [ types, description ] = regex('since', this.annotation.line)
+
+      return {
+        types: list(types),
+        description: _markdown(description, this.annotation.contents)
+      }
     }
   },
 
-  /// @name state
+  /// @name @state
   /// @page annotations
   /// @description A state of a the documented item
   /// @returns {object}
+  /// // state - `{state} - description`
   state: {
-    callback() {
-      // add regex for `modifier - description`
-      // should consider supporting multiple lines
-      // should `modifier` change to be `{modifier}` since it's sorta like `type`?
-      return this.annotation.line;
+    parse() {
+      let [ id, description ] = regex('state', this.annotation.line)
+
+      return [{
+        id,
+        description: _markdown(description, this.annotation.contents)
+      }]
     }
   },
 
-  /// @name todo
+  /// @name @todo
   /// @page annotations
   /// @description Things to do related to the documented item
   /// @returns {object}
+  /// // todo - {5} [assignee-one, assignee-two] - Task to be done
   todo: {
-    callback() {
-      // add regex for {5} [assignee-one, assignee-two] - Task to be done
-      // make sure it supports multiple lines
-      return this.annotation.line;
+    parse() {
+      let [ importance, assignees, description ] = regex('todo', this.annotation.line)
+
+      return [{
+        importance,
+        assignees: list(assignees),
+        description: _markdown(description, this.annotation.contents)
+      }]
     }
   },
 
-  /// @name type
+  /// @name @throws
+  /// @description
+  /// The error that happends if something goes wrong
+  throws: {
+    alias: ['throws', 'exception', 'error'],
+    parse() {
+      return [join(this.annoation.line, this.annoation.content)]
+    }
+  },
+
+  /// @name @type
   /// @page annotations
   /// @description Describes the type of a variable
   /// @returns {string}
+  /// // type - `{type} - description`
   type: {
-    callback() {
-      // add regex for `{type} - description`
-      return this.annotation.line;
+    parse() {
+      let [ type, description ] = regex('type', this.annotation.line)
+      return {
+        type,
+        description: _markdown(description, this.annotation.line)
+      }
     }
   },
 
-  /// @name version
+  /// @name @version
   /// @page annotations
   /// @description Describes the type of a variable
   /// @returns {string}
+  /// // version `{type} - description`
   version: {
-    callback() {
-      // add regex for `{type} - description`
-      return this.annotation.line;
+    parse() {
+      let [ version, description ] = regex('version', this.annotation.line)
+      return {
+        version,
+        description: _markdown(description, this.annotation.line)
+      }
     }
   }
 }
