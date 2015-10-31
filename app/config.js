@@ -3,12 +3,12 @@ import path from 'path'
 import annotations from './annotations'
 import AnnotationApi from './annotation_api'
 
-let log = new Reporter();
+let log = new Reporter()
 
 // changed by `options` key
 const default_options = {
   config: `${info.root}/docsfile.js`,
-  files: ['app/**/*'], // files to search
+  files: ['app/**/*', 'src/**/*', '*.md'], // files to search
   // files to be ignored
   ignore: [
     '.*', // all dot files
