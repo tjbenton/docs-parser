@@ -27,7 +27,7 @@ export default class AnnotationApi {
   /// Adds a single annotation to the list
   ///
   /// @arg {string, array} annotation - Name of the annotation
-  /// @arg {function, object} callbacks [annotation_base.callbacks] - Functions
+  /// @arg {function, object} parses [annotation_base.callbacks] - Functions
   /// @arg {string} ...alias - the rest of the arguments are alias
   ///
   /// @returns {this}
@@ -39,8 +39,8 @@ export default class AnnotationApi {
   ///
   /// @markup {js} **Example:** Declaring a annotation with more options
   /// docs.annotation.add("name", {
-  ///  alias: ["title", "heading"],
-  ///  callback: function(){
+  ///  alias: ['title', 'heading'],
+  ///  parse: function(){
   ///   return this.annotation.line
   ///  },
   ///  autofill: false,
@@ -48,13 +48,13 @@ export default class AnnotationApi {
   /// })
   ///
   /// @markup {js} **Example** Specifing a file specific annotation
-  /// docs.annotation.add("promise", {
-  ///  // the filetypes passed will use the `callback` and the other
+  /// docs.annotation.add('promise', {
+  ///  // the filetypes passed will use the `parse` and the other
   ///  // settings in the config. It can be a string or an array of
   ///  // filetypes. Note that if a filetype isn't specificed it defaults
-  ///  // to be `"default"` which will apply to all files.
-  ///  filetype: ["js", "jsx", "es", "es6", "es7"],
-  ///  callback: function(){
+  ///  // to be `'default'` which will apply to all files.
+  ///  filetype: ['js', 'jsx', 'es', 'es6', 'es7'],
+  ///  parse: function(){
   ///   return this.annotation.line
   ///  },
   ///  ...
@@ -62,9 +62,9 @@ export default class AnnotationApi {
   ///
   /// @markup {js} **Example** Specifing a file specific annotation(Option 2)
   /// This is very useful
-  /// docs.annotation.add("name", {
+  /// docs.annotation.add('name', {
   ///  default: { // for all filetypes that aren't defined for this annotation
-  ///   callback: function(){
+  ///   parse: function(){
   ///    return this.annotation.line
   ///   },
   ///   ...
@@ -85,7 +85,7 @@ export default class AnnotationApi {
 
       // This function runs when the parser gets
       // the annotations information
-      callback() {
+      parse() {
         return this.annotation.line
       },
 
@@ -97,9 +97,9 @@ export default class AnnotationApi {
       // annotation exists
       autofill: false,
 
-      // Runs after the callback and/or autofill runs the contents
-      // of `this` is what was returned by the callback and/or autofill.
-      // It's used to fixed data that was returned by callback.
+      // Runs after the parsed and/or autofill runs the contents
+      // of `this` is what was returned by the parse and/or autofill.
+      // It's used to fixed data that was returned by parse.
       // It helps when members on your team pass in the wrong keyword(s)
       // and let's you resolve them here in the data instead of resolving
       // the issues on the client side. It's also useful if you want want
@@ -114,7 +114,7 @@ export default class AnnotationApi {
     }
 
     // a) set the passed `array` as the `alias`
-    // b) set the passed `function` as the `callback` function
+    // b) set the passed `function` as the `parse` function
     // c) it's a filetype specific `object`
     // d) throw an error
     if (is.array(config)) {
@@ -124,7 +124,7 @@ export default class AnnotationApi {
     }
     else if (is.fn(config)) {
       config = {
-        callback: config
+        parse: config
       }
     }
     else if (is.plain_object(config) && !is.empty(config) && !is.any.in(config, ...to.keys(base_config))) {
@@ -222,7 +222,7 @@ export default class AnnotationApi {
       })
     }
 
-    // removes the first line because it's the "line" of the annotation
+    // removes the first line because it's the `line` of the annotation
     annotation.contents.shift()
 
     // normalizes the current annotation contents
@@ -246,11 +246,11 @@ export default class AnnotationApi {
     }
 
     // a) add the default annotation function to the object so it can be called in the file specific annotation functions if needed
-    if (is.all.truthy((this.file_list[file.type] || {})[annotation.name], this.file_list.default[annotation.name])) {
-      result.default = this.file_list.default[annotation.name].call(result)
+    if (is.all.truthy((this.file_list[file.type] || {})[annotation.name], ((this.file_list.default || {})[annotation.name]) || {}).parse) {
+      result.default = this.file_list.default[annotation.name].parse.call(result)
     }
 
-    result = annotations_list[annotation.name].callback.call(result)
+    result = annotations_list[annotation.name].parse.call(result)
 
     if (!is.fn(annotations_list[annotation.name].resolve)) {
       return result
