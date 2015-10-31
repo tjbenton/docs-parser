@@ -349,7 +349,15 @@ let to = {
   /// @description Converts a json object to a plain object
   /// @arg {json} - The json to parse
   /// @returns {object}
-  object: (arg) => JSON.parse(arg),
+  object: (arg) => {
+    if (is.array(arg)) {
+      let result = {}
+      for (let item of arg) result[item[0]] = item[1]
+      return result
+    }
+
+    return JSON.parse(arg)
+  },
 
   /// @name to.json
   /// @description Converts an object to a json string
