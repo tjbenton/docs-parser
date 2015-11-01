@@ -3,24 +3,29 @@ import { is, to } from './utils'
 // holds all the base regex expressions for the annotations
 // They're broken down so they can be reused instead of writing the same
 // regexp over and over with slightly different variations
-const types = '(?:{(.*)})?'
-const name = '([^\\s]*)?'
-const space = '(?:\\s*)?'
-const value = '(?:\\[(.*)\\])?'
-const id = '(?:\\((.*)\\))?'
-const description = '(?:\\-?\\s*)?(.*)?'
+let regexes
 
-const regexes = {
-  arg: new RegExp(types + space + name + space + value + space + description, 'i'),
-  deprecated: new RegExp(types + space + description, 'i'),
-  markup: new RegExp(id + space + types + space + value + space + description, 'i'),
-  note: new RegExp(types + space + description, 'i'),
-  requires: new RegExp(types + space + name + description, 'i'),
-  returns: new RegExp(types + space + description, 'i'),
-  state: new RegExp(types + space + description, 'i'),
-  todo: new RegExp(types + space + value + space + description, 'i'),
-  type: new RegExp(types + space + description, 'i'),
-  version: new RegExp(types + space + description, 'i'),
+{
+  const types = '(?:{(.*)})?'
+  const name = '([^\\s]*)?'
+  const space = '(?:\\s*)?'
+  const value = '(?:\\[(.*)\\])?'
+  const id = '(?:\\((.*)\\))?'
+  const description = '(?:\\-?\\s*)?(.*)?'
+
+  regexes = {
+    arg: new RegExp(types + space + name + space + value + space + description, 'i'),
+    deprecated: new RegExp(types + space + description, 'i'),
+    markup: new RegExp(id + space + types + space + value + space + description, 'i'),
+    note: new RegExp(types + space + description, 'i'),
+    requires: new RegExp(types + space + name + description, 'i'),
+    returns: new RegExp(types + space + description, 'i'),
+    state_id: new RegExp(`${id}${space}(.*)`, 'i'),
+    state: new RegExp(types + space + value + space + description, 'i'),
+    todo: new RegExp(types + space + value + space + description, 'i'),
+    type: new RegExp(types + space + description, 'i'),
+    version: new RegExp(types + space + description, 'i'),
+  }
 }
 
 
