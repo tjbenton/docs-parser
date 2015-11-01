@@ -1,76 +1,35 @@
 {
+  "preset": "google",
+  "requireSemicolons": false,
   "esnext": true,
-  "disallowIdentifierNames": ["foo", "bar", "baz", "qux"],
-  "disallowKeywords": ["with"],
-  "disallowMixedSpacesAndTabs": "smart",
-  "disallowMultipleLineStrings": true,
-  "disallowMultipleSpaces": true,
-  "disallowPaddingNewlinesInBlocks": true,
-  "disallowPaddingNewlinesBeforeKeywords": ["case", "catch", "void", "with"],
-  "disallowQuotedKeysInObjects": "allButReserved",
-  "requireSpaceAfterKeywords": [
-    "do",
-    "for",
-    "if",
-    "else",
-    "case",
-    "try",
-    "void",
-    "while",
-    "with",
-    "return",
-    "typeof"
-  ],
-  "requireSpaceBeforeKeywords": ["catch", "else"],
-  "requireParenthesesAroundArrowParam": true,
-  "disallowSpaceBeforeKeywords": ["for", "while"],
+  "requireCamelCaseOrUpperCaseIdentifiers": false,
   "requireCurlyBraces": [
     "else",
     "else if",
     "do",
     "try",
-    "catch",
-    "default"
+    "catch"
   ],
-  "requireLineBreakAfterVariableAssignment": true,
-  "disallowSpaceAfterObjectKeys": "ignoreSingleLine",
-  "disallowSpaceAfterPrefixUnaryOperators": ["++", "--", "+", "-", "~", "!", "!!", "~~"],
+  "maximumLineLength": {
+    "value": 100,
+    "allExcept": ["comments", "regex"]
+  },
+  "disallowMultipleSpaces": true,
+  "disallowMultipleLineBreaks": false,
+  "disallowPaddingNewlinesInBlocks": true,
+  "disallowNewlineBeforeBlockStatements": false,
+  "disallowQuotedKeysInObjects": "allButReserved",
   "disallowSpaceBeforePostfixUnaryOperators": ["++", "--"],
-  "disallowSpacesInAnonymousFunctionExpression": {
-    "beforeOpeningRoundBrace": true
-  },
-  "disallowSpacesInFunctionExpression": {
-    "beforeOpeningRoundBrace": true
-  },
-  "disallowSpacesInNamedFunctionExpression": {
-    "beforeOpeningRoundBrace": true
-  },
-  "disallowSpacesInFunction": {
-    "beforeOpeningRoundBrace": true
-  },
-  "disallowSpacesInCallExpression": true,
-  "requireSpacesInConditionalExpression": true,
-  "requireSpacesInForStatement": true,
-  "disallowTrailingWhitespace": "ignoreEmptyLines",
   "requireBlocksOnNewline": true,
   "requireCommaBeforeLineBreak": true,
-  "disallowYodaConditions": true,
-  "requireOperatorBeforeLineBreak": ["?", "=", "+", "-", "/", "*", "==", "===", "!=", "!==", ">", ">=", "<", "<="],
-  "requireSpaceBeforeBinaryOperators": true,
-  "requireSpaceBeforeObjectValues": true,
   "requireSpaceBetweenArguments": true,
-  "requireSpaceAfterBinaryOperators": true,
-  "disallowSpacesInsideObjectBrackets": null,
-  "safeContextKeyword": ["$obj", "obj", "$that", "that", "$elem", "elem", "_this", "self", "_self", "_", "$parent", "parent", "instance", "result", "context"],
-  "fileExtensions": [".js", "jscs"],
+  "disallowSpacesInsideObjectBrackets": false,
+  "disallowSpacesInsideArrayBrackets": false,
   "validateQuoteMarks": {
     "mark": "'",
     "escape": true
   },
-  "requireSpaceBeforeBlockStatements": true,
   "requireParenthesesAroundIIFE": true,
   "validateLineBreaks": "LF",
-  "validateIndentation": 2,
-  "validateParameterSeparator": ", ",
   "excludeFiles": ["node_modules/**/*", "app/tests/**/*.js"]
 }
