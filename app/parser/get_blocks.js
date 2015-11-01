@@ -74,6 +74,7 @@ export default function get_blocks(options) {
         // a) check for the end comment
         if (style === 'multi' && block.comment.start !== i && index.end !== false) {
           in_comment = false
+          block.comment.contents.push(line)
           block.comment.end = i // sets the end line in the comment block
 
           // @todo might need to remove this
