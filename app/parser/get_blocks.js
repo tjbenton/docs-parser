@@ -80,7 +80,7 @@ export default function get_blocks(options) {
           // @todo might need to remove this
           i++ // skips end comment line
           line = lines[i] // updates to be the next line
-          index.end = is.in(line, comment.end) ? line.indexOf(comment.end) : false
+          index.end = (line && is.in(line, comment.end)) ? line.indexOf(comment.end) : false
         }
 
         // a) adds this line to block comment contents
