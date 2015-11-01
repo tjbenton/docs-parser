@@ -362,7 +362,7 @@ let to = {
 
         // a) Filter out duplicates
         if (unique && !is.plain_object(a[k][0])) {
-          a[k] = to.unique_array(a[k])
+          a[k] = to.unique(a[k])
         }
       }
     }
@@ -418,12 +418,16 @@ let to = {
   /// @returnes {array} - single dimensional
   flatten: (arg) => is.array(arg) ? [].concat(...arg.map(to.flatten)) : arg,
 
-  /// @name to.unique_array
+  /// @name to.unique
   /// @description
   /// Removes duplicate values from an array
   /// @arg {array}
   /// @returns {array} - without duplicates
-  unique_array(arg){
+  unique(arg) {
+    if (!is.array(arg)) {
+      return arg
+    }
+
     let o = {}
     let r = []
 
