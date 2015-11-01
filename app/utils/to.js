@@ -231,34 +231,58 @@ let to = {
   ///
   /// @arg {*} - The item you want to clone
   /// @returns {*} - The copied result
-  clone(arg) {
-    // Basis.
-    if (!(arg instanceof Object)) {
-      return arg;
+  clone(obj, seen) {
+    if (!(obj instanceof Object)) {
+      return obj
     }
 
-    let clone;
+    seen = seen || { orig: [], copy: [] }
 
-    // Filter out special objects.
-    let Constructor = arg.constructor;
-    switch(Constructor) {
-      // Implement other special objects here.
-      case RegExp:
-        clone = new Constructor(arg);
-        break;
-      case Date:
-        clone = new Constructor(arg.getTime());
-        break;
-      default:
-        clone = new Constructor();
+    const lookup = seen.orig.indexOf(obj)
+
+    if (lookup !== -1) {
+      return seen.copy[lookup]
     }
 
-    // Clone each property.
-    for (var prop in arg) {
-      clone[prop] = to.clone(arg[prop]);
+    let newObj
+    let cloneDeep = false
+
+    if (!Array.isArray(obj)) {
+      if (Buffer.isBuffer(obj)) {
+        newObj = new Buffer(obj)
+      } else if (obj instanceof Date) {
+        newObj = new Date(obj.getTime())
+      } else if (obj instanceof RegExp) {
+        newObj = new RegExp(obj)
+      } else {
+        const proto = Object.getPrototypeOf(obj)
+        if (proto && proto.isImmutable) {
+          newObj = obj
+        } else {
+          newObj = Object.create(proto)
+          cloneDeep = true
+        }
+      }
+    } else {
+      newObj = []
+      cloneDeep = true
     }
 
-    return clone;
+    seen.orig.push(obj)
+    seen.copy.push(newObj)
+
+    if (cloneDeep) {
+      for (let [key, value] of to.entries(obj)) {
+        const descriptor = Object.getOwnPropertyDescriptor(obj, key)
+        if (descriptor && (descriptor.get || descriptor.set)) {
+          Object.defineProperty(newObj, key, descriptor)
+        } else {
+          newObj[key] = to.clone(value, seen)
+        }
+      }
+    }
+
+    return newObj
   },
 
   /// @name to.merge
