@@ -172,8 +172,8 @@ test('to.array', (t) => {
 })
 
 
-test('to.flat_array', (t) => {
-  t.is(to.flat_array([[[array]]])[0], 'one',
+test('to.flatten', (t) => {
+  t.is(to.flatten([[[array]]])[0], 'one',
     'the array should be flattend and the first value should be one')
   t.end()
 })

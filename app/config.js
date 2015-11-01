@@ -84,7 +84,7 @@ export default async function config(options = {}) {
 
   if (options.gitignore) {
     try {
-      options.ignore = to.flat_array([
+      options.ignore = to.flatten([
         options.ignore,
         to.array(to.string(await fs.readFile(path.join(info.root, '.gitignore'))))
       ])

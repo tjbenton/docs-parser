@@ -60,7 +60,7 @@ let to = {
   /// It also get's symbols if they're set as a key name.
   /// @arg {object}
   /// @returns {array}
-  keys: (arg) => (is.plain_object(arg) || is.symbol(arg)) && to.flat_array([Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg)]),
+  keys: (arg) => (is.plain_object(arg) || is.symbol(arg)) && to.flatten([Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg)]),
 
   /// @name to.entries
   /// @description
@@ -332,7 +332,7 @@ let to = {
       if (is.array(a[k])) {
         // a) Flatten the array
         if (flat) {
-          a[k] = to.flat_array(a[k])
+          a[k] = to.flatten(a[k])
         }
 
         // a) Filter out duplicates
@@ -374,12 +374,12 @@ let to = {
   /// @returns {array}
   array: (arg, glue = '\n') => is.array(arg) ? arg : is.arguments(arg) ? array_slice(arg) : is.string(arg) ? arg.split(glue) : is.plain_object(arg) || is.number(arg) ? [arg] : [],
 
-  /// @name to.flat_array
+  /// @name to.flatten
   /// @description
   /// Flattens an array, and arrays inside of it into a single array
   /// @arg {array}
   /// @returnes {array} - single dimensional
-  flat_array: (arg) => is.array(arg) ? [].concat(...arg.map(to.flat_array)) : arg,
+  flatten: (arg) => is.array(arg) ? [].concat(...arg.map(to.flatten)) : arg,
 
   /// @name to.unique_array
   /// @description

@@ -74,7 +74,7 @@ is.included = (a, b) => !is.empty(a) && !is.empty(b) && a.indexOf(b) > -1 ? a.in
 is.symbol = (arg) => typeof arg === 'symbol'
 
 is.all.in = (obj, ...values) => {
-  values = to.flat_array(values)
+  values = to.flatten(values)
   for (let i in values) {
     if (!is.in(obj, values[i])) {
       return false
@@ -84,7 +84,7 @@ is.all.in = (obj, ...values) => {
 }
 
 is.any.in = (obj, ...values) => {
-  values = to.flat_array(values)
+  values = to.flatten(values)
   for (let i in values) {
     if (is.in(obj, values[i])) {
       return true

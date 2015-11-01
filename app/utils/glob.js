@@ -23,8 +23,8 @@ const glob = co.wrap(function*(files, ignore = [], filter, files_only = true) {
   files = array(to.array(files)).map((file) => _glob(file));
   ignore = array(to.array(ignore)).map((file) => _glob(file.replace(/!/, '')))
 
-  files = to.flat_array(yield files)
-  ignore = to.flat_array(yield ignore)
+  files = to.flatten(yield files)
+  ignore = to.flatten(yield ignore)
 
   // removed any files that are supposed to be ignored
   if (ignore.length) {
