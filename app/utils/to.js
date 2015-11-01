@@ -60,7 +60,8 @@ let to = {
   /// It also get's symbols if they're set as a key name.
   /// @arg {object}
   /// @returns {array}
-  keys: (arg) => (is.plain_object(arg) || is.symbol(arg)) && to.flatten([Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg)]),
+  keys: (arg) => (is.plain_object(arg) || is.symbol(arg)) &&
+    to.flatten([Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg)]),
 
   /// @name to.entries
   /// @description
@@ -97,11 +98,11 @@ let to = {
       return obj.entries()
     }
 
-    let index = 0,
-        // In ES6, you can use strings or symbols as property keys,
-        // Reflect.ownKeys() retrieves both. But the support it is
-        // extremly low at the time of writing this.
-        keys = to.keys(obj)
+    let index = 0
+    // In ES6, you can use strings or symbols as property keys,
+    // Reflect.ownKeys() retrieves both. But the support it is
+    // extremly low at the time of writing this.
+    let keys = to.keys(obj)
 
     return {
       [Symbol.iterator]() {
@@ -215,12 +216,12 @@ let to = {
     let k = to.keys(b)
 
     for (let i = 0, l = k.length; i < l; i++) {
-      a[k[i]] = is.plain_object(b[k[i]]) ? is.plain_object(a[k[i]]) ? to.extend(a[k[i]], b[k[i]]) : b[k[i]] : b[k[i]]
+      if (is.plain_object(b[k[i]])) {
+        a[k[i]] = is.plain_object(a[k[i]]) ? to.extend(a[k[i]], b[k[i]]) : b[k[i]]
+      } else {
+        a[k[i]] = b[k[i]]
+      }
     }
-
-    // for (let k in b) {
-    //   a[k] = is.plain_object(b[k]) ? is.plain_object(a[k]) ? to.extend(a[k], b[k]) : b[k] : b[k]
-    // }
 
     return a
   },
@@ -396,7 +397,19 @@ let to = {
   /// It converts multiple arrays into a single array
   /// @arg {array, string, object, number} - The item you want to be converted to array
   /// @returns {array}
-  array: (arg, glue = '\n') => is.array(arg) ? arg : is.arguments(arg) ? array_slice(arg) : is.string(arg) ? arg.split(glue) : is.plain_object(arg) || is.number(arg) ? [arg] : [],
+  array: (arg, glue = '\n') => {
+    if (is.array(arg)) {
+      return arg
+    } else if (is.arguments(arg)) {
+      return array_slice(arg)
+    } else if (is.string(arg)) {
+      return arg.split(glue)
+    } else if (is.plain_object(arg) || is.number(arg)) {
+      return [arg]
+    } else {
+      return []
+    }
+  },
 
   /// @name to.flatten
   /// @description
@@ -482,7 +495,8 @@ let to = {
   /// Converts `arg` to number
   /// @arg {number, array, object, string, boolean}
   /// @returns {number}
-  number: (arg) => is.number(arg) ? arg : is.array(arg) ? arg.length : is.plain_object(arg) ? to.keys(arg).length : ~~arg
+  number: (arg) => is.number(arg) ? arg : is.array(arg) ?
+    arg.length : is.plain_object(arg) ? to.keys(arg).length : ~~arg
 }
 
 export default to
