@@ -150,7 +150,10 @@ const annotations = {
   },
 
   markdown: {
-    filetypes: ['markdown', 'mark', 'mdown', 'mkdn', 'md', 'mdml', 'mkd', 'mdwn', 'mdtxt', 'mdtext', 'text'],
+    filetypes: [
+      'markdown', 'mark', 'mdown', 'mkdn', 'mdtxt',
+      'mkd', 'mdml', 'mdwn', 'mdtext', 'text', 'md'
+    ],
     parse() {
       return to.markdown(this.file.contents)
     }

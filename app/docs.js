@@ -44,7 +44,8 @@ const docs = co.wrap(function*(options = {}) {
     let json = fs.readFile(info.temp.file)
     log.emit('start', 'paths')
     files = yield glob(files, ignore, changed ? has_file_changed : false)
-    log.emit('complete', 'paths', `%s completed after %dms with ${files.length} file${files.length > 1 ? 's' : ''} to parse`)
+    let s = files.length > 1 ? 's' : ''
+    log.emit('complete', 'paths', `%s completed after %dms with ${files.length} file${s} to parse`)
 
     log.emit('start', 'parser')
     files = yield array(files).map((file_path) => parser({ file_path, ...options, log }))
