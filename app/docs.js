@@ -1,10 +1,5 @@
 'use strict';
 
-process.on('uncaughtException', function(err) {
-  log.error('An uncaughtException was found:', err.stack)
-  process.exit(1)
-})
-
 import co from 'co'
 import path from 'path'
 import { info, fs, is, to, glob, array, Logger } from './utils'
@@ -102,9 +97,16 @@ async function has_file_changed(file) {
     } else {
       return false
     }
-  } catch(err) {
+  } catch (err) {
     // copies new files over because it doesn't exist in the temp target directory
     fs.fake_copy(source, target)
     return true
   }
 }
+
+
+let logger = new Logger()
+process.on('uncaughtException', function(err) {
+  logger.error('An uncaughtException was found:', err.stack)
+  process.exit(1)
+})

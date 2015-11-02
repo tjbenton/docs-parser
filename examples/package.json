@@ -5,8 +5,5 @@
   },
   "engines": {
     "node": ">=0.10.0"
-  },
-  "devDependencies": {
-    "gulp": "^3.8.11"
   }
 }
