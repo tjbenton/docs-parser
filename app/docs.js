@@ -7,7 +7,7 @@ process.on('uncaughtException', function(err) {
 
 import co from 'co'
 import path from 'path'
-import { info, fs, is, to, glob, array, Reporter } from './utils'
+import { info, fs, is, to, glob, array, Logger } from './utils'
 import parser from './parser'
 import sorter from './sorter'
 import get_config from './config'
@@ -35,7 +35,7 @@ const docs = co.wrap(function*(options = {}) {
     comments,
   } = options
 
-  let log = new Reporter({ debug, warning, timestamps });
+  let log = new Logger({ debug, warning, timestamps });
 
   log.emit('start', 'total')
 

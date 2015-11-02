@@ -1,4 +1,4 @@
-import { is, to } from './'
+import Purdy from './purdy'
 import chalk from 'chalk'
 
 let chevron = '\xBB'
@@ -6,10 +6,21 @@ let check = '\u2713'
 let warning = '\u26A0'
 let error = '\u2326'
 
-export class Logger {
-  constructor() {
+const messaging = {
+  warning: chalk.yellow(warning, chalk.bold.yellow('[WARNING]')),
+  debug: chalk.magenta(chevron, '[DEBUG]'),
+  error: chalk.red(error, chalk.bold.red('[ERROR]')),
+  file: chalk.bgBlue.gray(chevron, '[FILE]')
+}
+
+const purdy = new Purdy()
+
+export default class Logger {
+  constructor(options = {}) {
     this.events = []
     this.times = {}
+
+    this.report(options)
   }
 
   /// @description
@@ -29,62 +40,9 @@ export class Logger {
     return this
   }
 
-  log(...args) {
-    console.log(`${chalk.green(chevron)} ${awesome_report(...args)}`)
-  }
-
-  warn(...args) {
-    console.log(`${chalk.yellow(warning, chalk.bold.yellow('[WARNING]\n'))}${awesome_report(...args)}`)
-  }
-
-  error(...args) {
-    console.trace(...args)
-    console.log(`${chalk.red(error, chalk.bold.red('[ERROR]\n'))}${awesome_report(...args)}`)
-  }
-
-  time(label) {
-    this.times[label] = Date.now()
-  }
-
-  time_end(label, format = '%s completed after %dms') {
-    let time = this.times[label]
-
-    if (!time) {
-      throw new Error(`No such label: ${label}`)
-    }
-
-    let duration = Date.now() - time
-    console.log(`${chalk.green(check)} ${format}`, label, duration)
-  }
-
-  debug(...args) {
-    console.log(`${chalk.magenta(chevron, '[DEBUG]\n')}${awesome_report(...args)}`)
-  }
-
-  file(file) {
-    console.log('\n\n', chalk.bgBlue.gray('\n', chevron, '[FILE]'), file, '')
-  }
-}
-
-function awesome_report(...args) {
-  return args.map((arg) => {
-    if (is.fn(arg)) {
-      arg = arg()
-    }
-
-    if (is.object(arg)) {
-      return to.normalize(to.json(arg))
-    }
-
-    return to.normalize(to.string(arg))
-  }).join('\n') + '\n'
-}
-
-
-export class Reporter extends Logger {
-  constructor(options = {}) {
-    super()
-    this.report(options)
+  print(...args) {
+    purdy.print(...args)
+    return this
   }
 
   report(options) {
@@ -111,6 +69,67 @@ export class Reporter extends Logger {
     }
 
     if (warning) this.on('warning', (...args) => this.warn(...args))
+  }
+
+  warn(...args) {
+    console.log(
+      '\n\n',
+      messaging.warning,
+      '\n',
+      ...purdy.format(...args)
+    )
+    return this
+  }
+
+  error(arg) {
+    console.log(
+      '\n\n',
+      messaging.error,
+      '\n',
+      ...purdy.format(arg)
+    )
+    return this
+  }
+
+  time(label) {
+    this.times[label] = Date.now()
+    return this
+  }
+
+  time_end(label, format = '%s completed after %dms') {
+    let time = this.times[label]
+
+    if (!time) {
+      throw new Error(`No such label: ${label}`)
+    }
+
+    let duration = Date.now() - time
+    console.log(
+      `${chalk.green(check)} ${format}`,
+      label,
+      duration
+    )
+    return this
+  }
+
+  debug(...args) {
+    console.log(
+      '\n\n',
+      messaging.debug,
+      '\n',
+      ...purdy.format(...args)
+    )
+    return this
+  }
+
+  file(file) {
+    console.log(
+      '\n\n',
+      messaging.file,
+      file,
+      ''
+    )
+    return this
   }
 }
 

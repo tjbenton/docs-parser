@@ -1,9 +1,9 @@
-import {info, fs, is, to, Reporter} from './utils'
+import { info, fs, is, to, Logger } from './utils'
 import path from 'path'
 import annotations from './annotations'
 import AnnotationApi from './annotation_api'
 
-let log = new Reporter()
+let log = new Logger()
 
 // changed by `options` key
 const default_options = {
