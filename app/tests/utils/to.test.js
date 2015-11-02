@@ -106,8 +106,12 @@ test('to.extend', (t) => {
 test('to.clone', (t) => {
   let actual = { one: { two: { three: { four: { five: 'whatup' } } } } }
   let expected = { one: { two: { three: { four: { five: 'whatup' } } } } }
-  t.notDeepEqual(to.extend(to.clone(actual), {test: 'yo'}), actual,
-    'the cloned object should not equal the original object')
+  let test_one = to.clone(actual)
+  test_one.test = 'yo'
+  t.ok(actual.test === undefined,
+    '`acutal.test` should not be defined')
+  t.ok(test_one.test === 'yo',
+    '`test_one.test` should equal yo')
   t.deepEqual(actual, expected,
     'the actual object should remain the same as the expected object')
   t.end()
@@ -179,8 +183,8 @@ test('to.flatten', (t) => {
 })
 
 
-test('to.unique_array', (t) => {
-  t.is(to.unique_array(['one', 'one', 'two', 'two']).length, 2,
+test('to.unique', (t) => {
+  t.is(to.unique(['one', 'one', 'two', 'two']).length, 2,
     'should have a length of 2')
   t.end()
 })
