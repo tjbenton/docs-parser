@@ -293,17 +293,35 @@ const annotations = {
   /// @name @state
   /// @page annotations
   /// @description A state of a the documented item
-  /// @returns {object}
-  /// // state - `{state} - description`
+  /// @returns {hashmap}
+  /// @markup
+  /// /// @states (id) {state} [state_id] - description
+  /// /// @states (id)
+  /// /// {state} [state_id] - description
+  /// /// {state} [state_id] - description
+  /// /// {state} [state_id] - description
   state: {
     parse() {
-      let [ id, description ] = regex('state', this.annotation.line)
+      let states = this.annotation.contents.split('\n')
+      let [ markup_id, state_line ] = regex('state_id', this.annotation.line)
+      states.unshift(state_line)
 
-      return [{
-        id,
-        description: _markdown(description, this.annotation.contents)
-      }]
-    }
+      states = states.filter(Boolean).map((line, i) => {
+        let [ state, state_id = `${i}`, description ] = regex('state', line)
+        return {
+          state,
+          state_id,
+          description: _markdown(description)
+        }
+      })
+
+      return [
+        { markup_id, states }
+      ]
+    },
+    // resolve() {
+    //   /// @todo {10} - add code to that adds the markup code for this stuff.
+    // }
   },
 
   /// @name @todo
