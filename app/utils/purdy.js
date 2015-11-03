@@ -220,14 +220,27 @@ export default class Purdy {
   }
 
   _string(str) {
-    str = to.normalize(str).split('\n')
+    str = to.normalize(str, false).split('\n')
     let quote = str.length > 1 ? '`' : `'`
-    let out = []
+    let l = str.length
+
+    // returns because it's a single line string
+    if (l === 1) {
+      return quote + str[0] + quote
+    }
+
+    let has_newline_only = /(?:\s*?(\n)\s*?)(.*)/.exec(str[0])
+
+    str.splice(0, 1, quote + str[0])
+    str.splice(l - 1, l, str[l - 1] + quote)
+
+    // removes the first line from the str so it doesn't get indented
+    let out = str.splice(0, 1)
 
     for (let line of str)
       out.push(this.indent() + this.colorize(line, 'string'))
 
-    return quote + out.join('\n') + quote
+    return out.join('\n')
   }
 
   _boolean(bool) {
