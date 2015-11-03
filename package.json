@@ -39,8 +39,8 @@
   },
   "dependencies": {
     "babel-runtime": "^5.8.25",
-    "chalk": "^1.1.0",
     "change-case": "^2.3.0",
+    "clor": "^1.0.2",
     "co": "^4.6.0",
     "commander": "^2.9.0",
     "fs-extra": "^0.24.0",

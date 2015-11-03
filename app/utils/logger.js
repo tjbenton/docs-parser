@@ -1,5 +1,5 @@
 import Purdy from './purdy'
-import chalk from 'chalk'
+import $ from 'clor'
 
 let chevron = '\xBB'
 let check = '\u2713'
@@ -7,10 +7,10 @@ let warning = '\u26A0'
 let error = '\u2326'
 
 const messaging = {
-  warning: chalk.yellow(warning, chalk.bold.yellow('[WARNING]')),
-  debug: chalk.magenta(chevron, '[DEBUG]'),
-  error: chalk.red(error, chalk.bold.red('[ERROR]')),
-  file: chalk.bgBlue.gray(chevron, '[FILE]')
+  warning: $.yellow.bold(`${warning} [WARNING]`),
+  debug: $.magenta.bold(`${chevron}[DEBUG]`),
+  error: $.red.bold(`${error}[ERROR]`),
+  file: $.bgBlue.white(`${chevron}[FILE]`)
 }
 
 const purdy = new Purdy()
@@ -105,7 +105,7 @@ export default class Logger {
 
     let duration = Date.now() - time
     console.log(
-      `${chalk.green(check)} ${format}`,
+      `${$.green(check)} ${format}`,
       label,
       duration
     )

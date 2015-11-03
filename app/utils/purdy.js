@@ -1,6 +1,6 @@
 // Load modules
 import to from './to'
-import chalk from 'chalk'
+import $ from 'clor'
 
 export default class Purdy {
   constructor(options = {}) {
@@ -73,7 +73,7 @@ export default class Purdy {
     colors = colors.split('.')
 
     for (let color of colors) {
-      string = chalk[color](string)
+      string = $[color](string)
     }
 
     return string
