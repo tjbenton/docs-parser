@@ -11,7 +11,7 @@
     "catch"
   ],
   "maximumLineLength": {
-    "value": 100,
+    "value": 125,
     "allExcept": ["comments", "regex"]
   },
   "disallowMultipleSpaces": true,
