@@ -34,12 +34,12 @@ test('to.normal_string', async (t) => {
     // this file has some stupid ass characters in it
     // that need to be removed in order to become like the
     // rest of the fucking world. #microsoftBlowsAtStandards
-    let crappy_windows_file = await fs.readFile(`${info.root}/tests/lib/coffeescript/test.coffee`)
+    let crappy_windows_file = await fs.readFile(`${info.root}/examples/lib/coffeescript/test.coffee`)
     // crappy_windows_file = JSON.stringify({foo: crappy_windows_file + ''})
     t.is(to.normal_string(crappy_windows_file).match(/\r/g), null,
       'should be a normal string')
     t.end()
-  } catch(err) {
+  } catch (err) {
     t.fail('the file didn\'t load')
     console.log(err.stack);
     t.end()
@@ -85,7 +85,7 @@ test('to.normalize', (t) => {
   const expected = [ '.foo {', '  background: blue;', '}' ].join('\n')
 
   t.is(to.normalize(actual), expected, 'all whitespace should be stripped')
-  t.ok(actual.split('\n')[2].length > 19, 'should be greater than 19' )
+  t.ok(actual.split('\n')[2].length > 19, 'should be greater than 19')
   t.is(to.normalize(actual).split('\n')[1].length, 19, 'should be 19')
   t.end()
 })
@@ -119,9 +119,38 @@ test('to.clone', (t) => {
 
 
 test('to.merge', (t) => {
-  let a = { foo: { bar: '1', baz: ['3', '4'], qux: 'one', quux: { garply: { waldo: 'one' } }, waldo: '' } }
-  let b = { foo: { bar: '2', baz: ['5', '6'], qux: ['two', 'three'], quux: { garply: { waldo: 'two' } }, waldo: function(){ return this; }, garply: 'item' } }
-  let expected = { foo: { bar: [ '1', '2' ], baz: [ '3', '4', '5', '6' ], qux: [ 'one', 'two', 'three' ], quux: { garply: { waldo: [ 'one', 'two' ] } }, waldo: function() { return this; }, garply: 'item' } }
+  let a = {
+    foo: {
+      bar: '1',
+      baz: ['3', '4'],
+      qux: 'one',
+      quux: { garply: { waldo: 'one' } }, waldo: ''
+    }
+  }
+  let b = {
+    foo: {
+      bar: '2',
+      baz: ['5', '6'],
+      qux: ['two', 'three'],
+      quux: { garply: { waldo: 'two' } },
+      waldo: function() {
+        return this
+      },
+      garply: 'item'
+    }
+  }
+  let expected = {
+    foo: {
+      bar: [ '1', '2' ],
+      baz: [ '3', '4', '5', '6' ],
+      qux: [ 'one', 'two', 'three' ],
+      quux: { garply: { waldo: [ 'one', 'two' ] }
+    },
+    waldo: function() {
+      return this
+    },
+    garply: 'item' }
+  }
   t.is(a.foo.bar, '1', 'a.foo.bar should be 1')
   to.merge(a, b)
   t.pass('a and be were merged')
@@ -139,7 +168,7 @@ test('to.object', async (t) => {
     t.ok(to.object(json).author,
       'the passed json should now be an object')
     t.end()
-  } catch(err) {
+  } catch (err) {
     console.log(err.stack);
   }
 })
