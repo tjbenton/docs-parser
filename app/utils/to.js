@@ -182,15 +182,21 @@ let to = {
   /// are passed without affecting the formatting of the passes string. Then removes
   /// all whitespace at the end of each line.
   /// @arg {string, array} content - The content you want to be normalized
+  /// @arg {boolean} leading [true] - Determins if leading blank lines should be removed
+  /// @arg {boolean} trailing [leading] - Determins if trailing blank lines should be removed. It defaults to `leading`.
   /// @returns {string} - The normalized string
-  normalize: (content) => {
+  normalize: (content, leading = true, trailing = leading) => {
     content = to.array(content) // this allows arrays and strings to be passed
 
     // remove leading blank lines
-    while (content.length && !!!content[0].trim().length) content.shift()
+    if (leading)
+      while (content.length && !!!content[0].trim().length)
+        content.shift()
 
     // remove trailing blank lines
-    while (content.length && !!!(content[content.length - 1].trim()).length) content.pop()
+    if (trailing)
+      while (content.length && !!!(content[content.length - 1].trim()).length)
+        content.pop()
 
     return content.map((line) => line.slice(
              content.join('\n') // converts content to string to string
