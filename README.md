@@ -310,6 +310,34 @@ This type of comment can only occur **once** per file. Any annotations that are 
 # Todo
  - Add the ability to add aliases
    - Take into account the ability to specify alias and file types. For example being able to extend something onto the `name` but use the `scss` specific filetype callback.
+ - Double check to make sure that if a user specifies the same name and page for a comment block that it gets merged properly
+    ```scss
+    /// @name Beards
+    /// @page beards
+    /// @description
+    /// An awesome collection of beards in css
+    /// @markup
+    /// <div class="c-beard"></div>
+    .c-beard {
+      ...
+    }
+    ```
+
+    ```js
+    /// @name Beards
+    /// @page beards
+    /// @markup
+    /// <div class="c-beard js-beardme"></div>
+    /// @markup
+    /// beard_me('.js-beardme')
+    function beard_me(selector) {
+      document.body.addEventListener('click', function(e) {
+        if ((e.target || {}).classList.contains(selector.replace('.', ''))) {
+          e.target.classList.toggle('is-bearded')
+        }
+      })
+    }
+    ```
  - ~~Filter out files that haven't changed, and only pass through the new files.~~
  - Refactor the function that get's the blocks to be seperate functions so it can reused for both header level comments and body comments.
  - Ability to add single line notations, or allow the user to define how many lines they want to return. The way it would work is to have a special identifier after the opening comments(eg `/**#{2} @remove */`) for laguages that use them, or after the single line comment(`///#{5}`). If you didn't want to return multiple lines, then you could just write `///#` and it would return everything before the comment. Note that `///#` is different that `///#{1}` because the `{2}` telling the parser to return the next 2 lines. There couldn't be any spaces inbetween the specified comment style and the special character that's used to identify this type of comment. Having this ability would allow you to do things like the following.
