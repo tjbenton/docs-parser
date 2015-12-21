@@ -37,16 +37,41 @@
   "bin": {
     "docs": "bin/docs"
   },
+  "engines": {
+    "node": ">=0.12.0"
+  },
   "dependencies": {
-    "babel-runtime": "^5.8.25",
-    "change-case": "^2.3.0",
-    "clor": "^1.0.2",
+    "babel-runtime": "^6.3.19",
+    "change-case": "^2.3.1",
+    "clor": "^1.6.0",
     "co": "^4.6.0",
     "commander": "^2.9.0",
     "fs-extra": "^0.24.0",
-    "glob": "^5.0.6",
+    "glob": "^5.0.15",
     "is_js": "^0.7.4",
     "marked": "^0.3.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.3.17",
+    "babel-plugin-transform-runtime": "^6.3.13",
+    "babel-polyfill": "^6.3.14",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "coveralls": "^2.11.6",
+    "nyc": "^3.2.2",
+    "proxyquire": "^1.7.3",
+    "sinon": "^1.17.1",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.2.1"
+  },
+  "babel": {
+    "presets": [
+      "stage-0",
+      "es2015"
+    ],
+    "plugins": [
+      "transform-runtime"
+    ]
   },
   "keywords": [
     "css",
@@ -87,17 +112,5 @@
     "parser",
     "annotation",
     "comments"
-  ],
-  "engines": {
-    "node": ">=0.12.0"
-  },
-  "devDependencies": {
-    "babel": "^5.8.23",
-    "coveralls": "^2.11.4",
-    "nyc": "^3.2.2",
-    "proxyquire": "^1.7.3",
-    "sinon": "^1.17.1",
-    "tap-spec": "^4.1.0",
-    "tape": "^4.2.1"
-  }
+  ]
 }
