@@ -1,12 +1,11 @@
-import test from 'tape';
-import to from '../../utils/to.js'
-import fs from '../../utils/fs.js'
-import info from '../../utils/info.js'
-import is from 'is_js'
+import test from 'tape'
+import to from '../../../../dist/utils/to.js'
+import fs from '../../../../dist/utils/fs.js'
+import info from '../../../../dist/utils/info.js'
 
 const string = 'yo this is a string'
-const array = ['one', 'two', 'three']
-const object = {one: 1, two: 2, three: 3}
+const array = [ 'one', 'two', 'three' ]
+const object = { one: 1, two: 2, three: 3 }
 const buffer = new Buffer(string)
 const number = 4
 const boolean = false
@@ -34,14 +33,14 @@ test('to.normal_string', async (t) => {
     // this file has some stupid ass characters in it
     // that need to be removed in order to become like the
     // rest of the fucking world. #microsoftBlowsAtStandards
-    let crappy_windows_file = await fs.readFile(`${info.root}/examples/lib/coffeescript/test.coffee`)
+    const crappy_windows_file = await fs.readFile(`${info.root}/tests/file-types/coffeescript/test.coffee`)
     // crappy_windows_file = JSON.stringify({foo: crappy_windows_file + ''})
     t.is(to.normal_string(crappy_windows_file).match(/\r/g), null,
       'should be a normal string')
     t.end()
   } catch (err) {
     t.fail('the file didn\'t load')
-    console.log(err.stack);
+    console.log(err.stack)
     t.end()
   }
 })
@@ -57,7 +56,7 @@ test('to.keys', (t) => {
 
 
 test('to.entries', (t) => {
-  for (let [i, item] of to.entries(array)) {
+  for (const [ i, item ] of to.entries(array)) {
     t.ok(typeof i, 'number', '`i` should be a number')
     t.ok(typeof item, 'string', '`i` should be a string')
   }
@@ -66,7 +65,7 @@ test('to.entries', (t) => {
 
 
 test('to.object_entries', (t) => {
-  for (let { key, one, two, three } of to.object_entries({ test: object })) {
+  for (const { key, one, two, three } of to.object_entries({ test: object })) {
     t.is(key, 'test', 'The key should be `test`')
     t.is(one, 1, '`one` should equal 1')
     t.is(two, 2, '`two` should equal 2')
@@ -81,7 +80,7 @@ test('to.normalize', (t) => {
     .foo {
       background: blue;
     }
-  `;
+  `
   const expected = [ '.foo {', '  background: blue;', '}' ].join('\n')
 
   t.is(to.normalize(actual), expected, 'all whitespace should be stripped')
@@ -92,21 +91,21 @@ test('to.normalize', (t) => {
 
 
 test('to.extend', (t) => {
-  let temp = to.extend({}, object);
+  const temp = to.extend({}, object)
   t.deepEqual(object, object,
     'should equal each other, because they\'re the same')
   t.deepEqual(temp, object,
     'should be the same as the first object')
-  t.is(to.extend(temp, {one: 3}).one, 3,
+  t.is(to.extend(temp, { one: 3 }).one, 3,
     '`one` should be equal to 3')
   t.end()
 })
 
 
 test('to.clone', (t) => {
-  let actual = { one: { two: { three: { four: { five: 'whatup' } } } } }
-  let expected = { one: { two: { three: { four: { five: 'whatup' } } } } }
-  let test_one = to.clone(actual)
+  const actual = { one: { two: { three: { four: { five: 'whatup' } } } } }
+  const expected = { one: { two: { three: { four: { five: 'whatup' } } } } }
+  const test_one = to.clone(actual)
   test_one.test = 'yo'
   t.ok(actual.test === undefined,
     '`acutal.test` should not be defined')
@@ -119,37 +118,25 @@ test('to.clone', (t) => {
 
 
 test('to.merge', (t) => {
-  let a = {
+  const a = {
     foo: {
       bar: '1',
-      baz: ['3', '4'],
+      baz: [ '3', '4' ],
       qux: 'one',
       quux: { garply: { waldo: 'one' } }, waldo: ''
     }
   }
-  let b = {
+  const b = {
     foo: {
       bar: '2',
-      baz: ['5', '6'],
-      qux: ['two', 'three'],
+      baz: [ '5', '6' ],
+      qux: [ 'two', 'three' ],
       quux: { garply: { waldo: 'two' } },
-      waldo: function() {
+      waldo() {
         return this
       },
       garply: 'item'
     }
-  }
-  let expected = {
-    foo: {
-      bar: [ '1', '2' ],
-      baz: [ '3', '4', '5', '6' ],
-      qux: [ 'one', 'two', 'three' ],
-      quux: { garply: { waldo: [ 'one', 'two' ] }
-    },
-    waldo: function() {
-      return this
-    },
-    garply: 'item' }
   }
   t.is(a.foo.bar, '1', 'a.foo.bar should be 1')
   to.merge(a, b)
@@ -164,18 +151,18 @@ test('to.merge', (t) => {
 
 test('to.object', async (t) => {
   try {
-    let json = await fs.readFile(`${info.root}/package.json`)
+    const json = await fs.readFile(`${info.root}/package.json`)
     t.ok(to.object(json).author,
       'the passed json should now be an object')
     t.end()
   } catch (err) {
-    console.log(err.stack);
+    console.log(err.stack)
   }
 })
 
 
 test('to.json', (t) => {
-  let obj = { foo: 'foo', bar: 'foo' }
+  const obj = { foo: 'foo', bar: 'foo' }
   t.is(typeof obj, 'object',
     'the test object should be an object')
   t.is(typeof to.json(obj), 'string',
@@ -206,21 +193,21 @@ test('to.array', (t) => {
 
 
 test('to.flatten', (t) => {
-  t.is(to.flatten([[[array]]])[0], 'one',
+  t.is(to.flatten([ [ [ array ] ] ])[0], 'one',
     'the array should be flattend and the first value should be one')
   t.end()
 })
 
 
 test('to.unique', (t) => {
-  t.is(to.unique(['one', 'one', 'two', 'two']).length, 2,
+  t.is(to.unique([ 'one', 'one', 'two', 'two' ]).length, 2,
     'should have a length of 2')
   t.end()
 })
 
 
 test('to.sort', (t) => {
-  let actual = {
+  const actual = {
     c: 1,
     b: 2,
     a: 3

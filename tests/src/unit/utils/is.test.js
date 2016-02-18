@@ -1,5 +1,5 @@
 import test from 'tape'
-import is from '../../utils/is.js'
+import is from '../../../../dist/utils/is.js'
 
 test('is.false', (t) => {
   t.notOk(is.false('foo'),
@@ -20,8 +20,8 @@ test('is.fn', (t) => {
 })
 
 test('is.in', (t) => {
-  const array = ['one', 'two', 'three']
-  const object = {one: 1, two: 2, three: 3}
+  const array = [ 'one', 'two', 'three' ]
+  const object = { one: 1, two: 2, three: 3 }
   const string = 'onetwothree'
   t.ok(is.in(array, 'two'),
     'should return true when the item is in the array')
@@ -39,8 +39,8 @@ test('is.in', (t) => {
 })
 
 test('is.all.in', (t) => {
-  const array = ['one', 'two', 'three']
-  const object = {one: 1, two: 2, three: 3}
+  const array = [ 'one', 'two', 'three' ]
+  const object = { one: 1, two: 2, three: 3 }
   const string = 'onetwothree'
   t.ok(is.all.in(array, 'one', 'two'),
     'should return true because all items are in the array')
@@ -58,8 +58,8 @@ test('is.all.in', (t) => {
 })
 
 test('is.any.in', (t) => {
-  const array = ['one', 'two', 'three']
-  const object = {one: 1, two: 2, three: 3}
+  const array = [ 'one', 'two', 'three' ]
+  const object = { one: 1, two: 2, three: 3 }
   const string = 'onetwothree'
   t.ok(is.any.in(array, 'one', 'four'),
     'should return true because one is in the array')
@@ -102,7 +102,7 @@ test('is.between', (t) => {
 
 test('is.promise', (t) => {
   async function something_async() {
-    return 'some cool stuff';
+    return Promise.resolve('some cool stuff');
   }
   t.notOk(is.promise('foo'),
     'should return false because a string is not a promise')
@@ -133,5 +133,3 @@ test('is.symbol', (t) => {
     'should return false because it is a string')
   t.end()
 })
-
-

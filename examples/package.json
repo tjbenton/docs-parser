@@ -1,9 +1,0 @@
-{
-  "name": "docs",
-  "dependencies": {
-    "docs": "file:../"
-  },
-  "engines": {
-    "node": ">=0.10.0"
-  }
-}
