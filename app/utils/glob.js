@@ -2,12 +2,11 @@ import to from './to'
 import is from './is'
 import array from './array'
 import denodeify from './denodeify'
-import co from 'co'
 import path from 'path'
 
 // can't use `import` from es6 because it
 // returns an error saying "glob" is read only
-let _glob = denodeify(require('glob'))
+const original_glob = denodeify(require('glob'))
 
 
 /// @description
@@ -19,12 +18,12 @@ let _glob = denodeify(require('glob'))
 /// @arg {string, array} ignore [[]] - Glob patterns to ignore
 /// @arg {function, boolean} filter - Filter to run on the files
 /// @arg {boolean} files_only [true] - Only return file paths
-const glob = co.wrap(function*(files, ignore = [], filter, files_only = true) {
-  files = array(to.array(files)).map((file) => _glob(file));
-  ignore = array(to.array(ignore)).map((file) => _glob(file.replace(/!/, '')))
+export default async function glob(files, ignore = [], filter, files_only = true) {
+  files = array(to.array(files)).map((file) => original_glob(file))
+  ignore = array(to.array(ignore)).map((file) => original_glob(file.replace(/!/, '')))
 
-  files = to.flatten(yield files)
-  ignore = to.flatten(yield ignore)
+  files = to.flatten(await files)
+  ignore = to.flatten(await ignore)
 
   // removed any files that are supposed to be ignored
   if (ignore.length) {
@@ -45,13 +44,11 @@ const glob = co.wrap(function*(files, ignore = [], filter, files_only = true) {
 
   if (is.fn(filter)) {
     if (is.promise(filter())) {
-      return yield array(files).filter(filter)
+      return await array(files).filter(filter)
     }
 
     return files.filter(filter)
   }
 
   return files
-})
-
-export default glob
+}

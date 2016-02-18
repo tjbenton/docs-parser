@@ -1,12 +1,13 @@
-'use strict';
+/* eslint-disable no-bitwise */
+'use strict'
 
-export default function async_array(array){
-  return new AsyncArray(array);
+export default function async_array(array) {
+  return new AsyncArray(array)
 }
 
 
 class AsyncArray {
-  constructor(array){
+  constructor(array) {
     this.array = to_object(array)
   }
 
@@ -15,8 +16,8 @@ class AsyncArray {
   ///
   /// @arg {function} callback - The function to be applied to each value.
   /// @arg {any} receiver - The `this` value in the callback.
-  *for_each(callback, receiver) {
-    yield promise_all_map(this.array, callback, receiver);
+  async for_each(callback, receiver) {
+    await promiseAll(this.array, callback, receiver)
   }
 
   /// @description
@@ -24,10 +25,10 @@ class AsyncArray {
   ///
   /// @arg {function} callback - The function to be applied to each value.
   /// @arg {any} receiver - The `this` value in the callback.
-  *for_each_stepped(callback, receiver) {
+  async for_each_stepped(callback, receiver) {
     for (let i = 0; i < this.array.length; i++) {
-      if (i in obj) {
-        yield call(callback, receiver, this.array[i], i, this.array)
+      if (i in this.array) {
+        await call(callback, receiver, this.array[i], i, this.array)
       }
     }
   }
@@ -39,8 +40,8 @@ class AsyncArray {
   /// @arg {function} callback - The function to be applied to each value.
   /// @arg {any} receiver - The `this` value in the callback.
   /// @return {array} - The mapped array.
-  *map(callback, receiver) {
-    return yield promise_all_map(this.array, callback, receiver)
+  async map(callback, receiver) {
+    return await promiseAll(this.array, callback, receiver)
   }
 
   /// @description
@@ -50,16 +51,16 @@ class AsyncArray {
   /// @arg {function} callback - The function to be applied to each value.
   /// @arg {any} receiver - The `this` value in the callback.
   /// @return {array} - The mapped array.
-  *map_stepped(callback, receiver) {
-    let result = [];
+  async map_stepped(callback, receiver) {
+    let result = []
 
     for (let i = 0; i < this.array.length; i++) {
-      if (i in obj) {
-        result.push(yield call(callback, receiver, this.array[i], i, this.array));
+      if (i in this.array) {
+        result.push(await call(callback, receiver, this.array[i], i, this.array))
       }
     }
 
-    return result;
+    return result
   }
 
   /// @description
@@ -68,11 +69,9 @@ class AsyncArray {
   /// @arg {function} callback - The function to filter the values.
   /// @arg {any} receiver - The `this` value in the callback.
   /// @return {array} - The filtered array.
-  *filter(callback, receiver) {
-    const results = yield promise_all_map(this.array, callback, receiver)
-    return _filter(this.array, function(_, i) {
-      return results[i]
-    })
+  async filter(callback, receiver) {
+    const results = await promiseAll(this.array, callback, receiver)
+    return _filter(this.array, (obj, i) => results[i])
   }
 
   /// @description
@@ -81,13 +80,13 @@ class AsyncArray {
   /// @arg {function} callback - The function to filter the values.
   /// @arg {any} receiver - The `this` value in the callback.
   /// @return {array} - The filtered array.
-  *filter_stepped(callback, receiver) {
+  async filter_stepped(callback, receiver) {
     const result = []
 
     for (let i = 0; i < this.array.length; i++) {
-      if (i in obj) {
+      if (i in this.array) {
         const item = this.array[i]
-        if (yield call(callback, receiver, item, i, this.array)) {
+        if (await call(callback, receiver, item, i, this.array)) { // eslint-disable-line
           result[result.length] = item
         }
       }
@@ -102,28 +101,28 @@ class AsyncArray {
   /// @arg {function} callback - The function to be applied to each value.
   /// @arg {any} receiver - The `this` value in the callback.
   /// @return {any} - The accumulated value.
-  *reduce(callback, initial) {
-    const obj = this.array;
-    const len = ~~this.array.length;
-    let accum = initial;
-    let start = 0;
+  async reduce(callback, initial) {
+    const obj = this.array
+    const len = ~~this.array.length
+    let accum = initial
+    let start = 0
 
     if (arguments.length < 3) {
       for (; start < len; start++) {
         if (start in obj) {
-          accum = obj[start++];
-          break;
+          accum = obj[start++]
+          break
         }
       }
     }
 
     for (let i = start; i < len; i++) {
       if (i in obj) {
-        accum = yield callback(accum, obj[i], i, array);
+        accum = await callback(accum, obj[i], i, this.array)
       }
     }
 
-    return accum;
+    return accum
   }
 
   /// @description
@@ -133,14 +132,14 @@ class AsyncArray {
   /// @arg {function} callback - The function to test each value.
   /// @arg {any} receiver - The `this` value in the callback.
   /// @return Boolean
-  *some(callback, receiver) {
+  async some(callback, receiver) {
     for (let i = 0; i < this.array.length; i++) {
-      if (i in obj && (yield call(callback, receiver, this.array[i], i, this.array))) {
-        return true;
+      if (i in this.array && (await call(callback, receiver, this.array[i], i, this.array))) {
+        return true
       }
     }
 
-    return false;
+    return false
   }
 
   /// @description
@@ -150,43 +149,38 @@ class AsyncArray {
   /// @arg {function} callback - The function to test each value.
   /// @arg {any} receiver - The `this` value in the callback.
   /// @return Boolean
-  *every(callback, receiver) {
+  async every(callback, receiver) {
     for (let i = 0; i < this.array.length; i++) {
-      if (i in this.array && !(yield call(callback, receiver, this.array[i], i, this.array))) {
-        return false;
+      if (i in this.array && !(await call(callback, receiver, this.array[i], i, this.array))) {
+        return false
       }
     }
 
-    return true;
+    return true
   }
 }
 
-function promise_map(array, callback, receiver) {
-  const obj = to_object(array);
-  const len = ~~obj.length;
-  const promises = [];
+function promiseAll(array, callback, receiver) {
+  const obj = to_object(array)
+  const len = ~~obj.length
+  const promises = []
 
   for (let i = 0; i < len; i++) {
     if (i in obj) {
-      promises[promises.length] = call(callback, receiver, obj[i], i, array);
+      promises[promises.length] = call(callback, receiver, obj[i], i, array)
     }
   }
 
-  return promises;
+  return Promise.all(promises)
 }
 
-function promise_all_map(array, callback, receiver) {
-  return Promise.all(promise_map(array, callback, receiver));
-}
-
-const callbind = Function.prototype.bind.bind(Function.prototype.call);
-const call = callbind(Function.prototype.call);
-const apply = callbind(Function.prototype.apply);
-const _filter = callbind(Array.prototype.filter);
+const callbind = Function.prototype.bind.bind(Function.prototype.call)
+const call = callbind(Function.prototype.call)
+const _filter = callbind(Array.prototype.filter)
 
 function to_object(value) {
   if (value == null) {
-    throw new TypeError(`Can't convert ${value} to obj`);
+    throw new TypeError(`Can't convert ${value} to obj`)
   }
-  return Object(value);
+  return Object(value)
 }

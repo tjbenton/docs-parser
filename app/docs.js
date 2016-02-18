@@ -1,6 +1,5 @@
 'use strict'
 
-import co from 'co'
 import path from 'path'
 import {
   info,
@@ -21,8 +20,10 @@ import get_config from './config'
 /// This is used to parse any filetype that you want to and gets the
 /// documentation for it  and returns an `{}` of the document data
 ////
-const docs = co.wrap(function*(options = {}) {
-  options = yield get_config(options)
+export default async function docs(options = {}) {
+  options = await get_config(options)
+  /* eslint-disable no-unused-vars */
+  // these are all the options that can be used
   let {
     files,
     ignore,
@@ -36,30 +37,33 @@ const docs = co.wrap(function*(options = {}) {
     annotations,
     comments,
   } = options
+  /* eslint-enable no-unused-vars */
 
-  let log = new Logger({ debug, warning, timestamps });
+  let log = new Logger({ debug, warning, timestamps })
 
   log.emit('start', 'total')
 
   try {
-    yield fs.ensureFile(info.temp.file)
+    await fs.ensureFile(info.temp.file)
     let json = fs.readFile(info.temp.file)
     log.emit('start', 'paths')
-    files = yield glob(files, ignore, changed ? has_file_changed : false)
-    let s = files.length > 1 ? 's' : ''
+    files = await glob(files, ignore, changed ? has_file_changed : false)
+    let s = files.length > 1 ? 's' : '' // eslint-disable-line
     log.emit('complete', 'paths', `%s completed after %dms with ${files.length} file${s} to parse`)
 
     log.emit('start', 'parser')
-    files = yield array(files).map((file_path) => parser({ file_path, ...options, log }))
+    files = await array(files).map((file_path) => parser({ file_path, ...options, log }))
     log.emit('complete', 'parser')
 
     // converts json to a readable JS object
-    json = changed ? to.string(yield json) : false
+    json = changed ? to.string(await json) : false
     json = !!json ? to.object(json) : {}
 
     // Loop through the parsed files and update the
     // json data that was stored.
-    for (let i in files) to.extend(json, files[i])
+    for (let file of files) {
+      to.extend(json, file)
+    }
 
     // Update the temp json data. Even though this returns a promise
     // it's not returned below because there's no need to wait for it
@@ -76,12 +80,10 @@ const docs = co.wrap(function*(options = {}) {
 
     log.emit('complete', 'total')
     return json
-  } catch(err) {
+  } catch (err) {
     log.error(err.stack)
   }
-})
-
-export default docs
+}
 
 // @name has_file_changed
 // @access private
@@ -95,15 +97,15 @@ async function has_file_changed(file) {
   let target = path.join(info.temp.folder, file)
 
   try {
-    let stats = await array([source, target]).map((_path) => fs.stat(_path))
+    let stats = await array([ source, target ]).map((_path) => fs.stat(_path))
 
     // copies new files over because it's changed
     if (stats[0].mtime > stats[1].mtime) {
       fs.fake_copy(source, target)
       return true
-    } else {
-      return false
     }
+
+    return false
   } catch (err) {
     // copies new files over because it doesn't exist in the temp target directory
     fs.fake_copy(source, target)
@@ -113,7 +115,7 @@ async function has_file_changed(file) {
 
 
 let logger = new Logger()
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException', (err) => {
   logger.error('An uncaughtException was found:', err.stack)
   process.exit(1)
 })
