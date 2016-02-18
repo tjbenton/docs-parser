@@ -103,25 +103,25 @@ export default async function config(options = {}) {
   // ensures blank_lines is a number to avoid errors
   options.blank_lines = to.number(options.blank_lines)
 
-  let comments = {}
+  let parsed_comments = {}
 
   // ensures comments are a normal structure (aka not `'rb, py': {...}`)
-  for (let [option, value] of to.entries(options.comments)) {
+  for (let [ option, value ] of to.entries(options.comments)) {
     // converts option into an array so multiple languages can be declared at the same time
     option = option.replace(/\s/g, '').split(',')
 
-    for (let lang in option) comments[option[lang]] = value
+    for (let lang in option) parsed_comments[option[lang]] = value
   }
 
   // ensures each comment as all the required comment settings
   // this makes it easier later on when parsing
-  for (let [lang, value] of to.entries(comments)) {
+  for (let [ lang, value ] of to.entries(parsed_comments)) {
     if (lang !== '_') {
-      comments[lang] = to.extend(to.clone(default_comment), value)
+      parsed_comments[lang] = to.extend(to.clone(default_comment), value)
     }
   }
 
-  options.comments = comments
+  options.comments = parsed_comments
 
   options.annotations = new AnnotationApi(options.annotations)
 
