@@ -5,6 +5,7 @@ dist
 .tmp
 .DS_Store
 .sass-cache
+npm-debug.log
 *.map
 docs/docs.json
 coverage
