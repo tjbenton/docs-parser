@@ -80,8 +80,13 @@ export default async function config(options = {}) {
   // merge the config file with passed options
   options = to.extend(ensure_valid_config(config_file), options)
 
+  // ensures `files`, `ignore` is always an array this way no
+  // more checks have to happen for it
+  options.files = to.array(options.files)
+  options.ignore = to.array(options.ignore)
+
   // merge options with base_config so there's a complete list of settings
-  options = to.extend(base_config, options)
+  options = to.extend(to.extend({}, base_config), options)
 
   if (options.gitignore) {
     try {
@@ -93,12 +98,6 @@ export default async function config(options = {}) {
       // do nothing because there's no `.gitignore`
     }
   }
-
-
-  // ensures `files`, `ignore` is always an array this way no
-  // more checks have to happen for it
-  options.files = to.array(options.files)
-  options.ignore = to.array(options.ignore)
 
   // ensures blank_lines is a number to avoid errors
   options.blank_lines = to.number(options.blank_lines)
@@ -124,7 +123,6 @@ export default async function config(options = {}) {
   options.comments = parsed_comments
 
   options.annotations = new AnnotationApi(options.annotations)
-
   return options
 }
 
