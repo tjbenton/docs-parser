@@ -1,8 +1,15 @@
-'use strict';
+'use strict'
 
 import co from 'co'
 import path from 'path'
-import { info, fs, is, to, glob, array, Logger } from './utils'
+import {
+  info,
+  to,
+  fs,
+  glob,
+  array,
+  Logger
+} from './utils'
 import parser from './parser'
 import sorter from './sorter'
 import get_config from './config'

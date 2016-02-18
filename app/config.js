@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 import { info, fs, is, to, Logger } from './utils'
 import path from 'path'
 import annotations from './annotations'
@@ -7,8 +8,8 @@ let log = new Logger()
 
 // changed by `options` key
 const default_options = {
-  config: `${info.root}/docsfile.js`,
-  files: ['app/**/*', 'src/**/*', '*.md'], // files to search
+  config: `${info.root}/.docsfile.js`,
+  files: [ 'app/**/*', 'src/**/*', '*.md' ], // files to search
   // files to be ignored
   ignore: [
     '.*', // all dot files
@@ -72,7 +73,7 @@ export default async function config(options = {}) {
   try {
     // merge the default options with the user options
     config_file = require(config_file)
-  } catch(err) {
+  } catch (err) {
     config_file = {}
   }
 
@@ -88,7 +89,9 @@ export default async function config(options = {}) {
         options.ignore,
         to.array(to.string(await fs.readFile(path.join(info.root, '.gitignore'))))
       ])
-    } catch(err) {}
+    } catch (err) {
+      // do nothing because there's no `.gitignore`
+    }
   }
 
 
