@@ -1,4 +1,9 @@
-var docs = require('./dist/docs')
+/*
+  eslint
+  no-undef: 0,
+  prefer-arrow-callback: 0
+ */
+var docs = require('./docs.js')
 
 // Module exports
 // a) export module
@@ -6,13 +11,11 @@ var docs = require('./dist/docs')
 // c) add docs to the root
 if (typeof exports !== 'undefined') {
   if (typeof module !== 'undefined' && module.exports) {
-    exports = module.exports = docs;
+    exports = module.exports = docs
   }
-  exports.docs = docs;
+  exports.docs = docs
 } else if (typeof define === 'function' && define.amd) { // AMD definition
-  define(function(require) {
-    return docs;
-  });
+  define(() => docs)
 } else {
-  root.docs = docs;
+  root.docs = docs
 }
