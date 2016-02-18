@@ -99,6 +99,9 @@ export default async function config(options = {}) {
     }
   }
 
+  // always ignore json files because they don't support comments
+  options.ignore.push('*.json')
+
   // ensures blank_lines is a number to avoid errors
   options.blank_lines = to.number(options.blank_lines)
 
