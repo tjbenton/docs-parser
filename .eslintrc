@@ -81,7 +81,7 @@
         "min": 2,
         "max": 30,
         "properties": "always",
-        "exceptions": [ "i", "a", "b", "c", "d", "e", "x", "y", "z", "_", "t" ]
+        "exceptions": [ "i", "a", "b", "c", "d", "e", "l", "x", "y", "z", "_", "t" ]
       }
     ],
     "id-match": [ 2, "^(?:[a-z]{2,}([A-Z]{1}[a-z]+)*$)|([a-z_]+$)" ],

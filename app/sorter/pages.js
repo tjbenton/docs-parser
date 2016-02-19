@@ -1,3 +1,4 @@
+/* eslint-disable complexity, max-depth */
 import { is, to } from '../utils'
 
 // placeholder for the result
@@ -14,7 +15,7 @@ export default function pages(options = {}) {
     if (!is.empty(header)) {
       if (is.falsy(header.page)) {
         if (is.truthy(page_fallback)) {
-          header.page = [page_fallback]
+          header.page = [ page_fallback ]
         } else {
           log.emit('warning', `
             Header comment ${header.name && '(' + header.name + ')'} doesn't have a \`@page\` defined in
@@ -54,7 +55,9 @@ export default function pages(options = {}) {
             let index = (body.page || []).indexOf(page)
 
             // remove the page from the body comment
-            if (index > -1) block.page.splice(index, 1)
+            if (index > -1) {
+              block.page.splice(index, 1)
+            }
           }
         }
 
@@ -84,7 +87,7 @@ function set(path, type, value) {
   // won't get added to the data
   delete value.page
 
-  let pages = result
+  let obj = result
   // convert to array, and filter out empty strings
   let path_list = path.split('/').filter(Boolean)
 
@@ -96,20 +99,20 @@ function set(path, type, value) {
   // last one and create the `page`, and `nav` if they don't exist.
   for (let i = 0; i < length; i++) {
     let page = path_list[i]
-    if (!pages[page]) {
-      pages[page] = {
+    if (!obj[page]) {
+      obj[page] = {
         page: {
           header: {},
           body: []
         }
       }
     }
-    pages = pages[page]
+    obj = obj[page]
   }
 
   // a) Define the default data set(can't use `page` because it will be overwritten)
-  if (!pages[path_list[length]]) {
-    pages[path_list[length]] = {
+  if (!obj[path_list[length]]) {
+    obj[path_list[length]] = {
       page: {
         header: {},
         body: []
@@ -118,8 +121,8 @@ function set(path, type, value) {
   }
 
   if (type === 'header') {
-    pages[path_list[length]].page.header = to.merge(pages[path_list[length]].page.header, value)
+    obj[path_list[length]].page.header = to.merge(obj[path_list[length]].page.header, value)
   } else {
-    pages[path_list[length]].page.body.push(value)
+    obj[path_list[length]].page.body.push(value)
   }
 }

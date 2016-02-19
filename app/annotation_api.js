@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 import { is, to } from './utils'
 
@@ -78,7 +78,7 @@ export default class AnnotationApi {
     // the name of the annotation is always the key
     const base_config = {
       // this declares where this annotation get's applied
-      filetypes: ['default'],
+      filetypes: [ 'default' ],
 
       // holds an array of aliases for the given annotation
       alias: [],
@@ -97,7 +97,7 @@ export default class AnnotationApi {
       // annotation exists
       autofill: false,
 
-      // Runs after the parsed and/or autofill runs the contents
+      // Runs after the parsed and/or autofill runs the contents
       // of `this` is what was returned by the parse and/or autofill.
       // It's used to fixed data that was returned by parse.
       // It helps when members on your team pass in the wrong keyword(s)
@@ -121,23 +121,22 @@ export default class AnnotationApi {
       config = {
         alias: config
       }
-    }
-    else if (is.fn(config)) {
+    } else if (is.fn(config)) {
       config = {
         parse: config
       }
-    }
-    else if (is.plain_object(config) && !is.empty(config) && !is.any.in(config, ...to.keys(base_config))) {
+    } else if (is.plain_object(config) && !is.empty(config) && !is.any.in(config, ...to.keys(base_config))) {
       // loop through each filetype in the passed
       // object and rerun the add function
       for (let filetype in config) {
-        let obj = config[filetype];
-        obj.filetypes = is.in(obj, 'filetype') ? to.flatten([filetype, config.filetype]) : to.array(filetype)
-        this.add(name, obj);
+        if (config.hasOwnProperty(filetype)) {
+          let obj = config[filetype]
+          obj.filetypes = is.in(obj, 'filetype') ? to.flatten([ filetype, config.filetype ]) : to.array(filetype)
+          this.add(name, obj)
+        }
       }
       return
-    }
-    else if (!is.plain_object(config)) {
+    } else if (!is.plain_object(config)) {
       throw new Error('config must be a function or object')
       return
     }
@@ -149,11 +148,13 @@ export default class AnnotationApi {
     // merge the passed annotation with the
     // global list of annotations by filetype/default
     for (var filetype in base_config.filetypes) {
-      to.merge(this.annotations, {
-        [is.falsy(base_config.filetypes[filetype]) ? 'default' : base_config.filetypes[filetype]]: {
-          [name]: base_config
-        }
-      })
+      if (base_config.filetypes.hasOwnProperty(filetype)) {
+        to.merge(this.annotations, {
+          [is.falsy(base_config.filetypes[filetype]) ? 'default' : base_config.filetypes[filetype]]: {
+            [name]: base_config
+          }
+        })
+      }
     }
 
     return this
@@ -164,7 +165,9 @@ export default class AnnotationApi {
   /// @arg {array} annotations - Annotation objects
   add_annotations(annotations) {
     for (let name in annotations) {
-      this.add(name, annotations[name])
+      if (annotations.hasOwnProperty(name)) {
+        this.add(name, annotations[name])
+      }
     }
   }
 
@@ -174,7 +177,11 @@ export default class AnnotationApi {
   /// Basically the file specific annotations get extended onto the default annotations
   /// @returns {object} - the annotations to use for the current file
   list(filetype) {
-    return !is.undefined(this.annotations[filetype]) ? to.extend(to.clone(this.annotations.default), this.annotations[filetype]) : this.annotations.default
+    if (!is.undefined(this.annotations[filetype])) {
+      return to.extend(to.clone(this.annotations.default), this.annotations[filetype])
+    }
+
+    return this.annotations.default
   }
 
   autofill_list(filetype) {
@@ -187,7 +194,7 @@ export default class AnnotationApi {
     })
   }
 
-  resolve_list(filetype) {}
+  resolve_list(filetype) {} // eslint-disable-line
 
   /// @name run_annotation
   /// @access private
@@ -210,7 +217,7 @@ export default class AnnotationApi {
       contents = to.normalize(contents)
       return this.run({
         annotation: {
-          name: name,
+          name,
           line: to.normalize(contents[0]),
           contents,
           start: null,
@@ -268,10 +275,12 @@ export default class AnnotationApi {
 
   alias_check() {
     for (let i in this.annotation_names) {
-      let name = this.annotation_names[i];
-      if (is.in(this.annotation_aliases, name)) {
-        throw new Error(`${name} is already declared as an annotation`)
-        return
+      if (this.annotation_names.hasOwnProperty(i)) {
+        let name = this.annotation_names[i]
+        if (is.in(this.annotation_aliases, name)) {
+          throw new Error(`${name} is already declared as an annotation`)
+          return
+        }
       }
     }
   }

@@ -7,7 +7,7 @@ export default function nav(pages) {
   let result = []
 
   // loop over the pages structure to create the navigation
-  for (let [key, value] of to.entries(pages)) {
+  for (let [ key, value ] of to.entries(pages)) {
     result.push(set({
       title: to.titleCase(to.sentenceCase(key)),
       href: `/${key}`,
@@ -18,23 +18,6 @@ export default function nav(pages) {
 
   return result
 }
-
-
-// let nav = ((pages) => {
-//   let result = [] // placeholder to store the result
-//
-//   // loop over the pages structure to create the navigation
-//   for (let [key, value] of to.entries(pages)) {
-//     result.push(set({
-//       title: to.titleCase(to.sentenceCase(key)),
-//       href: `/${key}`,
-//       body: body_names(`/${key}`, value.page.body),
-//       subpages: []
-//     }, value))
-//   }
-//
-//   return result
-// }
 
 /// @name body_names
 /// @description Helper function to get the name of each block in the body
@@ -67,7 +50,7 @@ function body_names(href, body) {
 /// @arg {object} - The inner structure to continue to loop over.
 /// @returns {object}
 function set(a, b) {
-  for (let [key, value] of to.entries(b)) {
+  for (let [ key, value ] of to.entries(b)) {
     if (key !== 'page') {
       let nav_item = {
         title: is.truthy(value.page.header.name) ? value.page.header.name : to.titleCase(to.sentenceCase(key)),
