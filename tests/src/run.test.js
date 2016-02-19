@@ -9,14 +9,15 @@ const test_defaults = {
   debug: false,
   timestamps: false,
   warning: false,
-  changed: false
+  changed: false,
+  ignore: '.*'
 }
 
 
 test('case tests', async (mt) => {
   const base = path.join(__dirname, '..', 'cases')
   const actual_paths = await glob(path.join(base, '*'), [ path.join(base, '*.json') ])
-  const actual = await array(actual_paths).map((file) => docs({ file, ...test_defaults }))
+  const actual = await array(actual_paths).map((files) => docs({ files, ...test_defaults }))
   const expected = await array(actual_paths).map((file) => fs.readJson(file.replace(/\..*$/, '.json')))
 
   for (let i = 0; i < actual_paths.length; i++) {
