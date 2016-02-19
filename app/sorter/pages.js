@@ -1,14 +1,15 @@
 /* eslint-disable complexity, max-depth */
 import { is, to } from '../utils'
 
-// placeholder for the result
-let result = {}
 
 /// @name pages
 /// @description
 /// This function loops over the json that was passed and creates a organized structure
 /// based on the `@pages` annotations that were passed.
 export default function pages(options = {}) {
+  // placeholder for the result
+  let result = {}
+
   let { json, page_fallback, log } = options
 
   for (let { path, header, body } of to.object_entries(json, 'path')) {
@@ -69,60 +70,59 @@ export default function pages(options = {}) {
     }
   }
 
-  return result
-}
+  // @name set
+  // @description
+  // creates a structure from an array, and adds the passed object to
+  // the `base` array if it was passed.
+  //
+  // @returns {object} - The nested object with the set value
+  function set(path, type, value) {
+    // ensures values won't change in the passed value
+    value = to.clone(value)
 
+    // deletes the page from the value so it
+    // won't get added to the data
+    delete value.page
 
-// @name set
-// @description
-// creates a structure from an array, and adds the passed object to
-// the `base` array if it was passed.
-//
-// @returns {object} - The nested object with the set value
-function set(path, type, value) {
-  // ensures values won't change in the passed value
-  value = to.clone(value)
+    let obj = result
+    // convert to array, and filter out empty strings
+    let path_list = path.split('/').filter(Boolean)
 
-  // deletes the page from the value so it
-  // won't get added to the data
-  delete value.page
+    // 1 less than the link so the last item in the `path_list` is what
+    // the passed value will be set to
+    let length = path_list.length - 1
 
-  let obj = result
-  // convert to array, and filter out empty strings
-  let path_list = path.split('/').filter(Boolean)
+    // loop over all the pages in in the `path_list` except the
+    // last one and create the `page`, and `nav` if they don't exist.
+    for (let i = 0; i < length; i++) {
+      let page = path_list[i]
+      if (!obj[page]) {
+        obj[page] = {
+          page: {
+            header: {},
+            body: []
+          }
+        }
+      }
+      obj = obj[page]
+    }
 
-  // 1 less than the link so the last item in the `path_list` is what
-  // the passed value will be set to
-  let length = path_list.length - 1
-
-  // loop over all the pages in in the `path_list` except the
-  // last one and create the `page`, and `nav` if they don't exist.
-  for (let i = 0; i < length; i++) {
-    let page = path_list[i]
-    if (!obj[page]) {
-      obj[page] = {
+    // a) Define the default data set(can't use `page` because it will be overwritten)
+    if (!obj[path_list[length]]) {
+      obj[path_list[length]] = {
         page: {
           header: {},
           body: []
         }
       }
     }
-    obj = obj[page]
-  }
 
-  // a) Define the default data set(can't use `page` because it will be overwritten)
-  if (!obj[path_list[length]]) {
-    obj[path_list[length]] = {
-      page: {
-        header: {},
-        body: []
-      }
+    if (type === 'header') {
+      obj[path_list[length]].page.header = to.merge(obj[path_list[length]].page.header, value)
+    } else {
+      obj[path_list[length]].page.body.push(value)
     }
   }
 
-  if (type === 'header') {
-    obj[path_list[length]].page.header = to.merge(obj[path_list[length]].page.header, value)
-  } else {
-    obj[path_list[length]].page.body.push(value)
-  }
+  return result
 }

@@ -1,6 +1,6 @@
 import { is, to } from '../utils'
-import get_pages from './pages'
-import get_nav from './nav'
+import getPages from './pages'
+import getPav from './nav'
 
 /// @name sort
 /// @description
@@ -8,10 +8,8 @@ import get_nav from './nav'
 /// @arg {object}
 /// @returns {object}
 export default function sorter(options = {}) {
-  let pages = get_pages(options)
-
-
-  let nav = get_nav(pages)
+  let pages = getPages(options)
+  let nav = getPav(pages)
 
   return {
     nav,
