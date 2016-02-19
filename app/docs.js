@@ -69,7 +69,7 @@ export default async function docs(options = {}) {
     // it's not returned below because there's no need to wait for it
     // to finish writing out the json file before moving on. Because the
     // `json` object has already been updated.
-    fs.outputJson(info.temp.file, json, { spaces: 2 })
+    fs.outputJson(info.temp.file, (changed ? json : {}), { spaces: 2 })
       .catch((err) => log.error(err.stack))
 
     if (!raw) {
