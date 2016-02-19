@@ -8,9 +8,8 @@ import fs from 'fs-extra'
 // Creates an empty file temp file in the `.tmp/`. This is so that I can
 // check to see if the source file has been updated.
 fs.fake_copy = (source, target, callback) => {
-  var cbCalled = false,
-      source = path.parse(source),
-      target = path.parse(target);
+  source = path.parse(source)
+  target = path.parse(target)
 
   // creates the directory path if it doesn't exist
   fs.mkdirp(path.resolve(source.dir, path.relative(source.dir, target.dir)), () => {

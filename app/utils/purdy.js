@@ -1,6 +1,6 @@
 // Load modules
 import to from './to'
-import $ from 'clor'
+import clor from 'clor'
 
 export default class Purdy {
   constructor(options = {}) {
@@ -73,7 +73,7 @@ export default class Purdy {
     colors = colors.split('.')
 
     for (let color of colors) {
-      string = $[color](string)
+      string = clor[color](string)
     }
 
     return string
@@ -221,7 +221,7 @@ export default class Purdy {
 
   _string(str) {
     str = to.normalize(str, false).split('\n')
-    let quote = str.length > 1 ? '`' : `'`
+    let quote = str.length > 1 ? '`' : "'"
     let l = str.length
 
     // returns because it's a single line string
@@ -229,7 +229,7 @@ export default class Purdy {
       return quote + str[0] + quote
     }
 
-    let has_newline_only = /(?:\s*?(\n)\s*?)(.*)/.exec(str[0])
+    // let has_newline_only = /(?:\s*?(\n)\s*?)(.*)/.exec(str[0])
 
     str.splice(0, 1, quote + str[0])
     str.splice(l - 1, l, str[l - 1] + quote)
@@ -237,8 +237,9 @@ export default class Purdy {
     // removes the first line from the str so it doesn't get indented
     let out = str.splice(0, 1)
 
-    for (let line of str)
+    for (let line of str) {
       out.push(this.indent() + this.colorize(line, 'string'))
+    }
 
     return out.join('\n')
   }

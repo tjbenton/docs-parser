@@ -6,7 +6,7 @@ import { is, to } from '../utils'
 /// This function is used to replace all instances of aliases in a file
 /// @returns {string} - The file with the instances of aliases removed
 export default function aliases(options = {}) {
-  let { contents, annotations, comment, log } = options
+  let { contents, annotations, comment } = options /* , log */
 
   let main_annotation_list = to.keys(annotations)
 
@@ -18,7 +18,7 @@ export default function aliases(options = {}) {
     return false
   })
 
-  for (let [annotation, alias_list] of to.entries(annotations)) {
+  for (let [ annotation, alias_list ] of to.entries(annotations)) {
     // sorts the aliases based off their length. This is to ensure if to two
     // or more aliases are similar they will always get replaced correctly
     // aka `param` and `parameter`

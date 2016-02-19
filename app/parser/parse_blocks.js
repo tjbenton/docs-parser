@@ -25,9 +25,7 @@ export default function parse_blocks(options = {}) {
   let autofill_list = annotations.autofill_list(file.type)
 
   // loop over each block
-  for (let i in blocks) {
-    let block = blocks[i]
-
+  for (let block of blocks) {
     block.comment.contents = to.normalize(block.comment.contents)
     block.code.contents = to.normalize(block.code.contents)
 
@@ -71,7 +69,7 @@ function parse_block(options = {}) {
   } = options
 
   // gets the annotations to use on this file
-  let annotations_list = annotations.list(file.type);
+  let annotations_list = annotations.list(file.type)
   let keys = to.keys(annotations_list)
 
   let contents = to.array(block.comment.contents)

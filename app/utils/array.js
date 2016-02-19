@@ -1,4 +1,4 @@
-/* eslint-disable no-bitwise */
+/* eslint-disable no-bitwise, babel/no-await-in-loop */
 'use strict'
 
 export default function async_array(array) {

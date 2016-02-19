@@ -1,3 +1,4 @@
+/* eslint-disable complexity, max-statements, max-depth */
 import { is, to } from '../utils'
 
 /// @name blocks
@@ -5,7 +6,7 @@ import { is, to } from '../utils'
 /// @description Parses the file and returns the comment blocks in an array
 /// @returns {array} of the comment blocks
 /// @todo {5} - add a line offest argument to this so that you can call parse content on other language types.
-export default function get_blocks(options) {
+export default function getBlocks(options) {
   let {
     file,
     contents,
@@ -37,10 +38,10 @@ export default function get_blocks(options) {
   for (let i = start_at, l = lines.length; i < l; i++) {
     let line = lines[i]
     let index = {
-          start: style === 'multi' && is.in(line, comment.start) ? line.indexOf(comment.start) : false,
-          line: is.in(line, comment.line) ? line.indexOf(comment.line) : false,
-          end: style === 'multi' && is.in(line, comment.end) ? line.indexOf(comment.end) : false
-        }
+      start: style === 'multi' && is.in(line, comment.start) ? line.indexOf(comment.start) : false,
+      line: is.in(line, comment.line) ? line.indexOf(comment.line) : false,
+      end: style === 'multi' && is.in(line, comment.end) ? line.indexOf(comment.end) : false
+    }
 
     // a) The line isn't empty so parse it.
     if (!is.empty(line)) {
@@ -134,9 +135,7 @@ export default function get_blocks(options) {
           parsed.push(block)
         }
       }
-    }
-    // the last line in the file was an empty line.
-    else if (i === l - 1 && is.truthy(block)) {
+    } else if (i === l - 1 && is.truthy(block)) { // the last line in the file was an empty line.
       block[is.between(block.comment.end) ? 'comment' : 'code'].end = i
       parsed.push(block)
     }

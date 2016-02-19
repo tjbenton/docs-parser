@@ -45,7 +45,7 @@ is.plain_object = (arg) => to_string(arg) === '[object Object]'
 /// @arg {number} min [0]
 /// @arg {number} max [Infinity]
 /// @returns {boolean}
-is.between = (arg, min = 0, max = Infinity) => is.all.number(arg, min, max) && (arg >= min && arg <= max),
+is.between = (arg, min = 0, max = Infinity) => is.all.number(arg, min, max) && (arg >= min && arg <= max)
 
 /// @name is.promise
 /// @description is a given arg a promise?

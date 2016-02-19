@@ -81,7 +81,7 @@
         "min": 2,
         "max": 30,
         "properties": "always",
-        "exceptions": [ "i", "a", "b", "c", "d", "e", "l", "x", "y", "z", "_", "t" ]
+        "exceptions": [ "i", "k", "a", "b", "c", "d", "e", "l", "x", "y", "z", "_", "t" ]
       }
     ],
     "id-match": [ 2, "^(?:[a-z]{2,}([A-Z]{1}[a-z]+)*$)|([a-z_]+$)" ],
@@ -104,7 +104,6 @@
     "new-parens": 2,
     "no-alert": 2,
     "no-array-constructor": 2,
-    "no-confusing-arrow": 2,
     "no-bitwise": 2,
     "no-caller": 2,
     "no-catch-shadow": 2,
@@ -160,7 +159,6 @@
     "no-trailing-spaces": 2,
     "no-undef-init": 2,
     "no-undef": 2,
-    "no-underscore-dangle": 2,
     "no-unneeded-ternary": 2,
     "no-unused-expressions": [ 2, { "allowShortCircuit": true, "allowTernary": true } ],
     "no-unused-vars": 2,

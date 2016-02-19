@@ -38,7 +38,7 @@ function regex(name, str) {
 }
 
 function _markdown(...args) {
-  return to.markdown([...args].filter(Boolean).join('\n'))
+  return to.markdown([ ...args ].filter(Boolean).join('\n'))
 }
 
 
@@ -84,7 +84,7 @@ const annotations = {
   /// @note Description runs through markdown
   /// @returns {object}
   arg: {
-    alias: ['argument', 'param', 'parameter'],
+    alias: [ 'argument', 'param', 'parameter' ],
     parse() {
       let [
         types,
@@ -93,12 +93,14 @@ const annotations = {
         description
       ] = regex('arg', this.annotation.line)
 
-      return [{
-        types: list(types),
-        name,
-        value,
-        description: _markdown(description, this.annotation.contents)
-      }]
+      return [
+        {
+          types: list(types),
+          name,
+          value,
+          description: _markdown(description, this.annotation.contents)
+        }
+      ]
     }
   },
 
@@ -107,7 +109,7 @@ const annotations = {
   /// @description Author of the documented item
   /// @returns {string}
   author: {
-    alias: ['authors'],
+    alias: [ 'authors' ],
     parse() {
       return list(this.annotation.line)
     }
@@ -131,7 +133,7 @@ const annotations = {
     parse() {
       let [ version, description ] = regex('deprecated', this.annotation.line)
       return {
-        version: version,
+        version,
         description: _markdown(description, this.annotation.contents)
       }
     }
@@ -143,7 +145,7 @@ const annotations = {
   /// @note Runs through markdown
   /// @returns {string}
   description: {
-    alias: ['desc', 'definition', 'explanation', 'writeup', 'summary', 'summarization'],
+    alias: [ 'desc', 'definition', 'explanation', 'writeup', 'summary', 'summarization' ],
     parse() {
       return _markdown(this.annotation.line, this.annotation.contents)
     }
@@ -165,7 +167,7 @@ const annotations = {
   /// @returns {object}
   /// // markdown - `(id) {language} [settings] - description`
   markup: {
-    alias: ['code', 'example', 'output', 'outputs'],
+    alias: [ 'code', 'example', 'output', 'outputs' ],
     parse() {
       let escaped_characters = {
         '&': '&amp;',
@@ -182,22 +184,31 @@ const annotations = {
         description
       ] = regex('markup', this.annotation.line)
 
-      let raw = this.annotation.contents;
+      let raw = this.annotation.contents
 
-      let escaped = raw.split('\n').map((line) => line.replace(/[&<>'"]/g, (m) => escaped_characters[m])).join('\n');
+      let escaped = raw
+        .split('\n')
+        .map((line) => line
+          .replace(/[&<>'"]/g, (match) =>
+            escaped_characters[match]
+          )
+        )
+        .join('\n')
 
       if (is.string(settings)) {
         settings = to.object(list(settings).map((setting) => setting.split('=')))
       }
 
-      return [{
-        id,
-        language,
-        settings,
-        description: _markdown(description),
-        raw,
-        escaped
-      }]
+      return [
+        {
+          id,
+          language,
+          settings,
+          description: _markdown(description),
+          raw,
+          escaped
+        }
+      ]
     }
   },
 
@@ -206,7 +217,7 @@ const annotations = {
   /// @description Name of the documented item
   /// @returns {string}
   name: {
-    alias: ['title', 'heading']
+    alias: [ 'title', 'heading' ]
   },
 
   /// @name @note
@@ -217,10 +228,12 @@ const annotations = {
     parse() {
       let [ importance, description ] = regex('note', this.annotation.line)
 
-      return [{
-        importance,
-        description: _markdown(description, this.annotation.contents)
-      }]
+      return [
+        {
+          importance,
+          description: _markdown(description, this.annotation.contents)
+        }
+      ]
     }
   },
 
@@ -229,7 +242,7 @@ const annotations = {
   /// @description The page you want the documented item to be on
   /// @returns {string}
   page: {
-    alias: ['group'],
+    alias: [ 'group' ],
     parse() {
       return list(this.annotation.line)
     }
@@ -250,15 +263,17 @@ const annotations = {
   /// @description Requirements from the documented item
   /// @returns {object}
   requires: {
-    alias: ['require'],
+    alias: [ 'require' ],
     parse() {
       let [ types, name, description ] = regex('requires', this.annotation.line)
 
-      return [{
-        types: list(types),
-        name,
-        description: _markdown(description, this.annotation.contents)
-      }]
+      return [
+        {
+          types: list(types),
+          name,
+          description: _markdown(description, this.annotation.contents)
+        }
+      ]
     }
   },
 
@@ -267,7 +282,7 @@ const annotations = {
   /// @description Return from the documented function
   /// @returns {string}
   returns: {
-    alias: ['return'],
+    alias: [ 'return' ],
     parse() {
       let [ types, description ] = regex('returns', this.annotation.line)
 
@@ -334,13 +349,19 @@ const annotations = {
   /// // todo - {5} [assignee-one, assignee-two] - Task to be done
   todo: {
     parse() {
-      let [ importance, assignees, description ] = regex('todo', this.annotation.line)
-
-      return [{
+      let [
         importance,
-        assignees: list(assignees),
-        description: _markdown(description, this.annotation.contents)
-      }]
+        assignees,
+        description
+      ] = regex('todo', this.annotation.line)
+
+      return [
+        {
+          importance,
+          assignees: list(assignees),
+          description: _markdown(description, this.annotation.contents)
+        }
+      ]
     }
   },
 
@@ -348,9 +369,9 @@ const annotations = {
   /// @description
   /// The error that happends if something goes wrong
   throws: {
-    alias: ['throws', 'exception', 'error'],
+    alias: [ 'throws', 'exception', 'error' ],
     parse() {
-      return [join(this.annoation.line, this.annoation.content)]
+      return [ _markdown(this.annoation.line, this.annoation.content) ]
     }
   },
 

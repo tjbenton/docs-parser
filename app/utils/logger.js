@@ -1,16 +1,19 @@
 import Purdy from './purdy'
-import $ from 'clor'
+import clor from 'clor'
 
-let chevron = '\xBB'
-let check = '\u2713'
-let warning = '\u26A0'
-let error = '\u2326'
+
+let icon = {
+  chevron: '\xBB',
+  check: '\u2713',
+  warning: '\u26A0',
+  error: '\u2326'
+}
 
 const messaging = {
-  warning: $.yellow.bold(`${warning} [WARNING]`),
-  debug: $.magenta.bold(`${chevron}[DEBUG]`),
-  error: $.red.bold(`${error}[ERROR]`),
-  file: $.bgBlue.white(`${chevron}[FILE]`)
+  warning: clor.yellow.bold(`${icon.warning} [WARNING]`),
+  debug: clor.magenta.bold(`${icon.chevron}[DEBUG]`),
+  error: clor.red.bold(`${icon.error}[ERROR]`),
+  file: clor.bgBlue.white(`${icon.chevron}[FILE]`)
 }
 
 const purdy = new Purdy()
@@ -52,8 +55,8 @@ export default class Logger {
       timestamps = true
     } = options
 
-    this.on('annotation_error', ({ annotation, error }) =>
-      this.error(`with ${annotation}`, error))
+    this.on('annotation_error', ({ annotation, error_message }) =>
+      this.error(`with ${annotation}`, error_message))
 
     if (timestamps) {
       this
@@ -105,7 +108,7 @@ export default class Logger {
 
     let duration = Date.now() - time
     console.log(
-      `${$.green(check)} ${format}`,
+      `${clor.green(icon.check)} ${format}`,
       label,
       duration
     )
@@ -132,32 +135,3 @@ export default class Logger {
     return this
   }
 }
-
-// .on('fly_run', ({ path }) =>
-//   log(`Flying with ${fmt.path}...`, path))
-//
-// .on('flyfile_not_found', ({ error }) =>
-//   log(`No Flyfile Error: ${fmt.error}`, error))
-//
-// .on('fly_watch', () =>
-//   log(`${fmt.warn}`, 'Watching files...'))
-//
-// .on('plugin_load', ({ plugin }) =>
-//   log(`Loading plugin ${fmt.title}`, plugin))
-//
-// .on('plugin_error', ({ plugin, error }) =>
-//   log(`${fmt.error} failed due to ${fmt.error}`, plugin, error))
-//
-// .on('task_error', ({ task, error }) => {
-//   trace(error)
-//   log(`${fmt.error} failed due to ${fmt.error}`, task, error)
-// })
-//
-// .on('task_start', ({ task }) =>
-//   log(`Starting ${fmt.start}`, task))
-//
-// .on('task_complete', ({ task, duration }) => {
-//   const time = timeInfo(duration)
-//   log(`Finished ${fmt.complete} in ${fmt.secs}`,
-//     task, time.duration, time.scale)
-// })

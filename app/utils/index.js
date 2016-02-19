@@ -1,6 +1,6 @@
 export denodeify from './denodeify'
 export Logger from './logger'
-export {Purdy} from './purdy'
+export { Purdy } from './purdy'
 export fs from './fs'
 export glob from './glob'
 export info from './info'

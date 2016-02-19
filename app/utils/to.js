@@ -61,7 +61,7 @@ let to = {
   /// @arg {object}
   /// @returns {array}
   keys: (arg) => (is.plain_object(arg) || is.symbol(arg)) &&
-    to.flatten([Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg)]),
+    to.flatten([ Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg) ]),
 
   /// @name to.entries
   /// @description
@@ -113,12 +113,12 @@ let to = {
           let key = keys[index]
           index++
           return {
-            value: [key, obj[key]]
+            value: [ key, obj[key] ]
           }
-        } else {
-          return {
-            done: true
-          }
+        }
+
+        return {
+          done: true
         }
       }
     }
@@ -189,21 +189,27 @@ let to = {
     content = to.array(content) // this allows arrays and strings to be passed
 
     // remove leading blank lines
-    if (leading)
-      while (content.length && !!!content[0].trim().length)
-        content.shift()
+    if (leading) {
+      while (content.length && !!!content[0].trim().length) content.shift()
+    }
 
     // remove trailing blank lines
-    if (trailing)
-      while (content.length && !!!(content[content.length - 1].trim()).length)
-        content.pop()
+    if (trailing) {
+      while (content.length && !!!(content[content.length - 1].trim()).length) content.pop()
+    }
 
-    return content.map((line) => line.slice(
-             content.join('\n') // converts content to string to string
-               .match(/^\s*/gm) // gets the extra whitespace at the beginning of the line and returns a map of the spaces
-               .sort((a, b) => a.length - b.length)[0].length // sorts the spaces array from smallest to largest and then checks returns the length of the first item in the array
-             )) // remove extra whitespace from the beginning of each line
-             .join('\n').replace(/[^\S\r\n]+$/gm, '') // convert to string and remove all trailing white spaces from each line
+    let trim_by = content.join('\n') // converts content to string to string
+      // gets the extra whitespace at the beginning of the line and
+      // returns a map of the spaces
+      .match(/^\s*/gm)
+      // sorts the spaces array from smallest to largest and then checks
+      // returns the length of the first item in the array
+      .sort((a, b) => a.length - b.length)[0].length
+
+    return content
+      .map((line) => line.slice(trim_by)) // remove extra whitespace from the beginning of each line
+      .join('\n') // converts content to string
+      .replace(/[^\S\r\n]+$/gm, '') // removes all trailing white spaces from each line
   },
 
   /// @name to.extend
@@ -219,7 +225,7 @@ let to = {
       return a
     }
 
-    let k = to.keys(b)
+    let k = to.keys(b) // eslint-disable-line
 
     for (let i = 0, l = k.length; i < l; i++) {
       if (is.plain_object(b[k[i]])) {
@@ -241,31 +247,33 @@ let to = {
   clone(arg) {
     // Basis.
     if (!(arg instanceof Object)) {
-      return arg;
+      return arg
     }
 
-    let clone;
+    let clone
 
     // Filter out special objects.
-    let Constructor = arg.constructor;
+    let Constructor = arg.constructor
     switch (Constructor) {
       // Implement other special objects here.
+      /* eslint-disable indent */
       case RegExp:
-        clone = new Constructor(arg);
-        break;
+        clone = new Constructor(arg)
+        break
       case Date:
-        clone = new Constructor(arg.getTime());
-        break;
+        clone = new Constructor(arg.getTime())
+        break
       default:
-        clone = new Constructor();
+        clone = new Constructor()
+      /* eslint-enable indent */
     }
 
     // Clone each property.
-    for (var prop in arg) {
-      clone[prop] = to.clone(arg[prop]);
+    for (var prop in arg) { // eslint-disable-line
+      clone[prop] = to.clone(arg[prop])
     }
 
-    return clone;
+    return clone
   },
 
   /// @name to.merge
@@ -295,7 +303,16 @@ let to = {
   ///
   /// @markeup {js} **Example:**
   /// let a = { foo: { bar: "1", baz: ["3", "4"], qux: "one", quux: { garply: { waldo: "one" } }, waldo: "" } }
-  /// let b = { foo: { bar: "2", baz: ["5", "6"], qux: ["two", "three"], quux: { garply: { waldo: "two" } }, waldo: function(){ return this; }, garply: "item" } }
+  /// let b = {
+  ///   foo: {
+  ///     bar: "2",
+  ///     baz: ["5", "6"],
+  ///     qux: ["two", "three"],
+  ///     quux: { garply: { waldo: "two" } },
+  ///     waldo: function(){ return this; },
+  ///     garply: "item"
+  ///   }
+  /// }
   ///
   /// to.merge(a, b)
   ///
@@ -310,7 +327,7 @@ let to = {
   ///   garply: "item" // didn't exist before so it stays as a string
   ///  }
   /// }
-  merge(a, b, unique = true, flat = true) {
+  merge(a, b, unique = true, flat = true) { // eslint-disable-line
     // a) Don't touch `null` or `undefined` objects.
     if (!a || !b) {
       return a
@@ -318,33 +335,35 @@ let to = {
 
     // loop over each key in the second map
     for (let k in b) {
-      // a) Set the value of `a` to be the value in `b` because it was either
-      //    a function or it didn't exsit already in `a`
-      // c) Push the value in `b` into the `a` values array
-      // b) The recursive functionality happends here
-      //    a) Call the merge function go further into the object
-      //    b) Sets the value of `a` to be the value of `b`
-      // d) Convert the a value to be an array, and add the `b` value to it
-      if (is.fn(b[k]) || is.fn(a[k]) || is.undefined(a[k])) {
-        a[k] = b[k]
-      } else if (is.array(a[k])) {
-        a[k].push(b[k])
-      } else if (is.plain_object(a[k])) {
-        a[k] = is.plain_object(b[k]) ? to.merge(a[k], b[k]) : b[k]
-      } else {
-        a[k] = [a[k], b[k]]
-      }
-
-      // a) is array
-      if (is.array(a[k])) {
-        // a) Flatten the array
-        if (flat) {
-          a[k] = to.flatten(a[k])
+      if (b.hasOwnProperty(k)) {
+        // a) Set the value of `a` to be the value in `b` because it was either
+        //    a function or it didn't exsit already in `a`
+        // c) Push the value in `b` into the `a` values array
+        // b) The recursive functionality happends here
+        //    a) Call the merge function go further into the object
+        //    b) Sets the value of `a` to be the value of `b`
+        // d) Convert the a value to be an array, and add the `b` value to it
+        if (is.fn(b[k]) || is.fn(a[k]) || is.undefined(a[k])) {
+          a[k] = b[k]
+        } else if (is.array(a[k])) {
+          a[k].push(b[k])
+        } else if (is.plain_object(a[k])) {
+          a[k] = is.plain_object(b[k]) ? to.merge(a[k], b[k]) : b[k]
+        } else {
+          a[k] = [ a[k], b[k] ]
         }
 
-        // a) Filter out duplicates
-        if (unique && !is.plain_object(a[k][0])) {
-          a[k] = to.unique(a[k])
+        // a) is array
+        if (is.array(a[k])) {
+          // a) Flatten the array
+          if (flat) {
+            a[k] = to.flatten(a[k])
+          }
+
+          // a) Filter out duplicates
+          if (unique && !is.plain_object(a[k][0])) {
+            a[k] = to.unique(a[k])
+          }
         }
       }
     }
@@ -387,10 +406,10 @@ let to = {
     } else if (is.string(arg)) {
       return arg.split(glue)
     } else if (is.plain_object(arg) || is.number(arg)) {
-      return [arg]
-    } else {
-      return []
+      return [ arg ]
     }
+
+    return []
   },
 
   /// @name to.flatten
@@ -410,14 +429,15 @@ let to = {
       return arg
     }
 
-    let o = {}
-    let r = []
+    let obj = {}
+    let result = []
+    /* eslint-disable guard-for-in */
+    for (let i in arg) obj[arg[i]] = arg[i]
 
-    for (let i in arg) o[arg[i]] = arg[i]
+    for (let i in obj) result.push(obj[i])
+    /* eslint-enable guard-for-in */
 
-    for (let i in o) r.push(o[i])
-
-    return r
+    return result
   },
 
   /// @name to.sort
@@ -450,7 +470,7 @@ let to = {
 
     let result = {}
 
-    for (let [key, value] of to.entries(arg)) {
+    for (let [ key, value ] of to.entries(arg)) {
       let cb_result = callback(value, key)
       if (is.truthy(cb_result) && !is.empty(cb_result) && is.plain_object(cb_result)) {
         to.extend(result, cb_result)
@@ -467,7 +487,7 @@ let to = {
 
     let result = {}
 
-    for (let [key, value] of to.entries(arg)) {
+    for (let [ key, value ] of to.entries(arg)) {
       if (is.truthy(callback(value, key, arg))) {
         to.extend(result, { key: value })
       }
@@ -481,8 +501,17 @@ let to = {
   /// Converts `arg` to number
   /// @arg {number, array, object, string, boolean}
   /// @returns {number}
-  number: (arg) => is.number(arg) ? arg : is.array(arg) ?
-    arg.length : is.plain_object(arg) ? to.keys(arg).length : ~~arg
+  number: (arg) => {
+    if (is.number(arg)) {
+      return arg
+    } else if (is.array(arg)) {
+      return arg.length
+    } else if (is.plain_object(arg)) {
+      return to.keys(arg).length
+    }
+
+    return ~~arg // eslint-disable-line
+  }
 }
 
 export default to
