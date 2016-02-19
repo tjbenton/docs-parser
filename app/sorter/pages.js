@@ -38,12 +38,11 @@ export default function pages(options = {}) {
     }
 
     if (!is.empty(body)) {
-      for (let block_in_body of body) {
-        let { __start, ...block } = block_in_body
+      for (let block of body) {
         // warn the user that there isn't a page defined.
         if (is.all.empty(header.page, block.page)) {
           log.emit('warning', `
-            ${block.name || 'a block'} starting on line ${__start} doesn't have a \`@page\` defined in
+            ${block.name || 'a block'} starting on line ${block.__start} doesn't have a \`@page\` defined in
             ${path}
           `)
         }
