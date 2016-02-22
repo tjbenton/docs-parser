@@ -114,8 +114,9 @@ async function has_file_changed(file) {
 }
 
 
-let logger = new Logger()
-process.on('uncaughtException', (err) => {
-  logger.error('An uncaughtException was found:', err.stack)
-  process.exit(1)
-})
+// let logger = new Logger()
+// process.on('uncaughtException', (err) => {
+//   logger.error('An uncaughtException was found:', err)
+//   console.trace(err)
+//   process.exit(1)
+// })

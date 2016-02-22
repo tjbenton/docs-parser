@@ -3,25 +3,26 @@
 ///
 /// @description Your standard form button.
 ///
-/// @state :hover
-/// @state :active
-/// @state :disabled - Dims the button when disabled.
-/// @state .c-btn--mini - A mini button
-/// @state .c-btn--tiny - A tiny button
-/// @state .c-btn--medium - A medium button
-/// @state .c-btn--large - A large button
-/// @state .c-btn--primary - Primary action
-/// @state .c-btn--primary:hover
-/// @state .c-btn--primary:active
-/// @state .c-btn--secondary - Secondary action
-/// @state .c-btn--secondary:hover
-/// @state .c-btn--secondary:active
-/// @state .c-btn--tertiary - Tertiary action
-/// @state .c-btn--tertiary:hover
-/// @state .c-btn--tertiary:active
-/// @state .c-btn--text - It's a text link as a button
-/// @state .c-btn--text:hover
-/// @state .c-btn--text:active
+/// @state
+/// {:hover}
+/// {:active}
+/// {:disabled} - Dims the button when disabled.
+/// {.c-btn--mini} - A mini button
+/// {.c-btn--tiny} - A tiny button
+/// {.c-btn--medium} - A medium button
+/// {.c-btn--large} - A large button
+/// {.c-btn--primary} - Primary action
+/// {.c-btn--primary:hover}
+/// {.c-btn--primary:active}
+/// {.c-btn--secondary} - Secondary action
+/// {.c-btn--secondary:hover}
+/// {.c-btn--secondary:active}
+/// {.c-btn--tertiary} - Tertiary action
+/// {.c-btn--tertiary:hover}
+/// {.c-btn--tertiary:active}
+/// {.c-btn--text} - It's a text link as a button
+/// {.c-btn--text:hover}
+/// {.c-btn--text:active}
 ///
 /// @markup
 /// <div class="c-btn-group">

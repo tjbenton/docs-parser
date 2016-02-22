@@ -1,0 +1,60 @@
+{
+  "nav": [
+    {
+      "title": "Edge Cases",
+      "href": "/edge-cases",
+      "body": [],
+      "subpages": [
+        {
+          "title": "No Space Between Header And Body Comment",
+          "href": "/edge-cases/no-space-between-header-and-body-comment",
+          "body": [
+            {
+              "title": "moz-only",
+              "href": "/edge-cases/no-space-between-header-and-body-comment#moz-only"
+            }
+          ],
+          "subpages": []
+        }
+      ]
+    }
+  ],
+  "pages": {
+    "edge-cases": {
+      "page": {
+        "header": {},
+        "body": []
+      },
+      "no-space-between-header-and-body-comment": {
+        "page": {
+          "header": {
+            "__start": 0,
+            "__end": 3,
+            "author": [
+              "Tyler Benton"
+            ],
+            "access": "public"
+          },
+          "body": [
+            {
+              "__start": 4,
+              "__end": 27,
+              "name": "moz-only",
+              "markup": [
+                {
+                  "id": "0",
+                  "language": "scss",
+                  "settings": {},
+                  "description": "<p>(example=&quot;false&quot;) <strong>Example:</strong></p>\n",
+                  "raw": "@include moz-only(){\n // removes the weird styling in firefox\n -moz-appearance: none;\n padding: {\n  top: nth-val(get($form-config, padding), 1) - .2em;\n  bottom: nth-val(get($form-config, padding), 3) - .2em;\n };\n text-indent: 0.01px;\n text-overflow: \"\";\n}",
+                  "escaped": "@include moz-only(){\n // removes the weird styling in firefox\n -moz-appearance: none;\n padding: {\n  top: nth-val(get($form-config, padding), 1) - .2em;\n  bottom: nth-val(get($form-config, padding), 3) - .2em;\n };\n text-indent: 0.01px;\n text-overflow: &quot;&quot;;\n}"
+                }
+              ],
+              "access": "public"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

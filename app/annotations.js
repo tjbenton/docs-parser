@@ -178,7 +178,7 @@ const annotations = {
       }
 
       let [
-        id = false,
+        id = '0',
         language = this.file.type,
         settings = {},
         description
@@ -321,11 +321,12 @@ const annotations = {
   state: {
     parse() {
       let states = this.annotation.contents.split('\n')
-      let [ markup_id, state_line ] = regex('state_id', this.annotation.line)
+      let [ markup_id = '0', state_line ] = regex('state_id', this.annotation.line)
       states.unshift(state_line)
 
       states = states.filter(Boolean).map((line, i) => {
-        let [ state, state_id = `${i}`, description ] = regex('state', line)
+        let [ state = '', state_id = `${i}`, description = '' ] = regex('state', line)
+
         return {
           state,
           state_id,

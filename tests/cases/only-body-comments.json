@@ -1,0 +1,152 @@
+{
+  "nav": [
+    {
+      "title": "Components",
+      "href": "/components",
+      "body": [],
+      "subpages": [
+        {
+          "title": "Buttons",
+          "href": "/components/buttons",
+          "body": [],
+          "subpages": []
+        }
+      ]
+    }
+  ],
+  "pages": {
+    "components": {
+      "page": {
+        "header": {},
+        "body": []
+      },
+      "buttons": {
+        "page": {
+          "header": {},
+          "body": [
+            {
+              "__start": 0,
+              "__end": 31,
+              "author": [
+                "Tyler Benton"
+              ],
+              "state": [
+                {
+                  "markup_id": "0",
+                  "states": [
+                    {
+                      "state": ":hover",
+                      "state_id": "0",
+                      "description": ""
+                    },
+                    {
+                      "state": ":active",
+                      "state_id": "1",
+                      "description": ""
+                    },
+                    {
+                      "state": ":disabled",
+                      "state_id": "2",
+                      "description": "<p>Dims the button when disabled.</p>\n"
+                    },
+                    {
+                      "state": ".c-btn--mini",
+                      "state_id": "3",
+                      "description": "<p>A mini button</p>\n"
+                    },
+                    {
+                      "state": ".c-btn--tiny",
+                      "state_id": "4",
+                      "description": "<p>A tiny button</p>\n"
+                    },
+                    {
+                      "state": ".c-btn--medium",
+                      "state_id": "5",
+                      "description": "<p>A medium button</p>\n"
+                    },
+                    {
+                      "state": ".c-btn--large",
+                      "state_id": "6",
+                      "description": "<p>A large button</p>\n"
+                    },
+                    {
+                      "state": ".c-btn--primary",
+                      "state_id": "7",
+                      "description": "<p>Primary action</p>\n"
+                    },
+                    {
+                      "state": ".c-btn--primary:hover",
+                      "state_id": "8",
+                      "description": ""
+                    },
+                    {
+                      "state": ".c-btn--primary:active",
+                      "state_id": "9",
+                      "description": ""
+                    },
+                    {
+                      "state": ".c-btn--secondary",
+                      "state_id": "10",
+                      "description": "<p>Secondary action</p>\n"
+                    },
+                    {
+                      "state": ".c-btn--secondary:hover",
+                      "state_id": "11",
+                      "description": ""
+                    },
+                    {
+                      "state": ".c-btn--secondary:active",
+                      "state_id": "12",
+                      "description": ""
+                    },
+                    {
+                      "state": ".c-btn--tertiary",
+                      "state_id": "13",
+                      "description": "<p>Tertiary action</p>\n"
+                    },
+                    {
+                      "state": ".c-btn--tertiary:hover",
+                      "state_id": "14",
+                      "description": ""
+                    },
+                    {
+                      "state": ".c-btn--tertiary:active",
+                      "state_id": "15",
+                      "description": ""
+                    },
+                    {
+                      "state": ".c-btn--text",
+                      "state_id": "16",
+                      "description": "<p>It&#39;s a text link as a button</p>\n"
+                    },
+                    {
+                      "state": ".c-btn--text:hover",
+                      "state_id": "17",
+                      "description": ""
+                    },
+                    {
+                      "state": ".c-btn--text:active",
+                      "state_id": "18",
+                      "description": ""
+                    }
+                  ]
+                }
+              ],
+              "markup": [
+                {
+                  "id": "0",
+                  "language": "scss",
+                  "settings": {},
+                  "description": "",
+                  "raw": "<div class=\"c-btn-group\">\n <a href=\"#\" class=\"c-btn @state\">Button (a.button)</a>\n <button class=\"c-btn @state\">Button (button)</button>\n <input class=\"c-btn @state\" type=\"button\" value=\"Button (input.button)\">\n</div>",
+                  "escaped": "&lt;div class=&quot;c-btn-group&quot;&gt;\n &lt;a href=&quot;#&quot; class=&quot;c-btn @state&quot;&gt;Button (a.button)&lt;/a&gt;\n &lt;button class=&quot;c-btn @state&quot;&gt;Button (button)&lt;/button&gt;\n &lt;input class=&quot;c-btn @state&quot; type=&quot;button&quot; value=&quot;Button (input.button)&quot;&gt;\n&lt;/div&gt;"
+                }
+              ],
+              "access": "public"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "nav": [
+    {
+      "title": "Edge Cases",
+      "href": "/edge-cases",
+      "body": [],
+      "subpages": [
+        {
+          "title": "Header",
+          "href": "/edge-cases/header-comment-only",
+          "body": [],
+          "subpages": []
+        }
+      ]
+    }
+  ],
+  "pages": {
+    "edge-cases": {
+      "page": {
+        "header": {},
+        "body": []
+      },
+      "header-comment-only": {
+        "page": {
+          "header": {
+            "__start": 0,
+            "__end": 6,
+            "name": "Header",
+            "author": [
+              "Tyler Benton"
+            ],
+            "access": "public"
+          },
+          "body": []
+        }
+      }
+    }
+  }
+}
