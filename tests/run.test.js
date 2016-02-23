@@ -14,30 +14,77 @@ const test_defaults = {
 }
 
 
-async function asynctests(tests) {
-  const base = path.join(__dirname, 'cases')
-  const actual_paths = await glob(path.join(base, '*'), [ path.join(base, '*.json') ])
-  const actual = await array(actual_paths).map((files) => docs({ files, ...test_defaults }))
-  const expected = await array(actual_paths).map((file) => fs.readJson(file.replace(/\..*$/, '.json')))
-  tests({
-    actual_paths,
-    actual,
-    expected
-  })
-  run()
-}
+addSuite('cases', async ({ paths, expected }) => {
+  const actual = await array(paths).map((files) => docs({ files, ...test_defaults }))
 
-asynctests(({ actual_paths, actual, expected }) => {
-  suite('case tests', function() { // eslint-disable-line
-    this.timeout(50000) // eslint-disable-line
-
-    for (let i = 0; i < actual_paths.length; i++) {
-      test(`${i}: ${actual_paths[i]}`, () => {
+  return () => {
+    for (let i = 0; i < paths.length; i++) {
+      test(`${i}: ${paths[i]}`, () => {
         assert.deepStrictEqual(
           actual[i],
           expected[i]
         )
       })
     }
-  })
+  }
 })
+
+
+addSuite('annotations', async ({ paths, expected }) => {
+  const actual = await array(paths).map((files) => docs({ files, raw: true, ...test_defaults }))
+
+  return () => {
+    for (let i = 0; i < paths.length; i++) {
+      let _path = paths[i]
+      test(`${i}: ${_path}`, () => {
+        assert.deepStrictEqual(
+          actual[i]['docs' + _path.split('/docs')[1]],
+          expected[i]
+        )
+      })
+    }
+  }
+})
+
+
+const mochaAsync = (fn) => { // eslint-disable-line
+  return async (done) => {
+    try {
+      await fn()
+      done()
+    } catch (err) {
+      done(err)
+    }
+  }
+}
+
+
+async function addSuite(name, folder, callback) {
+  if (arguments.length === 2) {
+    callback = folder
+    folder = name
+  }
+  // get the test cases
+  const cases = await getTestCases(folder)
+  // run any async stuff if needed before the tests.
+  // this `callback` is a curry function so it has to return a function
+  const tests = await callback({ ...cases })
+
+  suite(name, function() { // eslint-disable-line
+    this.timeout(50000) // eslint-disable-line
+    tests()
+  })
+
+  run() // mocha-tests
+}
+
+// console.log(addSuite())
+
+async function getTestCases(folder) {
+  const base = path.join(__dirname, folder)
+  const paths = await glob(path.join(base, '**', '*'), [ path.join(base, '**', '*.json') ])
+  return {
+    paths,
+    expected: await array(paths).map((file) => fs.readJson(file.replace(path.extname(file), '.json')))
+  }
+}
