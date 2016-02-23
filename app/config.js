@@ -34,9 +34,9 @@ const default_comment = {
   prefix: '@', // annotation identifier(this should probably never be changed)
   inline_prefix: '#', // @todo add support for this single line prefix for comments inside of the code below the comment block
   // file level comment block identifier
-  header: { start: '////', line: '///', end: '////' },
+  header: { start: '////', line: '///', end: '////', type: 'header' },
   // block level comment block identifier
-  body: { start: '', line: '///', end: '' }
+  body: { start: '', line: '///', end: '', type: 'body' }
 }
 
 // some defaults for common languages

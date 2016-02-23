@@ -20,7 +20,7 @@ export default function getBlocks(options) {
   let style = is.all.truthy(comment.start, comment.end) ? 'multi' : 'single'
 
   let block_base = {
-    comment: { contents: [], start: -1, end: -1 },
+    comment: { contents: [], start: -1, end: -1, type: comment.type },
     code: { contents: [], start: -1, end: -1 },
     file
   }
