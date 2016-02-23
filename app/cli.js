@@ -30,6 +30,7 @@ export default function cli() {
     .option('-a, --no-changed', 'Parse changed files', to_boolean, base_config.changed)
     .option('-b, --blank-lines <n>', 'Stops parsing lines after <n> consecutive blank lines', to_number, base_config.blank_lines)
     .option('-p, --print', 'This will only print the results instead of outputting them', false)
+    .option('-r, --raw', 'This prevents the data from each file from being sorted', false)
     .parse(process.argv)
 
 
