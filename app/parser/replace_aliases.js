@@ -19,14 +19,11 @@ export default function aliases(options = {}) {
   })
 
   for (let [ annotation, alias_list ] of to.entries(annotations)) {
-    // sorts the aliases based off their length. This is to ensure if to two
-    // or more aliases are similar they will always get replaced correctly
-    // aka `param` and `parameter`
-    alias_list = alias_list
-      .filter((alias) => !is.in(main_annotation_list, alias))
-      .sort((a, b) => b.length > a.length ? 1 : 0)
+    // filter out any aliases that are already in the main annotation list
+    alias_list = alias_list.filter((alias) => !is.in(main_annotation_list, alias))
 
-    contents = contents.replace(new RegExp(`(?:${comment.prefix})(${alias_list.join('|')})`), comment.prefix + annotation)
+    const alias_list_regex = new RegExp(`(?:${comment.prefix})(${alias_list.join('|')})\\b`, 'g')
+    contents = contents.replace(alias_list_regex, comment.prefix + annotation + ' ')
   }
 
   return contents
