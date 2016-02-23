@@ -11,7 +11,10 @@ export default function autofill(options) {
 
   for (let [ annotation, annotation_autofill ] of to.entries(autofill_list)) {
     if (!is.in(parsed_keys, annotation)) {
-      parsed[annotation] = is.fn(annotation_autofill) ? annotation_autofill.call(block) : annotation_autofill
+      const result = is.fn(annotation_autofill) ? annotation_autofill.call(block) : annotation_autofill
+      if (result != null) {
+        parsed[annotation] = result
+      }
     }
   }
 
