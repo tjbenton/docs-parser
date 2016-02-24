@@ -1,0 +1,94 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "arg": [
+        {
+          "types": [],
+          "name": "",
+          "value": "",
+          "description": ""
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 2,
+      "__end": 2,
+      "arg": [
+        {
+          "types": [
+            "type"
+          ],
+          "name": "name-of-variable",
+          "value": "",
+          "description": ""
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 4,
+      "__end": 4,
+      "arg": [
+        {
+          "types": [
+            "type",
+            "othertype"
+          ],
+          "name": "name-of-variable",
+          "value": "",
+          "description": ""
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 6,
+      "__end": 6,
+      "arg": [
+        {
+          "types": [
+            "type"
+          ],
+          "name": "name-of-variable",
+          "value": "",
+          "description": "<p>description</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 8,
+      "__end": 8,
+      "arg": [
+        {
+          "types": [
+            "type"
+          ],
+          "name": "name-of-variable",
+          "value": "default value",
+          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 10,
+      "__end": 15,
+      "arg": [
+        {
+          "types": [
+            "type"
+          ],
+          "name": "name-of-variable",
+          "value": "default value",
+          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et\ndolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip\nex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore\neu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia\ndeserunt mollit anim id est laborum.</p>\n"
+        }
+      ],
+      "access": "public"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "readonly": true,
+      "access": "public"
+    },
+    {
+      "__start": 2,
+      "__end": 2,
+      "readonly": true,
+      "access": "public"
+    },
+    {
+      "__start": 4,
+      "__end": 4,
+      "readonly": false,
+      "access": "public"
+    }
+  ]
+}

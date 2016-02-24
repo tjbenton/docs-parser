@@ -2,8 +2,6 @@ import is from '../../../dist/utils/is.js'
 import assert from 'assert'
 
 
-console.log('mother fucker ')
-console.log()
 suite('is', () => {
   test('is.false', () => {
     assert.ok(!is.false('foo'),

@@ -1,0 +1,68 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "type": {
+        "type": "undefined",
+        "description": ""
+      },
+      "access": "public"
+    },
+    {
+      "__start": 2,
+      "__end": 2,
+      "type": {
+        "type": "object",
+        "description": ""
+      },
+      "access": "public"
+    },
+    {
+      "__start": 4,
+      "__end": 4,
+      "type": {
+        "type": "undefined",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
+      },
+      "access": "public"
+    },
+    {
+      "__start": 6,
+      "__end": 6,
+      "type": {
+        "type": "undefined",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
+      },
+      "access": "public"
+    },
+    {
+      "__start": 8,
+      "__end": 8,
+      "type": {
+        "type": "array",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
+      },
+      "access": "public"
+    },
+    {
+      "__start": 10,
+      "__end": 10,
+      "type": {
+        "type": "array",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
+      },
+      "access": "public"
+    },
+    {
+      "__start": 12,
+      "__end": 16,
+      "type": {
+        "type": "array",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos, quod\nlibero tenetur rerum odio harum perferendis repellat sunt, soluta expedita\niure. Provident, debitis, cupiditate. Quae magnam ipsa modi,\naspernatur eligendi.</p>\n"
+      },
+      "access": "public"
+    }
+  ]
+}

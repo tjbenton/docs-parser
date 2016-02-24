@@ -1,0 +1,17 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "requires": [
+        {
+          "types": [],
+          "name": "node",
+          "description": ""
+        }
+      ],
+      "access": "public"
+    }
+  ]
+}

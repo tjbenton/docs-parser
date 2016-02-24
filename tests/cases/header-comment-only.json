@@ -29,6 +29,7 @@
             "author": [
               "Tyler Benton"
             ],
+            "description": "<p>This test is for a file that only has a header comment.</p>\n",
             "access": "public"
           },
           "body": []

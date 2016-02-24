@@ -1,0 +1,11 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "name": "Foo",
+      "access": "public"
+    }
+  ]
+}

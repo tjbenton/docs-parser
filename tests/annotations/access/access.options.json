@@ -1,0 +1,20 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "access": "public"
+    },
+    {
+      "__start": 2,
+      "__end": 2,
+      "access": "public"
+    },
+    {
+      "__start": 4,
+      "__end": 4,
+      "access": "private"
+    }
+  ]
+}

@@ -40,6 +40,7 @@
               "__start": 4,
               "__end": 27,
               "name": "moz-only",
+              "description": "<p>This allows you to write specific styles for mozilla firefox only</p>\n",
               "markup": [
                 {
                   "id": "0",

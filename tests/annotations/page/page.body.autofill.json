@@ -1,0 +1,11 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "description": "<p>This block shouldn&#39;t have a page annotation because page doesn&#39;t autofill body comments</p>\n",
+      "access": "public"
+    }
+  ]
+}

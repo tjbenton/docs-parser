@@ -64,12 +64,17 @@ async function addSuite(name, folder, callback) {
     callback = folder
     folder = name
   }
-  // get the test cases
-  const cases = await getTestCases(folder)
-  // run any async stuff if needed before the tests.
-  // this `callback` is a curry function so it has to return a function
-  const tests = await callback({ ...cases })
+  let cases, tests
 
+  try {
+    // get the test cases
+    cases = await getTestCases(folder)
+    // run any async stuff if needed before the tests.
+    // this `callback` is a curry function so it has to return a function
+    tests = await callback({ ...cases })
+  } catch (err) {
+    console.log(err)
+  }
   suite(name, function() { // eslint-disable-line
     this.timeout(50000) // eslint-disable-line
     tests()

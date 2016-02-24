@@ -1,0 +1,87 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "throws": [
+        {
+          "types": [],
+          "description": ""
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 2,
+      "__end": 2,
+      "throws": [
+        {
+          "types": [
+            "fileNotFound"
+          ],
+          "description": ""
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 4,
+      "__end": 4,
+      "throws": [
+        {
+          "types": [
+            "fileNotFound"
+          ],
+          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 6,
+      "__end": 6,
+      "throws": [
+        {
+          "types": [
+            "fileNotFound"
+          ],
+          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 8,
+      "__end": 11,
+      "throws": [
+        {
+          "types": [
+            "fileNotFound"
+          ],
+          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod sequi adipisci illum.\nAtque itaque sequi, qui ratione aliquid debitis dolorem alias blanditiis, impedit\nnecessitatibus quidem at non, earum a esse.</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 13,
+      "__end": 14,
+      "throws": [
+        {
+          "types": [
+            "warning"
+          ],
+          "description": "<p>some warning message</p>\n"
+        },
+        {
+          "types": [
+            "error"
+          ],
+          "description": "<p>when something goes wrong</p>\n"
+        }
+      ],
+      "access": "public"
+    }
+  ]
+}

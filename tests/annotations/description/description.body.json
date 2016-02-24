@@ -1,0 +1,23 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 1,
+      "__end": 1,
+      "description": "<p>Lorem ipsum dolor sit amet</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 3,
+      "__end": 7,
+      "description": "<p>Line one\nOther\nlines\nbelow\nit</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 9,
+      "__end": 13,
+      "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nAccusantium vel, eveniet, architecto saepe, modi dolore incidunt\nquisquam eaque cum porro explicabo velit sunt illo praesentium\nfacere. Sit consequuntur illo nihil.</p>\n",
+      "access": "public"
+    }
+  ]
+}

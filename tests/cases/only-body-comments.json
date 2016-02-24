@@ -30,6 +30,7 @@
               "author": [
                 "Tyler Benton"
               ],
+              "description": "<p>Your standard form button.</p>\n",
               "state": [
                 {
                   "markup_id": "0",

@@ -1,0 +1,58 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "chainable": true,
+      "access": "public"
+    },
+    {
+      "__start": 2,
+      "__end": 2,
+      "chainable": true,
+      "access": "public"
+    },
+    {
+      "__start": 4,
+      "__end": 4,
+      "chainable": false,
+      "access": "public"
+    },
+    {
+      "__start": 6,
+      "__end": 6,
+      "chainable": [
+        "Object.prototype"
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 8,
+      "__end": 8,
+      "chainable": [
+        "One",
+        "Two"
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 10,
+      "__end": 12,
+      "chainable": [
+        "One",
+        "Two"
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 14,
+      "__end": 16,
+      "chainable": [
+        "One",
+        "Two"
+      ],
+      "access": "public"
+    }
+  ]
+}

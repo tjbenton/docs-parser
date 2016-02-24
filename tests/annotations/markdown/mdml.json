@@ -1,0 +1,8 @@
+{
+  "header": {
+    "__start": 0,
+    "__end": 2,
+    "markdown": "<h1 id=\"h1-tag\">H1 Tag</h1>\n<pre><code class=\"lang-scss\">.foo {\n  .bar {\n    background: blue;\n  }\n}\n</code></pre>\n"
+  },
+  "body": []
+}

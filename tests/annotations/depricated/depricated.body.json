@@ -1,0 +1,41 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "deprecated": {
+        "version": "0",
+        "description": ""
+      },
+      "access": "public"
+    },
+    {
+      "__start": 2,
+      "__end": 2,
+      "deprecated": {
+        "version": "0.0.1",
+        "description": "<p>Lorem</p>\n"
+      },
+      "access": "public"
+    },
+    {
+      "__start": 4,
+      "__end": 4,
+      "deprecated": {
+        "version": "0.0.1",
+        "description": "<p>Lorem</p>\n"
+      },
+      "access": "public"
+    },
+    {
+      "__start": 6,
+      "__end": 9,
+      "deprecated": {
+        "version": "^0.0.1",
+        "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis maiores veritatis,\nsed repellat voluptatibus, eaque nihil assumenda odit at, ea consequatur provident\naccusamus fugit magnam et adipisci eum, saepe incidunt.</p>\n"
+      },
+      "access": "public"
+    }
+  ]
+}

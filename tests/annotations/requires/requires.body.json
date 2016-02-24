@@ -1,0 +1,103 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "requires": [
+        {
+          "types": [],
+          "name": "",
+          "description": ""
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 2,
+      "__end": 2,
+      "requires": [
+        {
+          "types": [
+            "*"
+          ],
+          "name": "",
+          "description": ""
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 4,
+      "__end": 4,
+      "requires": [
+        {
+          "types": [
+            "object",
+            "array",
+            "function",
+            "string"
+          ],
+          "name": "",
+          "description": ""
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 6,
+      "__end": 6,
+      "requires": [
+        {
+          "types": [],
+          "name": "path",
+          "description": ""
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 8,
+      "__end": 8,
+      "requires": [
+        {
+          "types": [],
+          "name": "path",
+          "description": "<p>the path function from node</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 10,
+      "__end": 10,
+      "requires": [
+        {
+          "types": [
+            "function"
+          ],
+          "name": "path",
+          "description": "<p>the path function from node</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 12,
+      "__end": 13,
+      "requires": [
+        {
+          "types": [],
+          "name": "node",
+          "description": ""
+        },
+        {
+          "types": [],
+          "name": "npm",
+          "description": ""
+        }
+      ],
+      "access": "public"
+    }
+  ]
+}

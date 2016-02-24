@@ -1,0 +1,50 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "arg": [
+        {
+          "types": [
+            "type"
+          ],
+          "name": "name-of-variable",
+          "value": "",
+          "description": "<p>argument alias</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 2,
+      "__end": 2,
+      "arg": [
+        {
+          "types": [
+            "type"
+          ],
+          "name": "name-of-variable",
+          "value": "",
+          "description": "<p>param alias</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 4,
+      "__end": 4,
+      "arg": [
+        {
+          "types": [
+            "type"
+          ],
+          "name": "name-of-variable",
+          "value": "",
+          "description": "<p>parameter alias</p>\n"
+        }
+      ],
+      "access": "public"
+    }
+  ]
+}

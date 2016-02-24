@@ -1,0 +1,57 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 0,
+      "throws": [
+        {
+          "types": [
+            "throw"
+          ],
+          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 2,
+      "__end": 2,
+      "throws": [
+        {
+          "types": [
+            "exception"
+          ],
+          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 4,
+      "__end": 4,
+      "throws": [
+        {
+          "types": [
+            "error"
+          ],
+          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
+        }
+      ],
+      "access": "public"
+    },
+    {
+      "__start": 6,
+      "__end": 6,
+      "throws": [
+        {
+          "types": [
+            "catch"
+          ],
+          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
+        }
+      ],
+      "access": "public"
+    }
+  ]
+}

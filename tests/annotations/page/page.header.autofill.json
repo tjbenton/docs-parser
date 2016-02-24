@@ -1,0 +1,10 @@
+{
+  "header": {
+    "__start": 0,
+    "__end": 2,
+    "name": "page autofill test",
+    "page": "other",
+    "access": "public"
+  },
+  "body": []
+}

@@ -1,0 +1,89 @@
+{
+  "header": {},
+  "body": [
+    {
+      "__start": 0,
+      "__end": 1,
+      "name": "single-line `desc`",
+      "description": "<p>Lorem ipsum</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 3,
+      "__end": 6,
+      "name": "multi-line `desc`",
+      "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 10,
+      "__end": 11,
+      "name": "single-line `definition`",
+      "description": "<p>Lorem ipsum</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 13,
+      "__end": 16,
+      "name": "multi-line `definition`",
+      "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 20,
+      "__end": 21,
+      "name": "single-line `explanation`",
+      "description": "<p>Lorem ipsum</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 23,
+      "__end": 26,
+      "name": "multi-line `explanation`",
+      "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 30,
+      "__end": 31,
+      "name": "single-line `writeup`",
+      "description": "<p>Lorem ipsum</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 33,
+      "__end": 36,
+      "name": "multi-line `writeup`",
+      "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 40,
+      "__end": 41,
+      "name": "single-line `summary`",
+      "description": "<p>Lorem ipsum</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 43,
+      "__end": 46,
+      "name": "multi-line `summary`",
+      "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 50,
+      "__end": 51,
+      "name": "single-line `summarization`",
+      "description": "<p>Lorem ipsum</p>\n",
+      "access": "public"
+    },
+    {
+      "__start": 53,
+      "__end": 56,
+      "name": "multi-line `summarization`",
+      "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public"
+    }
+  ]
+}

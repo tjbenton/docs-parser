@@ -1,0 +1,18 @@
+{
+  "header": {
+    "__start": 0,
+    "__end": 2,
+    "requires": [
+      {
+        "types": [
+          "function"
+        ],
+        "name": "path",
+        "description": "<p>the path function from node</p>\n"
+      }
+    ],
+    "page": "other",
+    "access": "public"
+  },
+  "body": []
+}

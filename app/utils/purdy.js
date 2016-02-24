@@ -22,7 +22,7 @@ export default class Purdy {
         Null: 'red.bold',
         Number: 'blue.bold',
         RegExp: 'magenta',
-        String: 'green',
+        String: undefined, // use the default color
         Undefined: 'red.inverse',
         path: 'grey'
       }

@@ -15,6 +15,21 @@ let to = {
 
   ...changeCase,
 
+  /// @name to.clamp
+  /// @description
+  /// This is used to clamp a number between a min an max value
+  /// It ensures a number will always be between the passed values
+  /// @returns {number}
+  clamp(value, min = 0, max = Infinity) {
+    if (value > max) {
+      return max
+    } else if (value < min) {
+      return min
+    }
+
+    return value
+  },
+
   /// @name to.string
   /// @description
   /// Converts an object, array, number, or boolean to a string

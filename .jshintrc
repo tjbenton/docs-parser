@@ -1,0 +1,26 @@
+{
+  "esversion": 6,
+  "mocha": true,
+  "node": true,
+  "curly": false,
+  "eqeqeq": true,
+  "forin": true,
+  "immed": true,
+  "freeze": true,
+  "funcscope": true,
+  "futurehostile": true,
+  "latedef": false,
+  "newcap": true,
+  "noarg": true,
+  "sub": true,
+  "undef": true,
+  "varstmt": true,
+  "asi": true,
+  "unused": true,
+  "boss": true,
+  "eqnull": true,
+  "loopfunc": true,
+  "globals": [
+    "define"
+  ]
+}
