@@ -1,5 +1,5 @@
 import is from '../../../dist/utils/is.js'
-import assert from 'assert'
+import assert from 'core-assert'
 
 
 suite('is', () => {

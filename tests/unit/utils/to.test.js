@@ -1,7 +1,7 @@
 import to from '../../../dist/utils/to.js'
 import fs from '../../../dist/utils/fs.js'
 import info from '../../../dist/utils/info.js'
-import assert from 'assert'
+import assert from 'core-assert'
 const string = 'yo this is a string'
 const array = [ 'one', 'two', 'three' ]
 const object = { one: 1, two: 2, three: 3 }

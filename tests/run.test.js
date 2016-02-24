@@ -3,7 +3,7 @@
 import path from 'path'
 import docs from '../dist/index.js'
 import { fs, glob, array, } from '../dist/utils'
-import assert from 'assert'
+import assert from 'core-assert'
 
 const test_defaults = {
   debug: false,
