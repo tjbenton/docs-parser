@@ -7,7 +7,7 @@ import AnnotationApi from './annotation_api'
 let log = new Logger()
 
 // changed by `options` key
-const default_options = {
+export const default_options = {
   config: `${info.root}/.docsfile.js`,
   files: [ 'app/**/*', 'src/**/*', '*.md' ], // files to search
   // files to be ignored
@@ -30,7 +30,7 @@ const default_options = {
   annotations
 }
 
-const default_comment = {
+export const default_comment = {
   prefix: '@', // annotation identifier(this should probably never be changed)
   inline_prefix: '#', // @todo add support for this single line prefix for comments inside of the code below the comment block
   // file level comment block identifier
@@ -40,7 +40,7 @@ const default_comment = {
 }
 
 // some defaults for common languages
-const comments = {
+export const comments = {
   _: default_comment,
   css: {
     header: { start: '/***', line: '*', end: '***/' },
@@ -82,8 +82,9 @@ export default async function config(options = {}) {
 
   // ensures `files`, `ignore` is always an array this way no
   // more checks have to happen for it
-  options.files = to.array(options.files)
-  options.ignore = to.array(options.ignore)
+  if (options.files) options.files = to.array(options.files)
+  if (options.ignore) options.ignore = to.array(options.ignore)
+
 
   // merge options with base_config so there's a complete list of settings
   options = to.extend(to.extend({}, base_config), options)
@@ -105,10 +106,22 @@ export default async function config(options = {}) {
   // ensures blank_lines is a number to avoid errors
   options.blank_lines = to.number(options.blank_lines)
 
+  options.comments = parseComments(options.comments)
+
+  options.annotations = new AnnotationApi(options.annotations)
+  return options
+}
+
+
+let valid_options = to.keys(default_options)
+let valid_comment_options = to.keys(default_comment)
+
+
+export function parseComments(comments) {
   let parsed_comments = {}
 
   // ensures comments are a normal structure (aka not `'rb, py': {...}`)
-  for (let [ option, value ] of to.entries(options.comments)) {
+  for (let [ option, value ] of to.entries(comments)) {
     // converts option into an array so multiple languages can be declared at the same time
     option = option.replace(/\s/g, '').split(',')
 
@@ -123,15 +136,24 @@ export default async function config(options = {}) {
     }
   }
 
-  options.comments = parsed_comments
+  for (let [ lang, value ] of to.entries(parsed_comments)) {
+    if (
+      lang !== '_' &&
+      value.extend
+    ) {
+      if (!parsed_comments[value.extend]) {
+        throw new Error(`${value.extend} comment style doesn't exist`)
+      } else if (!is.string(value.extend)) {
+        throw new Error(`the value of extend must be a string you passed ${value.extend}`)
+      } else {
+        parsed_comments[lang] = to.extend(value, to.clone(parsed_comments[value.extend]))
+      }
+    }
+    delete parsed_comments[lang].extend
+  }
 
-  options.annotations = new AnnotationApi(options.annotations)
-  return options
+  return parsed_comments
 }
-
-
-let valid_options = to.keys(default_options)
-let valid_comment_options = to.keys(default_comment)
 
 /// @name ensure_valid_config
 /// @description
