@@ -1,5 +1,5 @@
-const to_string = (arg) => Object.prototype.toString.call(arg)
-const array_slice = (arg) => Array.prototype.slice.call(arg)
+const toString = (arg) => Object.prototype.toString.call(arg)
+const arraySlice = (arg) => Array.prototype.slice.call(arg)
 
 import markdown from 'marked'
 import changeCase from 'change-case'
@@ -44,8 +44,8 @@ let to = {
       return arg + ''
     }
 
-    if (is.plain_object(arg)) {
-      return to_string(arg)
+    if (is.plainObject(arg)) {
+      return toString(arg)
     }
 
     if (is.array(arg)) {
@@ -56,7 +56,7 @@ let to = {
   },
 
 
-  /// @name to.normal_string
+  /// @name to.normalString
   /// @description
   /// The ` + ""` converts the file from a buffer to a string
   ///
@@ -67,7 +67,7 @@ let to = {
   ///
   /// @arg {*}
   /// @returns {string} That has microsoft crap removed from it
-  normal_string: (str) => to.string(str).replace(/(?:\\[rn]+)+/g, '\n'),
+  normalString: (str) => to.string(str).replace(/(?:\\[rn]+)+/g, '\n'),
 
   /// @name to.keys
   /// @description
@@ -75,8 +75,29 @@ let to = {
   /// It also get's symbols if they're set as a key name.
   /// @arg {object}
   /// @returns {array}
-  keys: (arg) => (is.plain_object(arg) || is.symbol(arg)) &&
-    to.flatten([ Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg) ]),
+  keys(arg) {
+    if (!is.plainObject(arg) && !is.symbol(arg)) {
+      return arg
+    }
+
+    return to.flatten([ Object.getOwnPropertySymbols(arg), Object.getOwnPropertyNames(arg) ])
+  },
+
+  /// @name to.keys
+  /// @description
+  /// Converts an object to an array of it's values names.
+  /// @arg {object}
+  /// @returns {array}
+  values(arg) {
+    let values = []
+    for (var key in arg) {
+      if (arg.hasOwnProperty(key)) {
+        values.push(arg[key])
+      }
+    }
+
+    return values
+  },
 
   /// @name to.entries
   /// @description
@@ -158,13 +179,13 @@ let to = {
   ///   }
   /// }
   ///
-  /// for (let { key, one, two, three } of to.object_entries(example)) {
+  /// for (let { key, one, two, three } of to.objectEntries(example)) {
   ///   // key -> 'foo'
   ///   // one -> 'Item one'
   ///   // two -> 'Item two'
   ///   // three -> 'Item three'
   /// }
-  object_entries(obj, key_name = 'key', index_name = 'i') {
+  objectEntries(obj, key_name = 'key', index_name = 'i') {
     let i = 0
     let keys = to.keys(obj)
     let length = keys.length
@@ -243,8 +264,8 @@ let to = {
     let k = to.keys(b) // eslint-disable-line
 
     for (let i = 0, l = k.length; i < l; i++) {
-      if (is.plain_object(b[k[i]])) {
-        a[k[i]] = is.plain_object(a[k[i]]) ? to.extend(a[k[i]], b[k[i]]) : b[k[i]]
+      if (is.plainObject(b[k[i]])) {
+        a[k[i]] = is.plainObject(a[k[i]]) ? to.extend(a[k[i]], b[k[i]]) : b[k[i]]
       } else {
         a[k[i]] = b[k[i]]
       }
@@ -362,8 +383,8 @@ let to = {
           a[k] = b[k]
         } else if (is.array(a[k])) {
           a[k].push(b[k])
-        } else if (is.plain_object(a[k])) {
-          a[k] = is.plain_object(b[k]) ? to.merge(a[k], b[k]) : b[k]
+        } else if (is.plainObject(a[k])) {
+          a[k] = is.plainObject(b[k]) ? to.merge(a[k], b[k]) : b[k]
         } else {
           a[k] = [ a[k], b[k] ]
         }
@@ -376,7 +397,7 @@ let to = {
           }
 
           // a) Filter out duplicates
-          if (unique && !is.plain_object(a[k][0])) {
+          if (unique && !is.plainObject(a[k][0])) {
             a[k] = to.unique(a[k])
           }
         }
@@ -417,10 +438,10 @@ let to = {
     if (is.array(arg)) {
       return arg
     } else if (is.arguments(arg)) {
-      return array_slice(arg)
+      return arraySlice(arg)
     } else if (is.string(arg)) {
       return arg.split(glue)
-    } else if (is.plain_object(arg) || is.number(arg)) {
+    } else if (is.plainObject(arg) || is.number(arg)) {
       return [ arg ]
     }
 
@@ -461,11 +482,11 @@ let to = {
   /// @arg {array, object}
   /// @returns {array, object} - The sorted version
   sort(arg, callback) {
-    let run_sort = (obj) => is.fn(callback) ? obj.sort.apply(null, callback) : obj.sort()
+    let runSort = (obj) => is.fn(callback) ? obj.sort.apply(null, callback) : obj.sort()
     let result
-    if (is.plain_object(arg)) {
+    if (is.plainObject(arg)) {
       let sorted = {}
-      let keys = run_sort(to.keys(arg))
+      let keys = runSort(to.keys(arg))
 
       for (let i = 0, l = keys.length; i < l; i++) {
         sorted[keys[i]] = arg[keys[i]]
@@ -473,7 +494,7 @@ let to = {
 
       result = sorted
     } else if (is.array(arg)) {
-      result = run_sort(callback)
+      result = runSort(callback)
     }
     return result
   },
@@ -487,7 +508,7 @@ let to = {
 
     for (let [ key, value ] of to.entries(arg)) {
       let cb_result = callback(value, key)
-      if (is.truthy(cb_result) && !is.empty(cb_result) && is.plain_object(cb_result)) {
+      if (is.truthy(cb_result) && !is.empty(cb_result) && is.plainObject(cb_result)) {
         to.extend(result, cb_result)
       }
     }
@@ -521,7 +542,7 @@ let to = {
       return arg
     } else if (is.array(arg)) {
       return arg.length
-    } else if (is.plain_object(arg)) {
+    } else if (is.plainObject(arg)) {
       return to.keys(arg).length
     }
 

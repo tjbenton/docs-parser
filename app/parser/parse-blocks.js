@@ -7,7 +7,7 @@ import autofill from './autofill'
 // Used to parse an array of blocks and runs the annotations function and returns the result
 // @arg {array} - The block/blocks you want to have parsed
 // @returns {array} of parsed blocks
-export default function parse_blocks(options = {}) {
+export default function parseBlocks(options = {}) {
   let {
     file,
     blocks,
@@ -22,7 +22,7 @@ export default function parse_blocks(options = {}) {
 
   let parsed_blocks = []
 
-  let autofill_list = annotations.autofill_list(file.type)
+  let autofill_list = annotations.autofillList(file.type)
 
   // loop over each block
   for (let block of blocks) {

@@ -5,7 +5,7 @@
 /// @page utils/is
 ////
 
-const to_string = (arg) => Object.prototype.toString.call(arg)
+const toString = (arg) => Object.prototype.toString.call(arg)
 
 import to from './to.js'
 import is from 'is_js'
@@ -28,15 +28,15 @@ is.fn = is.function
 /// @arg {array, string, object} obj - the item to check against
 /// @arg {*} value - the value to look for in the `obj`
 /// @returns {boolean}
-is.in = (obj, value) => (is.plain_object(obj) ? to.keys(obj) : obj).indexOf(value) > -1
+is.in = (obj, value) => (is.plainObject(obj) ? to.keys(obj) : obj).indexOf(value) > -1
 
 
-/// @name is.plain_object
+/// @name is.plainObject
 /// @description is the `value` in `obj`?
 /// @arg {array, string, object} obj - the item to check against
 /// @arg {*} value - the value to look for in the `obj`
 /// @returns {boolean}
-is.plain_object = (arg) => to_string(arg) === '[object Object]'
+is.plainObject = (arg) => toString(arg) === '[object Object]'
 
 
 /// @name is.between

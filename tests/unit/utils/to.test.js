@@ -1,6 +1,8 @@
-import to from '../../../dist/utils/to.js'
-import fs from '../../../dist/utils/fs.js'
-import info from '../../../dist/utils/info.js'
+import to from '../../../app/utils/to.js'
+import asyncSuite from '../../../tools/async-suite.js'
+import fs from 'fs-extra'
+import promisify from 'es6-promisify'
+fs.readFile = promisify(fs.readFile)
 import assert from 'core-assert'
 const string = 'yo this is a string'
 const array = [ 'one', 'two', 'three' ]
@@ -8,9 +10,9 @@ const object = { one: 1, two: 2, three: 3 }
 const buffer = new Buffer(string)
 const number = 4
 const boolean = false
-const file = `${info.root}/tests/file-types/coffeescript/test.coffee`
+const file = `${process.cwd()}/tests/file-types/coffeescript/test.coffee`
 
-suite('to', () => {
+asyncSuite.wrap('to', () => {
   test('to.string', async () => {
     assert.strictEqual(typeof to.string(string), 'string',
       '`string` should be converted to a typeof string')
@@ -29,14 +31,14 @@ suite('to', () => {
   })
 
 
-  test('to.normal_string', async () => {
+  test('to.normalString', async () => {
     let result
     try {
       // this file has some stupid ass characters in it
       // that need to be removed in order to become like the
       // rest of the fucking world. #microsoftBlowsAtStandards
       const crappy_windows_file = await fs.readFile(file)
-      result = to.normal_string(crappy_windows_file).match(/\r/g)
+      result = to.normalString(crappy_windows_file).match(/\r/g)
       assert.equal(result, null,
         'should be a normal string')
     } catch (err) {
@@ -53,6 +55,13 @@ suite('to', () => {
     assert.strictEqual(keys[2], 'three', 'should return three')
   })
 
+  test('to.values', () => {
+    const values = to.values(object)
+    assert.strictEqual(values[0], 1)
+    assert.strictEqual(values[1], 2)
+    assert.strictEqual(values[2], 3)
+  })
+
 
   test('to.entries', () => {
     for (const [ i, item ] of to.entries(array)) {
@@ -62,8 +71,8 @@ suite('to', () => {
   })
 
 
-  test('to.object_entries', () => {
-    for (const { key, one, two, three } of to.object_entries({ test: object })) {
+  test('to.objectEntries', () => {
+    for (const { key, one, two, three } of to.objectEntries({ test: object })) {
       assert.strictEqual(key, 'test', 'The key should be `test`')
       assert.strictEqual(one, 1, '`one` should equal 1')
       assert.strictEqual(two, 2, '`two` should equal 2')
@@ -143,7 +152,7 @@ suite('to', () => {
 
   test('to.object', async () => {
     try {
-      const json = await fs.readFile(`${info.root}/package.json`)
+      const json = await fs.readFile(`${process.cwd()}/package.json`)
       assert.ok(to.object(json).author,
         'the passed json should now be an object')
     } catch (err) {

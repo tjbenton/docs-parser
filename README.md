@@ -408,10 +408,10 @@ This type of comment can only occur **once** per file. Any annotations that are 
  - Figure out a way to have nested comment blocks so the nested comment blocks can be tied to the initial comment block.
 
    ```js
-   /// @name parse_blocks
+   /// @name parseBlocks
    /// @description Parses each block in blocks
    /// @returns {array}
-   parse_blocks = function(){
+   parseBlocks = function(){
      /// @name this.merge
      /// @description Used as a helper function because this action is performed in two spots
      /// @arg {object} annotation - information of the current annotation block

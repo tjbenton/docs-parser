@@ -1,8 +1,8 @@
 import { info, fs, is, to } from '../utils'
 import path from 'path'
-import get_blocks from './get_blocks'
-import parse_blocks from './parse_blocks'
-import replace_aliases from './replace_aliases'
+import getBlocks from './get-blocks'
+import parseBlocks from './parse-blocks'
+import replaceAliases from './replace-aliases'
 
 export default async function parser(options = {}) {
   let { file_path, comments, annotations, log } = options
@@ -13,9 +13,9 @@ export default async function parser(options = {}) {
   // gets the comments to use on this file
   let comment = comments[type] ? comments[type] : comments._
 
-  let contents = to.normal_string(await fs.readFile(file_path))
+  let contents = to.normalString(await fs.readFile(file_path))
 
-  contents = replace_aliases({
+  contents = replaceAliases({
     contents,
     annotations: annotations.list(type),
     comment,
@@ -33,21 +33,25 @@ export default async function parser(options = {}) {
   }
 
   // a) The file doesn't contain any header level comments, or body level comments
-  if (!is.any.in(contents,
-      comment.header.start, comment.header.line, comment.header.end,
-      comment.body.start, comment.body.line, comment.body.end)) {
+  if (
+    !is.any.in(
+      contents,
+      ...to.values(comment.header).slice(0, -1),
+      ...to.values(comment.body).slice(0, -1)
+    )
+  ) {
     console.log(`Well shitfire, '${file.path}' doesn't contain any sweet documentation`)
     return []
   }
 
 
-  let header = get_blocks({
+  let header = getBlocks({
     file,
     contents,
     comment: comment.header
   })
 
-  let body = get_blocks({
+  let body = getBlocks({
     file,
     contents,
     comment: comment.body,
@@ -55,7 +59,7 @@ export default async function parser(options = {}) {
     start_at: !is.empty(header) ? header[0].comment.end + 1 : 0
   })
 
-  header = parse_blocks({
+  header = parseBlocks({
     file,
     blocks: header,
     annotations,
@@ -63,7 +67,7 @@ export default async function parser(options = {}) {
     log
   })[0] || {}
 
-  body = parse_blocks({
+  body = parseBlocks({
     file,
     blocks: body,
     annotations,
@@ -74,4 +78,10 @@ export default async function parser(options = {}) {
   return {
     [file.path]: { header, body }
   }
+}
+
+export {
+  getBlocks,
+  parseBlocks,
+  replaceAliases
 }

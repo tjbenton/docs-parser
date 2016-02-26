@@ -26,17 +26,26 @@ export default function cli() {
     .option('-g, --gitignore', 'Add `gitignore` files to the ignored files', base_config.gitignore)
     .option('-x, --no-debug', 'Output debugging information', to_boolean, base_config.debug)
     .option('-w, --no-warning', 'Output warning messages', to_boolean, base_config.warning)
-    .option('-t, --no-timestamps', 'Output timestamps of how long it takes to parse the files', to_boolean, base_config.timestamps)
+    .option('-m, --no-timestamps', 'Output timestamps of how long it takes to parse the files', to_boolean, base_config.timestamps)
     .option('-a, --no-changed', 'Parse changed files', to_boolean, base_config.changed)
     .option('-b, --blank-lines <n>', 'Stops parsing lines after <n> consecutive blank lines', to_number, base_config.blank_lines)
     .option('-p, --print', 'This will only print the results instead of outputting them', false)
     .option('-r, --raw', 'This prevents the data from each file from being sorted', false)
+    .option('-t, --dry-run', 'This will run everything without outputting anything', false)
     .parse(process.argv)
 
 
   let {
     blankLines: blank_lines,
+    dryRun: dry_run,
     print,
+    ignore,
+    gitignore,
+    debug,
+    warning,
+    timestamps,
+    changed,
+    raw,
     dest,
     args
   } = program
@@ -49,12 +58,20 @@ export default function cli() {
 
   return docs({
     files,
-    ...program,
+    ignore,
+    gitignore,
+    debug,
+    warning,
+    timestamps,
+    changed,
+    raw,
     blank_lines,
   })
     .then((parsed) => {
       if (print) {
-        console.log(JSON.stringify(parsed, null, 2))
+        console.log(to.json(parsed))
+      } else if (dry_run) {
+        // do nothing
       } else {
         fs.outputJson(dest, parsed, { spaces: 2 })
       }

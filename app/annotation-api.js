@@ -19,7 +19,7 @@ export default class AnnotationApi {
     }
 
     // add the inital annotations
-    this.add_annotations(annotations)
+    this.addAnnotations(annotations)
   }
 
   /// @name add
@@ -125,7 +125,7 @@ export default class AnnotationApi {
       config = {
         parse: config
       }
-    } else if (is.plain_object(config) && !is.empty(config) && !is.any.in(config, ...to.keys(base_config))) {
+    } else if (is.plainObject(config) && !is.empty(config) && !is.any.in(config, ...to.keys(base_config))) {
       // loop through each filetype in the passed
       // object and rerun the add function
       for (let filetype in config) {
@@ -136,7 +136,7 @@ export default class AnnotationApi {
         }
       }
       return
-    } else if (!is.plain_object(config)) {
+    } else if (!is.plainObject(config)) {
       throw new Error('config must be a function or object')
       return
     }
@@ -163,7 +163,7 @@ export default class AnnotationApi {
   /// @description
   /// Add an array of annotations
   /// @arg {array} annotations - Annotation objects
-  add_annotations(annotations) {
+  addAnnotations(annotations) {
     for (let name in annotations) {
       if (annotations.hasOwnProperty(name)) {
         this.add(name, annotations[name])
@@ -184,7 +184,7 @@ export default class AnnotationApi {
     return this.annotations.default
   }
 
-  autofill_list(filetype) {
+  autofillList(filetype) {
     return to.map(this.list(filetype), (annotation, name) => {
       if (is.truthy(annotation.autofill)) {
         return { [name]: annotation.autofill }

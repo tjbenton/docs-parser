@@ -12,7 +12,7 @@ export default function pages(options = {}) {
 
   let { json, page_fallback, log } = options
 
-  for (let { path, header, body } of to.object_entries(json, 'path')) {
+  for (let { path, header, body } of to.objectEntries(json, 'path')) {
     if (!is.empty(header)) {
       if (is.falsy(header.page)) {
         if (is.truthy(page_fallback)) {

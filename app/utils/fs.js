@@ -1,13 +1,13 @@
 // File System
 import path from 'path'
-import denodeify from './denodeify.js'
 import fs from 'fs-extra'
+import promisify from 'es6-promisify'
 
-// @name fs.fake_copy
+// @name fs.fakeCopy
 // @description
 // Creates an empty file temp file in the `.tmp/`. This is so that I can
 // check to see if the source file has been updated.
-fs.fake_copy = (source, target, callback) => {
+fs.fakeCopy = (source, target, callback) => {
   source = path.parse(source)
   target = path.parse(target)
 
@@ -17,11 +17,13 @@ fs.fake_copy = (source, target, callback) => {
   })
 }
 
+
 // The functions below are converted into promises
-fs.readJson = denodeify(fs.readJson)
-fs.outputJson = denodeify(fs.outputJson)
-fs.stat = denodeify(fs.stat)
-fs.readFile = denodeify(fs.readFile)
-fs.ensureFile = denodeify(fs.ensureFile)
+fs.readJson = promisify(fs.readJson)
+fs.outputJson = promisify(fs.outputJson)
+fs.stat = promisify(fs.stat)
+fs.readFile = promisify(fs.readFile)
+fs.ensureFile = promisify(fs.ensureFile)
 
 export default fs
+// export default promisify(fs)

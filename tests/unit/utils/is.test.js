@@ -1,8 +1,9 @@
-import is from '../../../dist/utils/is.js'
+import is from '../../../app/utils/is.js'
 import assert from 'core-assert'
+import asyncSuite from '../../../tools/async-suite.js'
 
 
-suite('is', () => {
+asyncSuite.wrap('is', () => {
   test('is.false', () => {
     assert.ok(!is.false('foo'),
       'should return false if a string is passed')
@@ -73,14 +74,14 @@ suite('is', () => {
       'should return false because none of the passed arguments are in the string')
   })
 
-  test('is.plain_object', () => {
-    assert.ok(is.plain_object({}),
+  test('is.plainObject', () => {
+    assert.ok(is.plainObject({}),
       'should return true if passed a {}')
-    assert.ok(!is.plain_object([]),
+    assert.ok(!is.plainObject([]),
       'should return false if passed a []')
-    assert.ok(!is.plain_object(''),
+    assert.ok(!is.plainObject(''),
       'should return false if passed a string')
-    assert.ok(!is.plain_object(test),
+    assert.ok(!is.plainObject(test),
       'should return false if passed a function')
   })
 

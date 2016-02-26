@@ -3,10 +3,10 @@ import clor from 'clor'
 
 
 let icon = {
-  chevron: '\xBB',
-  check: '\u2713',
-  warning: '\u26A0',
-  error: '\u2326'
+  chevron: '\xBB ',
+  check: '\u2713 ',
+  warning: '\u26A0 ',
+  error: '\u2326 '
 }
 
 const messaging = {
@@ -22,8 +22,10 @@ export default class Logger {
   constructor(options = {}) {
     this.events = []
     this.times = {}
+    this.options = options
 
-    this.report(options)
+
+    this.report()
   }
 
   /// @description
@@ -48,12 +50,12 @@ export default class Logger {
     return this
   }
 
-  report(options) {
+  report() {
     let {
       debug = true,
       warning = true,
       timestamps = true
-    } = options
+    } = this.options
 
     this.on('annotation_error', ({ annotation, error_message }) =>
       this.error(`with ${annotation}`, error_message))
@@ -62,7 +64,7 @@ export default class Logger {
       this
         .on('start', (name) => this.time(name))
         .on('complete', (name, format = '%s finished after %dms') =>
-          this.time_end(name, format))
+          this.timeEnd(name, format))
     }
 
     if (debug) {
@@ -99,7 +101,7 @@ export default class Logger {
     return this
   }
 
-  time_end(label, format = '%s completed after %dms') {
+  timeEnd(label, format = '%s completed after %dms') {
     let time = this.times[label]
 
     if (!time) {

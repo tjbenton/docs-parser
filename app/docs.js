@@ -6,12 +6,12 @@ import {
   to,
   fs,
   glob,
-  array,
   Logger
 } from './utils'
 import parser from './parser'
 import sorter from './sorter'
 import get_config from './config'
+import { map } from 'async-array-methods'
 
 ////
 /// @name docs.js
@@ -47,12 +47,12 @@ export default async function docs(options = {}) {
     await fs.ensureFile(info.temp.file)
     let json = fs.readFile(info.temp.file)
     log.emit('start', 'paths')
-    files = await glob(files, ignore, changed ? has_file_changed : false)
+    files = await glob(files, ignore, changed ? hasFileChanged : false)
     let s = files.length > 1 ? 's' : '' // eslint-disable-line
     log.emit('complete', 'paths', `%s completed after %dms with ${files.length} file${s} to parse`)
 
     log.emit('start', 'parser')
-    files = await array(files).map((file_path) => parser({ file_path, ...options, log }))
+    files = await map(files, (file_path) => parser({ file_path, ...options, log }))
     log.emit('complete', 'parser')
 
     // converts json to a readable JS object
@@ -85,30 +85,30 @@ export default async function docs(options = {}) {
   }
 }
 
-// @name has_file_changed
+// @name hasFileChanged
 // @access private
 // @description
 // checks the status of the file to see if it has changed or not.
 // @arg {string} - path to file
 // @async
 // @returns {boolean}
-async function has_file_changed(file) {
+async function hasFileChanged(file) {
   let source = path.join(info.root, file)
   let target = path.join(info.temp.folder, file)
 
   try {
-    let stats = await array([ source, target ]).map((_path) => fs.stat(_path))
+    let stats = await map([ source, target ], (_path) => fs.stat(_path))
 
     // copies new files over because it's changed
     if (stats[0].mtime > stats[1].mtime) {
-      fs.fake_copy(source, target)
+      fs.fakeCopy(source, target)
       return true
     }
 
     return false
   } catch (err) {
     // copies new files over because it doesn't exist in the temp target directory
-    fs.fake_copy(source, target)
+    fs.fakeCopy(source, target)
     return true
   }
 }

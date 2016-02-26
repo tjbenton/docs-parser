@@ -2,7 +2,7 @@
 import { info, fs, is, to, Logger } from './utils'
 import path from 'path'
 import annotations from './annotations'
-import AnnotationApi from './annotation_api'
+import AnnotationApi from './annotation-api'
 
 let log = new Logger()
 
@@ -78,7 +78,7 @@ export default async function config(options = {}) {
   }
 
   // merge the config file with passed options
-  options = to.extend(ensure_valid_config(config_file), options)
+  options = to.extend(ensureValidConfig(config_file), options)
 
   // ensures `files`, `ignore` is always an array this way no
   // more checks have to happen for it
@@ -155,11 +155,11 @@ export function parseComments(comments) {
   return parsed_comments
 }
 
-/// @name ensure_valid_config
+/// @name ensureValidConfig
 /// @description
 /// Ensures that the user set's a valid config
 /// @access private
-function ensure_valid_config(user_config) {
+function ensureValidConfig(user_config) {
   for (let key in user_config) {
     if (!is.in(valid_options, key)) {
       log.emit('warning', `'${key}' is not a valid option, see docs options for more details`) //# @todo add link to the doc options

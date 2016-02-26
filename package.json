@@ -9,8 +9,9 @@
     "refresh": "rm -rf -- node_modules/ .tmp/ dist/ .nyc_output/ coverage/; npm i",
     "compile": "npm run clean; babel app/ -d dist/",
     "watch": "npm run clean; babel app/ -d dist/ --watch",
-    "unit-tests": "mocha --compilers js:babel-register --ui tdd --check-leaks tests/unit/**/*.js",
-    "mock-tests": "mocha --compilers js:babel-register --ui tdd --check-leaks --delay tests/run.test.js",
+    "mocha": "mocha --compilers js:babel-register --ui tdd --check-leaks --colors --delay",
+    "unit-tests": "npm run mocha -- tests/unit/*.js tests/unit/**/*.js",
+    "mock-tests": "npm run mocha -- tests/run.test.js",
     "test": "npm run unit-tests; npm run mock-tests",
     "coverage": "nyc npm run unit-tests",
     "coveralls": "npm run coverage && nyc report --reporter=text-lcov | coveralls",
@@ -21,7 +22,8 @@
   "nyc": {
     "exclude": [
       "node_modules/",
-      "*/utils/fs.js"
+      "tests/",
+      "tools/"
     ]
   },
   "files": [
@@ -44,13 +46,15 @@
     "node": ">=0.12.0"
   },
   "dependencies": {
+    "async-array-methods": "^2.1.0",
     "babel-runtime": "^6.5.0",
     "change-case": "^2.3.1",
-    "clor": "^1.6.0",
+    "clor": "^2.0.2",
     "commander": "^2.9.0",
-    "fs-extra": "^0.24.0",
-    "glob": "^5.0.15",
-    "is_js": "^0.7.6",
+    "es6-promisify": "^3.0.0",
+    "fs-extra": "^0.26.5",
+    "glob": "^7.0.0",
+    "is_js": "^0.8.0",
     "marked": "^0.3.5"
   },
   "devDependencies": {
@@ -68,7 +72,7 @@
     "eslint": "^2.1.0",
     "eslint-plugin-babel": "^3.1.0",
     "mocha": "^2.4.5",
-    "nyc": "^3.2.2",
+    "nyc": "^5.6.0",
     "plato": "deedubs/es6-plato",
     "proxyquire": "^1.7.4",
     "sinon": "^1.17.3"

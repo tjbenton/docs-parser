@@ -11,7 +11,7 @@ export default function nav(pages) {
     result.push(set({
       title: to.titleCase(to.sentenceCase(key)),
       href: `/${key}`,
-      body: body_names(`/${key}`, value.page.body),
+      body: bodyNames(`/${key}`, value.page.body),
       subpages: []
     }, value))
   }
@@ -19,16 +19,16 @@ export default function nav(pages) {
   return result
 }
 
-/// @name body_names
+/// @name bodyNames
 /// @description Helper function to get the name of each block in the body
 /// @arg {string} - the href to append the `name` of the block to
 /// @arg {array} - the body of the page
 /// @returns {array}
-function body_names(href, body) {
+function bodyNames(href, body) {
   let names = []
   // loop over each block in the body
   for (let block of body) {
-    // a) Add the name to the body_names
+    // a) Add the name to the bodyNames
     if (is.existy(block.name)) {
       names.push({
         title: block.name,
@@ -60,7 +60,7 @@ function set(a, b) {
       }
 
       // add the name of each block in the body
-      nav_item.body = body_names(nav_item.href, value.page.body)
+      nav_item.body = bodyNames(nav_item.href, value.page.body)
 
       // a) Call `set` again because it's not the last level
       if (to.keys(value).length > 1) { // the reason it's `> 1` is because `page` will always be defined.
