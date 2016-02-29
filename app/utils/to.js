@@ -67,7 +67,7 @@ let to = {
   ///
   /// @arg {*}
   /// @returns {string} That has microsoft crap removed from it
-  normalString: (str) => to.string(str).replace(/(?:\\[rn]+)+/g, '\n'),
+  normalString: (str) => to.string(str).replace(/\r\n|\n/g, '\n'),
 
   /// @name to.keys
   /// @description
