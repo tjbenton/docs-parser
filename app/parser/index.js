@@ -4,9 +4,7 @@ import getBlocks from './get-blocks'
 import parseBlocks from './parse-blocks'
 import replaceAliases from './replace-aliases'
 
-export default async function parser(options = {}) {
-  let { file_path, comments, annotations, log } = options
-
+export default async function parser({ file_path, comments, annotations, log }) {
   // the filetype of the current file
   let type = path.extname(file_path).replace('.', '')
 

@@ -6,15 +6,13 @@ import { is, to } from '../utils'
 /// @description Parses the file and returns the comment blocks in an array
 /// @returns {array} of the comment blocks
 /// @todo {5} - add a line offest argument to this so that you can call parse content on other language types.
-export default function getBlocks(options) {
-  let {
-    file,
-    contents,
-    comment,
-    restrict = true,
-    start_at = 0
-  } = options
-
+export default function getBlocks({
+  file,
+  contents,
+  comment,
+  restrict = true,
+  start_at = 0
+}) {
   start_at = to.number(start_at)
 
   let style = is.all.truthy(comment.start, comment.end) ? 'multi' : 'single'
@@ -77,8 +75,6 @@ export default function getBlocks(options) {
           in_comment = false
           block.comment.contents.push(line)
           block.comment.end = i // sets the end line in the comment block
-
-          // @todo might need to remove this
           i++ // skips end comment line
           line = lines[i] // updates to be the next line
           index.end = (line && is.in(line, comment.end)) ? line.indexOf(comment.end) : false
@@ -93,8 +89,6 @@ export default function getBlocks(options) {
 
           block.comment.contents.push(line)
         }
-
-        // console.log(`${i}: ${line}`);
 
         // a) The last line in the file is a commment
         if (in_comment && (style === 'multi' && index.end !== false ? i === l : i === l - 1)) {
@@ -136,7 +130,7 @@ export default function getBlocks(options) {
         }
       }
     } else if (i === l - 1 && is.truthy(block)) { // the last line in the file was an empty line.
-      block[is.between(block.comment.end) ? 'comment' : 'code'].end = i
+      block[block.comment.end > -1 ? 'code' : 'comment'].end = i
       parsed.push(block)
     }
   } // end loop
