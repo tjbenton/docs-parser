@@ -55,7 +55,7 @@ export default function getBlocks({
 
           // a) There was block that has already been processed
           if (!is.undefined(block)) { // holds the current block information
-            block.code.end = i - 1 // @todo check to make sure this is correct
+            block.code.end = i - 1
             parsed.push(block)
 
             // Stops the loop after the first comment block
@@ -77,7 +77,6 @@ export default function getBlocks({
         // a) check for the end comment
         if (style === 'multi' && block.comment.start !== i && index.end !== false) {
           in_comment = false
-          block.comment.contents.push(line)
           block.comment.end = i // sets the end line in the comment block
           i++ // skips end comment line
           line = lines[i] // updates to be the next line
