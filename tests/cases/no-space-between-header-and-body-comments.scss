@@ -1,10 +1,10 @@
 ////
 /// @author Tyler Benton
-/// @page edge-cases/no-space-between-header-and-body-comment
+/// @page no-space-between-header-and-body-comment
 ////
 /// @name moz-only
 /// @description This allows you to write specific styles for mozilla firefox only
-/// @markup {scss} (example="false") **Example:**
+/// @markup {scss} [example='false'] **Example:**
 ///  @include moz-only(){
 ///   // removes the weird styling in firefox
 ///   -moz-appearance: none;

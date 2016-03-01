@@ -1,7 +1,15 @@
-/// @name moz-only
+
+
+
+
+
+
+/// @name Only block in body
+/// @author Tyler Benton
+/// @page starts-and-ends-with-empty-lines
 /// @author Tyler Benton
 /// @description This allows you to write specific styles for mozilla firefox only
-/// @markup {scss} (example="false") **Example:**
+/// @markup {scss} [example='false'] **Example:**
 ///  @include moz-only(){
 ///   // removes the weird styling in firefox
 ///   -moz-appearance: none;
@@ -22,3 +30,8 @@
   }
  }
 }
+
+
+
+
+

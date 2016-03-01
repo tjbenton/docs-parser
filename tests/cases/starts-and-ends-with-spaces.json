@@ -1,45 +1,27 @@
 {
   "nav": [
     {
-      "title": "No Space Between Header And Body Comment",
-      "href": "/no-space-between-header-and-body-comment",
+      "title": "Starts And Ends With Empty Lines",
+      "href": "/starts-and-ends-with-empty-lines",
       "body": [
         {
-          "title": "moz-only",
-          "href": "/no-space-between-header-and-body-comment#moz-only"
+          "title": "Only block in body",
+          "href": "/starts-and-ends-with-empty-lines#only-block-in-body"
         }
       ],
       "subpages": []
     }
   ],
   "pages": {
-    "no-space-between-header-and-body-comment": {
+    "starts-and-ends-with-empty-lines": {
       "page": {
-        "header": {
-          "author": [
-            "Tyler Benton"
-          ],
-          "access": "public",
-          "blockinfo": {
-            "comment": {
-              "start": 1,
-              "end": 4,
-              "type": "header"
-            },
-            "code": {
-              "start": -1,
-              "end": -1
-            },
-            "file": {
-              "path": "docs/tests/cases/no-space-between-header-and-body-comments.scss",
-              "start": 1,
-              "end": 28
-            }
-          }
-        },
+        "header": {},
         "body": [
           {
-            "name": "moz-only",
+            "name": "Only block in body",
+            "author": [
+              "Tyler Benton"
+            ],
             "description": "<p>This allows you to write specific styles for mozilla firefox only</p>\n",
             "markup": [
               {
@@ -56,18 +38,18 @@
             "access": "public",
             "blockinfo": {
               "comment": {
-                "start": 5,
-                "end": 17,
+                "start": 7,
+                "end": 22,
                 "type": "body"
               },
               "code": {
-                "start": 18,
-                "end": 28
+                "start": 23,
+                "end": 36
               },
               "file": {
-                "path": "docs/tests/cases/no-space-between-header-and-body-comments.scss",
+                "path": "docs/tests/cases/starts-and-ends-with-spaces.scss",
                 "start": 1,
-                "end": 28
+                "end": 38
               }
             }
           }
