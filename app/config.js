@@ -46,9 +46,9 @@ export const comments = {
     header: { start: '/***', line: '*', end: '***/' },
     body: { start: '/**', line: '*', end: '**/' }
   },
-  'rb, py': {
+  'rb, py, coffee, sh, bash': {
     header: { start: '###', line: '##', end: '###' },
-    body: { line: '#' }
+    body: { line: '##' }
   },
   'html, md, markdown, mark, mdown, mkdn, mdml, mkd, mdwn, mdtxt, mdtext, text': {
     header: { start: '<!----', end: '---->' },
