@@ -495,6 +495,12 @@ annotations.markup = {
   }
 }
 
+annotations['raw-code'] = {
+  parse() {
+    return this.code.contents
+  }
+}
+
 /// @name @name
 /// @alias @title, @heading, @header
 /// @description Name of the documented item

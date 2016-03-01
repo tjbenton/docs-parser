@@ -11,6 +11,7 @@ export default function getBlocks({
   contents,
   comment,
   restrict = true,
+  blank_lines,
   start_at = 0
 }) {
   start_at = to.number(start_at)
@@ -25,6 +26,7 @@ export default function getBlocks({
 
   let lines = to.array(contents)
   let parsed = []
+  let current_blank_lines = 0
   let block
   let in_comment = false // used to determin that you are in a comment
   let in_code = false // used to determin if you are in the code after the comment block
@@ -43,6 +45,7 @@ export default function getBlocks({
 
     // a) The line isn't empty so parse it.
     if (!is.empty(line)) {
+      current_blank_lines = 0
       // a) is the start and end style or there was an instance of a comment line
       if (style === 'multi' && (index.start !== false || in_comment) || index.line !== false) {
         // a) is the start of a new block
@@ -130,9 +133,15 @@ export default function getBlocks({
           parsed.push(block)
         }
       }
-    } else if (i === l - 1 && is.truthy(block)) { // the last line in the file was an empty line.
+    } else if (
+      !is.undefined(block) && (
+        ++current_blank_lines === blank_lines || // there were 4 consecutive blank lines so the code is skipped
+        i === l - 1 && is.truthy(block) // the last line in the file was an empty line.
+      )
+    ) {
       block[block.comment.end > -1 ? 'code' : 'comment'].end = i
       parsed.push(block)
+      block = undefined
     }
   } // end loop
 
