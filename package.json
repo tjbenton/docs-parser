@@ -49,6 +49,7 @@
     "async-array-methods": "^2.1.0",
     "babel-runtime": "^6.5.0",
     "change-case": "^2.3.1",
+    "clone": "^1.0.2",
     "clor": "^2.0.2",
     "commander": "^2.9.0",
     "es6-promisify": "^3.0.0",

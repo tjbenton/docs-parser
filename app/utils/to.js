@@ -4,6 +4,7 @@ const arraySlice = (arg) => Array.prototype.slice.call(arg)
 import markdown from 'marked'
 import changeCase from 'change-case'
 import is from './is.js'
+import clone from 'clone'
 
 let to = {
   /// @name to.markdown
@@ -280,37 +281,7 @@ let to = {
   ///
   /// @arg {*} - The item you want to clone
   /// @returns {*} - The copied result
-  clone(arg) {
-    // Basis.
-    if (!(arg instanceof Object)) {
-      return arg
-    }
-
-    let clone
-
-    // Filter out special objects.
-    let Constructor = arg.constructor
-    switch (Constructor) {
-      // Implement other special objects here.
-      /* eslint-disable indent */
-      case RegExp:
-        clone = new Constructor(arg)
-        break
-      case Date:
-        clone = new Constructor(arg.getTime())
-        break
-      default:
-        clone = new Constructor()
-      /* eslint-enable indent */
-    }
-
-    // Clone each property.
-    for (var prop in arg) { // eslint-disable-line
-      clone[prop] = to.clone(arg[prop])
-    }
-
-    return clone
-  },
+  clone,
 
   /// @name to.merge
   /// @description
