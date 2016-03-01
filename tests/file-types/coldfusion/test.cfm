@@ -1,13 +1,13 @@
 <!-----
 @author Tyler Benton
 @page tests/cfm-file
-/--->
+----->
 
 <!----
 @name main
 @description
 main method
-/--->
+----->
 <cfform method="GET" action="#CGI.SCRIPT_NAME#">
   <cfinput name="overview" type="checkbox" value="1" checked="#URL.overview#" onchange="this.form.submit();" />
   <label for="overview">overview</label>
@@ -19,7 +19,7 @@ main method
 @name John Doe
 @description
 This is a normal multi-line coldfusion comment.
-/--->
+---->
 <cfquery name="getArtPrices" datasource="cfartgallery" maxRows="5">
   SELECT A.PRICE
   FROM ART A
@@ -36,7 +36,7 @@ This is a normal multi-line coldfusion comment.
 @description
 This is another multi-line normal Coldfusion
 Script comment made of single-line comments.
-/--->
+---->
 component extends="Fruit" output="false" {
  property name="variety" type="string";
  public boolean function isGood() {
@@ -52,7 +52,7 @@ component extends="Fruit" output="false" {
 @name Bob
 @description
 This is another normal multi-line coldfusion comment.
-/--->
+---->
 <cfoutput>
 list: #priceList#<br/>
 sum: #numberFormat(arraySum(priceArr))#<br/>

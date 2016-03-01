@@ -51,12 +51,12 @@ export const comments = {
     body: { line: '#' }
   },
   'html, md, markdown, mark, mdown, mkdn, mdml, mkd, mdwn, mdtxt, mdtext, text': {
-    header: { start: '<!----', end: '/--->' },
-    body: { start: '<!---', end: '/-->' }
+    header: { start: '<!----', end: '---->' },
+    body: { start: '<!---', end: '--->' }
   },
   cfm: {
-    header: { start: '<!-----', end: '/--->' },
-    body: { start: '<!----', end: '/--->' }
+    header: { start: '<!-----', end: '----->' },
+    body: { start: '<!----', end: '---->' }
   }
 }
 

@@ -492,7 +492,7 @@ This type of comment can only occur **once** per file. Any annotations that are 
     @name something awesome
     @description
     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae praesentium voluptates beatae ducimus dolore velit excepturi maiores delectus doloribus labore totam odio culpa, magni reprehenderit est similique aspernatur dolor rerum?
-   /--->
+   ---->
    </script>
    ```
     ###### Need to figure out

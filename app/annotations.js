@@ -388,7 +388,7 @@ annotations.description = {
 /// @markup Usage
 /// <!----
 /// @markdown
-/// /--->
+/// ---->
 annotations.markdown = {
   filetypes: [
     'markdown', 'mark', 'mdown',
