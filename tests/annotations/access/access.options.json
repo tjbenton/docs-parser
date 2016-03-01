@@ -2,19 +2,61 @@
   "header": {},
   "body": [
     {
-      "__start": 0,
-      "__end": 0,
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 1,
+          "type": "body"
+        },
+        "code": {
+          "start": 2,
+          "end": 2
+        },
+        "file": {
+          "path": "docs/tests/annotations/access/access.options.js",
+          "start": 1,
+          "end": 6
+        }
+      }
     },
     {
-      "__start": 2,
-      "__end": 2,
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 3,
+          "end": 3,
+          "type": "body"
+        },
+        "code": {
+          "start": 4,
+          "end": 4
+        },
+        "file": {
+          "path": "docs/tests/annotations/access/access.options.js",
+          "start": 1,
+          "end": 6
+        }
+      }
     },
     {
-      "__start": 4,
-      "__end": 4,
-      "access": "private"
+      "access": "private",
+      "blockinfo": {
+        "comment": {
+          "start": 5,
+          "end": 5,
+          "type": "body"
+        },
+        "code": {
+          "start": 6,
+          "end": 6
+        },
+        "file": {
+          "path": "docs/tests/annotations/access/access.options.js",
+          "start": 1,
+          "end": 6
+        }
+      }
     }
   ]
 }

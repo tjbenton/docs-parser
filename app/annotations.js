@@ -229,6 +229,23 @@ annotations.alias = {
   }
 }
 
+
+annotations.blockinfo = {
+  autofill() {
+    let comment = this.comment
+    let code = this.code
+    let file = this.file
+    delete comment.contents
+    delete code.contents
+    delete file.contents
+    delete file.name
+    delete file.type
+    delete file.comment
+
+    return { comment, code, file }
+  }
+}
+
 /// @name @arg
 /// @description Parameters from the documented function/mixin
 /// @note Description runs through markdown

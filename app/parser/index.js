@@ -26,8 +26,8 @@ export default async function parser({ file_path, comments, annotations, log }) 
     name: path.basename(file_path, '.' + type), // name of the file
     type, // filetype of the file
     comment,
-    start: 0, // starting point of the file
-    end: to.array(contents).length - 1 // ending point of the file
+    start: 1, // starting point of the file
+    end: to.array(contents).length // ending point of the file
   }
 
   // a) The file doesn't contain any header level comments, or body level comments
@@ -42,6 +42,7 @@ export default async function parser({ file_path, comments, annotations, log }) 
     return []
   }
 
+  contents = '\n' + contents
 
   let header = getBlocks({
     file,

@@ -7,15 +7,13 @@ import autofill from './autofill'
 // Used to parse an array of blocks and runs the annotations function and returns the result
 // @arg {array} - The block/blocks you want to have parsed
 // @returns {array} of parsed blocks
-export default function parseBlocks(options = {}) {
-  let {
-    file,
-    blocks,
-    annotations,
-    comment,
-    log
-  } = options
-
+export default function parseBlocks({
+  file,
+  blocks,
+  annotations,
+  comment,
+  log
+}) {
   if (is.empty(blocks)) {
     return []
   }
@@ -29,7 +27,7 @@ export default function parseBlocks(options = {}) {
     block.comment.contents = to.normalize(block.comment.contents)
     block.code.contents = to.normalize(block.code.contents)
 
-    let parsed = parse_block({
+    let parsed = parseBlock({
       annotations,
       block,
       comment,
@@ -41,8 +39,6 @@ export default function parseBlocks(options = {}) {
 
     if (!is.empty(parsed)) {
       parsed_blocks.push({
-        __start: block.comment.start,
-        __end: block.comment.end,
         ...parsed
       })
     }
@@ -52,14 +48,14 @@ export default function parseBlocks(options = {}) {
 }
 
 
-// @name parse_block
+// @name parseBlock
 // @description
 // This parses the content passed to it seperates out each annotation
 // parses and figures out the annotation line, and the content after it.
 // Then once it has all the information it calls the annotation function(the annotation one it found)
 // for this file type or the default function.
 // @arg {object} - The blocks to parse
-function parse_block(options = {}) {
+function parseBlock(options = {}) {
   let {
     annotations,
     block,

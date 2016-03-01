@@ -2,29 +2,71 @@
   "header": {},
   "body": [
     {
-      "__start": 0,
-      "__end": 0,
       "page": [
         "level 1"
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 1,
+          "type": "body"
+        },
+        "code": {
+          "start": 2,
+          "end": 2
+        },
+        "file": {
+          "path": "docs/tests/annotations/page/page.body.js",
+          "start": 1,
+          "end": 7
+        }
+      }
     },
     {
-      "__start": 2,
-      "__end": 2,
       "page": [
         "level 1/level 2"
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 3,
+          "end": 3,
+          "type": "body"
+        },
+        "code": {
+          "start": 4,
+          "end": 4
+        },
+        "file": {
+          "path": "docs/tests/annotations/page/page.body.js",
+          "start": 1,
+          "end": 7
+        }
+      }
     },
     {
-      "__start": 4,
-      "__end": 5,
       "page": [
         "page 1/level 2",
         "page 2/level 2"
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 5,
+          "end": 6,
+          "type": "body"
+        },
+        "code": {
+          "start": 7,
+          "end": 7
+        },
+        "file": {
+          "path": "docs/tests/annotations/page/page.body.js",
+          "start": 1,
+          "end": 7
+        }
+      }
     }
   ]
 }

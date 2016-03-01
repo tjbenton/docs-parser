@@ -1,10 +1,24 @@
 {
   "header": {
-    "__start": 0,
-    "__end": 2,
     "name": "page autofill test",
-    "page": "other",
-    "access": "public"
+    "access": "public",
+    "blockinfo": {
+      "comment": {
+        "start": 1,
+        "end": 3,
+        "type": "header"
+      },
+      "code": {
+        "start": -1,
+        "end": -1
+      },
+      "file": {
+        "path": "docs/tests/annotations/page/page.header.autofill.js",
+        "start": 1,
+        "end": 4
+      }
+    },
+    "page": "other"
   },
   "body": []
 }

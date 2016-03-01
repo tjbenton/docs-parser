@@ -2,14 +2,28 @@
   "header": {},
   "body": [
     {
-      "__start": 0,
-      "__end": 0,
       "author": [
         "Author One",
         "Author Two",
         "Author Three"
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 1,
+          "type": "body"
+        },
+        "code": {
+          "start": 2,
+          "end": 2
+        },
+        "file": {
+          "path": "docs/tests/annotations/author/author.alias.js",
+          "start": 1,
+          "end": 2
+        }
+      }
     }
   ]
 }

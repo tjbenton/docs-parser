@@ -2,22 +2,64 @@
   "header": {},
   "body": [
     {
-      "__start": 0,
-      "__end": 0,
       "readonly": true,
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 1,
+          "type": "body"
+        },
+        "code": {
+          "start": 2,
+          "end": 2
+        },
+        "file": {
+          "path": "docs/tests/annotations/readonly/readonly.js",
+          "start": 1,
+          "end": 6
+        }
+      }
     },
     {
-      "__start": 2,
-      "__end": 2,
       "readonly": true,
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 3,
+          "end": 3,
+          "type": "body"
+        },
+        "code": {
+          "start": 4,
+          "end": 4
+        },
+        "file": {
+          "path": "docs/tests/annotations/readonly/readonly.js",
+          "start": 1,
+          "end": 6
+        }
+      }
     },
     {
-      "__start": 4,
-      "__end": 4,
       "readonly": false,
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 5,
+          "end": 5,
+          "type": "body"
+        },
+        "code": {
+          "start": 6,
+          "end": 6
+        },
+        "file": {
+          "path": "docs/tests/annotations/readonly/readonly.js",
+          "start": 1,
+          "end": 6
+        }
+      }
     }
   ]
 }

@@ -2,8 +2,6 @@
   "header": {},
   "body": [
     {
-      "__start": 0,
-      "__end": 0,
       "arg": [
         {
           "types": [],
@@ -12,11 +10,25 @@
           "description": ""
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 1,
+          "type": "body"
+        },
+        "code": {
+          "start": 2,
+          "end": 2
+        },
+        "file": {
+          "path": "docs/tests/annotations/arg/arg.js",
+          "start": 1,
+          "end": 17
+        }
+      }
     },
     {
-      "__start": 2,
-      "__end": 2,
       "arg": [
         {
           "types": [
@@ -27,11 +39,25 @@
           "description": ""
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 3,
+          "end": 3,
+          "type": "body"
+        },
+        "code": {
+          "start": 4,
+          "end": 4
+        },
+        "file": {
+          "path": "docs/tests/annotations/arg/arg.js",
+          "start": 1,
+          "end": 17
+        }
+      }
     },
     {
-      "__start": 4,
-      "__end": 4,
       "arg": [
         {
           "types": [
@@ -43,11 +69,25 @@
           "description": ""
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 5,
+          "end": 5,
+          "type": "body"
+        },
+        "code": {
+          "start": 6,
+          "end": 6
+        },
+        "file": {
+          "path": "docs/tests/annotations/arg/arg.js",
+          "start": 1,
+          "end": 17
+        }
+      }
     },
     {
-      "__start": 6,
-      "__end": 6,
       "arg": [
         {
           "types": [
@@ -58,11 +98,25 @@
           "description": "<p>description</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 7,
+          "end": 7,
+          "type": "body"
+        },
+        "code": {
+          "start": 8,
+          "end": 8
+        },
+        "file": {
+          "path": "docs/tests/annotations/arg/arg.js",
+          "start": 1,
+          "end": 17
+        }
+      }
     },
     {
-      "__start": 8,
-      "__end": 8,
       "arg": [
         {
           "types": [
@@ -73,11 +127,25 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 9,
+          "end": 9,
+          "type": "body"
+        },
+        "code": {
+          "start": 10,
+          "end": 10
+        },
+        "file": {
+          "path": "docs/tests/annotations/arg/arg.js",
+          "start": 1,
+          "end": 17
+        }
+      }
     },
     {
-      "__start": 10,
-      "__end": 15,
       "arg": [
         {
           "types": [
@@ -88,7 +156,23 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et\ndolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip\nex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore\neu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia\ndeserunt mollit anim id est laborum.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 11,
+          "end": 16,
+          "type": "body"
+        },
+        "code": {
+          "start": 17,
+          "end": 17
+        },
+        "file": {
+          "path": "docs/tests/annotations/arg/arg.js",
+          "start": 1,
+          "end": 17
+        }
+      }
     }
   ]
 }

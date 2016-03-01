@@ -2,22 +2,64 @@
   "header": {},
   "body": [
     {
-      "__start": 1,
-      "__end": 1,
       "description": "<p>Lorem ipsum dolor sit amet</p>\n",
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 2,
+          "end": 2,
+          "type": "body"
+        },
+        "code": {
+          "start": 3,
+          "end": 3
+        },
+        "file": {
+          "path": "docs/tests/annotations/description/description.body.js",
+          "start": 1,
+          "end": 15
+        }
+      }
     },
     {
-      "__start": 3,
-      "__end": 7,
       "description": "<p>Line one\nOther\nlines\nbelow\nit</p>\n",
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 4,
+          "end": 8,
+          "type": "body"
+        },
+        "code": {
+          "start": 9,
+          "end": 9
+        },
+        "file": {
+          "path": "docs/tests/annotations/description/description.body.js",
+          "start": 1,
+          "end": 15
+        }
+      }
     },
     {
-      "__start": 9,
-      "__end": 13,
       "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nAccusantium vel, eveniet, architecto saepe, modi dolore incidunt\nquisquam eaque cum porro explicabo velit sunt illo praesentium\nfacere. Sit consequuntur illo nihil.</p>\n",
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 10,
+          "end": 14,
+          "type": "body"
+        },
+        "code": {
+          "start": 15,
+          "end": 15
+        },
+        "file": {
+          "path": "docs/tests/annotations/description/description.body.js",
+          "start": 1,
+          "end": 15
+        }
+      }
     }
   ]
 }

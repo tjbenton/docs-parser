@@ -85,7 +85,7 @@
       }
     ],
     "id-match": [ 2, "^(?:[a-z]{2,}([A-Z]{1}[a-z]+)*$)|([a-z_]+$)" ],
-    "indent": [ 2, 2 ],
+    "indent": [ 2, 2 , { "SwitchCase": 1 } ],
     "key-spacing": [ 2, { "beforeColon": false, "afterColon": true } ],
     "linebreak-style": [ 2, "unix" ],
     "max-depth": [ 2, 5 ],

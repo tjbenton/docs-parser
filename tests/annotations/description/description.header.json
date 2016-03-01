@@ -1,10 +1,24 @@
 {
   "header": {
-    "__start": 0,
-    "__end": 6,
     "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur autem,\ninventore modi ratione. Ipsum natus odio inventore quibusdam error dolores\nnumquam sapiente dicta, perferendis quos quo provident,\nvoluptate, alias deserunt?</p>\n",
-    "page": "other",
-    "access": "public"
+    "access": "public",
+    "blockinfo": {
+      "comment": {
+        "start": 1,
+        "end": 7,
+        "type": "header"
+      },
+      "code": {
+        "start": -1,
+        "end": -1
+      },
+      "file": {
+        "path": "docs/tests/annotations/description/description.header.js",
+        "start": 1,
+        "end": 8
+      }
+    },
+    "page": "other"
   },
   "body": []
 }

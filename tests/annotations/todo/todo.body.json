@@ -2,8 +2,6 @@
   "header": {},
   "body": [
     {
-      "__start": 0,
-      "__end": 0,
       "todo": [
         {
           "importance": "0",
@@ -11,11 +9,25 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 1,
+          "type": "body"
+        },
+        "code": {
+          "start": 2,
+          "end": 2
+        },
+        "file": {
+          "path": "docs/tests/annotations/todo/todo.body.js",
+          "start": 1,
+          "end": 15
+        }
+      }
     },
     {
-      "__start": 2,
-      "__end": 2,
       "todo": [
         {
           "importance": "5",
@@ -23,11 +35,25 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 3,
+          "end": 3,
+          "type": "body"
+        },
+        "code": {
+          "start": 4,
+          "end": 4
+        },
+        "file": {
+          "path": "docs/tests/annotations/todo/todo.body.js",
+          "start": 1,
+          "end": 15
+        }
+      }
     },
     {
-      "__start": 4,
-      "__end": 4,
       "todo": [
         {
           "importance": "5",
@@ -35,11 +61,25 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 5,
+          "end": 5,
+          "type": "body"
+        },
+        "code": {
+          "start": 6,
+          "end": 6
+        },
+        "file": {
+          "path": "docs/tests/annotations/todo/todo.body.js",
+          "start": 1,
+          "end": 15
+        }
+      }
     },
     {
-      "__start": 6,
-      "__end": 6,
       "todo": [
         {
           "importance": "10",
@@ -49,11 +89,25 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 7,
+          "end": 7,
+          "type": "body"
+        },
+        "code": {
+          "start": 8,
+          "end": 8
+        },
+        "file": {
+          "path": "docs/tests/annotations/todo/todo.body.js",
+          "start": 1,
+          "end": 15
+        }
+      }
     },
     {
-      "__start": 8,
-      "__end": 8,
       "todo": [
         {
           "importance": "10",
@@ -64,11 +118,25 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 9,
+          "end": 9,
+          "type": "body"
+        },
+        "code": {
+          "start": 10,
+          "end": 10
+        },
+        "file": {
+          "path": "docs/tests/annotations/todo/todo.body.js",
+          "start": 1,
+          "end": 15
+        }
+      }
     },
     {
-      "__start": 10,
-      "__end": 13,
       "todo": [
         {
           "importance": "8",
@@ -79,7 +147,23 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem sed distinctio,\nneque molestiae numquam cumque incidunt magni et provident temporibus. Illum, ullam\nquidem nulla architecto, numquam hic voluptate provident sit!</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 11,
+          "end": 14,
+          "type": "body"
+        },
+        "code": {
+          "start": 15,
+          "end": 15
+        },
+        "file": {
+          "path": "docs/tests/annotations/todo/todo.body.js",
+          "start": 1,
+          "end": 15
+        }
+      }
     }
   ]
 }

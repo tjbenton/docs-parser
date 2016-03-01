@@ -2,8 +2,6 @@
   "header": {},
   "body": [
     {
-      "__start": 0,
-      "__end": 0,
       "requires": [
         {
           "types": [],
@@ -11,7 +9,23 @@
           "description": ""
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 1,
+          "type": "body"
+        },
+        "code": {
+          "start": 2,
+          "end": 2
+        },
+        "file": {
+          "path": "docs/tests/annotations/requires/requires.alias.js",
+          "start": 1,
+          "end": 2
+        }
+      }
     }
   ]
 }

@@ -2,40 +2,96 @@
   "header": {},
   "body": [
     {
-      "__start": 0,
-      "__end": 0,
       "since": {
         "version": "undefined",
         "description": ""
       },
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 1,
+          "type": "body"
+        },
+        "code": {
+          "start": 2,
+          "end": 2
+        },
+        "file": {
+          "path": "docs/tests/annotations/since/since.body.js",
+          "start": 1,
+          "end": 11
+        }
+      }
     },
     {
-      "__start": 2,
-      "__end": 2,
       "since": {
         "version": "0.0.1",
         "description": "<p>Lorem</p>\n"
       },
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 3,
+          "end": 3,
+          "type": "body"
+        },
+        "code": {
+          "start": 4,
+          "end": 4
+        },
+        "file": {
+          "path": "docs/tests/annotations/since/since.body.js",
+          "start": 1,
+          "end": 11
+        }
+      }
     },
     {
-      "__start": 4,
-      "__end": 4,
       "since": {
         "version": "0.0.1",
         "description": "<p>Lorem</p>\n"
       },
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 5,
+          "end": 5,
+          "type": "body"
+        },
+        "code": {
+          "start": 6,
+          "end": 6
+        },
+        "file": {
+          "path": "docs/tests/annotations/since/since.body.js",
+          "start": 1,
+          "end": 11
+        }
+      }
     },
     {
-      "__start": 6,
-      "__end": 9,
       "since": {
         "version": "^0.0.1",
         "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis maiores veritatis,\nsed repellat voluptatibus, eaque nihil assumenda odit at, ea consequatur provident\naccusamus fugit magnam et adipisci eum, saepe incidunt.</p>\n"
       },
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 7,
+          "end": 10,
+          "type": "body"
+        },
+        "code": {
+          "start": 11,
+          "end": 11
+        },
+        "file": {
+          "path": "docs/tests/annotations/since/since.body.js",
+          "start": 1,
+          "end": 11
+        }
+      }
     }
   ]
 }

@@ -59,6 +59,7 @@ export default function getBlocks({
             // has been parsed. This is for file header comments
             if (restrict) {
               block.comment.end = i
+              block.code.end = -1
               return parsed
             }
           }

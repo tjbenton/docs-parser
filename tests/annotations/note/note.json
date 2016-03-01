@@ -2,70 +2,154 @@
   "header": {},
   "body": [
     {
-      "__start": 0,
-      "__end": 0,
       "note": [
         {
           "importance": "0",
           "description": ""
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 1,
+          "type": "body"
+        },
+        "code": {
+          "start": 2,
+          "end": 2
+        },
+        "file": {
+          "path": "docs/tests/annotations/note/note.js",
+          "start": 1,
+          "end": 20
+        }
+      }
     },
     {
-      "__start": 2,
-      "__end": 2,
       "note": [
         {
           "importance": "10",
           "description": ""
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 3,
+          "end": 3,
+          "type": "body"
+        },
+        "code": {
+          "start": 4,
+          "end": 4
+        },
+        "file": {
+          "path": "docs/tests/annotations/note/note.js",
+          "start": 1,
+          "end": 20
+        }
+      }
     },
     {
-      "__start": 4,
-      "__end": 4,
       "note": [
         {
           "importance": "0",
           "description": "<p>Lorem ipsum dolor sit amet</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 5,
+          "end": 5,
+          "type": "body"
+        },
+        "code": {
+          "start": 6,
+          "end": 6
+        },
+        "file": {
+          "path": "docs/tests/annotations/note/note.js",
+          "start": 1,
+          "end": 20
+        }
+      }
     },
     {
-      "__start": 6,
-      "__end": 10,
       "note": [
         {
           "importance": "0",
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation\nullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 7,
+          "end": 11,
+          "type": "body"
+        },
+        "code": {
+          "start": 12,
+          "end": 12
+        },
+        "file": {
+          "path": "docs/tests/annotations/note/note.js",
+          "start": 1,
+          "end": 20
+        }
+      }
     },
     {
-      "__start": 12,
-      "__end": 12,
       "note": [
         {
           "importance": "5",
           "description": "<p>Lorem ipsum dolor sit amet</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 13,
+          "end": 13,
+          "type": "body"
+        },
+        "code": {
+          "start": 14,
+          "end": 14
+        },
+        "file": {
+          "path": "docs/tests/annotations/note/note.js",
+          "start": 1,
+          "end": 20
+        }
+      }
     },
     {
-      "__start": 14,
-      "__end": 18,
       "note": [
         {
           "importance": "5",
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation\nullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 15,
+          "end": 19,
+          "type": "body"
+        },
+        "code": {
+          "start": 20,
+          "end": 20
+        },
+        "file": {
+          "path": "docs/tests/annotations/note/note.js",
+          "start": 1,
+          "end": 20
+        }
+      }
     }
   ]
 }

@@ -2,30 +2,56 @@
   "header": {},
   "body": [
     {
-      "__start": 0,
-      "__end": 0,
       "returns": {
         "types": [
           "undefined"
         ],
         "description": ""
       },
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 1,
+          "type": "body"
+        },
+        "code": {
+          "start": 2,
+          "end": 2
+        },
+        "file": {
+          "path": "docs/tests/annotations/returns/returns.js",
+          "start": 1,
+          "end": 23
+        }
+      }
     },
     {
-      "__start": 2,
-      "__end": 2,
       "returns": {
         "types": [
           "undefined"
         ],
         "description": ""
       },
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 3,
+          "end": 3,
+          "type": "body"
+        },
+        "code": {
+          "start": 4,
+          "end": 4
+        },
+        "file": {
+          "path": "docs/tests/annotations/returns/returns.js",
+          "start": 1,
+          "end": 23
+        }
+      }
     },
     {
-      "__start": 4,
-      "__end": 4,
       "returns": {
         "types": [
           "array",
@@ -34,11 +60,25 @@
         ],
         "description": ""
       },
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 5,
+          "end": 5,
+          "type": "body"
+        },
+        "code": {
+          "start": 6,
+          "end": 6
+        },
+        "file": {
+          "path": "docs/tests/annotations/returns/returns.js",
+          "start": 1,
+          "end": 23
+        }
+      }
     },
     {
-      "__start": 6,
-      "__end": 6,
       "returns": {
         "types": [
           "array",
@@ -47,40 +87,98 @@
         ],
         "description": ""
       },
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 7,
+          "end": 7,
+          "type": "body"
+        },
+        "code": {
+          "start": 8,
+          "end": 8
+        },
+        "file": {
+          "path": "docs/tests/annotations/returns/returns.js",
+          "start": 1,
+          "end": 23
+        }
+      }
     },
     {
-      "__start": 8,
-      "__end": 8,
       "returns": {
         "types": [
           "object"
         ],
         "description": "<p>Lorem ipsum dolor sit amet</p>\n"
       },
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 9,
+          "end": 9,
+          "type": "body"
+        },
+        "code": {
+          "start": 10,
+          "end": 10
+        },
+        "file": {
+          "path": "docs/tests/annotations/returns/returns.js",
+          "start": 1,
+          "end": 23
+        }
+      }
     },
     {
-      "__start": 10,
-      "__end": 10,
       "returns": {
         "types": [
           "array"
         ],
         "description": "<p>Lorem ipsum dolor sit amet</p>\n"
       },
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 11,
+          "end": 11,
+          "type": "body"
+        },
+        "code": {
+          "start": 12,
+          "end": 12
+        },
+        "file": {
+          "path": "docs/tests/annotations/returns/returns.js",
+          "start": 1,
+          "end": 23
+        }
+      }
     },
     {
-      "__start": 12,
-      "__end": 21,
       "returns": {
         "types": [
           "object"
         ],
         "description": "<p>This super awesome object</p>\n<pre><code class=\"lang-js\">{\n  i: {\n    found: {\n      waldo: &#39;Shoot, you found me&#39;\n    }\n  }\n}\n</code></pre>\n"
       },
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 13,
+          "end": 22,
+          "type": "body"
+        },
+        "code": {
+          "start": 23,
+          "end": 23
+        },
+        "file": {
+          "path": "docs/tests/annotations/returns/returns.js",
+          "start": 1,
+          "end": 23
+        }
+      }
     }
   ]
 }

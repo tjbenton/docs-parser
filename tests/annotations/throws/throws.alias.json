@@ -2,8 +2,6 @@
   "header": {},
   "body": [
     {
-      "__start": 0,
-      "__end": 0,
       "throws": [
         {
           "types": [
@@ -12,11 +10,25 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 1,
+          "type": "body"
+        },
+        "code": {
+          "start": 2,
+          "end": 2
+        },
+        "file": {
+          "path": "docs/tests/annotations/throws/throws.alias.js",
+          "start": 1,
+          "end": 8
+        }
+      }
     },
     {
-      "__start": 2,
-      "__end": 2,
       "throws": [
         {
           "types": [
@@ -25,11 +37,25 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 3,
+          "end": 3,
+          "type": "body"
+        },
+        "code": {
+          "start": 4,
+          "end": 4
+        },
+        "file": {
+          "path": "docs/tests/annotations/throws/throws.alias.js",
+          "start": 1,
+          "end": 8
+        }
+      }
     },
     {
-      "__start": 4,
-      "__end": 4,
       "throws": [
         {
           "types": [
@@ -38,11 +64,25 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 5,
+          "end": 5,
+          "type": "body"
+        },
+        "code": {
+          "start": 6,
+          "end": 6
+        },
+        "file": {
+          "path": "docs/tests/annotations/throws/throws.alias.js",
+          "start": 1,
+          "end": 8
+        }
+      }
     },
     {
-      "__start": 6,
-      "__end": 6,
       "throws": [
         {
           "types": [
@@ -51,7 +91,23 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public"
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 7,
+          "end": 7,
+          "type": "body"
+        },
+        "code": {
+          "start": 8,
+          "end": 8
+        },
+        "file": {
+          "path": "docs/tests/annotations/throws/throws.alias.js",
+          "start": 1,
+          "end": 8
+        }
+      }
     }
   ]
 }
