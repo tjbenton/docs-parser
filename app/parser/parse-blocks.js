@@ -75,7 +75,19 @@ function parseBlock(options = {}) {
   // loop over each line in the comment block
   for (let i = 0, l = contents.length; i < l; i++) {
     let line = contents[i]
-    let prefix_index = line.indexOf(comment.prefix)
+    let prefix_index = -1
+
+    if (
+      !is.any.in(
+        line,
+        `${comment.header.line} ${comment.prefix}`,
+        `${comment.body.line} ${comment.prefix}`,
+        `\\${comment.prefix}`
+      )
+    ) {
+      prefix_index = line.indexOf(comment.prefix)
+    }
+
 
     // a) there is an index of the annotation prefix
     if (prefix_index >= 0) {

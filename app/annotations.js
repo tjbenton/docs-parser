@@ -177,7 +177,6 @@ function logAnnotationError(obj, expected) {
 let annotations = {}
 
 
-export default
 
 /// @name @access
 /// @arg {string} line [public] - public, private, protected

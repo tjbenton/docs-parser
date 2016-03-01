@@ -75,7 +75,12 @@ export default function getBlocks({
         }
 
         // a) check for the end comment
-        if (style === 'multi' && block.comment.start !== i && index.end !== false) {
+        if (
+          block &&
+          style === 'multi' &&
+          block.comment.start !== i &&
+          index.end !== false
+        ) {
           in_comment = false
           block.comment.end = i // sets the end line in the comment block
           i++ // skips end comment line
