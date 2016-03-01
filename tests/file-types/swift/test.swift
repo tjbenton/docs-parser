@@ -6,7 +6,6 @@
 /// @name main
 /// @description
 /// main method
-
 class Counter {
     var count = 0
     func increment() {
@@ -20,10 +19,10 @@ class Counter {
     }
 }
 
+
 /// @name Something
 /// @description
 /// This is a normal multi-line comment.
-
 class Counter2 {
     var count: Int = 0
     func incrementBy(amount: Int, numberOfTimes: Int) {
@@ -31,10 +30,10 @@ class Counter2 {
     }
 }
 
+
 /// @name Something else
 /// @description
 /// This is another normal multi-line comment.
-
 struct Point {
     var x = 0.0, y = 0.0
     func isToTheRightOfX(x: Double) -> Bool {

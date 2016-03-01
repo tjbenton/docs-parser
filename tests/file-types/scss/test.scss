@@ -3,42 +3,13 @@
 /// @page tests/scss-file
 ////
 
-/// @name state test
-/// @state (ermahgerd)
-/// {:hover, :focus} - pseudo class stuff
-/// {.something-else} [unique_identifier] - some really cool shit
-///
-/// @state (ermahgerd)
-/// {:active} - pseudo class stuff
-/// {.something-else} [unique_identifier] - some other really cool shit
-///
-/// @markup (ermahgerd) {html} **Example** Some example
-/// <div class='c-something-super-awesome {@state[0].state}'>
-///   <div class='{@state[0].state}'>
-///     {@state.unique_identifier.description}
-///   </div>
-/// </div>
-///
-/// @state (ermahgerd-two)
-/// {:hover, :focus} - pseudo class stuff
-/// {.something-else} - some really cool shit
-///
-/// @state (ermahgerd-two)
-/// {:active} - pseudo class stuff
-/// {.something-else} - some other really cool shit
-///
-/// @markup (ermahgerd-two) {html} **Example** Some other example
-/// <div class='c-something-super-awesome {@state[0].state}'>
-///   <div class='{@state[1].state}'>
-///     {@state[1].description}
-///   </div>
-/// </div>
-
+/// @name One
+/// @type {color}
+$color: #2d5e8b;
 
 
 
 /// @name moz-only
-/// @access someshit
 /// @author Tyler Benton
 /// @description This allows you to write specific styles for mozilla firefox only
 /// @arg {function, object} callbacks [something super sweet] - Functions
@@ -63,67 +34,5 @@
         @content;
       }
     }
-  }
-}
-
-// @author Tyler Benton
-// @page components/buttons
-//
-// @description Your standard form button.
-//
-// @state {:hover}
-// @state {:active}
-// @state {:disabled} - Dims the button when disabled.
-// @state {.c-btn--mini} - A mini button
-// @state {.c-btn--tiny} - A tiny button
-// @state {.c-btn--small} - A tiny button
-// @state {.c-btn--medium} - A medium button
-// @state {.c-btn--large} - A large button
-// @state {.c-btn--huge} - A huge button
-// @state {.c-btn--massive} - A massive button
-// @state {.c-btn--primary} - Primary action
-// @state {.c-btn--primary:hover}
-// @state {.c-btn--primary:active}
-// @state {.c-btn--secondary} - Secondary action
-// @state {.c-btn--secondary:hover}
-// @state {.c-btn--secondary:active}
-// @state {.c-btn--tertiary} - Tertiary action
-// @state {.c-btn--tertiary}:hover
-// @state {.c-btn--tertiary}:active
-// @state {.c-btn--text} - It's a text link as a button
-// @state {.c-btn--text:hover}
-// @state {.c-btn--text:active}
-//
-// @markup
-// <div class='o-actions'>
-//   <a href='#' class='c-btn {@state}'>Button (anchor)</a>
-//   <button class='c-btn {@state}'>Button (button)</button>
-//   <input class='c-btn {@state}' type='button' value='Button (input)'>
-// </div>
-.c-btn {
-  background: color(a);
-  border: none;
-  border-radius: get($config, border-radius);
-  display: inline-block;
-  font-size: 1em;
-  font-weight: bold;
-  line-height: 1em;
-  padding: em(13px) 1.5em;
-  text-align: center;
-  transition: background 0.25s ease-out, color 0.25s ease-out;
-  vertical-align: middle;
-  width: auto; // this resets the input style of 100%
-  &, &:hover, &:active, &:focus {
-    color: #fff;
-    text-decoration: none;
-  }
-  &:hover {
-    background: color(a, -2);
-  }
-  &:active, &:focus {
-    background: color(a, 2);
-  }
-  &:disabled {
-    opacity: 0.5;
   }
 }

@@ -30,6 +30,21 @@ addSuite('cases', async ({ paths, expected }) => {
 })
 
 
+addSuite('file-types', async ({ paths, expected }) => {
+  const actual = await map(paths, (files) => docs({ files, ...test_defaults }))
+  return () => {
+    for (let i = 0; i < paths.length; i++) {
+      test(`${i}: ${paths[i]}`, () => {
+        assert.deepStrictEqual(
+          actual[i],
+          expected[i]
+        )
+      })
+    }
+  }
+})
+
+
 addSuite('annotations', async ({ paths, expected }) => {
   const actual = await map(paths, (files) => docs({ files, raw: true, ...test_defaults }))
 

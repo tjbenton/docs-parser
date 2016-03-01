@@ -1,19 +1,19 @@
 <?php
-	////
- /// @name Header
-	/// @author Tyler Benton
- /// @page tests/php-file
-	////
+  ////
+  /// @name PHP
+  /// @author Tyler Benton
+  /// @page tests/php-file
+  ////
 
 
-	/// @name Body block 1
-	/// @description
-	/// main method
-	echo 'This is saying something';
+  /// @name One
+  /// @description
+  /// main method
+  echo 'This is saying something';
 
-	/// @name Body block 2
-	/// @description
-	/// This is a normal multi-line comment.
+  /// @name Two
+  /// @description
+  /// This is a normal multi-line comment.
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_URL, "example.com");
@@ -24,13 +24,13 @@
 
     curl_close($ch);
 
-	/// @name Body block 3
-	/// @description
-	/// This is another normal multi-line comment.
-	$color = "red";
-	echo "My car is " . $color . "<br>";
-	echo "My house is " . $COLOR . "<br>";
-	echo "My boat is " . $coLOR . "<br>";
+  /// @name Three
+  /// @description
+  /// This is another normal multi-line comment.
+  $color = "red";
+  echo "My car is " . $color . "<br>";
+  echo "My house is " . $COLOR . "<br>";
+  echo "My boat is " . $coLOR . "<br>";
 
-	// This is a normal single-line comment.
+  // This is a normal single-line comment.
 ?>

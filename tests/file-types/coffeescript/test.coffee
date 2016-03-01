@@ -4,7 +4,7 @@
 ###
 
 
-## @name main
+## @name One
 ## @description
 ## main method
 outer = 1
@@ -14,7 +14,7 @@ changeNumbers = ->
 inner = changeNumbers()
 
 
-## @name Something
+## @name Two
 ## @description
 ## This is a normal multi-line comment.
 mood = greatlyImproved if singing
@@ -28,7 +28,7 @@ else
 date = if friday then sue else jill
 
 
-## @name Something else
+## @name Three
 ## @description
 ## This is another normla multi-line comment.
 yearsOld = max: 10, ida: 9, tim: 11
@@ -36,4 +36,4 @@ yearsOld = max: 10, ida: 9, tim: 11
 ages = for child, age of yearsOld
   "#{child} is #{age}"
 
-  # This a normal single-line comment.
+# This a normal single-line comment.

@@ -3,7 +3,7 @@
 /// @page tests/java-file
 ////
 
-/// @name Body Block 1
+/// @name One
 /// @description
 /// A very simple class to print out `Hello World`
 class HelloWorldApp {
@@ -14,7 +14,7 @@ class HelloWorldApp {
 
 // This is a normal single-line comment, and shouldn't start a new block
 
-/// @name Body Block 2
+/// @name Two
 /// @description
 /// This is a normal multi-line comment.
 class saySomething {
@@ -23,7 +23,7 @@ class saySomething {
   }
 }
 
-/// @name Body Block 3
+/// @name Three
 /// @description
 /// This is another normal multi-line comment.
 class saySomethingElse {

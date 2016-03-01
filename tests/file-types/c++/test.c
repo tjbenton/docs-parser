@@ -3,9 +3,8 @@
 /// @page tests/c++-file
 ////
 
-/// @name main
-/// @description
-/// main method
+/// @name one
+/// @description Lorem ipsum dolor sit amet, consectetur adipisicing elit.
 #include <stdio.h>
 int main(){
   char name[50];
@@ -33,13 +32,16 @@ int main(){
 // This is a normal single-line comment, and shouldn't start a new block
 
 
-/// @name Something
+/// @name Two
 /// @description
-/// This is a normal multi-line comment.
+/// Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque non fugit,
+/// aspernatur! Quos consequatur libero, fugiat tempora maxime maiores quia
+/// aspernatur praesentium voluptatum incidunt! Tempora rem aperiam
+/// consectetur aut, fugiat.
 #include <stdio.h>
 struct s{
- char name[50];
- int height;
+  char name[50];
+  int height;
 };
 int main(){
    struct s a[5],b[5];
@@ -63,7 +65,7 @@ int main(){
    fclose(fptr);
 }
 
-/// @name Something else
+/// @name Three
 /// @description
 /// This is another normal multi-line comment.
 #include <stdio.h>

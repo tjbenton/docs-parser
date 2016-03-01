@@ -1,7 +1,8 @@
 <!----
- @name A super awesome markdown file
+ @name md
+ @page tests/markdown
  @markdown
-/--->
+---->
 
 ## Default Annotations
 ### @name

@@ -3,7 +3,7 @@
 /// @page tests/c-file
 ////
 
-/// @name main
+/// @name One
 /// @description
 /// main method
 #include <stdio.h>
@@ -31,7 +31,7 @@ int main(){
 
 // This is a normal single-line comment, and shouldn't start a new block
 
-/// @name Something
+/// @name Two
 /// @description
 /// This is a normal multi-line comment.
 #include <stdio.h>
@@ -61,7 +61,7 @@ int main(){
   fclose(fptr);
 }
 
-/// @name Something else
+/// @name Three
 /// @description
 /// This is another normal multi-line comment.
 #include <stdio.h>

@@ -46,13 +46,17 @@ export const comments = {
     header: { start: '/***', line: '*', end: '***/' },
     body: { start: '/**', line: '*', end: '**/' }
   },
-  'rb, py, coffee, sh, bash': {
+  'rb, py, coffee, sh, bash, pl': {
     header: { start: '###', line: '##', end: '###' },
     body: { line: '##' }
   },
   'html, md, markdown, mark, mdown, mkdn, mdml, mkd, mdwn, mdtxt, mdtext, text': {
     header: { start: '<!----', end: '---->' },
     body: { start: '<!---', end: '--->' }
+  },
+  jade: {
+    header: { start: '//-//', line: '//-/', end: '//-//' },
+    body: { line: '//-/' }
   },
   cfm: {
     header: { start: '<!-----', end: '----->' },
