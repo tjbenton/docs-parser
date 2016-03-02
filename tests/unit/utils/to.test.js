@@ -48,6 +48,16 @@ asyncSuite.wrap('to', () => {
   })
 
 
+  test('to.type', () => {
+    assert.strictEqual(to.type(string), 'string')
+    assert.strictEqual(to.type(array), 'array')
+    assert.strictEqual(to.type(object), 'object')
+    assert.strictEqual(to.type(buffer), 'buffer')
+    assert.strictEqual(to.type(number), 'number')
+    assert.strictEqual(to.type(boolean), 'boolean')
+  })
+
+
   test('to.keys', () => {
     const keys = to.keys(object)
     assert.strictEqual(keys[0], 'one', 'should return one')
@@ -56,10 +66,9 @@ asyncSuite.wrap('to', () => {
   })
 
   test('to.values', () => {
-    const values = to.values(object)
-    assert.strictEqual(values[0], 1)
-    assert.strictEqual(values[1], 2)
-    assert.strictEqual(values[2], 3)
+    assert.deepStrictEqual(to.values(object), [ 1, 2, 3 ])
+    assert.deepStrictEqual(to.values(object, '!one'), [ 2, 3 ])
+    assert.deepStrictEqual(to.values(object, 'one', 'two'), [ 1, 2 ])
   })
 
 
@@ -203,16 +212,20 @@ asyncSuite.wrap('to', () => {
 
 
   test('to.sort', () => {
-    const actual = {
+    const acutal_object = {
       c: 1,
       b: 2,
       a: 3
     }
+    const actual_array = [ 3, 2, 1 ]
 
-    assert.strictEqual(Object.keys(actual)[0], 'c',
+    assert.strictEqual(Object.keys(acutal_object)[0], 'c',
       'c should be the first key in the object')
-    assert.strictEqual(Object.keys(to.sort(actual))[0], 'a',
+    assert.strictEqual(Object.keys(to.sort(acutal_object))[0], 'a',
       'a should be the first key in the object after it\'s sorted')
+
+    assert.strictEqual(actual_array[0], 3)
+    assert.strictEqual(to.sort(actual_array)[0], 1)
   })
 
 

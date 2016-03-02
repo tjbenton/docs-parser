@@ -16,6 +16,21 @@ let to = {
 
   ...changeCase,
 
+  /// @name to.type
+  /// @description
+  /// since `typeof` can't tell the difference between an array and an actual object
+  /// this function will return the correct result
+  /// @returns {string}
+  type(arg) {
+    let result = toString(arg).slice(8, -1).toLowerCase()
+
+    if (result === 'uint8array') {
+      return 'buffer'
+    }
+
+    return result
+  },
+
   /// @name to.clamp
   /// @description
   /// This is used to clamp a number between a min an max value
@@ -87,13 +102,36 @@ let to = {
   /// @name to.keys
   /// @description
   /// Converts an object to an array of it's values names.
-  /// @arg {object}
+  /// @arg {object} arg - The object to get the values from
+  /// @arg {string} ...rest - A list of values
+  /// if you want to exclude a specific key you can use `!keyname`
+  /// or if you want to only get specific values then you can pass in
+  /// the specific values that you want to get. By default if ``...rest`
+  /// is empty it will return all the values in the object.
   /// @returns {array}
-  values(arg) {
+  /// @markup Example:
+  /// const obj = { one: 1, two: 2, three: 3 }
+  /// to.values(obj) // [ 1, 2, 3 ]
+  /// to.values(obj, '!two') // [ 1, 3 ]
+  /// to.values(obj, 'two', 'three') // [ 2, 3 ]
+  values(arg, ...rest) {
     let values = []
-    for (var key in arg) {
-      if (arg.hasOwnProperty(key)) {
-        values.push(arg[key])
+    let not = []
+    let include = []
+
+    for (let item of rest) {
+      if (item.slice(0, 1) === '!') {
+        not.push(item.slice(1))
+      } else {
+        include.push(item)
+      }
+    }
+
+    let iterate = is.empty(include) ? to.keys(arg) : include
+
+    for (var i = 0; i < iterate.length; i++) {
+      if (!is.in(not, iterate[i])) {
+        values.push(arg[iterate[i]])
       }
     }
 
@@ -424,7 +462,11 @@ let to = {
   /// Flattens an array, and arrays inside of it into a single array
   /// @arg {array}
   /// @returnes {array} - single dimensional
-  flatten: (arg) => is.array(arg) ? [].concat(...arg.map(to.flatten)) : arg,
+  // flatten: (arg) => is.array(arg) ? [].concat(...arg.map(to.flatten)) : arg,
+  flatten(...args) {
+    let _flatten = (arg) => is.array(arg) ? [].concat(...arg.map(_flatten)) : arg
+    return _flatten(args.map(_flatten))
+  },
 
   /// @name to.unique
   /// @description
@@ -453,11 +495,10 @@ let to = {
   /// @arg {array, object}
   /// @returns {array, object} - The sorted version
   sort(arg, callback) {
-    let runSort = (obj) => is.fn(callback) ? obj.sort.apply(null, callback) : obj.sort()
     let result
     if (is.plainObject(arg)) {
       let sorted = {}
-      let keys = runSort(to.keys(arg))
+      let keys = to.keys(arg).sort(callback)
 
       for (let i = 0, l = keys.length; i < l; i++) {
         sorted[keys[i]] = arg[keys[i]]
@@ -465,7 +506,7 @@ let to = {
 
       result = sorted
     } else if (is.array(arg)) {
-      result = runSort(callback)
+      result = arg.sort(callback)
     }
     return result
   },
