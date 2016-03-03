@@ -158,6 +158,52 @@ asyncSuite.wrap('to', () => {
       'a.foo.quux.garply.waldo should be an array')
   })
 
+  test('to.filter', () => {
+    assert.deepStrictEqual(
+      to.filter(array, (obj) => obj !== 'one'),
+      [ 'two', 'three' ]
+    )
+    assert.deepStrictEqual(
+      to.filter(array, (obj) => obj !== 'two'),
+      [ 'one', 'three' ]
+    )
+    assert.deepStrictEqual(
+      to.filter(object, ({ key }) => key !== 'one'),
+      { two: 2, three: 3 }
+    )
+    assert.deepStrictEqual(
+      to.filter(object, ({ value }) => value !== 1),
+      { two: 2, three: 3 }
+    )
+  })
+
+  test('to.map', () => {
+    assert.deepStrictEqual(
+      to.map(array, (item) => item + ' test'),
+      [ 'one test', 'two test', 'three test' ]
+    )
+    assert.deepStrictEqual(
+      to.map(object, ({ key, value }) => {
+        return { [`${key} test`]: value }
+      }),
+      { 'one test': 1, 'two test': 2, 'three test': 3 }
+    )
+  })
+
+  test('to.reduce', () => {
+    assert.deepStrictEqual(
+      to.reduce([ object, object, object ], (previous, next) => to.extend(previous, next), {}),
+      object
+    )
+
+    assert.deepStrictEqual(
+      to.reduce(object, (previous, { key }) => {
+        return [ ...previous, key ]
+      }, []),
+      array
+    )
+  })
+
 
   test('to.object', async () => {
     try {

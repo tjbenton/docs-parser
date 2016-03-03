@@ -186,8 +186,8 @@ export default class AnnotationApi {
       return list
     }
 
-    return to.map(list, (annotation, name) => {
-      if (is.truthy(annotation[type])) {
+    return to.map(list, ({ key: name, value: annotation }) => {
+      if (is.truthy(annotation[type]) && !is.empty(annotation[type])) {
         return { [name]: annotation[type] }
       }
 

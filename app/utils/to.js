@@ -188,7 +188,7 @@ let to = {
           let key = keys[index]
           index++
           return {
-            value: [ key, obj[key] ]
+            value: [ key, obj[key], index - 1 ]
           }
         }
 
@@ -494,32 +494,35 @@ let to = {
   /// Sorts an array or object based off your callback function. If one is provided.
   /// @arg {array, object}
   /// @returns {array, object} - The sorted version
-  sort(arg, callback) {
-    let result
-    if (is.plainObject(arg)) {
-      let sorted = {}
-      let keys = to.keys(arg).sort(callback)
-
-      for (let i = 0, l = keys.length; i < l; i++) {
-        sorted[keys[i]] = arg[keys[i]]
-      }
-
-      result = sorted
-    } else if (is.array(arg)) {
-      result = arg.sort(callback)
+  sort(obj, callback) {
+    if (is.array(obj)) {
+      return obj.sort(callback)
     }
-    return result
+
+    let sorted = {}
+    let keys = to.keys(obj).sort(callback)
+
+    for (let i = 0, l = keys.length; i < l; i++) {
+      sorted[keys[i]] = obj[keys[i]]
+    }
+
+    return sorted
   },
 
-  map(arg, callback) {
-    if (is.array(arg)) {
-      return arg.map.apply(null, callback)
+  /// @name to.map
+  /// @description This function allows you to map an array or object
+  /// @arg {array, object} obj
+  /// @arg {function} callback
+  /// @returns {array, object} that was mapped
+  map(obj, callback, this_arg) {
+    if (is.array(obj)) {
+      return obj.map(callback, this_arg)
     }
 
     let result = {}
 
-    for (let [ key, value ] of to.entries(arg)) {
-      let cb_result = callback(value, key)
+    for (let [ key, value, i ] of to.entries(obj)) {
+      let cb_result = callback({ key, value }, i, obj)
       if (is.truthy(cb_result) && !is.empty(cb_result) && is.plainObject(cb_result)) {
         to.extend(result, cb_result)
       }
@@ -528,16 +531,38 @@ let to = {
     return result
   },
 
-  filter(arg, callback) {
-    if (is.array(arg)) {
-      return arg.filter.apply(null, callback)
+  /// @name to.reduce
+  /// @description This function allows you to reduce an array or object
+  /// @arg {array, object} obj
+  /// @arg {function} callback
+  /// @returns {*} What ever the object or array was reduced to
+  reduce(obj, callback, initial) {
+    if (is.array(obj)) {
+      return obj.reduce(callback, initial)
+    }
+
+    for (let [ key, value, i ] of to.entries(obj)) {
+      initial = callback(initial, { key, value }, i, obj)
+    }
+
+    return initial
+  },
+
+  /// @name to.filter
+  /// @description This function allows you to filter an array or object
+  /// @arg {array, object} obj
+  /// @arg {function} callback
+  /// @returns {array, object} that was filtered
+  filter(obj, callback, this_arg = null) {
+    if (is.array(obj)) {
+      return obj.filter(callback, this_arg)
     }
 
     let result = {}
 
-    for (let [ key, value ] of to.entries(arg)) {
-      if (is.truthy(callback(value, key, arg))) {
-        to.extend(result, { key: value })
+    for (let [ key, value, i ] of to.entries(obj)) {
+      if (is.truthy(callback.call(this_arg, { key, value }, i, obj))) {
+        to.extend(result, { [key]: value })
       }
     }
 
