@@ -71,7 +71,9 @@
                   "settings": {},
                   "description": "",
                   "raw": "\\@name",
-                  "escaped": "\\@name"
+                  "escaped": "\\@name",
+                  "raw_stateless": "\\@name",
+                  "escaped_stateless": "\\@name"
                 }
               ],
               "access": "public",
@@ -102,7 +104,9 @@
                   "settings": {},
                   "description": "",
                   "raw": "<nav>\n  <a href=\"\">One</a>\n  <a href=\"\">Two</a>\n  <a href=\"\">Three</a>\n</nav>",
-                  "escaped": "&lt;nav&gt;\n  &lt;a href=&quot;&quot;&gt;One&lt;/a&gt;\n  &lt;a href=&quot;&quot;&gt;Two&lt;/a&gt;\n  &lt;a href=&quot;&quot;&gt;Three&lt;/a&gt;\n&lt;/nav&gt;"
+                  "escaped": "&lt;nav&gt;\n  &lt;a href=&quot;&quot;&gt;One&lt;/a&gt;\n  &lt;a href=&quot;&quot;&gt;Two&lt;/a&gt;\n  &lt;a href=&quot;&quot;&gt;Three&lt;/a&gt;\n&lt;/nav&gt;",
+                  "raw_stateless": "<nav>\n  <a href=\"\">One</a>\n  <a href=\"\">Two</a>\n  <a href=\"\">Three</a>\n</nav>",
+                  "escaped_stateless": "&lt;nav&gt;\n  &lt;a href=&quot;&quot;&gt;One&lt;/a&gt;\n  &lt;a href=&quot;&quot;&gt;Two&lt;/a&gt;\n  &lt;a href=&quot;&quot;&gt;Three&lt;/a&gt;\n&lt;/nav&gt;"
                 }
               ],
               "access": "public",
@@ -143,7 +147,9 @@
                   "settings": {},
                   "description": "",
                   "raw": ".foo {\n  .opacity(.3);\n}",
-                  "escaped": ".foo {\n  .opacity(.3);\n}"
+                  "escaped": ".foo {\n  .opacity(.3);\n}",
+                  "raw_stateless": ".foo {\n  .opacity(.3);\n}",
+                  "escaped_stateless": ".foo {\n  .opacity(.3);\n}"
                 }
               ],
               "access": "public",

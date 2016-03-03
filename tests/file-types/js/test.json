@@ -53,7 +53,7 @@
             {
               "name": "@author",
               "alias": [
-                "@author"
+                "@authors"
               ],
               "description": "<p>Author of the documented item</p>\n",
               "returns": {
@@ -68,8 +68,10 @@
                   "language": "js",
                   "settings": {},
                   "description": "<p>Usage</p>\n",
-                  "raw": "/// @author Author's name\n\n/// @author Author One, Author Two\n\n/// @author Author One\n/// @author Author Two",
-                  "escaped": "/// @author Author&#39;s name\n\n/// @author Author One, Author Two\n\n/// @author Author One\n/// @author Author Two"
+                  "raw": "/// @author Author's name\n/// @author Author One, Author Two\n/// @author Author One\n/// @author Author Two",
+                  "escaped": "/// @author Author&#39;s name\n/// @author Author One, Author Two\n/// @author Author One\n/// @author Author Two",
+                  "raw_stateless": "/// @author Author's name\n/// @author Author One, Author Two\n/// @author Author One\n/// @author Author Two",
+                  "escaped_stateless": "/// @author Author&#39;s name\n/// @author Author One, Author Two\n/// @author Author One\n/// @author Author Two"
                 }
               ],
               "access": "public",

@@ -25,8 +25,10 @@
                 "language": "scss",
                 "settings": {},
                 "description": "",
-                "raw": "<a href=\"#\" class=\"c-btn @state\">Button (a.button)</a>\n\n\n\n<button class=\"c-btn @state\">Button (button)</button>\n\n\n\n<input class=\"c-btn @state\" type=\"button\" value=\"Button (input.button)\">",
-                "escaped": "&lt;a href=&quot;#&quot; class=&quot;c-btn @state&quot;&gt;Button (a.button)&lt;/a&gt;\n\n\n\n&lt;button class=&quot;c-btn @state&quot;&gt;Button (button)&lt;/button&gt;\n\n\n\n&lt;input class=&quot;c-btn @state&quot; type=&quot;button&quot; value=&quot;Button (input.button)&quot;&gt;"
+                "raw": "<a href=\"#\" class=\"c-btn @state\">Button (a.button)</a>\n<button class=\"c-btn @state\">Button (button)</button>\n<input class=\"c-btn @state\" type=\"button\" value=\"Button (input.button)\">",
+                "escaped": "&lt;a href=&quot;#&quot; class=&quot;c-btn @state&quot;&gt;Button (a.button)&lt;/a&gt;\n&lt;button class=&quot;c-btn @state&quot;&gt;Button (button)&lt;/button&gt;\n&lt;input class=&quot;c-btn @state&quot; type=&quot;button&quot; value=&quot;Button (input.button)&quot;&gt;",
+                "raw_stateless": "<a href=\"#\" class=\"c-btn @state\">Button (a.button)</a>\n<button class=\"c-btn @state\">Button (button)</button>\n<input class=\"c-btn @state\" type=\"button\" value=\"Button (input.button)\">",
+                "escaped_stateless": "&lt;a href=&quot;#&quot; class=&quot;c-btn @state&quot;&gt;Button (a.button)&lt;/a&gt;\n&lt;button class=&quot;c-btn @state&quot;&gt;Button (button)&lt;/button&gt;\n&lt;input class=&quot;c-btn @state&quot; type=&quot;button&quot; value=&quot;Button (input.button)&quot;&gt;"
               }
             ],
             "access": "public",

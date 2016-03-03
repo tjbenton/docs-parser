@@ -491,7 +491,7 @@ annotations.markup = {
     }
 
     let [
-      id = '0',
+      id = null,
       language = this.file.type,
       settings = {},
       description
@@ -508,6 +508,10 @@ annotations.markup = {
       )
       .join('\n')
 
+    const state_interpolation = /\s*\{@states?[^\}]*\}\s*/gi
+    let raw_stateless = raw.replace(state_interpolation, '')
+    let escaped_stateless = escaped.replace(state_interpolation, '')
+
     if (is.string(settings)) {
       settings = to.object(list(settings).map((setting) => setting.split('=')))
     }
@@ -519,9 +523,19 @@ annotations.markup = {
         settings,
         description: markdown(description),
         raw,
-        escaped
+        escaped,
+        raw_stateless,
+        escaped_stateless,
       }
     ]
+  },
+  resolve() {
+    return this.map((obj, i) => {
+      if (obj.id === null) {
+        obj.id = `${i}`
+      }
+      return obj
+    })
   }
 }
 
