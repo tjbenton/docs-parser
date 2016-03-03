@@ -2,45 +2,10 @@
 /// @page components/buttons
 ///
 /// @description Your standard form button.
-///
-/// @state
-/// {:hover}
-/// {:active}
-/// {:disabled} - Dims the button when disabled.
-/// {.c-btn--mini} - A mini button
-/// {.c-btn--tiny} - A tiny button
-/// {.c-btn--medium} - A medium button
-/// {.c-btn--large} - A large button
-/// {.c-btn--primary} - Primary action
-/// {.c-btn--primary:hover}
-/// {.c-btn--primary:active}
-/// {.c-btn--secondary} - Secondary action
-/// {.c-btn--secondary:hover}
-/// {.c-btn--secondary:active}
-/// {.c-btn--tertiary} - Tertiary action
-/// {.c-btn--tertiary:hover}
-/// {.c-btn--tertiary:active}
-/// {.c-btn--text} - It's a text link as a button
-/// {.c-btn--text:hover}
-/// {.c-btn--text:active}
-///
-/// @markup
-/// <div class="c-btn-group">
-///  <a href="#" class="c-btn @state">Button (a.button)</a>
-///  <button class="c-btn @state">Button (button)</button>
-///  <input class="c-btn @state" type="button" value="Button (input.button)">
-/// </div>
 
 /// @name Button group
 /// @description
 /// Used when there's a group of buttons that need to be on the same line.
-///
-/// @markup
-/// <div class="c-btn-group">
-///  <a href="#" class="c-btn">Button (a.button)</a>
-///  <button class="c-btn">Button (button)</button>
-///  <input class="c-btn" type="button" value="Button (input.button)">
-/// </div>
 
 /// @name Test
 /// @state .state-1
