@@ -20,7 +20,7 @@ export default function parseBlocks({
 
   let parsed_blocks = []
 
-  let autofill_list = annotations.autofillList(file.type)
+  let autofill_list = annotations.list(file.type, 'autofill')
 
   // loop over each block
   for (let block of blocks) {

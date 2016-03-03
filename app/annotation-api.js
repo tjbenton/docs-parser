@@ -176,25 +176,24 @@ export default class AnnotationApi {
   /// This gets the annotations to use for the current filetype.
   /// Basically the file specific annotations get extended onto the default annotations
   /// @returns {object} - the annotations to use for the current file
-  list(filetype) {
+  list(filetype, type) {
+    let list = this.annotations.default
     if (!is.undefined(this.annotations[filetype])) {
-      return to.extend(to.clone(this.annotations.default), this.annotations[filetype])
+      list = to.extend(to.clone(this.annotations.default), this.annotations[filetype])
     }
 
-    return this.annotations.default
-  }
+    if (is.undefined(type)) {
+      return list
+    }
 
-  autofillList(filetype) {
-    return to.map(this.list(filetype), (annotation, name) => {
-      if (is.truthy(annotation.autofill)) {
-        return { [name]: annotation.autofill }
+    return to.map(list, (annotation, name) => {
+      if (is.truthy(annotation[type])) {
+        return { [name]: annotation[type] }
       }
 
       return false
     })
   }
-
-  resolve_list(filetype) {} // eslint-disable-line
 
   /// @name run_annotation
   /// @access private
@@ -257,13 +256,7 @@ export default class AnnotationApi {
       result.default = this.file_list.default[annotation.name].parse.call(result)
     }
 
-    result = annotations_list[annotation.name].parse.call(result)
-
-    if (!is.fn(annotations_list[annotation.name].resolve)) {
-      return result
-    }
-
-    return annotations_list[annotation.name].resolve.call(result)
+    return annotations_list[annotation.name].parse.call(result)
   }
 
   /// @name file_list
