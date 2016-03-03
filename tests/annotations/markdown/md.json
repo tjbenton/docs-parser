@@ -18,7 +18,9 @@
         "end": 13
       }
     },
-    "page": "other"
+    "page": [
+      "other"
+    ]
   },
   "body": []
 }

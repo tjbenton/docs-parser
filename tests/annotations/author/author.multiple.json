@@ -21,7 +21,9 @@
         "end": 14
       }
     },
-    "page": "other"
+    "page": [
+      "other"
+    ]
   },
   "body": [
     {

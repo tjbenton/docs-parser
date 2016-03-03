@@ -615,7 +615,7 @@ annotations.page = {
   autofill() {
     // autofill header comments
     if (this.comment.type === 'header') {
-      return 'other'
+      return [ 'other' ]
     }
     // don't autofill body comments
     return
