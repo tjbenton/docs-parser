@@ -9,7 +9,10 @@ let log = new Logger()
 // changed by `options` key
 export const default_options = {
   config: `${info.root}/.docsfile.js`,
-  files: [ 'app/**/*', 'src/**/*', '*.md' ], // files to search
+
+  // files to parse for documentation
+  files: [ 'app/**/*', 'src/**/*', '*.md' ],
+
   // files to be ignored
   ignore: [
     '.*', // all dot files
@@ -18,16 +21,24 @@ export const default_options = {
     'tests/', 'coverage/' // unit tests and coverage results
   ],
   page_fallback: 'general', // used if `@page` isn't defined
+
   // add gitignore files to the ignore list. Depending on ignored files it
   // could cause things to ge parsed slower, that's why it's defaulted to `false`
   gitignore: false,
-  changed: true, // determins if only changed files should be parsed or not
-  blank_lines: 4, // @todo this stops the current block from adding lines if there're `n` blank line lines between code, and starts a new block.
+
+  // determins if only changed files should be parsed or not
+  changed: true,
+
+  // this stops the current block from adding lines if there're `n`
+  // blank line lines between code, and starts a new block.
+  blank_lines: 4,
   debug: true,
   warning: true,
   timestamps: true,
-  raw: false, // this will return the raw data by file, aka data won't be sorted
-  annotations
+
+  // this will return the raw data by file, aka data won't be sorted
+  raw: false,
+
   // this is used to sort the annotations to be in a specific order after
   // the block has been parsed initial and before the the resolve functions run
   // for each annotation. You can manipulate this list to ensure that a specific
@@ -36,6 +47,9 @@ export const default_options = {
   sort(a, b) {
     return a.localeCompare(b) // same as the default sort function
   },
+
+  // default annotation list
+  annotations,
 }
 
 export const default_comment = {
@@ -44,7 +58,15 @@ export const default_comment = {
   // file level comment block identifier
   header: { start: '////', line: '///', end: '////', type: 'header' },
   // block level comment block identifier
-  body: { start: '', line: '///', end: '', type: 'body' }
+  body: { start: '', line: '///', end: '', type: 'body' },
+  // this is used for any interpolations that might occur in
+  // annotations. I don't see this needing to change but just incase
+  // I'm making it a setting.
+  // @note {10} This setting is used to create a RegExp so certain characters need to be escaped
+  interpolation: {
+    start: '\${',
+    end: '}'
+  },
 }
 
 // some defaults for common languages
@@ -59,16 +81,16 @@ export const comments = {
     body: { line: '##' }
   },
   'html, md, markdown, mark, mdown, mkdn, mdml, mkd, mdwn, mdtxt, mdtext, text': {
-    header: { start: '<!----', end: '---->' },
-    body: { start: '<!---', end: '--->' }
+    header: { start: '<!----', line: '', end: '---->' },
+    body: { start: '<!---', line: '', end: '--->' }
   },
   jade: {
     header: { start: '//-//', line: '//-/', end: '//-//' },
     body: { line: '//-/' }
   },
   cfm: {
-    header: { start: '<!-----', end: '----->' },
-    body: { start: '<!----', end: '---->' }
+    header: { start: '<!-----', line: '', end: '----->' },
+    body: { start: '<!----', line: '', end: '---->' }
   }
 }
 
@@ -148,6 +170,7 @@ export function parseComments(comments) {
     }
   }
 
+  // extend any languages that have the extend option
   for (let [ lang, value ] of to.entries(parsed_comments)) {
     if (
       lang !== '_' &&
