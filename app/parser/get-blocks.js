@@ -8,7 +8,6 @@ import { is, to } from '../utils'
 /// @todo {5} - add a line offest argument to this so that you can call parse content on other language types.
 export default function getBlocks({
   file,
-  contents,
   comment,
   restrict = true,
   blank_lines,
@@ -30,7 +29,7 @@ export default function getBlocks({
     file
   }
 
-  let lines = to.array(contents) // lines of the file
+  let lines = to.array(file.contents) // lines of the file
   let parsed = [] // holds the parsed blocks
   let current_blank_lines = 0 // stores the current count of blank lines
   let block // stores the current block

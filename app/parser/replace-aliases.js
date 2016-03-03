@@ -6,25 +6,31 @@ import { is, to } from '../utils'
 /// This function is used to replace all instances of aliases in a file
 /// @returns {string} - The file with the instances of aliases removed
 export default function aliases(options = {}) {
-  let { contents, annotations, comment } = options /* , log */
+  let { file, annotations, comment } = options /* , log */
 
-  let main_annotation_list = to.keys(annotations)
+  let main_annotation_list = to.keys(annotations.list(file.type))
 
-  annotations = to.map(annotations, (annotation, name) => {
-    if (is.truthy(annotation.alias) && !is.empty(annotation.alias)) {
-      return { [name]: annotation.alias }
-    }
+  let comment_types = [
+    to.values(comment.header, '!type', '!end'),
+    to.values(comment.body, '!type', '!end')
+  ]
 
-    return false
-  })
+  comment_types = to.flatten(comment_types)
+    .filter(Boolean)
+    .map((comment_type) => '\\' + comment_type.split('').join('\\'))
+  comment_types = `(?:${comment_types.join('|')})`
+  let block_comment = `(?:^(?:\\s*${comment_types})?\\s*)`
+  let inline_comment = `(?:${comment_types}?${comment.inline_prefix}\\s+)`
+  let comment_regex = `((?:${block_comment}|${inline_comment})${comment.prefix})`
 
-  for (let [ annotation, alias_list ] of to.entries(annotations)) {
-    // filter out any aliases that are already in the main annotation list
-    alias_list = alias_list.filter((alias) => !is.in(main_annotation_list, alias))
+  let alias_obj = to.reduce(annotations.list(file.type, 'alias'), (previous, { key, value }) => {
+    value = value
+      .filter((alias) => !is.in(main_annotation_list, alias))
+      .reduce((a, b) => to.extend(a, { [b]: key }), {})
+    return to.extend(previous, value)
+  }, {})
 
-    const alias_list_regex = new RegExp(`(?:${comment.prefix})(${alias_list.join('|')})\\b`, 'g')
-    contents = contents.replace(alias_list_regex, comment.prefix + annotation + ' ')
-  }
+  const alias_list_regex = new RegExp(`${comment_regex}(${to.keys(alias_obj).join('|')})\\b`, 'gm')
 
-  return contents
+  return file.contents.replace(alias_list_regex, (match, comment_match, alias) => comment_match + alias_obj[alias])
 }

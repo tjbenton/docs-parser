@@ -23,12 +23,11 @@ export default function parseBlocks({
   let parsed_blocks = []
 
   let autofill_list = annotations.list(file.type, 'autofill')
+  let resolve_list = annotations.list(file.type, 'resolve')
   // sort the parsed object before the annotations are resolved
   if (is.fn(sort)) {
     resolve_list = to.sort(resolve_list, sort)
   }
-
-  let resolve_list = annotations.list(file.type, 'resolve')
 
   // loop over each block
   for (let block of blocks) {

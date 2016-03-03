@@ -18,14 +18,7 @@ export default async function parser({
   // gets the comments to use on this file
   let comment = comments[type] ? comments[type] : comments._
 
-  let contents = to.normalString(await fs.readFile(file_path))
-
-  contents = replaceAliases({
-    contents,
-    annotations: annotations.list(type),
-    comment,
-    log
-  })
+  let contents = '\n' + to.normalString(await fs.readFile(file_path))
 
   let file = {
     contents, // all of the contents of the file
@@ -34,13 +27,22 @@ export default async function parser({
     type, // filetype of the file
     comment,
     start: 1, // starting point of the file
-    end: to.array(contents).length // ending point of the file
+    end: to.array(contents).length - 1 // ending point of the file
   }
+
+  file.contents = replaceAliases({
+    file,
+    annotations,
+    comment,
+    log
+  })
+
+
 
   // a) The file doesn't contain any header level comments, or body level comments
   if (
     !is.any.in(
-      contents,
+      file.contents,
       ...to.values(comment.header).slice(0, -1),
       ...to.values(comment.body).slice(0, -1)
     )
@@ -49,18 +51,14 @@ export default async function parser({
     return []
   }
 
-  contents = '\n' + contents
-
   let header = getBlocks({
     file,
-    contents,
     blank_lines,
     comment: comment.header
   })
 
   let body = getBlocks({
     file,
-    contents,
     blank_lines,
     comment: comment.body,
     restrict: false,
