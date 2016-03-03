@@ -18,16 +18,22 @@ export default function getBlocks({
 
   let style = is.all.truthy(comment.start, comment.end) ? 'multi' : 'single'
 
+  // this ensures there aren't any errors looking comment lines
+  // because `''` will always have an index of `0`
+  if (comment.line === '') {
+    comment.line = undefined
+  }
+
   let block_base = {
     comment: { contents: [], start: -1, end: -1, type: comment.type },
     code: { contents: [], start: -1, end: -1 },
     file
   }
 
-  let lines = to.array(contents)
-  let parsed = []
-  let current_blank_lines = 0
-  let block
+  let lines = to.array(contents) // lines of the file
+  let parsed = [] // holds the parsed blocks
+  let current_blank_lines = 0 // stores the current count of blank lines
+  let block // stores the current block
   let in_comment = false // used to determin that you are in a comment
   let in_code = false // used to determin if you are in the code after the comment block
 
@@ -35,7 +41,23 @@ export default function getBlocks({
     return []
   }
 
+  // used for debuging files. to debug a file just change this to false
+  // @note THIS SHOULD NEVER BE COMMITTED AS `TRUE`
+  let debug_file = false
+  function debug(...args) {
+    if (debug_file && args.length > 0) {
+      console.log(...args)
+    }
+    return debug_file
+  }
+
   for (let i = start_at, l = lines.length; i < l; i++) {
+    // If you're trying to debug something between specific lines you
+    // can use this to narrow down the longs to the lines you're wanting debug
+    // just pass in the starting line number and end line number both should be 1
+    // less that what you're looking for since this is zero based.
+    // debug = is.between(i, [start line], [end line])
+    debug_file = debug_file && is.between(i, 0, 8)
     let line = lines[i]
     let index = {
       start: style === 'multi' && is.in(line, comment.start) ? line.indexOf(comment.start) : false,
@@ -43,13 +65,22 @@ export default function getBlocks({
       end: style === 'multi' && is.in(line, comment.end) ? line.indexOf(comment.end) : false
     }
 
+    debug('')
+    debug('')
+    debug(`line ${i}:`)
+    debug(line)
+    debug('index:', index)
+
     // a) The line isn't empty so parse it.
     if (!is.empty(line)) {
+      // reset the current blank line count back to 0 because this line wasn't empty
       current_blank_lines = 0
+
       // a) is the start and end style or there was an instance of a comment line
       if (style === 'multi' && (index.start !== false || in_comment) || index.line !== false) {
         // a) is the start of a new block
-        if (index.start !== false || style !== 'multi' && !in_comment) {
+        if (index.start !== false || (style !== 'multi' && !in_comment)) {
+          debug('start of new block')
           // reset code to false
           in_code = false
 
@@ -74,13 +105,14 @@ export default function getBlocks({
           in_comment = true
         }
 
-        // a) check for the end comment
+        // check for the end comment
         if (
           block &&
           style === 'multi' &&
           block.comment.start !== i &&
           index.end !== false
         ) {
+          debug('is end comment')
           in_comment = false
           block.comment.end = i // sets the end line in the comment block
           i++ // skips end comment line
@@ -93,13 +125,19 @@ export default function getBlocks({
           // a) removes the `comment.line` from the line.
           if (index.line !== false) {
             line = line.slice(index.line + comment.line.length)
+          } else if (index.start !== false) {
+            line = line.slice(index.start + comment.start.length)
           }
 
-          block.comment.contents.push(line)
+          if (!is.empty(line)) {
+            debug('line was pushed')
+            block.comment.contents.push(line)
+          }
         }
 
         // a) The last line in the file is a commment
         if (in_comment && (style === 'multi' && index.end !== false ? i === l : i === l - 1)) {
+          debug('the last line in the file is a comment')
           block.comment.end = style === 'multi' ? i - 1 : i
           parsed.push(block)
           break // ensures that the loop stops because it's the last line in the file
