@@ -4,7 +4,14 @@ import getBlocks from './get-blocks'
 import parseBlocks from './parse-blocks'
 import replaceAliases from './replace-aliases'
 
-export default async function parser({ file_path, comments, annotations, blank_lines, log }) {
+export default async function parser({
+  file_path,
+  comments,
+  annotations,
+  blank_lines,
+  sort,
+  log
+}) {
   // the filetype of the current file
   let type = path.extname(file_path).replace('.', '')
 
@@ -65,6 +72,7 @@ export default async function parser({ file_path, comments, annotations, blank_l
     blocks: header,
     annotations,
     comment,
+    sort,
     log
   })[0] || {}
 
@@ -73,6 +81,7 @@ export default async function parser({ file_path, comments, annotations, blank_l
     blocks: body,
     annotations,
     comment,
+    sort,
     log
   })
 

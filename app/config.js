@@ -28,6 +28,14 @@ export const default_options = {
   timestamps: true,
   raw: false, // this will return the raw data by file, aka data won't be sorted
   annotations
+  // this is used to sort the annotations to be in a specific order after
+  // the block has been parsed initial and before the the resolve functions run
+  // for each annotation. You can manipulate this list to ensure that a specific
+  // annotation resolves before another one does, this is used in the event that
+  // one annotation depends on another annotation to be resolved first
+  sort(a, b) {
+    return a.localeCompare(b) // same as the default sort function
+  },
 }
 
 export const default_comment = {

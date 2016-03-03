@@ -1,5 +1,6 @@
 import { is, to } from '../utils'
 import autofill from './autofill'
+import resolve from './resolve'
 
 // @name parsed_blocks
 // @access private
@@ -12,6 +13,7 @@ export default function parseBlocks({
   blocks,
   annotations,
   comment,
+  sort,
   log
 }) {
   if (is.empty(blocks)) {
@@ -21,6 +23,12 @@ export default function parseBlocks({
   let parsed_blocks = []
 
   let autofill_list = annotations.list(file.type, 'autofill')
+  // sort the parsed object before the annotations are resolved
+  if (is.fn(sort)) {
+    resolve_list = to.sort(resolve_list, sort)
+  }
+
+  let resolve_list = annotations.list(file.type, 'resolve')
 
   // loop over each block
   for (let block of blocks) {
@@ -35,12 +43,13 @@ export default function parseBlocks({
       log
     })
 
+    // run the autofill functions for all the annotations that have a autofill function
     parsed = autofill({ autofill_list, parsed, block, log })
 
     if (!is.empty(parsed)) {
-      parsed_blocks.push({
-        ...parsed
-      })
+      // run the resolve function for all the annotations that have a resolve function
+      parsed = resolve({ resolve_list, parsed, block, log })
+      parsed_blocks.push(parsed)
     }
   } // end blocks loop
 

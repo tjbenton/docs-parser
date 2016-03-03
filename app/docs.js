@@ -34,6 +34,7 @@ export default async function docs(options = {}) {
     warning,
     timestamps,
     raw,
+    sort,
     annotations,
     comments,
   } = options
