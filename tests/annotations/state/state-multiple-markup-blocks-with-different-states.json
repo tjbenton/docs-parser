@@ -1,0 +1,116 @@
+{
+  "header": {},
+  "body": [
+    {
+      "states": {
+        "0": [
+          {
+            "state": {
+              "0": {
+                "state": ":hover",
+                "description": "<p>Hover state for example 1</p>\n"
+              }
+            },
+            "markup": {
+              "id": "0",
+              "language": "html",
+              "settings": {},
+              "description": "<p>Example 1</p>\n",
+              "raw": "<div class=\"something-super-awesome :hover\">\n  This is the only block that will get states applied to it.\n</div>",
+              "escaped": "&lt;div class=&quot;something-super-awesome :hover&quot;&gt;\n  This is the only block that will get states applied to it.\n&lt;/div&gt;"
+            }
+          },
+          {
+            "state": {
+              "0": {
+                "state": ":focus",
+                "description": "<p>Focus state for example 1</p>\n"
+              }
+            },
+            "markup": {
+              "id": "0",
+              "language": "html",
+              "settings": {},
+              "description": "<p>Example 1</p>\n",
+              "raw": "<div class=\"something-super-awesome :focus\">\n  This is the only block that will get states applied to it.\n</div>",
+              "escaped": "&lt;div class=&quot;something-super-awesome :focus&quot;&gt;\n  This is the only block that will get states applied to it.\n&lt;/div&gt;"
+            }
+          }
+        ],
+        "something": [
+          {
+            "state": {
+              "0": {
+                "state": ":hover",
+                "description": "<p>Hover state for example 2</p>\n"
+              }
+            },
+            "markup": {
+              "id": "something",
+              "language": "html",
+              "settings": {},
+              "description": "<p>Example 2</p>\n",
+              "raw": "<div class=\"something-super-awesome\">\n  There are no states created with this markup because it is the\n  second markup annotation in the comment block and there was no\n  id set so the id is 1 by default. If you are looking for an example\n  of multiple markup blocks with seperate states see\n  `state-multiple-markup-blocks-with-different-states.scss`\n</div>",
+              "escaped": "&lt;div class=&quot;something-super-awesome&quot;&gt;\n  There are no states created with this markup because it is the\n  second markup annotation in the comment block and there was no\n  id set so the id is 1 by default. If you are looking for an example\n  of multiple markup blocks with seperate states see\n  `state-multiple-markup-blocks-with-different-states.scss`\n&lt;/div&gt;"
+            }
+          },
+          {
+            "state": {
+              "0": {
+                "state": ":focus",
+                "description": "<p>Focus state for example 2</p>\n"
+              }
+            },
+            "markup": {
+              "id": "something",
+              "language": "html",
+              "settings": {},
+              "description": "<p>Example 2</p>\n",
+              "raw": "<div class=\"something-super-awesome\">\n  There are no states created with this markup because it is the\n  second markup annotation in the comment block and there was no\n  id set so the id is 1 by default. If you are looking for an example\n  of multiple markup blocks with seperate states see\n  `state-multiple-markup-blocks-with-different-states.scss`\n</div>",
+              "escaped": "&lt;div class=&quot;something-super-awesome&quot;&gt;\n  There are no states created with this markup because it is the\n  second markup annotation in the comment block and there was no\n  id set so the id is 1 by default. If you are looking for an example\n  of multiple markup blocks with seperate states see\n  `state-multiple-markup-blocks-with-different-states.scss`\n&lt;/div&gt;"
+            }
+          }
+        ]
+      },
+      "markup": [
+        {
+          "id": "0",
+          "language": "html",
+          "settings": {},
+          "description": "<p>Example 1</p>\n",
+          "raw": "<div class=\"something-super-awesome ${@state}\">\n  This is the only block that will get states applied to it.\n</div>",
+          "escaped": "&lt;div class=&quot;something-super-awesome ${@state}&quot;&gt;\n  This is the only block that will get states applied to it.\n&lt;/div&gt;",
+          "raw_stateless": "<div class=\"something-super-awesome\">\n  This is the only block that will get states applied to it.\n</div>",
+          "escaped_stateless": "&lt;div class=&quot;something-super-awesome&quot;&gt;\n  This is the only block that will get states applied to it.\n&lt;/div&gt;"
+        },
+        {
+          "id": "something",
+          "language": "html",
+          "settings": {},
+          "description": "<p>Example 2</p>\n",
+          "raw": "<div class=\"something-super-awesome\">\n  There are no states created with this markup because it is the\n  second markup annotation in the comment block and there was no\n  id set so the id is 1 by default. If you are looking for an example\n  of multiple markup blocks with seperate states see\n  `state-multiple-markup-blocks-with-different-states.scss`\n</div>",
+          "escaped": "&lt;div class=&quot;something-super-awesome&quot;&gt;\n  There are no states created with this markup because it is the\n  second markup annotation in the comment block and there was no\n  id set so the id is 1 by default. If you are looking for an example\n  of multiple markup blocks with seperate states see\n  `state-multiple-markup-blocks-with-different-states.scss`\n&lt;/div&gt;",
+          "raw_stateless": "<div class=\"something-super-awesome\">\n  There are no states created with this markup because it is the\n  second markup annotation in the comment block and there was no\n  id set so the id is 1 by default. If you are looking for an example\n  of multiple markup blocks with seperate states see\n  `state-multiple-markup-blocks-with-different-states.scss`\n</div>",
+          "escaped_stateless": "&lt;div class=&quot;something-super-awesome&quot;&gt;\n  There are no states created with this markup because it is the\n  second markup annotation in the comment block and there was no\n  id set so the id is 1 by default. If you are looking for an example\n  of multiple markup blocks with seperate states see\n  `state-multiple-markup-blocks-with-different-states.scss`\n&lt;/div&gt;"
+        }
+      ],
+      "access": "public",
+      "blockinfo": {
+        "comment": {
+          "start": 1,
+          "end": 19,
+          "type": "body"
+        },
+        "code": {
+          "start": 20,
+          "end": 27
+        },
+        "file": {
+          "path": "docs/tests/annotations/state/state-multiple-markup-blocks-with-different-states.scss",
+          "start": 1,
+          "end": 27
+        }
+      }
+    }
+  ]
+}
