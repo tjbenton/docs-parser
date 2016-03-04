@@ -58,11 +58,11 @@ export default {
     ] = regex('markup', this.annotation.line)
 
     let raw = this.annotation.contents
-
+    let { interpolation, prefix, header, body } = this.file.comment
     let escaped = escape(raw)
 
-    // @todo {10} update this use use the user defined options
-    const state_interpolation = /\s*\${@states?[^\}]*\}\s*/gi
+    let state_interpolation = `${interpolation.start}${prefix}states?[^${interpolation.end}]*${interpolation.end}`
+    state_interpolation = new RegExp(`\\s*${state_interpolation}\\s*`, 'gi')
     let raw_stateless = raw.replace(state_interpolation, '')
     let escaped_stateless = escaped.replace(state_interpolation, '')
 

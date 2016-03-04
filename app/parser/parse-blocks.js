@@ -74,6 +74,7 @@ function parseBlock(options = {}) {
 
   // gets the annotations to use on this file
   let annotations_list = annotations.list(file.type)
+  let annotations_alias_list = annotations.list(file.type, 'alias')
   let keys = to.keys(annotations_list)
 
   let contents = to.array(block.comment.contents)
@@ -113,6 +114,7 @@ function parseBlock(options = {}) {
             [annotation.name]: annotations.run({
               annotation,
               annotations_list,
+              annotations_alias_list,
               block,
               file,
               log
@@ -124,6 +126,7 @@ function parseBlock(options = {}) {
         annotation = {
           name, // sets the current annotation name
           line: line.slice(prefix_index + 1 + name.length), // removes the current annotation name and it's prefix from the first line
+          alias: is.in(annotations_alias_list, name) ? annotations_alias_list[name] : [],
           contents: [],
           start: i, // sets the starting line of the annotation
           end: 0
@@ -145,6 +148,7 @@ function parseBlock(options = {}) {
         [annotation.name]: annotations.run({
           annotation,
           annotations_list,
+          annotations_alias_list,
           block,
           file,
           log

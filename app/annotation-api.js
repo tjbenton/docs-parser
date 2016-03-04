@@ -202,6 +202,7 @@ export default class AnnotationApi {
     let {
       annotation,
       annotations_list,
+      annotations_alias_list,
       block = {},
       file,
       log
@@ -217,6 +218,7 @@ export default class AnnotationApi {
       return this.run({
         annotation: {
           name,
+          alias: is.in(annotations_alias_list, name) ? annotations_alias_list[name] : [],
           line: to.normalize(contents[0]),
           contents,
           start: null,

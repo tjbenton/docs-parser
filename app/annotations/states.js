@@ -88,8 +88,8 @@ export default {
       // without affecting the actual state output
       let _state = to.clone(state)
       to.extend(_state, _state[to.keys(_state)[0]])
-      markup.raw = replaceStates(markup.raw, _state)
-      markup.escaped = replaceStates(markup.escaped, _state)
+      markup.raw = replaceStates(markup.raw, _state, state.__details)
+      markup.escaped = replaceStates(markup.escaped, _state, state.__details)
 
       return to.merge(previous, {
         [markup_id]: [ { state, markup } ]
@@ -99,15 +99,14 @@ export default {
 }
 
 
-function replaceStates(str, states) {
-  // @todo {5} - Update this to use language settings
-  //  - annotation name and it's aliases
-  //  - interpolation
-  //  - annotation prefix
-  // const state_interpolation = new RegExp(`${settings.interpolation.start}${settings.annotation.prefix}etc....`, 'gi')
-  const state_interpolation = /\${@(?:state|states)[^\}]*\}/g
+function replaceStates(str, states, options) {
+  let names = [ options.annotation.name, ...options.annotation.alias ].join('|')
+  let { interpolation, prefix } = options.file.comment
+
+  const state_interpolation = new RegExp(`${interpolation.start}${prefix}(?:${names})[^${interpolation.end}]*${interpolation.end}`, 'g')
+  const replacement = new RegExp(`${interpolation.start}${prefix}(?:${names})|${interpolation.end}`, 'g')
   return str.replace(state_interpolation, (original_match) => {
-    let match = original_match.replace(/\${@(?:states|state)|}/g, '').slice(1)
+    let match = original_match.replace(replacement, '').slice(1)
 
     if (!match) {
       return states.state

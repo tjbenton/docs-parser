@@ -64,7 +64,7 @@ export const default_comment = {
   // I'm making it a setting.
   // @note {10} This setting is used to create a RegExp so certain characters need to be escaped
   interpolation: {
-    start: '\${',
+    start: '\\${',
     end: '}'
   },
 }
