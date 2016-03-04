@@ -11,7 +11,7 @@ export markup from './markup'
 export name from './name'
 export note from './note'
 export page from './page'
-export type from './type'
+module.exports.type = require('./type')
 module.exports['raw-code'] = require('./raw-code.js')
 export readonly from './readonly'
 export requires from './requires'
