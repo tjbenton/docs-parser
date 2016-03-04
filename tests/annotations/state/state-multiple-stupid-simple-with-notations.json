@@ -66,7 +66,6 @@
           "escaped_stateless": "&lt;div class=&quot;something-super-awesome&quot;&gt;\n  Mind blown\n&lt;/div&gt;"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -82,7 +81,8 @@
           "start": 1,
           "end": 74
         }
-      }
+      },
+      "access": "public"
     },
     {
       "states": {
@@ -149,7 +149,6 @@
           "escaped_stateless": "&lt;div class=&quot;something-super-awesome&quot;&gt;\n  Mind blown\n&lt;/div&gt;"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 26,
@@ -165,7 +164,8 @@
           "start": 1,
           "end": 74
         }
-      }
+      },
+      "access": "public"
     },
     {
       "states": {
@@ -232,7 +232,6 @@
           "escaped_stateless": "&lt;div class=&quot;something-super-awesome&quot;&gt;\n  Mind blown\n&lt;/div&gt;"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 51,
@@ -248,7 +247,8 @@
           "start": 1,
           "end": 74
         }
-      }
+      },
+      "access": "public"
     }
   ]
 }

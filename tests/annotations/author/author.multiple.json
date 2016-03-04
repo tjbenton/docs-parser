@@ -4,7 +4,6 @@
       "Author One",
       "Author Two"
     ],
-    "access": "public",
     "blockinfo": {
       "comment": {
         "start": 1,
@@ -21,6 +20,7 @@
         "end": 14
       }
     },
+    "access": "public",
     "page": [
       "other"
     ]
@@ -31,7 +31,6 @@
         "Author One",
         "Author Two"
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -47,14 +46,14 @@
           "start": 1,
           "end": 14
         }
-      }
+      },
+      "access": "public"
     },
     {
       "author": [
         "Author One",
         "Author Two"
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 8,
@@ -70,14 +69,14 @@
           "start": 1,
           "end": 14
         }
-      }
+      },
+      "access": "public"
     },
     {
       "author": [
         "Author One",
         "Author Two"
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 11,
@@ -93,7 +92,8 @@
           "start": 1,
           "end": 14
         }
-      }
+      },
+      "access": "public"
     }
   ]
 }

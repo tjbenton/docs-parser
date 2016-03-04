@@ -1,7 +1,6 @@
 {
   "header": {
     "markdown": "<h1 id=\"h1-tag\">H1 Tag</h1>\n<pre><code class=\"lang-scss\">.foo {\n  .bar {\n    background: blue;\n  }\n}\n</code></pre>\n",
-    "access": "public",
     "blockinfo": {
       "comment": {
         "start": 1,
@@ -18,6 +17,7 @@
         "end": 13
       }
     },
+    "access": "public",
     "page": [
       "other"
     ]

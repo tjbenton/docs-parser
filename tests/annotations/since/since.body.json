@@ -6,7 +6,6 @@
         "version": "undefined",
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -22,14 +21,14 @@
           "start": 1,
           "end": 11
         }
-      }
+      },
+      "access": "public"
     },
     {
       "since": {
         "version": "0.0.1",
         "description": "<p>Lorem</p>\n"
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 3,
@@ -45,14 +44,14 @@
           "start": 1,
           "end": 11
         }
-      }
+      },
+      "access": "public"
     },
     {
       "since": {
         "version": "0.0.1",
         "description": "<p>Lorem</p>\n"
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -68,14 +67,14 @@
           "start": 1,
           "end": 11
         }
-      }
+      },
+      "access": "public"
     },
     {
       "since": {
         "version": "^0.0.1",
         "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis maiores veritatis,\nsed repellat voluptatibus, eaque nihil assumenda odit at, ea consequatur provident\naccusamus fugit magnam et adipisci eum, saepe incidunt.</p>\n"
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 7,
@@ -91,7 +90,8 @@
           "start": 1,
           "end": 11
         }
-      }
+      },
+      "access": "public"
     }
   ]
 }

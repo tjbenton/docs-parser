@@ -10,7 +10,6 @@
           "description": ""
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -26,7 +25,8 @@
           "start": 1,
           "end": 17
         }
-      }
+      },
+      "access": "public"
     },
     {
       "arg": [
@@ -39,7 +39,6 @@
           "description": ""
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 3,
@@ -55,7 +54,8 @@
           "start": 1,
           "end": 17
         }
-      }
+      },
+      "access": "public"
     },
     {
       "arg": [
@@ -69,7 +69,6 @@
           "description": ""
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -85,7 +84,8 @@
           "start": 1,
           "end": 17
         }
-      }
+      },
+      "access": "public"
     },
     {
       "arg": [
@@ -98,7 +98,6 @@
           "description": "<p>description</p>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 7,
@@ -114,7 +113,8 @@
           "start": 1,
           "end": 17
         }
-      }
+      },
+      "access": "public"
     },
     {
       "arg": [
@@ -127,7 +127,6 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 9,
@@ -143,7 +142,8 @@
           "start": 1,
           "end": 17
         }
-      }
+      },
+      "access": "public"
     },
     {
       "arg": [
@@ -156,7 +156,6 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et\ndolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip\nex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore\neu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia\ndeserunt mollit anim id est laborum.</p>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 11,
@@ -172,7 +171,8 @@
           "start": 1,
           "end": 17
         }
-      }
+      },
+      "access": "public"
     }
   ]
 }

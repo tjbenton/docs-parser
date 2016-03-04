@@ -3,7 +3,6 @@
   "body": [
     {
       "name": "Title",
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -19,11 +18,11 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "access": "public"
     },
     {
       "name": "Heading",
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 3,
@@ -39,11 +38,11 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "access": "public"
     },
     {
       "name": "Header",
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -59,7 +58,8 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "access": "public"
     }
   ]
 }

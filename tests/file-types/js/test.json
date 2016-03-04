@@ -31,7 +31,6 @@
             "author": [
               "Tyler Benton"
             ],
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 1,
@@ -47,7 +46,8 @@
                 "start": 1,
                 "end": 28
               }
-            }
+            },
+            "access": "public"
           },
           "body": [
             {
@@ -74,7 +74,6 @@
                   "escaped_stateless": "/// @author Author&#39;s name\n/// @author Author One, Author Two\n/// @author Author One\n/// @author Author Two"
                 }
               ],
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 8,
@@ -90,7 +89,8 @@
                   "start": 1,
                   "end": 28
                 }
-              }
+              },
+              "access": "public"
             }
           ]
         }

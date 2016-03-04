@@ -40,7 +40,6 @@
             "author": [
               "Tyler Benton"
             ],
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 2,
@@ -56,13 +55,13 @@
                 "start": 1,
                 "end": 37
               }
-            }
+            },
+            "access": "public"
           },
           "body": [
             {
               "name": "One",
               "description": "<p>main method</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 9,
@@ -78,12 +77,12 @@
                   "start": 1,
                   "end": 37
                 }
-              }
+              },
+              "access": "public"
             },
             {
               "name": "Two",
               "description": "<p>This is a normal multi-line comment.</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 14,
@@ -99,12 +98,12 @@
                   "start": 1,
                   "end": 37
                 }
-              }
+              },
+              "access": "public"
             },
             {
               "name": "Three",
               "description": "<p>This is another normal multi-line comment.</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 27,
@@ -120,7 +119,8 @@
                   "start": 1,
                   "end": 37
                 }
-              }
+              },
+              "access": "public"
             }
           ]
         }

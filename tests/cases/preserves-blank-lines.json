@@ -31,7 +31,6 @@
                 "escaped_stateless": "&lt;a href=&quot;#&quot; class=&quot;c-btn @state&quot;&gt;Button (a.button)&lt;/a&gt;\n&lt;button class=&quot;c-btn @state&quot;&gt;Button (button)&lt;/button&gt;\n&lt;input class=&quot;c-btn @state&quot; type=&quot;button&quot; value=&quot;Button (input.button)&quot;&gt;"
               }
             ],
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 1,
@@ -47,7 +46,8 @@
                 "start": 1,
                 "end": 13
               }
-            }
+            },
+            "access": "public"
           }
         ]
       }

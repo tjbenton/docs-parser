@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 import { info, fs, is, to, Logger } from './utils'
 import path from 'path'
-import annotations from './annotations'
+import * as annotations from './annotations'
 import AnnotationApi from './annotation-api'
 
 let log = new Logger()

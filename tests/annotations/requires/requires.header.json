@@ -9,7 +9,6 @@
         "description": "<p>the path function from node</p>\n"
       }
     ],
-    "access": "public",
     "blockinfo": {
       "comment": {
         "start": 1,
@@ -26,6 +25,7 @@
         "end": 4
       }
     },
+    "access": "public",
     "page": [
       "other"
     ]

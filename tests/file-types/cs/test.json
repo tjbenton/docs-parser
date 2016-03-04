@@ -40,7 +40,6 @@
               "Tyler Benton"
             ],
             "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nEaque temporibus praesentium iure, qui dolorem blanditiis\nerror a reprehenderit voluptates debitis iusto, quibusdam.</p>\n",
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 1,
@@ -56,13 +55,13 @@
                 "start": 1,
                 "end": 95
               }
-            }
+            },
+            "access": "public"
           },
           "body": [
             {
               "name": "One",
               "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nEaque temporibus praesentium iure, qui dolorem blanditiis\nerror a reprehenderit voluptates debitis iusto, quibusdam.</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 10,
@@ -78,12 +77,12 @@
                   "start": 1,
                   "end": 95
                 }
-              }
+              },
+              "access": "public"
             },
             {
               "name": "Two",
               "description": "<p>This is a normal multi-line comment.</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 40,
@@ -99,12 +98,12 @@
                   "start": 1,
                   "end": 95
                 }
-              }
+              },
+              "access": "public"
             },
             {
               "name": "Three",
               "description": "<p>This is another normal multi-line comment.</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 70,
@@ -120,7 +119,8 @@
                   "start": 1,
                   "end": 95
                 }
-              }
+              },
+              "access": "public"
             }
           ]
         }

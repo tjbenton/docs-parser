@@ -29,7 +29,6 @@
                 "Tyler Benton"
               ],
               "description": "<p>Your standard form button.</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 1,
@@ -45,7 +44,8 @@
                   "start": 1,
                   "end": 19
                 }
-              }
+              },
+              "access": "public"
             }
           ]
         }

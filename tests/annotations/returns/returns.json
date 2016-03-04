@@ -8,7 +8,6 @@
         ],
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -24,7 +23,8 @@
           "start": 1,
           "end": 23
         }
-      }
+      },
+      "access": "public"
     },
     {
       "returns": {
@@ -33,7 +33,6 @@
         ],
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 3,
@@ -49,7 +48,8 @@
           "start": 1,
           "end": 23
         }
-      }
+      },
+      "access": "public"
     },
     {
       "returns": {
@@ -60,7 +60,6 @@
         ],
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -76,7 +75,8 @@
           "start": 1,
           "end": 23
         }
-      }
+      },
+      "access": "public"
     },
     {
       "returns": {
@@ -87,7 +87,6 @@
         ],
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 7,
@@ -103,7 +102,8 @@
           "start": 1,
           "end": 23
         }
-      }
+      },
+      "access": "public"
     },
     {
       "returns": {
@@ -112,7 +112,6 @@
         ],
         "description": "<p>Lorem ipsum dolor sit amet</p>\n"
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 9,
@@ -128,7 +127,8 @@
           "start": 1,
           "end": 23
         }
-      }
+      },
+      "access": "public"
     },
     {
       "returns": {
@@ -137,7 +137,6 @@
         ],
         "description": "<p>Lorem ipsum dolor sit amet</p>\n"
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 11,
@@ -153,7 +152,8 @@
           "start": 1,
           "end": 23
         }
-      }
+      },
+      "access": "public"
     },
     {
       "returns": {
@@ -162,7 +162,6 @@
         ],
         "description": "<p>This super awesome object</p>\n<pre><code class=\"lang-js\">{\n  i: {\n    found: {\n      waldo: &#39;Shoot, you found me&#39;\n    }\n  }\n}\n</code></pre>\n"
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 13,
@@ -178,7 +177,8 @@
           "start": 1,
           "end": 23
         }
-      }
+      },
+      "access": "public"
     }
   ]
 }

@@ -43,7 +43,6 @@
             "author": [
               "Tyler Benton"
             ],
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 1,
@@ -59,13 +58,13 @@
                 "start": 1,
                 "end": 61
               }
-            }
+            },
+            "access": "public"
           },
           "body": [
             {
               "name": "One",
               "description": "<p>main method</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 6,
@@ -81,12 +80,12 @@
                   "start": 1,
                   "end": 61
                 }
-              }
+              },
+              "access": "public"
             },
             {
               "name": "Two",
               "description": "<p>This is a normal multi-line coldfusion comment.</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 18,
@@ -102,12 +101,12 @@
                   "start": 1,
                   "end": 61
                 }
-              }
+              },
+              "access": "public"
             },
             {
               "name": "Three",
               "description": "<p>This is another multi-line normal Coldfusion\nScript comment made of single-line comments.</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 34,
@@ -123,12 +122,12 @@
                   "start": 1,
                   "end": 61
                 }
-              }
+              },
+              "access": "public"
             },
             {
               "name": "Four",
               "description": "<p>This is another normal multi-line coldfusion comment.</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 51,
@@ -144,7 +143,8 @@
                   "start": 1,
                   "end": 61
                 }
-              }
+              },
+              "access": "public"
             }
           ]
         }

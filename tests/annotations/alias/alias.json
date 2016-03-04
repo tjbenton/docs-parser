@@ -5,7 +5,6 @@
       "alias": [
         "foo"
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -21,14 +20,14 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "access": "public"
     },
     {
       "alias": [
         "foo",
         "bar"
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 3,
@@ -44,14 +43,14 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "access": "public"
     },
     {
       "alias": [
         "foo",
         "bar"
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -67,7 +66,8 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "access": "public"
     }
   ]
 }
