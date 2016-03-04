@@ -1,6 +1,7 @@
 import { regex, list, markdown } from './annotation-utils'
 
 /// @name @throws
+/// @page annotations
 /// @alias @throw, @exception, @error, @catch
 /// @description
 /// The error that happends if something goes wrong

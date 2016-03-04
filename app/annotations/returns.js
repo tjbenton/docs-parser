@@ -1,6 +1,7 @@
 import { regex, list, markdown } from './annotation-utils'
 
 /// @name @returns
+/// @page annotations
 /// @alias @return
 /// @description Return from the documented function
 /// @returns {string}

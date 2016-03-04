@@ -1,6 +1,7 @@
 import { regex, list, markdown } from './annotation-utils'
 
 /// @name @todo
+/// @page annotations
 /// @description Things to do related to the documented item
 /// @returns {object}
 /// // todo - {5} [assignee-one, assignee-two] - Task to be done

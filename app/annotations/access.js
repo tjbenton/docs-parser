@@ -1,4 +1,5 @@
 /// @name @access
+/// @page annotations
 /// @arg {string} line [public] - public, private, protected
 /// @description
 /// Access of the documented item. If access isn't declared then it defaults to public.

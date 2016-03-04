@@ -1,6 +1,7 @@
 import { to } from '../utils'
 
 /// @name @markdown
+/// @page annotations
 /// @filetypes @markdown, @mark, @mdown, @mkdn, @mdtxt, @mkd, @mdml, @mdwn, @mdtext, @text, @md
 /// @description
 /// This markdown annotation is used to add a markdown files contents to the documentation.

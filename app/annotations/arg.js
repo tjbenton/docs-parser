@@ -1,6 +1,7 @@
 import { markdown, regex, list } from './annotation-utils'
 
 /// @name @arg
+/// @page annotations
 /// @description Parameters from the documented function/mixin
 /// @note Description runs through markdown
 /// @returns {object}

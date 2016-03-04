@@ -2,8 +2,8 @@ import { is, to } from '../utils'
 import { regex, markdown } from './annotation-utils'
 
 /// @name @states
-/// @alias @state
 /// @page annotations
+/// @alias @state
 /// @description A state of a the documented item
 /// @returns {hashmap}
 /// @note {10} This annotation must be used with @markup

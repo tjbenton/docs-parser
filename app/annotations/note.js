@@ -1,6 +1,7 @@
 import { regex, markdown } from './annotation-utils'
 
 /// @name @note
+/// @page annotations
 /// @alias @notes
 /// @description A note about the documented item
 /// @returns {object}

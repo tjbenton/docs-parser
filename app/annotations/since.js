@@ -1,6 +1,7 @@
 import { regex, markdown } from './annotation-utils'
 
 /// @name @since
+/// @page annotations
 /// @description Let's you know what version of the project a something was added
 /// @returns {string}
 /// @markup Usage

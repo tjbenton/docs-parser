@@ -1,6 +1,8 @@
 import { is } from '../utils'
 import { list, logAnnotationError } from './annotation-utils'
+
 /// @name @alias
+/// @page annotations
 /// @arg {string, list} line - The aliases to that are avaliable for this documented item
 /// @description Whether the documented item is an alias of another item
 /// @returns {array}

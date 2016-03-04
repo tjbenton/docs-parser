@@ -1,5 +1,6 @@
 import { multiple } from './annotation-utils'
 /// @name @author
+/// @page annotations
 /// @alias @authors
 /// @description Author of the documented item
 /// @returns {string}

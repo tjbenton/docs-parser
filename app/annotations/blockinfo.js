@@ -1,6 +1,7 @@
 import { to } from '../utils'
 import { logAnnotationError } from './annotation-utils'
 /// @name blockinfo
+/// @page annotations
 /// @description
 /// This annotation is a special one in that it's only autofilled, and it adds
 /// information about the current block

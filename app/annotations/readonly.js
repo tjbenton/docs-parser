@@ -1,6 +1,7 @@
 import { toBoolean } from './annotation-utils'
 
 /// @name @readonly
+/// @page annotations
 /// @description
 /// To note that a property is readonly.
 /// @returns {boolean}

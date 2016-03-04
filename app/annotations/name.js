@@ -1,4 +1,5 @@
 /// @name @name
+/// @page annotations
 /// @alias @title, @heading, @header
 /// @description Name of the documented item
 /// @returns {string}

@@ -2,6 +2,7 @@ import { regex, markdown, logAnnotationError } from './annotation-utils'
 import clor from 'clor'
 
 /// @name @type
+/// @page annotations
 /// @description Describes the type of a variable
 /// @returns {object}
 /// @markup Usage

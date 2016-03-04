@@ -1,6 +1,7 @@
 import { regex, list, markdown } from './annotation-utils'
 
 /// @name @requires
+/// @page annotations
 /// @alias @require
 /// @description Requirements from the documented item
 /// @returns {object}

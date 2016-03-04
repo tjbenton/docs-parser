@@ -1,6 +1,7 @@
 import { list } from './annotation-utils'
 
 /// @name @page
+/// @page annotations
 /// @alias @group
 /// @description The page you want the documented item to be on
 /// @note {5}

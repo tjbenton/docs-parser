@@ -1,7 +1,8 @@
 import { is, to } from '../utils'
-import { regex, list, markdown } from './annotation-utils'
+import { regex, list, markdown, escape } from './annotation-utils'
 
 /// @name @markup
+/// @page annotations
 /// @alias @code, @example, @output, @outputs
 /// @description
 /// Example code on how to use the documented block.
@@ -20,7 +21,9 @@ import { regex, list, markdown } from './annotation-utils'
 ///   settings: {}, // settings for the code block
 ///   description: 'string',
 ///   raw: 'string', // raw string of code
-///   escaped: 'string' // escaped code, aka `<span>` turns to `&lt;span&gt;`
+///   raw_stateless: 'string', // same as the raw string but without `@state` references
+///   escaped: 'string', // escaped code, aka `<span>` turns to `&lt;span&gt;`
+///   escaped_stateless: 'string', // same as the escaped string but without `@state` references
 /// }
 /// ```
 /// @markup Usage
@@ -47,14 +50,6 @@ import { regex, list, markdown } from './annotation-utils'
 export default {
   alias: [ 'code', 'example', 'output', 'outputs' ],
   parse() {
-    let escaped_characters = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      '\'': '&#39;'
-    }
-
     let [
       id = null,
       language = this.file.type,
@@ -64,14 +59,7 @@ export default {
 
     let raw = this.annotation.contents
 
-    let escaped = raw
-      .split('\n')
-      .map((line) => line
-        .replace(/[&<>'"]/g, (match) =>
-          escaped_characters[match]
-        )
-      )
-      .join('\n')
+    let escaped = escape(raw)
 
     // @todo {10} update this use use the user defined options
     const state_interpolation = /\s*\${@states?[^\}]*\}\s*/gi

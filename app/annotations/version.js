@@ -2,8 +2,9 @@ import { logAnnotationError, regex, markdown } from './annotation-utils'
 import clor from 'clor'
 
 /// @name @version
+/// @page annotations
 /// @description Describes the type of a variable
-/// @returns {string}
+/// @returns {object}
 /// @markup Usage
 /// /// @version {version}
 ///

@@ -1,6 +1,7 @@
 import { toBoolean, multiple } from './annotation-utils'
 
 /// @name @chainable
+/// @page annotations
 /// @alias @chain
 /// @description Used to notate that a function is chainable
 /// @returns {boolean, array}

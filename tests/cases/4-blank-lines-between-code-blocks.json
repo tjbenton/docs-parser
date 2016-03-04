@@ -13,7 +13,10 @@
         "header": {},
         "body": [
           {
-            "raw-code": "@mixin moz-only() {\n  $selector: &;\n  @at-root {\n    @-moz-document url-prefix() {\n      #{$selector} {\n        @content;\n      }\n    }\n  }\n}",
+            "raw-code": {
+              "raw": "@mixin moz-only() {\n  $selector: &;\n  @at-root {\n    @-moz-document url-prefix() {\n      #{$selector} {\n        @content;\n      }\n    }\n  }\n}",
+              "escaped": "@mixin moz-only() {\n  $selector: &amp;;\n  @at-root {\n    @-moz-document url-prefix() {\n      #{$selector} {\n        @content;\n      }\n    }\n  }\n}"
+            },
             "blockinfo": {
               "comment": {
                 "start": 1,
