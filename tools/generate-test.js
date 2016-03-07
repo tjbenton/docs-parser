@@ -46,7 +46,6 @@ function annotationTest(file) {
   return new Promise(function(resolve) {
     docs({
       files: file,
-      changed: false,
       warning: false,
       debug: false,
       timestamps: false,
@@ -75,7 +74,6 @@ function caseTest(file) {
   return new Promise(function(resolve) {
     docs({
       files: file,
-      changed: false,
       warning: false,
       debug: false,
       timestamps: false,

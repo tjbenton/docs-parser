@@ -10,7 +10,6 @@ const test_defaults = {
   debug: false,
   timestamps: false,
   warning: false,
-  changed: false,
   ignore: '.*'
 }
 

@@ -102,7 +102,6 @@ export default class Logger {
     console.log('')
     this.print(`${messaging.warning}`)
     this.print(...args)
-    console.log('')
     return this
   }
 
@@ -110,7 +109,6 @@ export default class Logger {
     console.log('')
     this.print(`${messaging.error}`)
     this.print(...args)
-    console.log('')
     return this
   }
 
@@ -139,7 +137,6 @@ export default class Logger {
     console.log('')
     this.print(`${messaging.debug}`)
     this.print(...args)
-    console.log('')
     return this
   }
 
@@ -151,7 +148,6 @@ export default class Logger {
     console.log('')
     this.print(`${messaging.file} ${file}`)
     this.print(...args)
-    console.log('')
     return this
   }
 }

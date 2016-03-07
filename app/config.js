@@ -21,14 +21,14 @@ export const default_options = {
     'tests/', 'coverage/' // unit tests and coverage results
   ],
 
+  // when true it will watch files for changes
+  watch: false,
+
   page_fallback: 'general', // used if `@page` isn't defined
 
   // add gitignore files to the ignore list. Depending on ignored files it
   // could cause things to ge parsed slower, that's why it's defaulted to `false`
   gitignore: false,
-
-  // determins if only changed files should be parsed or not
-  changed: true,
 
   // this stops the current block from adding lines if there're `n`
   // blank line lines between code, and starts a new block.
@@ -147,6 +147,12 @@ export default async function config(options = {}) {
   options.languages = parseLanguages(options.languages)
 
   options.annotations = new AnnotationApi(options.annotations)
+
+  options.log = new Logger({
+    debug: options.debug,
+    warning: options.warning,
+    timestamps: options.timestamps
+  })
 
   return options
 }

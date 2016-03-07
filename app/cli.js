@@ -23,11 +23,11 @@ export default function cli() {
     .option('-d, --dest [path]', 'Documentation folder', `${info.root}/docs/docs.json`)
     .option('-c, --config [path]', 'Path to configuration file', default_options.config)
     .option('-i, --ignore <glob1,[glob2,...]>', 'Paths to ignore', to_list, default_options.ignore)
+    .option('-w, --watch', 'Recompile docs on changes', true, default_options.watch)
     .option('-g, --gitignore', 'Add `gitignore` files to the ignored files', default_options.gitignore)
     .option('-x, --no-debug', 'Output debugging information', to_boolean, default_options.debug)
-    .option('-w, --no-warning', 'Output warning messages', to_boolean, default_options.warning)
+    .option('-n, --no-warning', 'Output warning messages', to_boolean, default_options.warning)
     .option('-m, --no-timestamps', 'Output timestamps of how long it takes to parse the files', to_boolean, default_options.timestamps)
-    .option('-a, --no-changed', 'Parse changed files', to_boolean, default_options.changed)
     .option('-b, --blank-lines <n>', 'Stops parsing lines after <n> consecutive blank lines', to_number, default_options.blank_lines)
     .option('-p, --print', 'This will only print the results instead of outputting them', false)
     .option('-r, --raw', 'This prevents the data from each file from being sorted', false)
@@ -40,11 +40,11 @@ export default function cli() {
     dryRun: dry_run,
     print,
     ignore,
+    watch,
     gitignore,
     debug,
     warning,
     timestamps,
-    changed,
     raw,
     dest,
     args
@@ -63,9 +63,9 @@ export default function cli() {
     debug,
     warning,
     timestamps,
-    changed,
     raw,
     blank_lines,
+    watch,
   })
     .then((parsed) => {
       if (print) {
