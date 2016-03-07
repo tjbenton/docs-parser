@@ -122,7 +122,13 @@ function replaceStates(str, states, options) {
       return (states[key] || {})[item]
     }
 
-    return states[clean(match)]
+    let result = states[clean(match)]
+
+    if (is.plainObject(result)) {
+      return result.state
+    }
+
+    return result
   })
 }
 
