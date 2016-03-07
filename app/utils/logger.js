@@ -1,6 +1,6 @@
 import Purdy from './purdy'
 import clor from 'clor'
-
+import to from './to'
 
 let icon = {
   chevron: '\xBB ',
@@ -10,7 +10,7 @@ let icon = {
 }
 
 const messaging = {
-  warning: clor.yellow.bold(`${icon.warning} [WARNING]`),
+  warning: clor.yellow.bold(`${icon.warning}[WARNING]`),
   debug: clor.magenta.bold(`${icon.chevron}[DEBUG]`),
   error: clor.red.bold(`${icon.error}[ERROR]`),
   file: clor.bgBlue.white(`${icon.chevron}[FILE]`)
@@ -23,7 +23,6 @@ export default class Logger {
     this.events = []
     this.times = {}
     this.options = options
-
 
     this.report()
   }
@@ -45,9 +44,30 @@ export default class Logger {
     return this
   }
 
+  format(...args) {
+    return to.map(args, (arg) => {
+      switch (to.type(arg)) {
+        case 'array':
+        case 'object':
+        case 'number':
+          return purdy.format(arg).toString()
+        case 'function':
+          return arg.toString()
+        case 'string':
+          return to.normalize(arg)
+        default:
+          return arg
+      }
+    })
+  }
+
   print(...args) {
-    purdy.print(...args)
+    console.log(...this.format(...args))
     return this
+  }
+
+  space() {
+    console.log('')
   }
 
   report() {
@@ -69,30 +89,28 @@ export default class Logger {
 
     if (debug) {
       this
-        .on('debug', (...args) => this.debug(...args))
-        .on('file', (...args) => this.file(...args))
+        .on('debug', this.debug)
+        .on('file', this.file)
     }
 
-    if (warning) this.on('warning', (...args) => this.warn(...args))
+    if (warning) this.on('warning', this.warn)
+
+    this.on('success', this.success)
   }
 
   warn(...args) {
-    console.log(
-      '\n\n',
-      messaging.warning,
-      '\n',
-      ...purdy.format(...args)
-    )
+    console.log('')
+    this.print(`${messaging.warning}`)
+    this.print(...args)
+    console.log('')
     return this
   }
 
-  error(arg) {
-    console.log(
-      '\n\n',
-      messaging.error,
-      '\n',
-      ...purdy.format(arg)
-    )
+  error(...args) {
+    console.log('')
+    this.print(`${messaging.error}`)
+    this.print(...args)
+    console.log('')
     return this
   }
 
@@ -110,7 +128,7 @@ export default class Logger {
 
     let duration = Date.now() - time
     console.log(
-      `${clor.green(icon.check)} ${format}`,
+      `${clor.green(icon.check)}${format}`,
       label,
       duration
     )
@@ -118,22 +136,22 @@ export default class Logger {
   }
 
   debug(...args) {
-    console.log(
-      '\n\n',
-      messaging.debug,
-      '\n',
-      ...purdy.format(...args)
-    )
+    console.log('')
+    this.print(`${messaging.debug}`)
+    this.print(...args)
+    console.log('')
     return this
   }
 
-  file(file) {
-    console.log(
-      '\n\n',
-      messaging.file,
-      file,
-      ''
-    )
+  success(...args) {
+    this.print(`${clor.green(icon.check)}`, ...args)
+  }
+
+  file(file, ...args) {
+    console.log('')
+    this.print(`${messaging.file} ${file}`)
+    this.print(...args)
+    console.log('')
     return this
   }
 }

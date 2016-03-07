@@ -1,6 +1,6 @@
 /* eslint-disable complexity, max-depth */
 import { is, to } from '../utils'
-
+import clor from 'clor'
 
 /// @name pages
 /// @description
@@ -19,7 +19,7 @@ export default function pages(options = {}) {
           header.page = [ page_fallback ]
         } else {
           log.emit('warning', `
-            Header comment ${header.name && '(' + header.name + ')'} doesn't have a \`@page\` defined in
+            Header comment ${header.name && '(' + header.name + ')'} doesn't have a ${clor.bold('@page')} defined in
             ${path}
           `)
         }
@@ -27,10 +27,12 @@ export default function pages(options = {}) {
 
       // a) Set the name in the header to be the name of the file
       if (is.falsy(header.name)) {
-        log.emit('warning', `
-         The hardest thing in development is naming but you gotta try, add a '@name' to the header comment in
-         ${path}
-        `)
+        log.emit('warning', '' +
+          'The hardest thing in development is naming but you gotta try, add a ' +
+          clor.bold('@name') +
+          ' to the header comment in ' +
+          clor.bold(path)
+        )
       }
 
       // set the header for the file

@@ -3,6 +3,7 @@ import path from 'path'
 import getBlocks from './get-blocks'
 import parseBlocks from './parse-blocks'
 import replaceAliases from './replace-aliases'
+import clor from 'clor'
 
 export default async function parser(file_path, {
   languages,
@@ -39,7 +40,7 @@ export default async function parser(file_path, {
       ...to.values(file.options.body).slice(0, -1)
     )
   ) {
-    console.log(`Well shitfire, '${file.path}' doesn't contain any sweet documentation`)
+    log.emit('warning', `Well shitfire, ${clor.bold(file.path)} doesn't contain any sweet documentation`)
     return []
   }
 
