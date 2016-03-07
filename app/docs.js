@@ -10,7 +10,7 @@ import {
 } from './utils'
 import parser from './parser'
 import sorter from './sorter'
-import get_config from './config'
+import getConfig from './config'
 import { map } from 'async-array-methods'
 
 ////
@@ -21,7 +21,7 @@ import { map } from 'async-array-methods'
 /// documentation for it  and returns an `{}` of the document data
 ////
 export default async function docs(options = {}) {
-  options = await get_config(options)
+  options = await getConfig(options)
   /* eslint-disable no-unused-vars */
   // these are all the options that can be used
   let {
@@ -39,8 +39,9 @@ export default async function docs(options = {}) {
     comments,
   } = options
   /* eslint-enable no-unused-vars */
+  let log
 
-  let log = new Logger({ debug, warning, timestamps })
+  options.log = log = new Logger({ debug, warning, timestamps })
 
   log.emit('start', 'total')
 
@@ -53,7 +54,7 @@ export default async function docs(options = {}) {
     log.emit('complete', 'paths', `%s completed after %dms with ${files.length} file${s} to parse`)
 
     log.emit('start', 'parser')
-    files = await map(files, (file_path) => parser({ file_path, ...options, log }))
+    files = await map(files, (file_path) => parser(file_path, options))
     log.emit('complete', 'parser')
 
     // converts json to a readable JS object

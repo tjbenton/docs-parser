@@ -4,26 +4,26 @@ import getBlocks from './get-blocks'
 import parseBlocks from './parse-blocks'
 import replaceAliases from './replace-aliases'
 
-export default async function parser({
-  file_path,
+export default async function parser(file_path, {
   comments,
+  languages,
   annotations,
   blank_lines,
   sort,
   log
 }) {
   // the filetype of the current file
-  let type = path.extname(file_path).replace('.', '')
+  const type = path.extname(file_path).replace('.', '')
 
   // gets the comments to use on this file
-  let comment = comments[type] ? comments[type] : comments._
+  const comment = comments[type] ? comments[type] : comments._
 
-  let contents = '\n' + to.normalString(await fs.readFile(file_path))
+  const contents = '\n' + to.normalString(await fs.readFile(file_path))
 
   let file = {
     contents, // all of the contents of the file
     path: path.join(info.dir, path.relative(info.root, file_path)) || file_path, // path of the file
-    name: path.basename(file_path, '.' + type), // name of the file
+    name: path.basename(file_path, `.${type}`), // name of the file
     type, // filetype of the file
     comment,
     start: 1, // starting point of the file
