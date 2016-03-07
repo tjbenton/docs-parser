@@ -20,6 +20,7 @@ export const default_options = {
     'dist/', 'build/', 'docs/', // normal folders
     'tests/', 'coverage/' // unit tests and coverage results
   ],
+
   page_fallback: 'general', // used if `@page` isn't defined
 
   // add gitignore files to the ignore list. Depending on ignored files it
@@ -48,60 +49,59 @@ export const default_options = {
     return a.localeCompare(b) // same as the default sort function
   },
 
+  languages: {
+    default: {
+      // annotation identifier that can be change on a file specific basis if needed.
+      // While this is a setting, it probably should probably never be changed. If it does
+      // need to be changed it should be changed to be a special character.
+      prefix: '@',
+
+      // @todo add support for this single line prefix for comments inside of the code below the comment block
+      inline_prefix: '#',
+
+      // header comment style
+      // @note {10} only 1 of these can be used per file
+      header: { start: '////', line: '///', end: '////', type: 'header' },
+
+      // body comment style
+      body: { start: '', line: '///', end: '', type: 'body' },
+
+      // this is used for any interpolations that might occur in annotations.
+      // I don't see this needing to change but just incase I'm making it a setting.
+      // @note {10} This setting is used to create a RegExp so certain characters need to be escaped
+      interpolation: {
+        start: '\\${',
+        end: '}'
+      },
+    },
+    css: {
+      header: { start: '/***', line: '*', end: '***/' },
+      body: { start: '/**', line: '*', end: '**/' }
+    },
+    'rb, py, coffee, sh, bash, pl': {
+      header: { start: '###', line: '##', end: '###' },
+      body: { line: '##' }
+    },
+    'html, md, markdown, mark, mdown, mkdn, mdml, mkd, mdwn, mdtxt, mdtext, text': {
+      header: { start: '<!----', line: '', end: '---->' },
+      body: { start: '<!---', line: '', end: '--->' }
+    },
+    jade: {
+      header: { start: '//-//', line: '//-/', end: '//-//' },
+      body: { line: '//-/' }
+    },
+    cfm: {
+      header: { start: '<!-----', line: '', end: '----->' },
+      body: { start: '<!----', line: '', end: '---->' }
+    }
+  },
+
   // default annotation list
   annotations,
 }
 
-export const default_comment = {
-  prefix: '@', // annotation identifier(this should probably never be changed)
-  inline_prefix: '#', // @todo add support for this single line prefix for comments inside of the code below the comment block
-  // file level comment block identifier
-  header: { start: '////', line: '///', end: '////', type: 'header' },
-  // block level comment block identifier
-  body: { start: '', line: '///', end: '', type: 'body' },
-  // this is used for any interpolations that might occur in
-  // annotations. I don't see this needing to change but just incase
-  // I'm making it a setting.
-  // @note {10} This setting is used to create a RegExp so certain characters need to be escaped
-  interpolation: {
-    start: '\\${',
-    end: '}'
-  },
-}
-
-// some defaults for common languages
-export const comments = {
-  _: default_comment,
-  css: {
-    header: { start: '/***', line: '*', end: '***/' },
-    body: { start: '/**', line: '*', end: '**/' }
-  },
-  'rb, py, coffee, sh, bash, pl': {
-    header: { start: '###', line: '##', end: '###' },
-    body: { line: '##' }
-  },
-  'html, md, markdown, mark, mdown, mkdn, mdml, mkd, mdwn, mdtxt, mdtext, text': {
-    header: { start: '<!----', line: '', end: '---->' },
-    body: { start: '<!---', line: '', end: '--->' }
-  },
-  jade: {
-    header: { start: '//-//', line: '//-/', end: '//-//' },
-    body: { line: '//-/' }
-  },
-  cfm: {
-    header: { start: '<!-----', line: '', end: '----->' },
-    body: { start: '<!----', line: '', end: '---->' }
-  }
-}
-
-
-export const base_config = {
-  ...default_options,
-  comments
-}
-
 export default async function config(options = {}) {
-  let config_file = (options.config ? options : base_config).config
+  let config_file = (options.config ? options : default_options).config
 
   // try to get the `docsfile.js` so the user config can be merged
   try {
@@ -112,7 +112,11 @@ export default async function config(options = {}) {
   }
 
   // merge the config file with passed options
-  options = to.extend(ensureValidConfig(config_file), options)
+  options = to.extend(config_file, options)
+  // Not sure this valid config should be a thing because what if a user
+  // want's to pass in options here for their annotations.
+  // Should It be a option that determins if this runs? like `strict_config`
+  // options = to.extend(ensureValidConfig(config_file), options)
 
   // ensures `files`, `ignore` is always an array this way no
   // more checks have to happen for it
@@ -120,8 +124,8 @@ export default async function config(options = {}) {
   if (options.ignore) options.ignore = to.array(options.ignore)
 
 
-  // merge options with base_config so there's a complete list of settings
-  options = to.extend(to.extend({}, base_config), options)
+  // merge options with default_options so there's a complete list of settings
+  options = to.extend(to.clone(default_options), options)
 
   if (options.gitignore) {
     try {
@@ -140,55 +144,57 @@ export default async function config(options = {}) {
   // ensures blank_lines is a number to avoid errors
   options.blank_lines = to.number(options.blank_lines)
 
-  options.comments = parseComments(options.comments)
+  options.languages = parseLanguages(options.languages)
 
   options.annotations = new AnnotationApi(options.annotations)
+
   return options
 }
 
 
-let valid_options = to.keys(default_options)
-let valid_comment_options = to.keys(default_comment)
-
-
-export function parseComments(comments) {
-  let parsed_comments = {}
+export function parseLanguages(languages) {
+  let parsed = {}
 
   // ensures comments are a normal structure (aka not `'rb, py': {...}`)
-  for (let [ option, value ] of to.entries(comments)) {
+  for (let [ option, value ] of to.entries(languages)) {
     // converts option into an array so multiple languages can be declared at the same time
     option = option.replace(/\s/g, '').split(',')
 
-    for (let lang in option) parsed_comments[option[lang]] = value
+    for (let lang in option) parsed[option[lang]] = value
   }
 
-  // ensures each comment as all the required comment settings
+  // ensures each comment has all the required comment settings
   // this makes it easier later on when parsing
-  for (let [ lang, value ] of to.entries(parsed_comments)) {
+  for (let [ lang, value ] of to.entries(parsed)) {
     if (lang !== '_') {
-      parsed_comments[lang] = to.extend(to.clone(default_comment), value)
+      parsed[lang] = to.extend(to.clone(default_options.languages.default), value)
     }
   }
 
   // extend any languages that have the extend option
-  for (let [ lang, value ] of to.entries(parsed_comments)) {
+  for (let [ lang, value ] of to.entries(parsed)) {
     if (
       lang !== '_' &&
       value.extend
     ) {
-      if (!parsed_comments[value.extend]) {
+      if (!parsed[value.extend]) {
         throw new Error(`${value.extend} comment style doesn't exist`)
       } else if (!is.string(value.extend)) {
         throw new Error(`the value of extend must be a string you passed ${value.extend}`)
       } else {
-        parsed_comments[lang] = to.extend(value, to.clone(parsed_comments[value.extend]))
+        parsed[lang] = to.extend(value, to.clone(parsed[value.extend]))
       }
     }
-    delete parsed_comments[lang].extend
+    delete parsed[lang].extend
   }
 
-  return parsed_comments
+  // console.log(parsed)
+
+  return parsed
 }
+
+let valid_options = to.keys(default_options)
+let valid_language_options = to.keys(default_options.languages.default)
 
 /// @name ensureValidConfig
 /// @description
@@ -202,15 +208,18 @@ function ensureValidConfig(user_config) {
   }
 
   // ensures the newly added language has the correct comment format
-  if (user_config.comments) {
-    for (let lang in user_config.comments) {
-      for (let type in lang) {
-        if (!is.in(valid_comment_options, type)) {
-          log.emit('warning', `'${type}' is not a valid comment option in '${lang}', must be 'header', or 'body'`)
+  if (user_config.languages) {
+    for (let [ lang, options ] of to.entries(user_config.languages)) {
+      // console.log('type', type)
+      for (let [ key ] of to.entries(options)) {
+        if (!is.in(valid_language_options, key)) {
+          log.emit(
+            'warning',
+            `'${key}' is not a valid comment option in '${lang}'. Here's the default language config`,
+            default_options.languages.default
+          )
         }
       }
     }
   }
-
-  return user_config
 }

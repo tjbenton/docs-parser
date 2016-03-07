@@ -91,7 +91,7 @@ export function logAnnotationError(obj, expected) {
   // used to modifiy the indention of numbers so that they align to the right
   let modifier = getSpaces(file.end)
   let temp_contents = to.flatten([ comment.contents, code.contents ])
-  let comment_style = file.comment[comment.type].line
+  let comment_style = file.options[comment.type].line
   // The line below should get the correct length but it currently doesn't
   // let total_comment_lines = comment.end - comment.start
   let total_comment_lines = comment.contents.length - 1

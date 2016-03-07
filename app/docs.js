@@ -36,7 +36,7 @@ export default async function docs(options = {}) {
     raw,
     sort,
     annotations,
-    comments,
+    languages,
   } = options
   /* eslint-enable no-unused-vars */
   let log

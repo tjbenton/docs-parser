@@ -2,26 +2,23 @@
 import assert from 'core-assert'
 import asyncSuite from '../../tools/async-suite.js'
 import getConfig, {
-  parseComments,
+  parseLanguages,
   default_options,
-  default_comment,
-  comments,
-  base_config
 } from '../../app/config'
 
 asyncSuite('config', () => {
   return () => {
-    test('parseComments empty', () => {
+    test('parseLanguages empty', () => {
       assert.deepStrictEqual(
-        parseComments({
+        parseLanguages({
           test: {}
         }).test,
-        default_comment
+        default_options.languages.default
       )
     })
 
-    test('parseComments extend', () => {
-      let test = parseComments({
+    test('parseLanguages extend', () => {
+      let test = parseLanguages({
         rb: {
           header: { start: '###', line: '##', end: '###' },
           body: { line: '#' }

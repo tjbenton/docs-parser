@@ -101,7 +101,7 @@ export default {
 
 function replaceStates(str, states, options) {
   let names = [ options.annotation.name, ...options.annotation.alias ].join('|')
-  let { interpolation, prefix } = options.file.comment
+  let { interpolation, prefix } = options.file.options
 
   const state_interpolation = new RegExp(`${interpolation.start}${prefix}(?:${names})[^${interpolation.end}]*${interpolation.end}`, 'g')
   const replacement = new RegExp(`${interpolation.start}${prefix}(?:${names})|${interpolation.end}`, 'g')

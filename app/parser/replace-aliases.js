@@ -6,13 +6,13 @@ import { is, to } from '../utils'
 /// This function is used to replace all instances of aliases in a file
 /// @returns {string} - The file with the instances of aliases removed
 export default function aliases(options = {}) {
-  let { file, annotations, comment } = options /* , log */
+  let { file, annotations } = options /* , log */
 
   let main_annotation_list = to.keys(annotations.list(file.type))
 
   let comment_types = [
-    to.values(comment.header, '!type', '!end'),
-    to.values(comment.body, '!type', '!end')
+    to.values(file.options.header, '!type', '!end'),
+    to.values(file.options.body, '!type', '!end')
   ]
 
   comment_types = to.flatten(comment_types)
@@ -20,8 +20,8 @@ export default function aliases(options = {}) {
     .map((comment_type) => '\\' + comment_type.split('').join('\\'))
   comment_types = `(?:${comment_types.join('|')})`
   let block_comment = `(?:^(?:\\s*${comment_types})?\\s*)`
-  let inline_comment = `(?:${comment_types}?${comment.inline_prefix}\\s+)`
-  let comment_regex = `((?:${block_comment}|${inline_comment})${comment.prefix})`
+  let inline_comment = `(?:${comment_types}?${file.options.inline_prefix}\\s+)`
+  let comment_regex = `((?:${block_comment}|${inline_comment})${file.options.prefix})`
 
   let alias_obj = to.reduce(annotations.list(file.type, 'alias'), (previous, { key, value }) => {
     value = value

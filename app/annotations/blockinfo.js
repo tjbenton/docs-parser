@@ -1,4 +1,4 @@
-import { to } from '../utils'
+import { to, is } from '../utils'
 import { logAnnotationError } from './annotation-utils'
 /// @name blockinfo
 /// @page annotations
@@ -30,16 +30,25 @@ export default {
   autofill() {
     let obj = to.clone(this)
     let comment = obj.comment
-    let code = obj.code
-    let file = obj.file
     delete comment.contents
+
+    let code = obj.code
     delete code.contents
-    delete file.contents
-    delete file.name
-    delete file.type
-    delete file.comment
+
+    const file_filter = [ 'contents', 'name', 'type', 'comment', 'options' ]
+    let file = to.filter(obj.file, ({ key }) => !is.in(file_filter, key))
 
     return { comment, code, file }
+
+    // @todo {5} decide if `comment` needs the `type` key. If it doesn't need
+    // it then just use the code below because it removes all the things that
+    // aren't needed from each of the values in `this`
+    // const filter = [ 'contents', 'name', 'type', 'comment', 'options' ]
+    // return to.map(this, (obj) => {
+    //   return {
+    //     [obj.key]: to.filter(obj.value, ({ key }) => !is.in(filter, key))
+    //   }
+    // })
   },
   parse() {
     this.log.emit('warning', "Passed @blockinfo, it's only supposed to be an autofilled annotation", logAnnotationError(this, ''))

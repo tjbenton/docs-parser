@@ -4,12 +4,10 @@ import { is, to } from '../utils'
 // @access private
 // @description
 // This function is used to run the all the functions that autofill if not defined.
-export default function resolve(options) {
-  let { resolve_list, parsed, block, log } = options
-
+export default function resolve({ list, parsed, block, log }) {
   let parsed_keys = to.keys(parsed)
 
-  for (let [ annotation, annotation_resolve ] of to.entries(resolve_list)) {
+  for (let [ annotation, annotation_resolve ] of to.entries(list)) {
     if (is.in(parsed_keys, annotation)) {
       let result = annotation_resolve
       if (is.fn(annotation_resolve)) {

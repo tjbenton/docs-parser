@@ -195,14 +195,21 @@ export default class AnnotationApi {
     })
   }
 
+  lists(filetype) {
+    return to.reduce([ 'alias', 'autofill', 'resolve' ], (previous, current) => {
+      return to.extend(previous, {
+        [current]: this.list(filetype, current)
+      })
+    }, { main: this.list(filetype) })
+  }
+
   /// @name run_annotation
   /// @access private
   /// @arg {object} annotation - the information for the annotation to be called(name, line, content, start, end)
   run(options) {
     let {
       annotation,
-      annotations_list,
-      annotations_alias_list,
+      annotation_types,
       block = {},
       file,
       log
@@ -218,13 +225,13 @@ export default class AnnotationApi {
       return this.run({
         annotation: {
           name,
-          alias: is.in(annotations_alias_list, name) ? annotations_alias_list[name] : [],
+          alias: is.in(annotation_types.alias, name) ? annotation_types.alias[name] : [],
           line: to.normalize(contents[0]),
           contents,
           start: null,
           end: null
         },
-        annotations_list,
+        annotation_types,
         ...block,
         log
       })
@@ -258,7 +265,7 @@ export default class AnnotationApi {
       result.default = this.file_list.default[annotation.name].parse.call(result)
     }
 
-    return annotations_list[annotation.name].parse.call(result)
+    return annotation_types.main[annotation.name].parse.call(result)
   }
 
   /// @name file_list

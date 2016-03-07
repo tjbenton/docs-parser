@@ -12,7 +12,6 @@ export default function parseBlocks({
   file,
   blocks,
   annotations,
-  comment,
   sort,
   log
 }) {
@@ -22,11 +21,11 @@ export default function parseBlocks({
 
   let parsed_blocks = []
 
-  let autofill_list = annotations.list(file.type, 'autofill')
-  let resolve_list = annotations.list(file.type, 'resolve')
+  let annotation_types = annotations.lists(file.type)
+
   // sort the parsed object before the annotations are resolved
   if (is.fn(sort)) {
-    resolve_list = to.sort(resolve_list, sort)
+    annotation_types.resolve = to.sort(annotation_types.resolve, sort)
   }
 
   // loop over each block
@@ -36,18 +35,18 @@ export default function parseBlocks({
 
     let parsed = parseBlock({
       annotations,
+      annotation_types,
       block,
-      comment,
       file,
       log
     })
 
     // run the autofill functions for all the annotations that have a autofill function
-    parsed = autofill({ autofill_list, parsed, block, log })
+    parsed = autofill({ list: annotation_types.autofill, parsed, block, log })
 
     if (!is.empty(parsed)) {
       // run the resolve function for all the annotations that have a resolve function
-      parsed = resolve({ resolve_list, parsed, block, log })
+      parsed = resolve({ list: annotation_types.resolve, parsed, block, log })
       parsed_blocks.push(parsed)
     }
   } // end blocks loop
@@ -66,16 +65,13 @@ export default function parseBlocks({
 function parseBlock(options = {}) {
   let {
     annotations,
+    annotation_types,
     block,
-    comment,
     file,
     log
   } = options
 
-  // gets the annotations to use on this file
-  let annotations_list = annotations.list(file.type)
-  let annotations_alias_list = annotations.list(file.type, 'alias')
-  let keys = to.keys(annotations_list)
+  let keys = to.keys(annotation_types.main)
 
   let contents = to.array(block.comment.contents)
   let block_annotations = {}
@@ -89,12 +85,12 @@ function parseBlock(options = {}) {
     if (
       !is.any.in(
         line,
-        `${comment.header.line} ${comment.prefix}`,
-        `${comment.body.line} ${comment.prefix}`,
-        `\\${comment.prefix}`
+        `${file.options.header.line} ${file.options.prefix}`,
+        `${file.options.body.line} ${file.options.prefix}`,
+        `\\${file.options.prefix}`
       )
     ) {
-      prefix_index = line.indexOf(comment.prefix)
+      prefix_index = line.indexOf(file.options.prefix)
     }
 
 
@@ -113,8 +109,7 @@ function parseBlock(options = {}) {
           to.merge(block_annotations, {
             [annotation.name]: annotations.run({
               annotation,
-              annotations_list,
-              annotations_alias_list,
+              annotation_types,
               block,
               file,
               log
@@ -126,7 +121,7 @@ function parseBlock(options = {}) {
         annotation = {
           name, // sets the current annotation name
           line: line.slice(prefix_index + 1 + name.length), // removes the current annotation name and it's prefix from the first line
-          alias: is.in(annotations_alias_list, name) ? annotations_alias_list[name] : [],
+          alias: is.in(annotation_types.alias, name) ? annotation_types.alias[name] : [],
           contents: [],
           start: i, // sets the starting line of the annotation
           end: 0
@@ -147,8 +142,7 @@ function parseBlock(options = {}) {
       to.merge(block_annotations, {
         [annotation.name]: annotations.run({
           annotation,
-          annotations_list,
-          annotations_alias_list,
+          annotation_types,
           block,
           file,
           log

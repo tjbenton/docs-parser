@@ -58,7 +58,7 @@ export default {
     ] = regex('markup', this.annotation.line)
 
     let raw = this.annotation.contents
-    let { interpolation, prefix, header, body } = this.file.comment
+    let { interpolation, prefix } = this.file.options
     let escaped = escape(raw)
 
     let state_interpolation = `${interpolation.start}${prefix}states?[^${interpolation.end}]*${interpolation.end}`

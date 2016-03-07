@@ -3,7 +3,7 @@ import pkg from '../package.json'
 import { info, fs, to } from './utils'
 import program from 'commander'
 import docs from './docs'
-import { base_config } from './config'
+import { default_options } from './config'
 
 export default function cli() {
   // helper functions to parse passed options
@@ -21,14 +21,14 @@ export default function cli() {
       Note: Put globs quotes \`'.*, app/**/*'\` to avoid issues
     `)
     .option('-d, --dest [path]', 'Documentation folder', `${info.root}/docs/docs.json`)
-    .option('-c, --config [path]', 'Path to configuration file', base_config.config)
-    .option('-i, --ignore <glob1,[glob2,...]>', 'Paths to ignore', to_list, base_config.ignore)
-    .option('-g, --gitignore', 'Add `gitignore` files to the ignored files', base_config.gitignore)
-    .option('-x, --no-debug', 'Output debugging information', to_boolean, base_config.debug)
-    .option('-w, --no-warning', 'Output warning messages', to_boolean, base_config.warning)
-    .option('-m, --no-timestamps', 'Output timestamps of how long it takes to parse the files', to_boolean, base_config.timestamps)
-    .option('-a, --no-changed', 'Parse changed files', to_boolean, base_config.changed)
-    .option('-b, --blank-lines <n>', 'Stops parsing lines after <n> consecutive blank lines', to_number, base_config.blank_lines)
+    .option('-c, --config [path]', 'Path to configuration file', default_options.config)
+    .option('-i, --ignore <glob1,[glob2,...]>', 'Paths to ignore', to_list, default_options.ignore)
+    .option('-g, --gitignore', 'Add `gitignore` files to the ignored files', default_options.gitignore)
+    .option('-x, --no-debug', 'Output debugging information', to_boolean, default_options.debug)
+    .option('-w, --no-warning', 'Output warning messages', to_boolean, default_options.warning)
+    .option('-m, --no-timestamps', 'Output timestamps of how long it takes to parse the files', to_boolean, default_options.timestamps)
+    .option('-a, --no-changed', 'Parse changed files', to_boolean, default_options.changed)
+    .option('-b, --blank-lines <n>', 'Stops parsing lines after <n> consecutive blank lines', to_number, default_options.blank_lines)
     .option('-p, --print', 'This will only print the results instead of outputting them', false)
     .option('-r, --raw', 'This prevents the data from each file from being sorted', false)
     .option('-t, --dry-run', 'This will run everything without outputting anything', false)
@@ -53,7 +53,7 @@ export default function cli() {
   let files = to.flatten(args.map((arg) => to_list(arg)))
 
   if (!files.length) {
-    files = base_config.files
+    files = default_options.files
   }
 
   return docs({
