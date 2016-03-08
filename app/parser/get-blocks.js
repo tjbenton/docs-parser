@@ -50,6 +50,13 @@ export default function getBlocks({
     return debug_file
   }
 
+
+  function pushBlock(block_to_push) {
+    block_to_push.comment.contents = to.normalize(block_to_push.comment.contents)
+    block_to_push.code.contents = to.normalize(block_to_push.code.contents)
+    parsed.push(block_to_push)
+  }
+
   for (let i = start_at, l = lines.length; i < l; i++) {
     // If you're trying to debug something between specific lines you
     // can use this to narrow down the longs to the lines you're wanting debug
@@ -86,7 +93,7 @@ export default function getBlocks({
           // a) There was block that has already been processed
           if (!is.undefined(block)) { // holds the current block information
             block.code.end = i - 1
-            parsed.push(block)
+            pushBlock(block)
 
             // Stops the loop after the first comment block
             // has been parsed. This is for file header comments
@@ -138,7 +145,7 @@ export default function getBlocks({
         if (in_comment && (style === 'multi' && index.end !== false ? i === l : i === l - 1)) {
           debug('the last line in the file is a comment')
           block.comment.end = style === 'multi' ? i - 1 : i
-          parsed.push(block)
+          pushBlock(block)
           break // ensures that the loop stops because it's the last line in the file
         }
 
@@ -156,7 +163,7 @@ export default function getBlocks({
         // Stops the loop after the first comment block
         // has been parsed. This is for file header comments
         if (restrict) {
-          parsed.push(block)
+          pushBlock(block)
           break
         }
         // a) The previous line was a comment
@@ -171,7 +178,7 @@ export default function getBlocks({
         // a) pushes the last block onto the body
         if (i === l - 1) {
           block.code.end = i
-          parsed.push(block)
+          pushBlock(block)
         }
       }
     } else if (
@@ -181,7 +188,7 @@ export default function getBlocks({
       )
     ) {
       block[block.comment.end > -1 ? 'code' : 'comment'].end = i
-      parsed.push(block)
+      pushBlock(block)
       block = undefined
     }
   } // end loop
