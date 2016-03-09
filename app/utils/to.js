@@ -46,6 +46,58 @@ let to = {
     return value
   },
 
+  /// @name to.random
+  /// @description
+  /// This function will return a random number or value depending on what it's passed
+  /// @arg {array, object, number} - Item you want to get a random value or number from
+  /// @returns {*}
+  random(min = 0, max = 100) {
+    let value
+    let length = arguments.length
+
+    switch (to.type(min)) {
+      case 'number':
+        return Math.floor(Math.random() * (max - min + 1)) + min
+        break
+      case 'array':
+      case 'object':
+        switch (length) {
+          case 3:
+            value = min
+            min = max
+            max = arguments[2]
+            break
+          case 2:
+            value = min
+            min = 0
+            break
+          case 1:
+            value = min
+            min = 0
+            break
+          default:
+            throw new Error('a max of 3 params is allowed')
+            break
+        }
+      case 'array': // eslint-disable-line
+        if (length === 1) {
+          max = value.length - 1
+        }
+        return value[to.random(min, max)]
+        break
+      case 'object':
+        const keys = to.keys(value)
+        if (length === 1) {
+          max = keys.length - 1
+        }
+        return value[keys[to.random(min, max)]]
+        break
+      default:
+        console.log(`${to.type(min)} is not allowed`)
+        return min
+    }
+  },
+
   /// @name to.string
   /// @description
   /// Converts an object, array, number, or boolean to a string
