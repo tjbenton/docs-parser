@@ -220,7 +220,8 @@ export default class Purdy {
   }
 
   _string(str) {
-    str = to.normalize(str, false).split('\n')
+    // str = to.normalize(str, false).split('\n')
+    str = to.array(str)
     let quote = str.length > 1 ? '`' : "'"
     let l = str.length
 
