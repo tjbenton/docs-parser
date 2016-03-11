@@ -75,96 +75,108 @@ import clor from 'clor'
 ///   }
 /// }
 ///
-export default function debug(default_name = 'DEBUG', value = false, default_color = 'magenta') {
-  const color_list = [ 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'gray' ].filter((color) => color !== default_color)
-  const icon_chevron = '\xBB '
-  const base = clor[default_color].bold(`${icon_chevron}[${default_name}]:`)
-
-  return function debugDecorator(target) {
-    let log = target.log || new Logger()
-    /// @name define
-    /// This function helps define properties on an object
-    /// @description
-    /// @private
-    function define(obj, name, val, options = {}) {
-      Object.defineProperty(obj, name, {
-        configurable: true,
-        writable: true,
-        enumerable: false,
-        value: val,
-        ...options
-      })
-    }
+export default function debug(default_name = 'DEBUG', default_should_debug = false, default_options = {}) {
+  try {
+    let color_list = [ 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'gray' ]
+    default_options = to.extend({ seperator: 2, color: to.random(color_list) }, default_options)
+    color_list = color_list.filter((color_name) => color_name !== default_options.color)
+    const log = new Logger()
+    const icon_chevron = '\xBB '
+    default_name = clor[default_options.color].bold(`${icon_chevron}[${default_name}]:`)
 
     class Debugger {
-      constructor(name = '', val, color = default_color, context) {
-        this.should_debug = val
-        this.__debug_list = []
-        this.__color = color
-        this.__name = name
-        let self = this
-        return function boundDebugger() {
-          this.should_debug = self.should_debug
-          define(this, '__default_name', self.__name)
-          define(this, '__name', self.__name)
-          define(this, '__color', self.__color)
-          // this ensures the __debug_list won't show up as enumerable in
-          // the object it's applied to called object
-          define(this, '__debug_list', self.__debug_list)
-        }.bind(context || this)()
+      constructor(name = 'Define a Name', should_debug, options = {}) {
+        if (is.plainObject(should_debug)) {
+          options = should_debug
+          should_debug = options.should_debug || default_should_debug
+        }
+        this.should_debug = should_debug
+        this.debug_list = []
+        this.name = name
+        this.color = options.color
+        this.seperator = options.seperator
       }
 
       debug(...args) {
-        this.__debug_list.push(...args)
+        this.debug_list.push(...args)
         return this.should_debug
+      }
+
+      push(...args) {
+        return this.debug(...args)
+      }
+
+      add(...args) {
+        return this.debug(...args)
       }
 
       debugIfTrue(arg, ...args) {
         if (is.truthy(arg)) {
-          this.__debug_list.push(...args)
+          this.debug_list.push(...args)
         }
         return arg
       }
 
       debugIfFalse(arg, ...args) {
         if (is.false(arg)) {
-          this.__debug_list.push(...args)
+          this.debug_list.push(...args)
         }
         return arg
       }
 
       debugWrap(arg, cb, ...args) {
-        if (is.function(cb)) {
-          console.log('debugWrap must use have a callback')
-          if (cb(arg)) {
-            this.__debug_list.push(...args)
-          }
+        if (!is.function(cb)) {
+          console.log('debugWrap must use a callback')
+        }
+        if (cb(arg)) {
+          this.debug_list.push(...args)
         }
         return arg
       }
 
-      runDebug() {
-        if (this.should_debug && this.__debug_list.length > 0) {
-          console.log('')
-          console.log('')
-          console.log(`${base} ${clor[this.__color].bold(this.__name)}`)
-          this.__debug_list.slice(0, 1).forEach((obj) => log.print(obj))
-          this.__debug_list.slice(1).forEach((obj) => log.print(obj))
-          // update the debug list to be empty
-          define(this, '__debug_list', [])
+      run() {
+        try {
+          if (this.should_debug && this.debug_list.length > 0) {
+            for (let i = this.seperator; i; i--) console.log('')
+            console.log(this.name)
+            this.debug_list.slice(0, 1).forEach((obj) => log.print(obj))
+            this.debug_list.slice(1).forEach((obj) => log.print(obj))
+            // update the debug list to be empty
+            this.debug_list = []
+          }
+        } catch (e) {
+          console.trace(e)
         }
+      }
+
+      debugSet(name = 'define a name silly', should_debug, options = {}) {
+        if (!should_debug) {
+          should_debug = this.should_debug ? this.should_debug : default_should_debug
+        }
+
+        if (!options.seperator) {
+          options.seperator = this.seperator ? this.seperator : default_options.seperator
+        }
+
+        if (!options.color) {
+          options.color = to.random(color_list)
+        }
+
+        if (this.name) {
+          name = `${this.name} > ${clor[options.color].bold(name)}`
+        } else {
+          name = `${default_name} ${clor[options.color].bold(name)}`
+        }
+
+        return new Debugger(name, should_debug, options)
       }
     }
 
-    const default_debugger = new Debugger('', value, default_color, target.prototype)
-    target.prototype.debug = default_debugger.debug
-    target.prototype.runDebug = default_debugger.runDebug
-    target.prototype.debugIfTrue = default_debugger.debugIfTrue
-    target.prototype.debugIfFalse = default_debugger.debugIfFalse
-    target.prototype.debugSet = function debugSet(name = '', val = value, color = to.random(color_list)) {
-      return new Debugger(name, val, color)
+    return function debugDecorator(target) {
+      target.prototype.debugSet = Debugger.prototype.debugSet
+      return target
     }
-
-    return target
+  } catch (err) {
+    console.trace(err)
   }
 }
