@@ -30,6 +30,20 @@ asyncSuite.wrap('to', () => {
       '`boolean` should be converted to a typeof string')
   })
 
+  test('to.random', () => {
+    let array_test = [ 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'gray' ]
+
+    for (let i = 0; i < 1000; i++) {
+      let random_array_item = to.random(array_test)
+      assert.ok(array_test.indexOf(random_array_item) > -1)
+    }
+
+    for (let i = -1000; i < 1000; i++) {
+      let random_number = to.random(i, 1000)
+      assert.ok(random_number >= i && random_number <= 1000)
+    }
+  })
+
 
   test('to.normalString', async () => {
     let result

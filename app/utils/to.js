@@ -57,6 +57,9 @@ let to = {
 
     switch (to.type(min)) {
       case 'number':
+        if (min === max) {
+          return min
+        }
         return Math.floor(Math.random() * (max - min + 1)) + min
         break
       case 'array':
