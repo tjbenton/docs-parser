@@ -1,6 +1,7 @@
 /* eslint-disable no-loop-func */
 import path from 'path'
 import docs from '../dist/index.js'
+import Tokenizer from '../dist/new-parser/tokenizer.js'
 import { fs, glob } from '../dist/utils'
 import assert from 'core-assert'
 import { map } from 'async-array-methods'
@@ -53,6 +54,30 @@ addSuite('annotations', async ({ paths, expected }) => {
       test(`${i}: ${_path}`, () => {
         assert.deepStrictEqual(
           actual[i]['docs' + _path.split('/docs')[1]],
+          expected[i]
+        )
+      })
+    }
+  }
+})
+
+
+import tokenizerHelper from '../tools/tokenizer-helper.js'
+addSuite('Tokenizer', async ({ paths, expected }) => {
+  const actual = await map(paths, async (file) => {
+    try {
+      const obj = await tokenizerHelper(file)
+      return new Tokenizer(obj.str, obj.comment)
+    } catch (e) {
+      console.trace(e)
+    }
+  })
+
+  return () => {
+    for (let i = 0; i < paths.length; i++) {
+      test(`${i}: ${paths[i]}`, () => {
+        assert.deepStrictEqual(
+          actual[i],
           expected[i]
         )
       })

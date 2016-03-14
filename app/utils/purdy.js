@@ -22,7 +22,7 @@ export default class Purdy {
         Null: 'red.bold',
         Number: 'blue.bold',
         RegExp: 'magenta',
-        String: undefined, // use the default color
+        String: 'green', // use the default color
         Undefined: 'red.inverse',
         path: 'grey'
       }
@@ -226,8 +226,8 @@ export default class Purdy {
     let l = str.length
 
     // returns because it's a single line string
-    if (l === 1) {
-      return quote + str[0] + quote
+    if (l <= 1) {
+      return quote + to.string(str) + quote
     }
 
     // let has_newline_only = /(?:\s*?(\n)\s*?)(.*)/.exec(str[0])

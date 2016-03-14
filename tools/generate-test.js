@@ -4,6 +4,7 @@
 
 
 var docs = require('..').default
+var Tokenizer = require('../dist/new-parser/tokenizer.js').default
 var path = require('path')
 var clor = require('clor')
 var utils = require('../dist/utils')
@@ -33,6 +34,8 @@ function sortTest(file) {
     case 'cases':
     case 'file-types':
       return caseTest(file)
+    case 'tokenizer':
+      return tokenizerTest(file)
     case 'annotations':
       return annotationTest(file)
     default:
@@ -40,6 +43,13 @@ function sortTest(file) {
   }
 }
 
+function output(file, data) {
+  return utils.fs.outputJson(
+    file.replace(path.extname(file), '.json').replace('docs/', ''),
+    data,
+    { spaces: 2 }
+  )
+}
 
 
 function annotationTest(file) {
@@ -53,16 +63,13 @@ function annotationTest(file) {
       ignore: '.*'
     })
     .then(function(parsed) {
-      return utils.fs.outputJson(
-        file.replace(path.extname(file), '.json').replace('docs/', ''),
-        parsed[path.join('docs', file)],
-        { spaces: 2 }
-      )
+      return output(file, parsed[path.join('docs', file)])
     })
     .then(function() {
       resolve(clor.green(file) + '')
     })
-    .catch(function() {
+    .catch(function(err) {
+      console.trace(err)
       resolve(clor.red(file) + '')
     })
   })
@@ -80,17 +87,38 @@ function caseTest(file) {
       ignore: '.*'
     })
     .then(function(parsed) {
-      return utils.fs.outputJson(
-        file.replace(path.extname(file), '.json'),
-        parsed,
-        { spaces: 2 }
-      )
+      return output(file, parsed)
     })
     .then(function() {
       resolve(clor.green(file) + '')
     })
-    .catch(function() {
+    .catch(function(err) {
+      console.trace(err)
       resolve(clor.red(file) + '')
     })
+  })
+}
+
+
+var tokenizerHelper = require('../tools/tokenizer-helper.js')
+function tokenizerTest(file) {
+  return new Promise(function(resolve) {
+    tokenizerHelper(file)
+      .then(function(obj) {
+        let result
+        try {
+          result = new Tokenizer(obj.str, obj.comment)
+        } catch (e) {
+          console.trace(e.stack)
+        }
+        return output(file, result)
+      })
+      .then(function() {
+        resolve(clor.green(file) + '')
+      })
+      .catch(function(err) {
+        console.trace(err)
+        resolve(clor.red(file) + '')
+      })
   })
 }

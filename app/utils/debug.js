@@ -110,50 +110,63 @@ export default function debug(default_name = 'DEBUG', default_should_debug = fal
 
     dp.push = dp.debug = dp.add = function push(...args) {
       this.debug_list.push(...args)
-      return this.should_debug
+      return this
+    }
+
+    dp.always = function always(arg, ...args) {
+      this.debug_list.push(...args)
+      return arg
+    }
+
+    dp.shouldRun = function shouldRun(...args) {
+      let should_run = false
+      let last = args.slice(-1)[0]
+      if (is.boolean(last)) {
+        should_run = last
+        args.pop()
+      }
+      this.debug_list.push(...args)
+      if (should_run) {
+        this.run()
+      }
+      return args
+    }
+
+    dp.debugIfElse = dp.ifElse = dp.ife = dp.if = function debugIfElse(arg, if_true, if_false) {
+      if (is.truthy(arg) && !is.undefined(if_true)) {
+        this.debug_list.push(if_true)
+      } else if (!is.undefined(if_false)) {
+        this.debug_list.push(if_false)
+      }
+      return arg
     }
 
     dp.debugIfTrue = dp.ifTrue = function debugIfTrue(arg, ...args) {
       if (is.truthy(arg)) {
-        this.debug_list.push(...args)
+        this.shouldRun(...args)
       }
+
       return arg
     }
 
 
     dp.debugIfFalse = dp.ifFalse = function debugIfFalse(arg, ...args) {
-      if (is.false(arg)) {
-        this.debug_list.push(...args)
+      if (arg === false) {
+        this.shouldRun(...args)
       }
+
       return arg
     }
 
     dp.debugWrap = dp.wrap = function debugWrap(arg, cb, ...args) {
-      if (!is.function(cb)) {
-        console.log('debugWrap must use a callback')
+      if (is.undefined(cb)) {
+        cb = () => true
       }
       if (cb(arg)) {
-        this.debug_list.push(...args)
+        this.shouldRun(...args)
       }
-      return arg
-    }
 
-    // dp.debugSet.prototype.run = dp.set.prototype.run = dp.debugWrap.prototype.run = dp.wrap.prototype.run = dp.debugIfFalse.prototype.run = dp.ifFalse.prototype.run = dp.debugIfTrue.prototype.run = dp.ifTrue.prototype.run = dp.push.prototype.run = dp.debug.prototype.run = dp.add.prototype.run =
-    dp.runDebug = dp.run = function runDebug() {
-      try {
-        if (this.should_debug) {
-          for (let i = this.spaces; i; i--) console.log('')
-          console.log(this.name)
-          if (this.debug_list.length > 0) {
-            this.debug_list.slice(0, 1).forEach((obj) => log.print(obj))
-            this.debug_list.slice(1).forEach((obj) => log.print(obj))
-          }
-          // update the debug list to be empty
-          this.debug_list = []
-        }
-      } catch (e) {
-        console.trace(e)
-      }
+      return arg
     }
 
     dp.debugSet = dp.set = function debugSet(name = 'define a name silly', should_debug, options = {}) {
@@ -171,7 +184,7 @@ export default function debug(default_name = 'DEBUG', default_should_debug = fal
       // if should_debug is not defined then it will inherit the value that
       // was set on the original debugSet or its parent
       if (is.undefined(should_debug)) {
-        should_debug = this.should_debug ? this.should_debug : default_should_debug
+        should_debug = !is.undefined(this.should_debug) ? this.should_debug : default_should_debug
       }
 
       if (
@@ -200,15 +213,38 @@ export default function debug(default_name = 'DEBUG', default_should_debug = fal
       return new Debugger(`${name}`, should_debug, options)
     }
 
-    // let debugger_map = to.reduce(dp, (prev, { key, value }) => {
-    //   prev[key] = {
-    //     configurable: true,
-    //     enumerable: true,
-    //     writable: true,
-    //     value,
+    /* eslint-disable */
+    dp.runDebug = dp.run = function runDebug() {
+      try {
+        if (this.should_debug) {
+          for (let i = this.spaces; i; i--) console.log('')
+          console.log(this.name)
+          if (this.debug_list.length > 0) {
+            this.debug_list.slice(0, 1).forEach((obj) => log.print(obj))
+            this.debug_list.slice(1).forEach((obj) => log.print(obj))
+          }
+          // update the debug list to be empty
+          this.debug_list = []
+        }
+      } catch (e) {
+        console.trace(e)
+      }
+    }
+    /* eslint-enable */
+
+    for (let fn in dp) {
+      if (fn !== 'run' || fn !== 'runDebug') {
+        dp[fn].run = dp[fn].runDebug = dp.runDebug
+      }
+    }
+
+    // for (let fn_to_set in dp) {
+    //   for (let fn in dp) {
+    //     if (fn_to_set !== 'run' || fn_to_set !== 'runDebug') {
+    //       dp[fn_to_set][fn] = dp[fn_to_set].prototype[fn] = dp[fn]
+    //     }
     //   }
-    //   return prev
-    // }, {})
+    // }
 
     return function debugDecorator(target) {
       target.prototype.debugSet = Debugger.prototype.debugSet

@@ -52,7 +52,9 @@ export default class Logger {
         case 'number':
           return purdy.format(arg).toString()
         case 'function':
-          return arg.toString()
+          let obj = to.array(arg.toString())
+          const first = obj.shift()
+          return first + '\n' + to.normalize(obj)
         case 'string':
           return to.normalize(arg)
         default:
