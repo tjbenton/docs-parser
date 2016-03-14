@@ -1,5 +1,5 @@
 /* eslint-disable complexity, max-statements, max-depth */
-import { is, to, Logger, debug } from '../utils'
+import { is, to, debug as _debug } from '../utils'
 import { default_options } from '../config'
 import clor from 'clor'
 
@@ -106,9 +106,8 @@ export class Tokenizer {
   }
 
   tokenize() {
-      this.update(false)
-    // const l = this.lines.length - 1
-    // while (this.update() || this.lineno < this.lines.length) {
+    this.lineno--
+    while (this.update('updated from the loop')) {
       // if `this.break` is set at any point it will stop loop
       // and return the tokens that exist
       if (this.break) {
@@ -117,25 +116,60 @@ export class Tokenizer {
         return this.tokens
       }
       this.visit()
-      this.debugLine.runDebug()
+      this.debugLine.run()
     }
   }
 
-  pushToken() {
+  ifToken() {
+    return !this.break && !is.undefined(this.token)
+  }
+
+  pushToken(pushed_from = 'unknown unknown') {
+    const debug = this.debugPushToken
+    debug.push(`pushed from: ${pushed_from}`)
+    debug.run()
+
+    // set the end point of the code or the comment
+    this.token[this.token.comment.end > -1 && this.token.code.start > -1 ? 'code' : 'comment'].end = this.lineno
+
+    // normalize the comment contents by striping out empty lines from the start and end of comment block
     this.token.comment.contents = to.normalize(this.token.comment.contents).split('\n')
-    this.token.code.contents = to.normalize(this.token.code.contents).split('\n')
+
+    let code = this.token.code
+    // normalize the code contents
+    code.contents = to.normalize(code.contents).split('\n')
+    // check to see if the code contents is just empty lines
+    if (is.empty(code.contents.filter((line) => !!line.trim()))) {
+      // set code start and end points to -1 because there really wasn't any code
+      code.start = -1
+      code.end = -1
+      code.contents = []
+    }
+
+    this.token.code = code
+    
+    // push the finished token to the tokens list
     this.tokens.push(this.token)
+    
+    // reset the token to be undefined because it's finished
     this.token = undefined
   }
 
-  update(update_index = true) {
-    const dl = this.debugLine
-    if (update_index) {
-      this.lineno++
+  update(updated_from = 'wtf yo') {
+    const debug = this.debugUpdate
+    debug.push(`updated from: ${updated_from}`)
+
+    if (!(++this.lineno < this.lines.length)) {
+      this.break = true
+      if (this.ifToken()) {
+        // lol I don't know why i put this here but it looks important
+        console.log(`${clor.red.bold.underline('FUCK!!!FUCK!!!FUCK!!!FUCK!!!FUCK!!!FUCK!!!FUCK!!!FUCK!!!FUCK!!!FUCK')}`)
+      }
+      return false
     }
+
     this.line = this.lines[this.lineno]
-    dl.debug(`line ${this.lineno}:`)
-    dl.debug(`${clor.bgBlue(this.line)}`)
+    debug.push(`line ${this.lineno}: ${!this.line ? clor.bgRed('empty line') : clor.bgBlue(this.line)}`)
 
     // If you're trying to debug something between specific lines you
     // can use this to narrow down the longs to the lines you're wanting debug
@@ -143,9 +177,9 @@ export class Tokenizer {
     // less that what you're looking for since this is zero based.
     // debug = is.between(i, [start line], [end line])
     // this.should_debug = is.between(this.lineno, 0, 8)
-    // const escape = (str) => '\\' + str.split('').join('\\')
 
-    this.index = { start: false, line: false, end: false }
+    // this is a helper function that is used
+    // to test the existence of the comment
     const test_comment = (comment) => {
       if (is.falsy(comment)) {
         return false
@@ -159,7 +193,8 @@ export class Tokenizer {
           return index
         }
 
-        // check to see if the comment is the only thing on the line
+        // check to see if the comment is the last thing on that line
+        // aka <!--- --->
         if (this.line.length === index + comment.length) {
           return index
         }
@@ -168,47 +203,14 @@ export class Tokenizer {
       return false
     }
 
-    // const test_comment = (comment) => {
-    //   if (!comment) {
-    //     return false
-    //   }
-    //   const escape = (str) => '\\' + str.split('').join('\\')
-    //   const regex = new RegExp(escape(comment) + '\s*')
-    //   const result = this.line.match(regex)
-    //   console.log('regex:', regex)
-    //   console.log('result:', result)
-    //   return result !== false && this.line.indexOf(this.line)
-    // }
-    // console.log('line:', `${clor.bold.magenta(this.lineno)}`, `${clor.bgBlue(this.line)}`)
     this.index = to.reduce([ 'start', 'line', 'end' ], (prev, next) => {
       prev[next] = test_comment(this.comment[next])
       return prev
     }, {})
 
-    this.index = {
-      start: test_comment(this.comment.start),
-      line: test_comment(this.comment.line),
-      end: test_comment(this.comment.end)
-    }
-    // console.log('{')
-    // to.map(this.index, ({ key, value }) => {
-    //   console.log(`  ${key}: ${clor[value !== false ? 'green' : 'red'](value)}`)
-    //   return {}
-    // })
-    // console.log('}')
-
-    // this.index = {
-    //   start: this.is_multi && is.in(this.line, this.comment.start) ? this.line.indexOf(this.comment.start) : false,
-    //   line: is.in(this.line, this.comment.line) ? this.line.indexOf(this.comment.line) : false,
-    //   end: this.is_multi && is.in(this.line, this.comment.end) ? this.line.indexOf(this.comment.end) : false
-    // }
-
-    // console.log('')
-    // console.log('')
-    // console.log('')
-    // console.log('')
-    dl.debug('index:', this.index)
-    dl.debug('')
+    debug.push('index:', this.index)
+    debug.run()
+    return true
   }
 
   visit() {
@@ -221,7 +223,7 @@ export class Tokenizer {
         this.walkComment()
         if (this.restrict) {
           this.debugLine.debug('is restricted')
-          return this.token
+          return this.tokens
         }
       }
 
@@ -237,74 +239,89 @@ export class Tokenizer {
         this.walkCode()
       }
     } else if (this.shouldStop()) {
-      this.handleShouldStop()
+      this.token[this.token.comment.end > -1 ? 'code' : 'comment'].end = this.lineno
+      this.pushToken()
     }
   }
 
   isLastLine() {
     // checks to see if the current line is the last line in the file
     const length = this.is_multi && this.index.end !== false ? this.lines.length : this.lines.length - 1
-    return this.debugLine.debugIfTrue(this.lineno === length, `${clor.red('is the last line')}`)
+    if (this.lineno === length) {
+      this.debugIsLastLine.run()
+      return true
+    }
+    return false
   }
 
   shouldStop() {
-    const dl = this.debugLine
+    const debug = this.debugShouldStop
     if (
-      !is.undefined(this.token) && (
+      this.ifToken() && (
         // checks to see if there were 4 consecutive blank lines
-        dl.debugIfTrue(++this.blank_line_count === this.blank_lines, 'hit the max blank lines') ||
+        debug.debugIfTrue(++this.blank_line_count === this.blank_lines, 'hit the max blank lines') ||
         //  checks to see if it was the last line in the file
         this.isLastLine()
       )
     ) {
-      this.debugLine.debug('is stopping')
+      debug.push('is stopping')
+      debug.run()
       return true
     }
 
     return false
   }
-  handleShouldStop() {
-    this.token[this.token.comment.end > -1 ? 'code' : 'comment'].end = this.lineno
-    this.pushToken()
-  }
 
 
   isComment() {
-    const dl = this.debugLine
+    const debug = this.debugIsComment
     // checks for the start and end style or there was an instance of a comment line
     if (
       this.is_multi && (
-        dl.debugIfTrue(this.index.start !== false, 'is the start of a multi line comment') ||
-        dl.debugIfTrue(this.in_comment, 'is in a multi line comment')
+        debug.debugIfTrue(this.index.start !== false, 'is the start of a multi line comment') ||
+        debug.debugIfTrue(this.in_comment, 'is in a multi line comment')
       ) ||
-      dl.debugIfTrue(this.index.line !== false, 'is single line comment')
+      debug.debugIfTrue(this.index.line !== false, 'is single line comment')
     ) {
+      debug.run()
       return true
     }
     return false
   }
 
   walkComment() {
-    const dl = this.debugLine
+    const debug = this.debugWalkComment
 
-    const isNewToken = this.index.start !== false || (!this.is_multi && !this.in_comment)
+    // Handles situations where there's a start and end style comment that are identical
+    // such as { start: '////', line: '///', end: '////' }. If the comment styles
+    // are identical they can't be used like this `//// some comment //// some other comment`
+    // however `<!--- some comment --->` is perfectly acceptable
+    if (
+      this.is_multi &&
+      this.comment.start === this.comment.end &&
+      this.ifToken() &&
+      this.token.comment.start !== -1
+    ) {
+      this.comment.start = false
+    }
+
     // check for the start of a new token block
+    const isNewToken = this.index.start !== false || (!this.is_multi && !this.in_comment)
     if (isNewToken) {
-      dl.debug('is new token')
+      debug.push('is new token')
       this.in_code = false
       this.in_comment = true
 
       // There was a token that has already been processed
-      if (!is.undefined(this.token)) { // holds the current token information
-        dl.debug('this.token', this.token)
+      if (this.ifToken()) {
         this.token.code.end = this.lineno - 1 // sets the line number to be the previous line
         this.pushToken()
 
         // Stops the loop after the first comment token
         // has been parsed. This is for file header comments
         if (this.restrict) {
-          this.token.comment.end = this.lineno
-          this.token.code.end = -1
+          this.tokens[0].comment.end = this.lineno
+          this.tokens[0].code.end = -1
           return this.tokens
         }
       }
@@ -317,9 +334,9 @@ export class Tokenizer {
     }
 
     // check for the end comment
-    const isEndComment = !is.undefined(this.token) && this.is_multi && this.token.comment.start !== this.lineno && this.index.end !== false
-    if (isEndComment) {
-      dl.debug('is end comment')
+    const isEndComment = this.is_multi && this.token.comment.start !== this.lineno && this.index.end !== false
+    if (this.ifToken() && isEndComment) {
+      debug.push('is end comment')
       this.in_comment = false
       this.token.comment.end = this.lineno // sets the end line in the comment token
 
@@ -340,39 +357,37 @@ export class Tokenizer {
         this.line = this.line.slice(this.index.start + this.comment.start.length)
       }
 
-      if (!is.empty(this.line)) {
-        dl.debug('line was pushed')
-        this.token.comment.contents.push(this.line)
-      }
+      debug.push('line was pushed')
+      this.token.comment.contents.push(this.line)
     }
 
 
     // The last line in the file is a commment
     if (this.in_comment && this.isLastLine()) {
-      dl.debug('the last line in the file is a comment')
+      debug.push('the last line in the file is a comment')
       this.token.comment.end = this.is_multi ? this.lineno - 1 : this.lineno
       this.pushToken()
-    }
-
-    // check the next line for an instance of the a line comment
-    if (
+      this.break = true
+    } else if (
       !this.is_multi &&
       !is.in(this.lines[this.lineno + 1], this.comment.line)
     ) {
-      dl.debug('next line is not a comment')
+      debug.push('next line is not a comment')
       this.in_comment = false
       this.token.comment.end = this.lineno // sets the end line in the comment token
-      this.update() // updates to be the next line
+      this.update('checks the next line') // updates to be the next line
     }
+
+    debug.run()
   }
 
   isCode() {
     if (
-      !is.undefined(this.token) &&
+      this.ifToken() &&
       !this.in_comment &&
       this.index.end === false
     ) {
-      this.debugLine.debug(`${clor.green('is code')}`)
+      this.debugIsCode.run()
       this.in_comment = false
       this.in_code = true
       return true
