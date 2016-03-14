@@ -78,99 +78,137 @@ import clor from 'clor'
 export default function debug(default_name = 'DEBUG', default_should_debug = false, default_options = {}) {
   try {
     let color_list = [ 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'gray' ]
-    default_options = to.extend({ seperator: 2, color: to.random(color_list) }, default_options)
+
+    default_options = to.extend({
+      spaces: 2,
+      seperator: ' > ',
+      color: to.random(color_list)
+    }, default_options)
+
     color_list = color_list.filter((color_name) => color_name !== default_options.color)
+
     const log = new Logger()
+
     const icon_chevron = '\xBB '
-    default_name = clor[default_options.color].bold(`${icon_chevron}[${default_name}]:`)
 
-    class Debugger {
-      constructor(name = 'Define a Name', should_debug, options = {}) {
-        if (is.plainObject(should_debug)) {
-          options = should_debug
-          should_debug = options.should_debug || default_should_debug
-        }
-        this.should_debug = should_debug
-        this.debug_list = []
-        this.name = name
-        this.color = options.color
-        this.seperator = options.seperator
+    default_name = clor[default_options.color].bold(`${icon_chevron}[${default_name}]: `)
+
+
+    function Debugger(name = 'Define a Name', should_debug, options = {}) {
+      if (is.plainObject(should_debug)) {
+        options = should_debug
+        should_debug = options.should_debug || default_should_debug
       }
+      this.should_debug = should_debug
+      this.debug_list = []
+      this.name = name
+      this.color = options.color
+      this.spaces = options.spaces
+    }
 
-      debug(...args) {
+    const dp = Debugger.prototype
+
+    dp.push = dp.debug = dp.add = function push(...args) {
+      this.debug_list.push(...args)
+      return this.should_debug
+    }
+
+    dp.debugIfTrue = dp.ifTrue = function debugIfTrue(arg, ...args) {
+      if (is.truthy(arg)) {
         this.debug_list.push(...args)
-        return this.should_debug
       }
+      return arg
+    }
 
-      push(...args) {
-        return this.debug(...args)
+
+    dp.debugIfFalse = dp.ifFalse = function debugIfFalse(arg, ...args) {
+      if (is.false(arg)) {
+        this.debug_list.push(...args)
       }
+      return arg
+    }
 
-      add(...args) {
-        return this.debug(...args)
+    dp.debugWrap = dp.wrap = function debugWrap(arg, cb, ...args) {
+      if (!is.function(cb)) {
+        console.log('debugWrap must use a callback')
       }
-
-      debugIfTrue(arg, ...args) {
-        if (is.truthy(arg)) {
-          this.debug_list.push(...args)
-        }
-        return arg
+      if (cb(arg)) {
+        this.debug_list.push(...args)
       }
+      return arg
+    }
 
-      debugIfFalse(arg, ...args) {
-        if (is.false(arg)) {
-          this.debug_list.push(...args)
-        }
-        return arg
-      }
-
-      debugWrap(arg, cb, ...args) {
-        if (!is.function(cb)) {
-          console.log('debugWrap must use a callback')
-        }
-        if (cb(arg)) {
-          this.debug_list.push(...args)
-        }
-        return arg
-      }
-
-      run() {
-        try {
-          if (this.should_debug && this.debug_list.length > 0) {
-            for (let i = this.seperator; i; i--) console.log('')
-            console.log(this.name)
+    // dp.debugSet.prototype.run = dp.set.prototype.run = dp.debugWrap.prototype.run = dp.wrap.prototype.run = dp.debugIfFalse.prototype.run = dp.ifFalse.prototype.run = dp.debugIfTrue.prototype.run = dp.ifTrue.prototype.run = dp.push.prototype.run = dp.debug.prototype.run = dp.add.prototype.run =
+    dp.runDebug = dp.run = function runDebug() {
+      try {
+        if (this.should_debug) {
+          for (let i = this.spaces; i; i--) console.log('')
+          console.log(this.name)
+          if (this.debug_list.length > 0) {
             this.debug_list.slice(0, 1).forEach((obj) => log.print(obj))
             this.debug_list.slice(1).forEach((obj) => log.print(obj))
-            // update the debug list to be empty
-            this.debug_list = []
           }
-        } catch (e) {
-          console.trace(e)
+          // update the debug list to be empty
+          this.debug_list = []
         }
-      }
-
-      debugSet(name = 'define a name silly', should_debug, options = {}) {
-        if (!should_debug) {
-          should_debug = this.should_debug ? this.should_debug : default_should_debug
-        }
-
-        if (!options.seperator) {
-          options.seperator = this.seperator ? this.seperator : default_options.seperator
-        }
-
-        if (!options.color) {
-          options.color = to.random(color_list)
-        }
-
-        if (this.name) {
-          name = `${this.name} > ${clor[options.color].bold(name)}`
-        } else {
-          name = `${default_name} ${clor[options.color].bold(name)}`
-        }
-
-        return new Debugger(name, should_debug, options)
+      } catch (e) {
+        console.trace(e)
       }
     }
+
+    dp.debugSet = dp.set = function debugSet(name = 'define a name silly', should_debug, options = {}) {
+      if (is.plainObject(should_debug)) {
+        options = should_debug
+        should_debug = undefined
+      } if (is.number(should_debug)) {
+        options.spaces = should_debug
+        should_debug = undefined
+      } else if (is.string(should_debug)) {
+        options.color = should_debug
+        should_debug = undefined
+      }
+
+      // if should_debug is not defined then it will inherit the value that
+      // was set on the original debugSet or its parent
+      if (is.undefined(should_debug)) {
+        should_debug = this.should_debug ? this.should_debug : default_should_debug
+      }
+
+      if (
+        options.color === 'inherit' || (
+          this.color === 'inherit' &&
+          is.undefined(options.color)
+        )
+      ) {
+        options.color = this.color ? this.color : default_options.color
+      }
+
+      options = to.extend({
+        // if the parent debugSet exsists then use it's defined spaces,
+        // else use the default spaces
+        spaces: this.spaces ? this.spaces : default_options.spaces,
+        seperator: this.seperator ? this.seperator : default_options.seperator,
+        color: to.random(color_list)
+      }, options)
+
+      // colorize the name
+      name = clor[options.color].bold(name)
+
+      // if a name exists then prepend it to the name that was passed
+      name = this.name ? this.name + options.seperator + name : default_name + name
+
+      return new Debugger(`${name}`, should_debug, options)
+    }
+
+    // let debugger_map = to.reduce(dp, (prev, { key, value }) => {
+    //   prev[key] = {
+    //     configurable: true,
+    //     enumerable: true,
+    //     writable: true,
+    //     value,
+    //   }
+    //   return prev
+    // }, {})
 
     return function debugDecorator(target) {
       target.prototype.debugSet = Debugger.prototype.debugSet
