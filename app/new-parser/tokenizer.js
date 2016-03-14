@@ -36,16 +36,16 @@ export default function tokenizer(settings) {
   return ''
 }
 
-@debug('Tokenizer')
-class Tokenizer {
-  constructor(str, options = {}) {
-    if (arguments.length === 1) {
+@_debug('Tokenizer')
+export class Tokenizer {
+  constructor(content, options = {}) {
+    if (arguments.length === 1 && is.plainObject(content)) {
       options = arguments[0]
-      str = options.str || options.content || options.source
+      content = options.str || options.content || options.source
     }
 
     // forces the string to become 1 based instead of 0 and it normalizes it #windows sucks
-    str = '\n' + to.normalString(str)
+    content = '\n' + to.normalString(content)
 
     options = to.extend({
       comment: { start: '', line: '///', end: '' }, // the default comment style to look for
@@ -56,8 +56,7 @@ class Tokenizer {
 
     to.extend(this, options)
 
-    this.content = str // the contents to parse
-    this.lines = to.array(this.content)
+    this.lines = to.array(content)
     this.lineno = to.number(this.start_at || this.lineno, this.i || this.index || 0)
     this.is_multi = is.all.truthy(this.comment.start, this.comment.end)
 
@@ -69,10 +68,14 @@ class Tokenizer {
 
     // The base of what each token looks like
     this.token_base = {
-      comment: { contents: [], start: -1, end: -1, type: this.comment.type || 'NA' },
-      subcomments: [],
+      comment: { contents: [], start: -1, end: -1 },
       code: { contents: [], start: -1, end: -1 }
     }
+    // add the comment type if it was passed
+    if (this.comment.type) {
+      this.token_base.comment.type = this.comment.type
+    }
+
     this.tokens = [] // placeholder for all the parsed tokens
     this.blank_line_count = 0 // stores the current count of blank lines
     this.token = undefined // stores the current token
@@ -80,18 +83,29 @@ class Tokenizer {
     this.in_code = false // used to determin if you are in the code after the comment block
 
     // checks to see if the file has any comments
-    if (!(this.is_multi ? is.any.in(this.content, this.comment.start, this.comment.end) : is.in(this.content, this.comment.line))) {
+    if (
+      this.is_multi &&
+      !is.any.in(content, this.comment.start, this.comment.end) || // checks if the multi line comment style exists
+      !is.in(content, this.comment.line) // checks if the single line comment style exists
+    ) {
       return []
     }
 
     // debuggers
-    this.debugLine = this.debugSet('line')
+    this.debugLine = this.debugSet('line', { spaces: 2 })
+    this.debugUpdate = this.debugLine.debugSet('update', 0)
+    this.debugWalkComment = this.debugLine.debugSet('walkComment', 0)
+    this.debugIsCode = this.debugLine.set('isCode', { spaces: 0, color: 'green' })
+    this.debugIsComment = this.debugLine.set('isComment', 0)
+    this.debugIsLastLine = this.debugLine.set('isLasLine', { spaces: 0, color: 'bgRed' })
+    this.debugShouldStop = this.debugLine.set('shouldStop', 0)
+    this.debugPushToken = this.debugLine.debugSet('pushToken', 0)
+
     this.tokenize()
     return this.tokens
   }
 
   tokenize() {
-    for (; this.lineno < this.lines.length; this.lineno++) {
       this.update(false)
     // const l = this.lines.length - 1
     // while (this.update() || this.lineno < this.lines.length) {
