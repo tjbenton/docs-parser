@@ -94,10 +94,10 @@ export default function debug(default_name = 'DEBUG', default_should_debug = fal
     default_name = clor[default_options.color].bold(`${icon_chevron}[${default_name}]: `)
 
 
-    function Debugger(name = 'Define a Name', should_debug, options = {}) {
+    function Debugger(name = 'Define a Name', should_debug = default_should_debug, options = {}) {
       if (is.plainObject(should_debug)) {
         options = should_debug
-        should_debug = options.should_debug || default_should_debug
+        should_debug = options.should_debug || options.condition || default_should_debug
       }
       this.should_debug = should_debug
       this.debug_list = []

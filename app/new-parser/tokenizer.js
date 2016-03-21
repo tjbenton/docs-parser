@@ -19,14 +19,15 @@ export default class Tokenizer {
 
     // Update the content
     {
-      const { str: _str, string, source, code, content } = options
-      options.content = _str || string || source || code || content
+      const { str: _str, string, source, code, content, contents, ...rest } = options
+      str = _str || string || source || code || content || contents
+      this.options = rest
     }
 
 
     // ensures that the comment style that was passed will work
     {
-      let { start, line, single, end } = options.comment
+      let { start, line, single, end } = this.options.comment
 
       single = single || line
       // this ensures there aren't any errors while looking comment lines
@@ -47,26 +48,23 @@ export default class Tokenizer {
         throw new Error('The start and end comments must be longer than the single comment')
       }
 
-      options.comment = { start, single, end }
+      this.options.comment = { start, single, end }
+
+      this.is_multi = is.all.truthy(start, end)
+      this.is_same_multi = this.is_multi && start === end
     }
-
-    const { content, ...rest } = options
-
-    this.options = rest
 
     // holds the parsed tokens
     this.tokens = []
-
-    this.is_multi = is.all.truthy(options.comment.start, options.comment.end)
-    this.is_same_multi = this.is_multi && options.comment.start === options.comment.end
 
     const debug = this.debugSet('options')
 
     debug.push('this.options', this.options, '')
 
-    if (!!content) {
+    if (!!str) {
       debug.push('has content in the options').run()
-      return this.parse(content)
+      this.parse(str)
+      return this.tokens
     }
     debug.run()
     return
@@ -250,8 +248,9 @@ export default class Tokenizer {
     }
 
     debug.push('', '', '', '').run()
-
-    return this.getTokens()
+    if (!this.options.restrict) {
+      return this.getTokens()
+    }
   }
 
   /// @name this.getBefore
@@ -472,11 +471,11 @@ export default class Tokenizer {
   /// @arg {boolean} condition
   setDebug(condition) {
     if (is.undefined(condition)) {
-      condition = this.should_debug
+      condition = this.should_debug || false
     }
 
-    this.debugParse = this.debugSet('parse', condition, { spaces: 0 })
-    this.debugGetTokens = this.debugSet('parse', condition, { spaces: 0 })
+    this.debugParse = this.debugSet('parse', { condition, spaces: 0 })
+    this.debugGetTokens = this.debugSet('parse', { condition, spaces: 0 })
     this.debugGetSingleComment = this.debugGetTokens.set('getSingleComment', 0)
     this.debugGetMultiComment = this.debugGetTokens.set('getMultiComment', 0)
     this.debugGetCode = this.debugGetTokens.set('getCode', 0)
