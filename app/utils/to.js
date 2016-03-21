@@ -223,35 +223,65 @@ let to = {
   /// // Output:
   /// // 0: Jane
   /// // 1: Doe
-  entries: (obj) => {
-    if (is.array(obj)) {
-      return obj.entries()
+  entries(obj, from_index = 0, to_index) {
+    const done = { done: true }
+    let iterator = {
+      [Symbol.iterator]() {
+        return this
+      }
     }
 
-    let index = 0
+    if (is.array(obj)) {
+      if (is.undefined(to_index)) {
+        to_index = obj.length
+      }
+
+      if (from_index < to_index) {
+        iterator.next = () => {
+          if (from_index < to_index) {
+            return { value: [ from_index, obj[from_index++] ] }
+          }
+          return done
+        }
+      } else {
+        iterator.next = () => {
+          if (from_index > to_index) {
+            return { value: [ from_index, obj[from_index--] ] }
+          }
+          return done
+        }
+      }
+
+      return iterator
+    }
+
     // In ES6, you can use strings or symbols as property keys,
     // Reflect.ownKeys() retrieves both. But the support it is
     // extremly low at the time of writing this.
     let keys = to.keys(obj)
+    if (is.undefined(to_index)) {
+      to_index = keys.length
+    }
 
-    return {
-      [Symbol.iterator]() {
-        return this
-      },
-      next() {
-        if (index < keys.length) {
-          let key = keys[index]
-          index++
-          return {
-            value: [ key, obj[key], index - 1 ]
-          }
+    if (from_index < to_index) {
+      iterator.next = () => {
+        if (from_index < to_index) {
+          let key = keys[from_index]
+          return { value: [ key, obj[key], from_index++ ] }
         }
-
-        return {
-          done: true
+        return done
+      }
+    } else {
+      iterator.next = () => {
+        if (from_index > to_index) {
+          let key = keys[from_index]
+          return { value: [ key, obj[key], from_index-- ] }
         }
+        return done
       }
     }
+
+    return iterator
   },
 
   /// @name object entries
@@ -314,32 +344,147 @@ let to = {
   /// @arg {string, array} content - The content you want to be normalized
   /// @arg {boolean} leading [true] - Determins if leading blank lines should be removed
   /// @arg {boolean} trailing [leading] - Determins if trailing blank lines should be removed. It defaults to `leading`.
+  /// @arg {boolean} info [false]
+  /// If this is set to true it will return an object of the information of what was removed
+  /// along with the normalized string
+  ///
+  /// ```js
+  /// {
+  ///   content, // the updated string
+  ///   leading, // the total leading lines that were removed
+  ///   trailing, // the total trailing lines that were removed
+  /// }
+  /// ```
+  ///
+  /// @note {5} You can also pass in named arguments in the form of an object
+  ///
+  /// @markup Usage: All of these return the same result
+  /// let content = `
+  ///
+  ///       foo
+  ///       bar
+  ///       baz
+  ///
+  /// ` // aka  "\n\n        foo\n        bar\n        baz\n\n"
+  /// to.normalize(content)
+  /// to.normalize(content.split('\n')) // aka [ '', '', '        foo', '        bar', '        baz', '', '' ]
+  /// to.normalize({ content })
+  /// // => "foo\nbar\nbaz"
+  ///
+  /// @markup Usage: passing options
+  /// let content = `
+  ///     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+  ///     Nemo cum, nostrum rem neque perspiciatis fugiat similique
+  ///     unde adipisci officia, placeat suscipit explicabo non
+  ///     consequuntur in numquam eaque laborum voluptas. Cumque?
+  /// `
+  /// let trailing = true
+  /// let leading = trailing
+  /// let info = false
+  ///
+  /// to.normalize(content)
+  /// to.normalize({ content })
+  /// to.normalize({ content }, trailing)
+  /// to.normalize(content, trailing, leading, info)
+  /// to.normalize(content, { trailing, leading, info })
+  /// to.normalize({ content, trailing, leading, info })
+  ///
+  /// // all the `to.normalize` functions above result in the same thing
+  /// // because these are the defaults
+  ///
+  /// // `Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+  /// // Nemo cum, nostrum rem neque perspiciatis fugiat similique
+  /// // unde adipisci officia, placeat suscipit explicabo non
+  /// // consequuntur in numquam eaque laborum voluptas. Cumque?`
+  ///
+  ///
+  /// @markup Usage with info
+  /// let content = `
+  ///
+  ///     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+  ///     Nemo cum, nostrum rem neque perspiciatis fugiat similique
+  ///
+  /// ` aka "\n\n    Lorem ipsum dolor sit amet, consectetur adipisicing elit.\n    Nemo cum, nostrum rem neque perspiciatis fugiat similique\n\n"
+  ///
+  /// to.normalize(content, true, true, true)
+  /// to.normalize(content, { info: true })
+  /// to.normalize({ content, info: true })
+  ///
+  /// // {
+  /// //   "content": "Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nNemo cum, nostrum rem neque perspiciatis fugiat similique",
+  /// //   "indent": 4,
+  /// //   "leading": 2, // 2 leading blanks lines were remove
+  /// //   "trailing": -2 // 2 trailing lines were removed
+  /// // }
+  ///
   /// @returns {string} - The normalized string
-  normalize: (content, leading = true, trailing = leading) => {
-    content = to.array(content) // this allows arrays and strings to be passed
+  normalize: (...args) => {
+    const options = to.arguments({
+      content: '',
+      leading: true,
+      trailing: undefined,
+      info: false
+    }, ...args)
+    options.trailing = !is.undefined(options.trailing) ? options.trailing : options.leading
 
-    // remove leading blank lines
-    if (leading) {
-      while (content.length && !!!content[0].trim().length) content.shift()
+    let content = to.array(options.content) // this allows arrays and strings to be passed
+    let leading = 0
+    let trailing = 0
+
+    if (options.leading) {
+      while (content.length && !!!content[0].trim().length) {
+        leading++
+        content.shift()
+      }
     }
 
-    // remove trailing blank lines
-    if (trailing) {
-      while (content.length && !!!(content[content.length - 1].trim()).length) content.pop()
+    if (options.trailing) {
+      while (content.length && !!!(content[content.length - 1].trim()).length) {
+        trailing--
+        content.pop()
+      }
     }
 
-    let trim_by = content.join('\n') // converts content to string to string
-      // gets the extra whitespace at the beginning of the line and
-      // returns a map of the spaces
-      .match(/^\s*/gm)
-      // sorts the spaces array from smallest to largest and then checks
-      // returns the length of the first item in the array
-      .sort((a, b) => a.length - b.length)[0].length
+    const indent = to.indentLevel(content)
 
-    return content
-      .map((line) => line.slice(trim_by)) // remove extra whitespace from the beginning of each line
+    content = content
+      .map((line) => line.slice(indent)) // remove extra whitespace from the beginning of each line
       .join('\n') // converts content to string
       .replace(/[^\S\r\n]+$/gm, '') // removes all trailing white spaces from each line
+
+    if (!options.info) {
+      return content
+    }
+
+    return { content, indent, leading, trailing }
+  },
+
+  indentLevel(str) {
+    return to.string(str) // ensures argument is a string
+    // gets the extra whitespace at the beginning of the line and
+    // returns a map of the spaces
+    .match(/^\s*/gm)
+    // sorts the spaces array from smallest to largest and then checks
+    // returns the length of the first item in the array
+    .sort((a, b) => a.length - b.length)[0].length
+  },
+
+  arguments(defaults = {}, ...args) {
+    let result = {} // placeholder for the result
+    let keys = to.keys(defaults)
+
+    for (let [ i, arg ] of to.entries(args)) {
+      if (is.arguments(arg)) {
+        arg = to.arguments(defaults, ...arraySlice(arg))
+      }
+      if (is.plainObject(arg)) {
+        to.extend(result, arg)
+      } else {
+        result[keys[i] || i] = arg
+      }
+    }
+
+    return to.extend(defaults, result)
   },
 
   /// @name to.extend
@@ -367,7 +512,6 @@ let to = {
 
     return a
   },
-
   /// @name to.clone
   /// @description
   /// This will clone argument so the passed arg doesn't change
@@ -490,7 +634,7 @@ let to = {
   /// @arg {object} - The object to convert
   /// @arg {number} - The spacing to use
   /// @returns {json}
-  json: (arg, spacing = 2) => is.object(arg) && JSON.stringify(arg, null, spacing),
+  json: (arg, spacing = 2) => (is.object(arg) || is.string(arg)) && JSON.stringify(arg, null, spacing),
 
   /// @name to.array
   /// @description
@@ -504,7 +648,8 @@ let to = {
     } else if (is.arguments(arg)) {
       return arraySlice(arg)
     } else if (is.string(arg)) {
-      return arg.split(glue)
+      arg = arg.split(glue)
+      return arg.length === 1 && arg[0] === '' ? [] : arg
     } else if (is.plainObject(arg) || is.number(arg)) {
       return [ arg ]
     }
