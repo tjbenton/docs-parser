@@ -478,7 +478,15 @@ let to = {
         arg = to.arguments(defaults, ...arraySlice(arg))
       }
       if (is.plainObject(arg)) {
-        to.extend(result, arg)
+        const initial = defaults[keys[i]]
+        if (
+          is.plainObject(initial) &&
+          is.any.in(to.keys(initial), ...to.keys(arg))
+        ) {
+          result[keys[i]] = to.extend(to.clone(initial), arg)
+        } else {
+          to.extend(result, arg)
+        }
       } else {
         result[keys[i] || i] = arg
       }
