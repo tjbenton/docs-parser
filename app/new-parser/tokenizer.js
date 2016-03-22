@@ -7,27 +7,38 @@ import clor from 'clor'
 @_debug('Tokenizer')
 export default class Tokenizer {
   constructor(str, options = {}) { // eslint-disable-line
+    this.options = {}
+    this.setOptions(arguments)
+
+    if (!is.empty(this.stash)) {
+      return this.parse()
+    }
+    return
+  }
+
+  setOptions(options) { // eslint-disable-line
+    const debug = this.debugSet('options')
     options = to.arguments({
       content: '',
-      comment: { start: '', line: '///', end: '' }, // the default comment style to look for
-      blank_lines: default_options.blank_lines,
-      verbose: false, // determins if all the extra line info will be returned or if it will just return strings
-      strip: false, // determins if the comment should be stripped from the line
-      restrict: false,
-      indent: true,
+      lineno: 0,
+      comment: this.options.comment || { start: '', line: '///', end: '', type: undefined }, // the default comment style to look for
+      blank_lines: this.options.blank_lines || default_options.blank_lines,
+      // determins if all the extra line info will be returned or if it will just return strings
+      verbose: !is.undefined(this.options.verbose) ? this.options.verbose : false,
+      // determins if the comment should be stripped from the line
+      strip: !is.undefined(this.options.strip) ? this.options.strip : false,
+      // if true this option will only return the first token
+      restrict: !is.undefined(this.options.restrict) ? this.options.restrict : false,
+      // determins if the code below should stop parsing if the indent level is less than the starting indent level
+      indent: !is.undefined(this.options.indent) ? this.options.indent : true,
     }, arguments)
 
-    // Update the content
-    {
-      const { str: _str, string, source, code, content, contents, ...rest } = options
-      str = _str || string || source || code || content || contents
-      this.options = rest
-    }
 
+    debug.push('options 1:', options)
 
-    // ensures that the comment style that was passed will work
-    {
-      let { start, line, single, end } = this.options.comment
+    { // parse the comment to ensure the settings are valid, and attempt to update them
+      // to be valid if they aren't valid
+      let { start, line, single, end, type } = options.comment
 
       single = single || line
       // this ensures there aren't any errors while looking comment lines
@@ -48,26 +59,39 @@ export default class Tokenizer {
         throw new Error('The start and end comments must be longer than the single comment')
       }
 
-      this.options.comment = { start, single, end }
-
+      options.comment = { start, single, end, type }
       this.is_multi = is.all.truthy(start, end)
       this.is_same_multi = this.is_multi && start === end
     }
 
+    { // set the lineno to start with
+      const { i, index, lineno, start_at, ...rest } = options
+      this.lineno = i || index || start_at || lineno || 0
+      options = rest
+    }
+
+
+    let stash
+    { // set the string to use
+      let { str, string, source, code, content, contents, ...rest } = options
+      stash = str || string || source || code || content || contents || ''
+      options = rest
+    }
+
+    // update the options
+    this.options = options
+
     // holds the parsed tokens
     this.tokens = []
 
-    const debug = this.debugSet('options')
+    // update the stash
+    this.stash = this.getStash(stash)
+
+    // update the iterator to use
+    this.iterator = to.entries(this.stash, this.lineno)
 
     debug.push('this.options', this.options, '')
-
-    if (!!str) {
-      debug.push('has content in the options').run()
-      this.parse(str)
-      return this.tokens
-    }
     debug.run()
-    return
   }
 
   /// @name hasNext
@@ -153,7 +177,6 @@ export default class Tokenizer {
     return stash
   }
 
-
   /// @name parse
   /// @description
   /// This will parse the passed content
@@ -163,34 +186,18 @@ export default class Tokenizer {
   /// @returns {array} - Of parsed tokens
   /// @note {5} This function also accepts a object to be passed with named arguments
   /// @markup Usage
-  parse(content = '', start_at = 0, verbose) { // eslint-disable-line
-    let options = to.arguments({
-      content: '',
-      start_at: this.options.start_at || 0,
-      verbose: this.options.verbose,
-    }, arguments)
-
-    // update the verbose option incase it changed
-    this.verbose = options.verbose
-
-    // update the stash to use the passed content
-    this.stash = options.content = this.getStash(options.content)
-
-    // holds the current position in the stash to start from
-    this.lineno = options.i || options.index || options.lineno || options.start_at || 0
-
-    // update the iterator to use
-    this.iterator = to.entries(this.stash, this.lineno)
-
-    // holds the parsed tokens
-    this.tokens = []
+  parse(content = '', start_at = 0) { // eslint-disable-line
+    if (is.empty(this.stash)) {
+      this.setOptions(arguments)
+    }
 
     this.setDebug()
     const debug = this.debugParse
-    const result = this.getTokens()
-    debug.push('parsed:', result)
-    debug.run()
-
+    const result = to.clone(this.getTokens())
+    this.tokens = [] // reset the tokens list to be empty
+    this.stash = [] // resets the stash to be empty
+    this.token = undefined // reset the current token to be empty
+    debug.push('parsed:', result).run()
     return result
   }
 
@@ -216,7 +223,8 @@ export default class Tokenizer {
 
     if (
       debug.ifTrue(is.empty(`${this.line}`.trim()), "the line was empty, and isn't in a token already") ||
-      debug.ifTrue(!this.line.has_comment, "The line doesn't have a comment, and isn't in a token already")
+      debug.ifTrue(!this.line.has_comment, "The line doesn't have a comment, and isn't in a token already") ||
+      debug.ifTrue(this.is_multi && !this.line.index.start, "The line doesn't have a starting comment")
     ) {
       debug.push('', '', '', '').run()
       return this.getTokens()
@@ -224,8 +232,18 @@ export default class Tokenizer {
 
     debug.push(`line [${this.lineno}]: ${clor.bgBlue(this.line)}`, this.line).run()
 
-    if (this.line.has_comment) {
+    if (
+      this.line.has_comment
+    ) {
       this.token = new Token()
+
+      {
+        const { type } = this.options.comment
+        if (type) {
+          this.token.comment.type = type
+        }
+      }
+
       debug.push('has comment').run()
 
       if (this.is_same_multi && this.line.index.start === this.line.index.end) {
@@ -248,9 +266,8 @@ export default class Tokenizer {
     }
 
     debug.push('', '', '', '').run()
-    if (!this.options.restrict) {
-      return this.getTokens()
-    }
+
+    return !this.options.restrict ? this.getTokens() : this.tokens
   }
 
   /// @name this.getBefore
