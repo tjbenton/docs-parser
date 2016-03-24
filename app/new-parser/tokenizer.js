@@ -31,6 +31,7 @@ export default class Tokenizer {
       restrict: !is.undefined(this.options.restrict) ? this.options.restrict : false,
       // determins if the code below should stop parsing if the indent level is less than the starting indent level
       indent: !is.undefined(this.options.indent) ? this.options.indent : true,
+      offset: 0,
     }, arguments)
 
 
@@ -410,9 +411,17 @@ export default class Tokenizer {
   /// determin the starting and ending point for the comment and code.
   pushToken() {
     const debug = this.debugPushToken
+    const { offset } = this.options
     let token = to.clone(this.token)
 
     const normalizeContent = (obj, set_start_end_before = false) => {
+      if (is.number(offset) && offset > 0) {
+        obj.contents = to.map(obj.contents, (line) => {
+          line.lineno += offset
+          return line
+        })
+      }
+
       // normalize the contents of the obj
       let { content, leading, trailing } = to.normalize(obj.contents.join('\n'), { info: true })
       let lines = to.array(content)
