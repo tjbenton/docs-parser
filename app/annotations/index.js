@@ -11,7 +11,7 @@ export markup from './markup'
 export name from './name'
 export note from './note'
 export page from './page'
-module.exports.type = require('./type')
+export property from './property'
 module.exports['raw-code'] = require('./raw-code.js')
 export readonly from './readonly'
 export requires from './requires'
@@ -20,4 +20,5 @@ export since from './since'
 export states from './states'
 export throws from './throws'
 export todo from './todo'
+module.exports.type = require('./type')
 export version from './version'
