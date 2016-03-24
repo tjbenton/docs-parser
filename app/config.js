@@ -56,15 +56,15 @@ export const default_options = {
       // need to be changed it should be changed to be a special character.
       prefix: '@',
 
-      // @todo add support for this single line prefix for comments inside of the code below the comment block
-      inline_prefix: '#',
-
       // header comment style
       // @note {10} only 1 of these can be used per file
       header: { start: '////', line: '///', end: '////', type: 'header' },
 
       // body comment style
       body: { start: '', line: '///', end: '', type: 'body' },
+
+      // @todo add support for this single line prefix for comments inside of the code below the comment block
+      inline: { start: '', line: '///#', end: '', type: 'inline' },
 
       // this is used for any interpolations that might occur in annotations.
       // I don't see this needing to change but just incase I'm making it a setting.
@@ -76,23 +76,28 @@ export const default_options = {
     },
     css: {
       header: { start: '/***', line: '*', end: '***/' },
-      body: { start: '/**', line: '*', end: '**/' }
+      body: { start: '/**', line: '*', end: '**/' },
+      inline: { start: '/**#', line: '', end: '**/' }
     },
     'rb, py, coffee, sh, bash, pl': {
       header: { start: '###', line: '##', end: '###' },
-      body: { line: '##' }
+      body: { line: '##' },
+      inline: { line: '##$' }
     },
     'html, md, markdown, mark, mdown, mkdn, mdml, mkd, mdwn, mdtxt, mdtext, text': {
       header: { start: '<!----', line: '', end: '---->' },
-      body: { start: '<!---', line: '', end: '--->' }
+      body: { start: '<!---', line: '', end: '--->' },
+      inline: { start: '<!---#', line: '', end: '--->' }
     },
     jade: {
       header: { start: '//-//', line: '//-/', end: '//-//' },
-      body: { line: '//-/' }
+      body: { line: '//-/' },
+      inline: { line: '//-#' }
     },
     cfm: {
       header: { start: '<!-----', line: '', end: '----->' },
-      body: { start: '<!----', line: '', end: '---->' }
+      body: { start: '<!----', line: '', end: '---->' },
+      inline: { start: '<!----#', line: '', end: '---->' }
     }
   },
 
