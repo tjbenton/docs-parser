@@ -91,12 +91,15 @@ export default class Parser {
   }
 
   map({ header, body }, callback) {
-    const map = (token) => {
+    const map = (token, parent = {}) => {
       if (is.empty(token)) return {}
-      token = callback(token)
+      if (parent.inline) {
+        delete parent.inline
+      }
+      token = callback(token, parent)
 
       if (token.inline && !is.empty(token.inline)) {
-        token.inline = to.map(token.inline, map)
+        token.inline = to.map(token.inline, (obj) => map(obj, token))
       }
 
       return token
@@ -149,11 +152,11 @@ export default class Parser {
     const { log } = this.options
     const file = this.file
 
-    return this.map(tokens, (token) => {
+    return this.map(tokens, (token, parent) => {
       if (is.empty(token)) return token
       const { annotations, ...base } = token
       token.parsed = to.reduce(annotations, (result, annotation) => {
-        const current = this.api.run('parse', { annotation, ...base, file, log })
+        const current = this.api.run('parse', { annotation, ...base, parent, file, log })
         if (result != null) {
           return to.merge(result, {
             [annotation.name]: current
@@ -170,8 +173,8 @@ export default class Parser {
     const file = this.file
     const autofill_list = to.keys(this.api.annotations.autofill)
 
-    return this.map(tokens, (token) => {
-      const base = { file, log, ...token }
+    return this.map(tokens, (token, parent) => {
+      const base = { ...token, parent, file, log }
       const parsed_keys = to.keys(token.parsed)
       for (let name of autofill_list) {
         if (!is.in(parsed_keys, name)) {
