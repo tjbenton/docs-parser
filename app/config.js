@@ -2,7 +2,6 @@
 import { info, fs, is, to, Logger } from './utils'
 import path from 'path'
 import * as annotations from './annotations'
-import AnnotationApi from './annotation-api'
 
 let log = new Logger()
 
@@ -153,8 +152,6 @@ export default async function config(options = {}) {
   options.blank_lines = to.number(options.blank_lines)
 
   options.languages = parseLanguages(options.languages)
-
-  options.annotations = new AnnotationApi(options.annotations)
 
   options.log = new Logger({
     debug: options.debug,

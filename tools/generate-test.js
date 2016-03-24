@@ -4,7 +4,7 @@
 
 
 var docs = require('..').default
-var Tokenizer = require('../dist/new-parser/tokenizer.js').default
+var Tokenizer = require('../dist/parser/tokenizer.js').default
 var path = require('path')
 var clor = require('clor')
 var utils = require('../dist/utils')

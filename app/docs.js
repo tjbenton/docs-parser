@@ -7,7 +7,7 @@ import {
   fs,
   glob,
 } from './utils'
-import parser from './parser'
+import Parser from './parser'
 import sorter from './sorter'
 import getConfig from './config'
 import { map } from 'async-array-methods'
@@ -34,6 +34,7 @@ export default async function docs(options = {}) {
     warning,
     timestamps,
     raw,
+    indent,
     sort,
     annotations,
     watch,
@@ -43,6 +44,7 @@ export default async function docs(options = {}) {
   /* eslint-enable no-unused-vars */
 
   let json = {}
+  let parsers = {}
   let ignored
 
   let walk = async (files) => {
@@ -62,8 +64,25 @@ export default async function docs(options = {}) {
       log.emit('complete', 'paths', paths_message)
 
       log.emit('start', 'parser')
-      files = await map(files, (file_path) => parser(file_path, options))
+      options.annotationsApi = annotations
+      const parser_options = { blank_lines, indent, annotations, sort, log }
 
+      const parse = async ({ file, type }) => {
+        return {
+          [path.join('docs', file)]: await parsers[type].parse(file)
+        }
+      }
+
+
+
+      files = await map(files, (file) => {
+        const type = path.extname(file).replace('.', '')
+        if (!parsers[type]) {
+          parsers[type] = new Parser(languages[type] || languages.default, type, parser_options)
+        }
+
+        return parse({ file, type })
+      })
 
       log.emit('complete', 'parser')
 
@@ -113,3 +132,9 @@ export default async function docs(options = {}) {
     }
   })
 }
+
+// Catch uncaught exceptions
+process.on('uncaughtException', (err) => {
+  // handle the error safely
+  console.log(err)
+})

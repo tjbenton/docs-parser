@@ -1,5 +1,5 @@
 import { fs, is, to, Logger } from '../utils'
-import AnnotationApi from '../new-annotation-api'
+import AnnotationApi from '../annotation-api'
 import path from 'path'
 import Tokenizer from './tokenizer'
 
@@ -59,10 +59,11 @@ export default class Parser {
     file = is.plainObject(file) ? file : { path: file }
     file.type = file.type || path.extname(file.path).replace('.', '')
     file.contents = file.contents || to.string(await fs.readFile(file.path))
+    file.path = path.join(process.cwd().split(path.sep).pop(), file.path)
     file.name = path.basename(file.path, `.${file.type}`) // name of the file
     file.options = this.options.language
     file.start = 1 // starting point of the file
-    file.end = to.array(file.contents).length - 1 // ending point of the file
+    file.end = to.array(file.contents).length // ending point of the file
     this.file = file
 
     let tokens = this.getTokens(file.contents)
@@ -70,6 +71,7 @@ export default class Parser {
     tokens = this.parseTokens(tokens)
     tokens = this.autofillTokens(tokens)
     tokens = this.resolveTokens(tokens)
+    tokens = this.cleanupTokens(tokens)
     return tokens
   }
 
@@ -77,7 +79,7 @@ export default class Parser {
     const { language, blank_lines, indent } = this.options
     const base = { blank_lines, indent, verbose: true }
     const header = new Tokenizer(contents, 0, language.header, { restrict: true, ...base })[0] || {}
-    let body = new Tokenizer(contents, header.comment ? header.comment.end : 0, language.body, base)
+    let body = new Tokenizer(contents, header.comment ? header.comment.end + 1 : 0, language.body, base)
     const inline_tokenizer = new Tokenizer({ comment: language.inline, ...base })
 
     body = body.map((token) => {
@@ -91,7 +93,7 @@ export default class Parser {
   }
 
   map({ header, body }, callback) {
-    const map = (token, parent = {}) => {
+    const map = (token, index, parent = false) => {
       if (is.empty(token)) return {}
       if (parent.inline) {
         delete parent.inline
@@ -99,7 +101,7 @@ export default class Parser {
       token = callback(token, parent)
 
       if (token.inline && !is.empty(token.inline)) {
-        token.inline = to.map(token.inline, (obj) => map(obj, token))
+        token.inline = to.map(token.inline, (obj, i) => map(obj, i, token))
       }
 
       return token
@@ -153,10 +155,8 @@ export default class Parser {
     const file = this.file
 
     return this.map(tokens, (token, parent) => {
-      if (is.empty(token)) return token
-      const { annotations, ...base } = token
-      token.parsed = to.reduce(annotations, (result, annotation) => {
-        const current = this.api.run('parse', { annotation, ...base, parent, file, log })
+      token.parsed = to.reduce(token.annotations, (result, annotation) => {
+        const current = this.api.run('parse', { annotation, ...token, parent, file, log })
         if (result != null) {
           return to.merge(result, {
             [annotation.name]: current
@@ -198,17 +198,40 @@ export default class Parser {
       resolve_list = to.sort(resolve_list, sort)
     }
 
-    return this.map(tokens, (token) => {
-      const keys = to.keys(token.parsed)
-      const list = resolve_list.filter((name) => is.in(keys, name))
-      for (let name of list) {
-        const result = this.api.run('resolve', { name, ...token, file, log, })
-        if (result != null) {
-          token.parsed[name] = result
+    return this.map(tokens, (token, parent) => {
+      const base = { ...token, parent, file, log, }
+      const parsed_keys = to.keys(token.parsed)
+      for (let name of resolve_list) {
+        if (is.in(parsed_keys, name)) {
+          const result = this.api.run('resolve', { name }, base)
+          if (result != null) {
+            token.parsed[name] = result
+          }
         }
       }
       return token
     })
+  }
+
+  cleanupTokens(tokens) {
+    let { header, body } = tokens
+    let autofill_keys = to.keys(this.api.annotations.autofill)
+    const cleanup = ({ inline, parsed }) => {
+      if (!parsed) return {}
+      if (inline) {
+        return to.merge(parsed, to.reduce(inline, (prev, next) => {
+          return to.merge(prev, to.filter(next.parsed, ({ key }) => {
+            return !is.in(autofill_keys, key)
+          }))
+        }, {}))
+      }
+      return parsed
+    }
+
+    header = cleanup(header)
+    body = to.map(body, cleanup)
+
+    return { header, body }
   }
 }
 
