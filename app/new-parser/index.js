@@ -1,11 +1,7 @@
 import { fs, is, to, Logger } from '../utils'
 import AnnotationApi from '../new-annotation-api'
 import path from 'path'
-// import getBlocks from '../../get-blocks'
-// import parseBlocks from '../parser/parse-blocks'
-// import getConfig from '../config'
 import Tokenizer from './tokenizer'
-// import clor from 'clor'
 
 export default class Parser {
   constructor(options) { // eslint-disable-line
@@ -74,11 +70,6 @@ export default class Parser {
     tokens = this.parseTokens(tokens)
     tokens = this.autofillTokens(tokens)
     tokens = this.resolveTokens(tokens)
-    // console.log('')
-    // console.log('')
-    // console.log('')
-    // console.log('')
-    console.log(to.json(tokens))
     return tokens
   }
 
@@ -248,7 +239,7 @@ class Annotations {
   getAnnotations() {
     this.next()
     this.annotation = new Annotation(this.line)
-    // console.log(this.line)
+
     if (this.hasNext() && !this.peak().has_annotation) {
       this.next()
       this.getContent()
@@ -266,8 +257,6 @@ class Annotations {
 
   pushAnnotation() {
     let { contents, start, end, ...rest } = this.annotation
-
-    // line.str = to.normalize(`${line}`)
     let { content, leading, trailing } = to.normalize(contents.join('\n'), { info: true })
 
     trailing += contents.length
@@ -290,7 +279,6 @@ class Annotations {
   }
 
   getContent() {
-    // console.log(this.line)
     this.annotation.contents.push(this.line)
     if (this.hasNext() && !this.peak().has_annotation) {
       this.next()
