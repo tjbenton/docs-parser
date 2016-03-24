@@ -306,9 +306,9 @@ export default class Tokenizer {
         !line.index.start &&
         line.index.end
       ) {
-        line.line = `${line}`.slice(line.index.end + this.options.comment.end.length + 1)
+        line.str = `${line}`.slice(line.index.end + this.options.comment.end.length + 1)
       } else {
-        line.line = `${line}`.slice(1, line.index.start || line.index.single || line.index.end || undefined)
+        line.str = `${line}`.slice(1, line.index.start || line.index.single || line.index.end || undefined)
       }
 
 
@@ -322,10 +322,10 @@ export default class Tokenizer {
 
       if (
         this.hasNext() &&
-        debug.ifTrue(!this.is_same_multi || !line.has_comment, `the current line(${line.lineno}) doesn't have a comment: ${clor.bgGreen(line)}`)
+        debug.ifTrue(!this.is_same_multi || !line.has_comment, `the current line(${line.strno}) doesn't have a comment: ${clor.bgGreen(line)}`)
       ) {
         const next_line = this.peak()
-        const next_msg = `the next line(${next_line.lineno}) has a comment: ${clor.bgRed(next_line)}`
+        const next_msg = `the next line(${next_line.strno}) has a comment: ${clor.bgRed(next_line)}`
         return debug.ifFalse(!next_line.has_comment, next_msg) && this.next() && recursiveCode()
       }
     }
@@ -342,14 +342,14 @@ export default class Tokenizer {
     const debug = this.debugGetSingleComment
     const { comment } = this.options
     let line = to.clone(this.line)
-    line.line = this.getAfter(comment.single, `${line}`)
+    line.str = this.getAfter(comment.single, `${line}`)
 
     this.token.comment.contents.push(line)
-    const current_msg = `the current line(${line.lineno}) doesn't have code: ${clor.bgGreen(line)}`
+    const current_msg = `the current line(${line.strno}) doesn't have code: ${clor.bgGreen(line)}`
     if (debug.ifTrue(!line.has_code, current_msg) && this.hasNext()) {
       const next_line = this.peak()
       const context = next_line.has_code ? 'has code' : 'is empty'
-      const next_msg = `the next line(${next_line.lineno}) ${context}: ${clor.bgRed(next_line)}`
+      const next_msg = `the next line(${next_line.strno}) ${context}: ${clor.bgRed(next_line)}`
 
       this.next()
       return debug.ifFalse(next_line.has_comment && !next_line.has_code, next_msg, true) && this.getSingleComment()
@@ -381,17 +381,17 @@ export default class Tokenizer {
       }
     }
 
-    line.line = str
+    line.str = str
     this.token.comment.contents.push(line)
     debug.push(line)
     if (this.hasNext()) {
-      if (debug.ifTrue(!line.index.end, `the current line(${line.lineno}) wasn't the last comment: ${clor.bgGreen(this.line)}`)) {
+      if (debug.ifTrue(!line.index.end, `the current line(${line.strno}) wasn't the last comment: ${clor.bgGreen(this.line)}`)) {
         debug.run()
         return this.next() && this.getMultiComment()
       }
       const next = this.peak()
       if (
-        debug.ifTrue(!line.index.code, `the current line(${line.lineno}) doesn't has code: ${clor.bgGreen(line)}`) &&
+        debug.ifTrue(!line.index.code, `the current line(${line.strno}) doesn't has code: ${clor.bgGreen(line)}`) &&
         debug.ifTrue(!next.has_comment, `the next line(${next.lineno}) doesn't have a comment: ${clor.bgGreen(next)}`)
       ) {
         debug.run()
@@ -427,7 +427,7 @@ export default class Tokenizer {
       obj.contents = obj.contents
         .filter((line, i) => i >= leading && i < trailing) // filter out the lines that were removed
         .map((line, i) => {
-          line.line = lines[i] // update the lines content to be the normalized version
+          line.str = lines[i] // update the lines content to be the normalized version
           return line
         })
 
@@ -438,11 +438,7 @@ export default class Tokenizer {
         return obj
       }
 
-
-      // obj.raw_contents = content.split('\n')
-      // @todo uncomment these lines after everything setup and working
       if (!this.options.verbose) {
-        // obj.raw_contents = obj.contents
         obj.contents = content.split('\n')
       }
 
@@ -518,27 +514,19 @@ class Token {
 class Line {
   constructor(...args) {
     args = to.arguments({
-      line: '',
+      str: '',
       lineno: ''
     }, ...args)
     to.extend(this, args)
-    this.raw = this.line
-    this.indent = to.indentLevel(this.line)
+    this.raw = this.str
+    this.indent = to.indentLevel(this.str)
   }
 
   get length() {
-    return this.line.length
+    return this.str.length
   }
 
   toString() {
-    return this.line
-  }
-
-  get str() {
-    return this.line
-  }
-
-  get string() {
-    return this.line
+    return this.str
   }
 }
