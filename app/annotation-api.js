@@ -286,8 +286,15 @@ export default class AnnotationApi {
       }
     }
 
-    const fn = this.getAnnotationFn(base.annotation.name, fn_name)
-    let result = is.function(fn) ? fn.call(base) : fn
+    let result
+    try {
+      const fn = this.getAnnotationFn(base.annotation.name, fn_name)
+      result = is.function(fn) ? fn.call(base) : fn
+    } catch (e) {
+      this.log.error(e)
+      throw new Error(e)
+    }
+
     return result
   }
 
