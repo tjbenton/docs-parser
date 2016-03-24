@@ -37,6 +37,9 @@ export const default_options = {
   warning: true,
   timestamps: true,
 
+  // stop adding code to the token.code.contents if the indent is less than the starting line indent
+  indent: true,
+
   // this will return the raw data by file, aka data won't be sorted
   raw: false,
 
