@@ -41,6 +41,16 @@ export default class Parser {
     this.api = new AnnotationApi({ annotations, type })
 
     {
+      const { language } = this.options
+      this.comment_values = to.flatten([
+        ...to.values(language.header, '!type'),
+        ...to.values(language.body, '!type'),
+        ...to.values(language.inline, '!type')
+      ])
+      this.comment_values = to.unique(this.comment_values).filter(Boolean)
+    }
+
+    {
       let { alias, parse } = this.api.annotations
       parse = to.keys(parse)
       const reverse_alias_list = to.reduce(alias, (previous, { key, value }) => {
@@ -65,6 +75,15 @@ export default class Parser {
     file.start = 1 // starting point of the file
     file.end = to.array(file.contents).length // ending point of the file
     this.file = file
+
+    // if the file is empty or there aren't any comments then
+    // just return the the empty values
+    if (
+      is.empty(file.contents) ||
+      !is.any.in(file.contents, ...(this.comment_values))
+    ) {
+      return { header: {}, body: [] }
+    }
 
     let tokens = this.getTokens(file.contents)
     tokens = this.getAnnotations(tokens)
@@ -140,11 +159,8 @@ export default class Parser {
       // find lines that have annotations and set the correct annotation if an alias is found
       comment.contents = to.map(comment.contents, hasAnnotation)
 
-      comment.contents = new Lines(comment.contents)
-      code.contents = new Lines(code.contents)
-
       // get the annotations that are in the comment
-      const annotations = new Annotations(comment.contents.raw, language.prefix)
+      const annotations = new Annotations(comment.contents, language.prefix)
 
       return { comment, code, inline, annotations }
     })
@@ -190,7 +206,8 @@ export default class Parser {
   }
 
   resolveTokens(tokens) {
-    const { log, sort } = this.options
+    const { options } = this
+    const { log, sort } = options
     const file = this.file
     let resolve_list = to.keys(this.api.annotations.resolve)
     // sort the parsed object before the annotations are resolved
@@ -203,7 +220,7 @@ export default class Parser {
       const parsed_keys = to.keys(token.parsed)
       for (let name of resolve_list) {
         if (is.in(parsed_keys, name)) {
-          const result = this.api.run('resolve', { name }, base)
+          const result = this.api.run('resolve', { name, alias: this.api.annotations.alias[name] }, base)
           if (result != null) {
             token.parsed[name] = result
           }
@@ -283,6 +300,12 @@ class Annotations {
 
   pushAnnotation() {
     let { contents, start, end, ...rest } = this.annotation
+
+    // this ensures that the line of the annotation always stays intact
+    // even if it's empty
+    let line = contents.shift()
+    line.str = `${line}`.trim()
+
     let { content, leading, trailing } = to.normalize(contents.join('\n'), { info: true })
 
     trailing += contents.length
@@ -298,9 +321,12 @@ class Annotations {
         })
     }
 
+    // prepend the line back onto the contents
+    contents.unshift(line)
+
     start = (contents[0] || {}).lineno || start || -1 // get the starting line of the comment
     end = (contents.slice(-1)[0] || {}).lineno || end || start || -1 // get the end line of the comment
-    contents = new Lines(contents)
+
     this.annotations.push({ contents, start, end, ...rest })
   }
 
@@ -323,13 +349,5 @@ class Annotation {
       start,
       end: 0
     }
-  }
-}
-
-class Lines {
-  constructor(lines) {
-    this.lines = to.array(to.string(lines))
-    this.lines.raw = lines
-    return this.lines
   }
 }

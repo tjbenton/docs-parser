@@ -41,7 +41,7 @@ import { list } from './annotation-utils'
 export default {
   alias: [ 'group' ],
   parse() {
-    return list(this.annotation.line)
+    return list(this.annotation.contents[0] || '')
   },
   autofill() {
     // autofill header comments

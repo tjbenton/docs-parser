@@ -1,4 +1,5 @@
-import { regex, markdown, logAnnotationError } from './annotation-utils'
+import { regex, logAnnotationError } from './annotation-utils'
+import { to } from '../utils'
 import clor from 'clor'
 
 /// @name @type
@@ -18,7 +19,8 @@ import clor from 'clor'
 /// /// description
 export default {
   parse() {
-    let [ type, description ] = regex('type', this.annotation.line)
+    let { contents } = this.annotation
+    let [ type, description = '' ] = regex('type', contents.shift() || '')
 
     if (!type) {
       this.log.emit(
@@ -31,7 +33,7 @@ export default {
 
     return {
       type,
-      description: markdown(description, this.annotation.contents)
+      description: to.markdown(description, contents)
     }
   }
 }

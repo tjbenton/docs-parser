@@ -1,5 +1,5 @@
-import { regex, list, markdown } from './annotation-utils'
-
+import { regex, list } from './annotation-utils'
+import { to } from '../utils'
 /// @name @throws
 /// @page annotations
 /// @alias @throw, @exception, @error, @catch
@@ -22,12 +22,13 @@ import { regex, list, markdown } from './annotation-utils'
 export default {
   alias: [ 'throw', 'exception', 'error', 'catch' ],
   parse() {
-    let [ types, description ] = regex('throws', this.annotation.line)
+    let { contents } = this.annotation
+    let [ types, description = '' ] = regex('throws', contents.shift() || '')
 
     return [
       {
         types: list(types),
-        description: markdown(description, this.annotation.contents)
+        description: to.markdown(description, contents)
       }
     ]
   }

@@ -10,8 +10,8 @@
           "type": "body"
         },
         "code": {
-          "start": 2,
-          "end": 2
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/chainable/chainable.js",
@@ -30,8 +30,8 @@
           "type": "body"
         },
         "code": {
-          "start": 4,
-          "end": 4
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/chainable/chainable.js",
@@ -50,8 +50,8 @@
           "type": "body"
         },
         "code": {
-          "start": 6,
-          "end": 6
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/chainable/chainable.js",
@@ -72,8 +72,8 @@
           "type": "body"
         },
         "code": {
-          "start": 8,
-          "end": 8
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/chainable/chainable.js",
@@ -95,8 +95,8 @@
           "type": "body"
         },
         "code": {
-          "start": 10,
-          "end": 10
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/chainable/chainable.js",
@@ -118,8 +118,8 @@
           "type": "body"
         },
         "code": {
-          "start": 14,
-          "end": 14
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/chainable/chainable.js",
@@ -141,8 +141,8 @@
           "type": "body"
         },
         "code": {
-          "start": 18,
-          "end": 18
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/chainable/chainable.js",

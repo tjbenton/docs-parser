@@ -1,4 +1,5 @@
-import { regex, list, markdown } from './annotation-utils'
+import { regex, list } from './annotation-utils'
+import { to } from '../utils'
 
 /// @name @todo
 /// @page annotations
@@ -20,18 +21,22 @@ import { regex, list, markdown } from './annotation-utils'
 /// /// description
 export default {
   parse() {
+    let { contents } = this.annotation
     let [
       importance = '0',
       assignees,
-      description
-    ] = regex('todo', this.annotation.line)
+      description = ''
+    ] = regex('todo', contents.shift() || '')
 
     return [
       {
         importance,
         assignees: list(assignees),
-        description: markdown(description, this.annotation.contents)
+        description: to.markdown(description, contents)
       }
     ]
+  },
+  resolve() {
+    // come back and add a setting that auto creates a todo page
   }
 }

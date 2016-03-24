@@ -19,38 +19,6 @@
               "raw": "<div class=\"something-super-awesome :hover\">\n  Mind blown\n</div>",
               "escaped": "&lt;div class=&quot;something-super-awesome :hover&quot;&gt;\n  Mind blown\n&lt;/div&gt;"
             }
-          },
-          {
-            "state": {
-              "0": {
-                "state": ":focus",
-                "description": ""
-              }
-            },
-            "markup": {
-              "id": "0",
-              "language": "html",
-              "settings": {},
-              "description": "",
-              "raw": "<div class=\"something-super-awesome :focus\">\n  Mind blown\n</div>",
-              "escaped": "&lt;div class=&quot;something-super-awesome :focus&quot;&gt;\n  Mind blown\n&lt;/div&gt;"
-            }
-          },
-          {
-            "state": {
-              "0": {
-                "state": ":active",
-                "description": ""
-              }
-            },
-            "markup": {
-              "id": "0",
-              "language": "html",
-              "settings": {},
-              "description": "",
-              "raw": "<div class=\"something-super-awesome :active\">\n  Mind blown\n</div>",
-              "escaped": "&lt;div class=&quot;something-super-awesome :active&quot;&gt;\n  Mind blown\n&lt;/div&gt;"
-            }
           }
         ]
       },
@@ -69,17 +37,17 @@
       "blockinfo": {
         "comment": {
           "start": 1,
-          "end": 8,
+          "end": 6,
           "type": "body"
         },
         "code": {
-          "start": 9,
-          "end": 24
+          "start": 7,
+          "end": 13
         },
         "file": {
-          "path": "docs/tests/annotations/state/state-multiple-stupid-simple.scss",
+          "path": "docs/tests/annotations/state/stupid-simple/simple.scss",
           "start": 1,
-          "end": 24
+          "end": 14
         }
       },
       "access": "public"

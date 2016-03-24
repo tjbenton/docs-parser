@@ -19,8 +19,8 @@
           "type": "body"
         },
         "code": {
-          "start": 2,
-          "end": 2
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/arg/arg.aliases.js",
@@ -48,8 +48,8 @@
           "type": "body"
         },
         "code": {
-          "start": 4,
-          "end": 4
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/arg/arg.aliases.js",
@@ -77,8 +77,8 @@
           "type": "body"
         },
         "code": {
-          "start": 6,
-          "end": 6
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/arg/arg.aliases.js",

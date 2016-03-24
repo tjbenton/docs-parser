@@ -1,5 +1,5 @@
-import { markdown, regex } from './annotation-utils'
-
+import { regex } from './annotation-utils'
+import { to } from '../utils'
 /// @name @deprecated
 /// @page annotations
 /// @description Lets you know that a mixin/function has been depricated
@@ -20,10 +20,11 @@ import { markdown, regex } from './annotation-utils'
 /// /// more of the description
 export default {
   parse() {
-    let [ version = '0', description ] = regex('deprecated', this.annotation.line)
+    let { contents } = this
+    let [ version = '0', description = '' ] = regex('deprecated', contents.shift() || '')
     return {
       version,
-      description: markdown(description, this.annotation.contents)
+      description: to.markdown(description, contents)
     }
   }
 }

@@ -1,5 +1,5 @@
-import { regex, markdown } from './annotation-utils'
-
+import { regex } from './annotation-utils'
+import { to } from '../utils'
 /// @name @since
 /// @page annotations
 /// @description Let's you know what version of the project a something was added
@@ -17,11 +17,12 @@ import { regex, markdown } from './annotation-utils'
 /// /// description
 export default {
   parse() {
-    let [ version = 'undefined', description ] = regex('since', this.annotation.line)
+    let { contents } = this.annotation
+    let [ version = 'undefined', description = '' ] = regex('since', contents.shift() || '')
 
     return {
       version,
-      description: markdown(description, this.annotation.contents)
+      description: to.markdown(description, contents)
     }
   }
 }

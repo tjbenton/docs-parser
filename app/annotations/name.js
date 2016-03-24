@@ -7,5 +7,8 @@
 /// @markup Usage
 /// /// @name Name of the documented item
 export default {
-  alias: [ 'title', 'heading', 'header' ]
+  alias: [ 'title', 'heading', 'header' ],
+  parse() {
+    return `${this.annotation.contents[0]}`
+  }
 }

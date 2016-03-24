@@ -286,21 +286,64 @@ export default class AnnotationApi {
       }
     }
 
-    let result
+    let to_call = base
+    let details
+
     try {
       const fn = this.getAnnotationFn(base.annotation.name, fn_name)
-      result = is.function(fn) ? fn.call(base) : fn
+
+      if (fn_name === 'parse') {
+        to_call = copyInvisible(details = base.annotation, base)
+      } else if (fn_name === 'resolve') {
+        to_call = copyInvisible(details = base.parsed[base.annotation.name], base)
+      }
+
+      let result = is.function(fn) ? fn.call(to_call) : fn
+
+      if (fn_name === 'parse' && !is.any.undefined(details, result)) {
+        if (is.array(result) && result.length === 1) {
+          result = to.map(result, (obj) => copyInvisible(obj, { details }))
+        }
+
+        result = copyInvisible(result, { details })
+      }
+
+      return result
     } catch (e) {
-      this.log.error(e)
       throw new Error(e)
     }
 
-    return result
+
+    function copyInvisible(obj, value) {
+      let _type = to.type(obj)
+
+      switch (_type) {
+        case 'array':
+        case 'object':
+          break
+        default:
+          let types = { String, Number, Boolean }
+          let Type = types[_type.charAt(0).toUpperCase() + _type.slice(1)]
+          obj = new Type(obj)
+      }
+
+      // loop over the data and set them to be getters on the
+      // passed object. This makes them available but they don't show
+      // up in the console and clutter up all the things
+      for (var item in value) {
+        if (value.hasOwnProperty(item)) {
+          Object.defineProperty(obj, item, { value: value[item] })
+        }
+      }
+
+      // set the prototype to the the passed data
+      Object.defineProperty(obj, 'prototype', { value })
+      return obj
+    }
   }
 
   getAnnotationFn(name, type) {
     let fn = this.annotations
-    // console.log('fn 1:', fn)
     fn = fn[type] || {}
     fn = fn[name] || {}
     if (is.function(fn)) {

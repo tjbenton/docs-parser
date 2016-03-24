@@ -158,10 +158,10 @@
         },
         "code": {
           "start": 41,
-          "end": 60
+          "end": 59
         },
         "file": {
-          "path": "docs/tests/annotations/state/state-complex-multiple-states-multiple-markup-by-id.scss",
+          "path": "docs/tests/annotations/state/complex-multiple/states-multiple-markup-by-id.scss",
           "start": 1,
           "end": 60
         }

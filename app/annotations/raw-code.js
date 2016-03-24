@@ -1,5 +1,5 @@
 import { escape } from './annotation-utils'
-
+import { to } from '../utils'
 /// @name @raw-code
 /// @page annotations
 /// @description
@@ -7,9 +7,7 @@ import { escape } from './annotation-utils'
 /// @returns {object}
 export default {
   parse() {
-    return {
-      raw: this.code.contents,
-      escaped: escape(this.code.contents)
-    }
+    const raw = to.string(this.code.contents)
+    return { raw, escaped: escape(raw) }
   }
 }

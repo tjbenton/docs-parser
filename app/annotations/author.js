@@ -1,4 +1,4 @@
-import { multiple } from './annotation-utils'
+import { list } from './annotation-utils'
 /// @name @author
 /// @page annotations
 /// @alias @authors
@@ -14,6 +14,6 @@ import { multiple } from './annotation-utils'
 export default {
   alias: [ 'authors' ],
   parse() {
-    return multiple(this.annotation)
+    return list(this.annotation.contents)
   }
 }

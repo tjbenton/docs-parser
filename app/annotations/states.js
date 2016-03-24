@@ -1,5 +1,5 @@
 import { is, to } from '../utils'
-import { regex, markdown } from './annotation-utils'
+import { regex } from './annotation-utils'
 
 /// @name @states
 /// @page annotations
@@ -29,36 +29,40 @@ import { regex, markdown } from './annotation-utils'
 export default {
   alias: [ 'state' ],
   parse() {
-    let [ markup_id = null, state_line ] = regex('state_id', this.annotation.line)
-    let state = [ state_line, ...to.array(this.annotation.contents) ].filter(Boolean)
+    let { contents } = this
+    let [ markup_id = null, state_line ] = regex('state_id', contents.shift())
+    let state = to.flatten(state_line, contents).filter(Boolean)
 
     state = state.reduce((previous, current, i) => {
       let [ state = '', id = `${i}`, description = '' ] = regex('state', current) // eslint-disable-line
       return to.extend(previous, {
-        [id]: { state, description: markdown(description) }
+        [id]: { state, description: to.markdown(description) }
       })
     }, {})
 
-    Object.defineProperty(state, '__details', { __proto__: null, value: this })
+    // Object.defineProperty(state, '__details', { __proto__: null, get: () => this })
 
     return [ { markup_id, state } ]
   },
-  resolve({ parsed, block, log }) {
-    return this.reduce((previous, { markup_id, state }) => {
+  resolve() {
+    let { parsed, log, file } = this
+
+    return this.reduce((previous, current) => {
+      let { markup_id, state, details } = current
       let markup
-      let start_at = state.__details.annotation.start
+      let start_at = details.start
 
       // throw an error because a state should always be accompanied by a `@markup` block
       if (!parsed.markup) {
         log.emit('error', "There's no instance of a '@markup' annotation")
       } else if (is.falsy(markup_id)) {
         markup = findMarkupAfter(parsed.markup, start_at)
-        markup_id = markup.id
+        markup_id = (markup || {}).id
 
         if (!markup) {
           log.emit('error', to.normalize(`
-            There's no instance of a '@markup' annotation after line ${block.comment.start + start_at}
-            in ${block.file.path}
+            There's no instance of a '@markup' annotation after line ${start_at}
+            in ${file.path}
           `))
         }
       } else {
@@ -66,7 +70,7 @@ export default {
         if (!markup) {
           log.emit('error', to.normalize(`
             There's no instance of a '@markup' annotation with an id of ${markup_id}
-            in ${block.file.path}
+            in ${file.path}
           `))
         }
       }
@@ -79,7 +83,6 @@ export default {
         })
       }
 
-
       // filter out the `raw_stateless`, and `escaped_stateless` keys because this is
       // a state so it shouldn't have a stateless instance
       markup = to.filter(to.clone(markup), ({ key }) => !is.in(key, 'state'))
@@ -87,9 +90,11 @@ export default {
       // this allows users to specify interpolations like `@state.description`
       // without affecting the actual state output
       let _state = to.clone(state)
+      // this adds the first state to the `_state` object. This allows
+      // users to write `@state.description` instead of `@state[0].description`
       to.extend(_state, _state[to.keys(_state)[0]])
-      markup.raw = replaceStates(markup.raw, _state, state.__details)
-      markup.escaped = replaceStates(markup.escaped, _state, state.__details)
+      markup.raw = replaceStates.call(this, markup.raw, _state)
+      markup.escaped = replaceStates.call(this, markup.escaped, _state)
 
       return to.merge(previous, {
         [markup_id]: [ { state, markup } ]
@@ -98,13 +103,19 @@ export default {
   }
 }
 
+/* eslint-disable no-invalid-this */
+function replaceStates(str, states) {
+  let state_interpolation, replacement
 
-function replaceStates(str, states, options) {
-  let names = [ options.annotation.name, ...options.annotation.alias ].join('|')
-  let { interpolation, prefix } = options.file.options
+  {
+    let names = [ this.annotation.name, ...(this.annotation.alias) ].join('|')
+    const { interpolation, prefix } = this.file.options
+    const { start, end } = interpolation
 
-  const state_interpolation = new RegExp(`${interpolation.start}${prefix}(?:${names})[^${interpolation.end}]*${interpolation.end}`, 'g')
-  const replacement = new RegExp(`${interpolation.start}${prefix}(?:${names})|${interpolation.end}`, 'g')
+    state_interpolation = new RegExp(`${start}${prefix}(?:${names})[^${end}]*${end}`, 'g')
+    replacement = new RegExp(`${start}${prefix}(?:${names})|${end}`, 'g')
+  }
+
   return str.replace(state_interpolation, (original_match) => {
     let match = original_match.replace(replacement, '').slice(1)
 
@@ -146,9 +157,9 @@ function findMarkupById(markup, id) {
 }
 
 function findMarkupAfter(markup, start_at) {
-  for (let markup_block of markup) {
-    if (start_at < markup_block.__details.annotation.start) {
-      return markup_block
+  for (let item of markup) {
+    if (start_at < item.details.start) {
+      return item
     }
   }
   return

@@ -1,5 +1,5 @@
-import { regex, markdown } from './annotation-utils'
-
+import { regex } from './annotation-utils'
+import { to } from '../utils'
 /// @name @note
 /// @page annotations
 /// @alias @notes
@@ -18,12 +18,14 @@ import { regex, markdown } from './annotation-utils'
 export default {
   alias: [ 'notes' ],
   parse() {
-    let [ importance = '0', description ] = regex('note', this.annotation.line)
+    let { contents } = this.annotation
+    let line = contents.shift()
+    let [ importance = '0', description = '' ] = regex('note', line || '')
 
     return [
       {
         importance,
-        description: markdown(description, this.annotation.contents)
+        description: to.markdown(description, contents)
       }
     ]
   }

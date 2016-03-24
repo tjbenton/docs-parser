@@ -1,4 +1,5 @@
-import { regex, list, markdown } from './annotation-utils'
+import { regex, list } from './annotation-utils'
+import { to } from '../utils'
 
 /// @name @returns
 /// @page annotations
@@ -21,7 +22,8 @@ import { regex, list, markdown } from './annotation-utils'
 export default {
   alias: [ 'return' ],
   parse() {
-    let [ types, description ] = regex('returns', this.annotation.line)
+    let { contents } = this.annotation
+    let [ types, description ] = regex('returns', contents.shift() || '')
 
     if (
       types == null ||
@@ -32,7 +34,7 @@ export default {
 
     return {
       types: list(types),
-      description: markdown(description, this.annotation.contents)
+      description: to.markdown(description, contents)
     }
   }
 }

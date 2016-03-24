@@ -42,10 +42,10 @@
         },
         "code": {
           "start": 7,
-          "end": 15
+          "end": 13
         },
         "file": {
-          "path": "docs/tests/annotations/state/state-stupid-simple-with-description.scss",
+          "path": "docs/tests/annotations/state/stupid-simple/with-description.scss",
           "start": 1,
           "end": 43
         }
@@ -93,10 +93,10 @@
         },
         "code": {
           "start": 22,
-          "end": 29
+          "end": 28
         },
         "file": {
-          "path": "docs/tests/annotations/state/state-stupid-simple-with-description.scss",
+          "path": "docs/tests/annotations/state/stupid-simple/with-description.scss",
           "start": 1,
           "end": 43
         }
@@ -144,10 +144,10 @@
         },
         "code": {
           "start": 36,
-          "end": 43
+          "end": 42
         },
         "file": {
-          "path": "docs/tests/annotations/state/state-stupid-simple-with-description.scss",
+          "path": "docs/tests/annotations/state/stupid-simple/with-description.scss",
           "start": 1,
           "end": 43
         }

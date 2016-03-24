@@ -16,8 +16,8 @@
           "type": "body"
         },
         "code": {
-          "start": 2,
-          "end": 2
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/requires/requires.body.js",
@@ -44,8 +44,8 @@
           "type": "body"
         },
         "code": {
-          "start": 4,
-          "end": 4
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/requires/requires.body.js",
@@ -75,8 +75,8 @@
           "type": "body"
         },
         "code": {
-          "start": 6,
-          "end": 6
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/requires/requires.body.js",
@@ -101,8 +101,8 @@
           "type": "body"
         },
         "code": {
-          "start": 8,
-          "end": 8
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/requires/requires.body.js",
@@ -127,8 +127,8 @@
           "type": "body"
         },
         "code": {
-          "start": 10,
-          "end": 10
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/requires/requires.body.js",
@@ -155,8 +155,8 @@
           "type": "body"
         },
         "code": {
-          "start": 12,
-          "end": 12
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/requires/requires.body.js",
@@ -186,8 +186,8 @@
           "type": "body"
         },
         "code": {
-          "start": 15,
-          "end": 15
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/requires/requires.body.js",

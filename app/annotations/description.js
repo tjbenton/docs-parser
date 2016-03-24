@@ -1,4 +1,4 @@
-import { markdown } from './annotation-utils'
+import { to } from '../utils'
 
 /// @name @description
 /// @page annotations
@@ -19,6 +19,6 @@ export default {
     'writeup', 'summary', 'summarization'
   ],
   parse() {
-    return markdown(this.annotation.line, this.annotation.contents)
+    return to.markdown(this.annotation.contents)
   }
 }

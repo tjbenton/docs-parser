@@ -11,8 +11,8 @@
           "type": "body"
         },
         "code": {
-          "start": 3,
-          "end": 3
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",
@@ -32,8 +32,8 @@
           "type": "body"
         },
         "code": {
-          "start": 8,
-          "end": 10
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",
@@ -53,8 +53,8 @@
           "type": "body"
         },
         "code": {
-          "start": 13,
-          "end": 13
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",
@@ -74,8 +74,8 @@
           "type": "body"
         },
         "code": {
-          "start": 18,
-          "end": 20
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",
@@ -95,8 +95,8 @@
           "type": "body"
         },
         "code": {
-          "start": 23,
-          "end": 23
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",
@@ -116,8 +116,8 @@
           "type": "body"
         },
         "code": {
-          "start": 28,
-          "end": 30
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",
@@ -137,8 +137,8 @@
           "type": "body"
         },
         "code": {
-          "start": 33,
-          "end": 33
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",
@@ -158,8 +158,8 @@
           "type": "body"
         },
         "code": {
-          "start": 38,
-          "end": 40
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",
@@ -179,8 +179,8 @@
           "type": "body"
         },
         "code": {
-          "start": 43,
-          "end": 43
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",
@@ -200,8 +200,8 @@
           "type": "body"
         },
         "code": {
-          "start": 48,
-          "end": 50
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",
@@ -221,8 +221,8 @@
           "type": "body"
         },
         "code": {
-          "start": 53,
-          "end": 53
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",
@@ -242,8 +242,8 @@
           "type": "body"
         },
         "code": {
-          "start": 58,
-          "end": 58
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.alias.js",

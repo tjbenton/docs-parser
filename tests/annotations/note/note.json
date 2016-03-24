@@ -15,8 +15,8 @@
           "type": "body"
         },
         "code": {
-          "start": 2,
-          "end": 2
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/note/note.js",
@@ -40,8 +40,8 @@
           "type": "body"
         },
         "code": {
-          "start": 4,
-          "end": 4
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/note/note.js",
@@ -65,8 +65,8 @@
           "type": "body"
         },
         "code": {
-          "start": 6,
-          "end": 6
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/note/note.js",
@@ -90,8 +90,8 @@
           "type": "body"
         },
         "code": {
-          "start": 12,
-          "end": 12
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/note/note.js",
@@ -115,8 +115,8 @@
           "type": "body"
         },
         "code": {
-          "start": 14,
-          "end": 14
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/note/note.js",
@@ -140,8 +140,8 @@
           "type": "body"
         },
         "code": {
-          "start": 20,
-          "end": 20
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/note/note.js",

@@ -1,4 +1,5 @@
-import { logAnnotationError, regex, markdown } from './annotation-utils'
+import { logAnnotationError, regex } from './annotation-utils'
+import { to } from '../utils'
 import clor from 'clor'
 
 /// @name @version
@@ -18,20 +19,20 @@ import clor from 'clor'
 /// /// description
 export default {
   parse() {
-    let [ version, description ] = regex('version', this.annotation.line)
+    let { contents } = this.annotation
+    let [ version = 'undefined', description = '' ] = regex('version', contents.shift() || '')
 
-    if (!version) {
+    if (version === 'undefined') {
       this.log.emit(
         'warning',
         `You didn't pass in a version to ${clor.bold('@version ')}`,
         logAnnotationError(this, `@version {version}${description ? ' - ' + description : ''}`)
       )
-      version = 'undefined'
     }
 
     return {
       version,
-      description: markdown(description, this.annotation.contents)
+      description: to.markdown(description, contents)
     }
   }
 }

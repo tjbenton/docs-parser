@@ -15,7 +15,7 @@ import { list, logAnnotationError } from './annotation-utils'
 /// /// @alias bar
 export default {
   parse() {
-    let alias_list = list(this.annotation.line)
+    let alias_list = list(this.annotation.contents[0] || '')
     if (is.empty(alias_list)) {
       this.log.emit('warning', "You didn't pass in an alias to @alias on", logAnnotationError(this, '@alias name[, name]'))
     }

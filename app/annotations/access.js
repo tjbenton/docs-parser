@@ -9,13 +9,21 @@
 /// /// @access private
 ///
 /// /// @access protected
-/// @note This is autofilled on every header or body comment
+/// @note This is autofilled on every comment block
 export default {
   autofill() {
-    return 'public'
+    let access = 'public'
+    try {
+      if (this.comment.type === 'inline') {
+        access = this.parent.parsed.access
+      }
+    } catch (e) {
+       // do nothing
+    }
+    return access
   },
   parse() {
-    const line = this.annotation.line
+    const line = `${this.annotation.contents[0]}`
     if (
       line === 'private' ||
       line === 'protected'

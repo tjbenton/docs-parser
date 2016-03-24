@@ -16,7 +16,7 @@ import { toBoolean } from './annotation-utils'
 /// /// @readonly false
 export default {
   parse() {
-    let bool = toBoolean(this.annotation)
+    let bool = toBoolean(this.annotation.contents)
 
     if (bool !== undefined) {
       return bool

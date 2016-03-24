@@ -8,8 +8,8 @@
         "type": "header"
       },
       "code": {
-        "start": -1,
-        "end": -1
+        "start": 4,
+        "end": 12
       },
       "file": {
         "path": "docs/tests/annotations/markdown/text.text",

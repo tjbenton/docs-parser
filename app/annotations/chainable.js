@@ -1,4 +1,4 @@
-import { toBoolean, multiple } from './annotation-utils'
+import { toBoolean, list } from './annotation-utils'
 
 /// @name @chainable
 /// @page annotations
@@ -19,12 +19,11 @@ import { toBoolean, multiple } from './annotation-utils'
 export default {
   alias: [ 'chain' ],
   parse() {
-    let bool = toBoolean(this.annotation)
-
+    const { contents } = this.annotation
+    let bool = toBoolean(contents)
     if (bool !== undefined) {
       return bool
     }
-
-    return multiple(this.annotation)
+    return list(contents)
   }
 }

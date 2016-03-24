@@ -1,6 +1,5 @@
 import { is, to } from '../utils'
-import { regex, list, markdown, escape } from './annotation-utils'
-
+import { regex, list, escape } from './annotation-utils'
 /// @name @markup
 /// @page annotations
 /// @alias @code, @example, @output, @outputs
@@ -50,18 +49,25 @@ import { regex, list, markdown, escape } from './annotation-utils'
 export default {
   alias: [ 'code', 'example', 'output', 'outputs' ],
   parse() {
+    let { contents } = this
     let [
       id = null,
       language = this.file.type,
       settings = {},
       description
-    ] = regex('markup', this.annotation.line)
+    ] = regex('markup', contents.shift() || '')
 
-    let raw = this.annotation.contents
-    let { interpolation, prefix } = this.file.options
+    let raw = to.string(contents)
     let escaped = escape(raw)
+    let state_interpolation
 
-    let state_interpolation = `${interpolation.start}${prefix}states?[^${interpolation.end}]*${interpolation.end}`
+    {
+      const { interpolation, prefix } = this.file.options
+      const { start, end } = interpolation
+
+      state_interpolation = `${start}${prefix}states?[^${end}]*${end}`
+    }
+
     state_interpolation = new RegExp(`\\s*${state_interpolation}\\s*`, 'gi')
     let raw_stateless = raw.replace(state_interpolation, '')
     let escaped_stateless = escaped.replace(state_interpolation, '')
@@ -75,19 +81,17 @@ export default {
       id,
       language,
       settings,
-      description: markdown(description),
+      description: to.markdown(description),
       raw,
       escaped,
       raw_stateless,
       escaped_stateless,
     }
 
-    Object.defineProperty(result, '__details', { __proto__: null, value: this })
-
     return [ result ]
   },
   resolve() {
-    return this.map((obj, i) => {
+    return to.map(this, (obj, i) => {
       if (obj.id === null) {
         obj.id = `${i}`
       }

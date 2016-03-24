@@ -13,8 +13,8 @@
           "type": "body"
         },
         "code": {
-          "start": 2,
-          "end": 2
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/since/since.body.js",
@@ -36,8 +36,8 @@
           "type": "body"
         },
         "code": {
-          "start": 4,
-          "end": 4
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/since/since.body.js",
@@ -59,8 +59,8 @@
           "type": "body"
         },
         "code": {
-          "start": 6,
-          "end": 6
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/since/since.body.js",
@@ -82,8 +82,8 @@
           "type": "body"
         },
         "code": {
-          "start": 11,
-          "end": 11
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/since/since.body.js",

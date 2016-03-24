@@ -10,8 +10,8 @@
           "type": "body"
         },
         "code": {
-          "start": 3,
-          "end": 3
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.body.js",
@@ -30,8 +30,8 @@
           "type": "body"
         },
         "code": {
-          "start": 9,
-          "end": 9
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.body.js",
@@ -50,8 +50,8 @@
           "type": "body"
         },
         "code": {
-          "start": 15,
-          "end": 15
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/description/description.body.js",

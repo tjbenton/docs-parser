@@ -17,9 +17,9 @@ let regexes
   let rg = {}
 
   rg.arg =
-  rg.property = new RegExp(types + space + name + space + value + space + description, 'i')
+  rg.property = to.regex(types, space, name, space, value, space, description, 'i')
 
-  rg.markup = new RegExp(id + space + types + space + value + space + description, 'i')
+  rg.markup = to.regex(id, space, types, space, value, space, description, 'i')
 
   rg.deprecated =
   rg.note =
@@ -27,54 +27,53 @@ let regexes
   rg.returns =
   rg.since =
   rg.type =
-  rg.version = new RegExp(types + space + description, 'i')
+  rg.version = to.regex(types, space, description, 'i')
 
-  rg.requires = new RegExp(types + space + name + description, 'i')
+  rg.requires = to.regex(types, space, name, description, 'i')
 
-  rg.state_id = new RegExp(`${id}${space}(.*)`, 'i')
+  rg.state_id = to.regex(id, space, '(.*)', 'i')
 
   rg.state =
-  rg.todo = new RegExp(types + space + value + space + description, 'i')
+  rg.todo = to.regex(types, space, value, space, description, 'i')
 
   regexes = rg
 }
 
 export function regex(name, str) {
-  return regexes[name].exec(str).slice(1)
+  return regexes[name].exec(`${str}`).slice(1)
 }
 
-export function list(str) {
-  return to.array(str, ',').map((item) => item.trim()).filter(Boolean)
+function list(arg) {
+  if (is.array(arg)) {
+    return to.map(arg, list)
+  }
+
+  if (arg == null) {
+    return []
+  }
+
+  return to.array(`${arg}`, ',').map((item) => item.trim()).filter(Boolean)
 }
 
+export { list }
 
-export function multiple(annotation) {
-  return to.flatten([
-    ...(annotation.line.split(',')),
-    ...(annotation.contents.split('\n').map((item) => item.split(',')))
-  ])
-  .map((author) => author.trim())
-  .filter(Boolean)
-}
-
-export function toBoolean(annotation) {
-  let line = annotation.line
-
-  if (annotation.contents.length > 0) {
+export function toBoolean(contents) {
+  let line = `${contents[0]}`
+  if (!is.empty(contents.slice(1))) {
     return undefined
   }
 
   if (line === 'false') {
     return false
-  } else if (line.length === 0 || line === 'true') {
+  } else if (
+    is.undefined(line) ||
+    line.length === 0 ||
+    line === 'true'
+  ) {
     return true
   }
 
   return undefined
-}
-
-export function markdown(...args) {
-  return to.markdown([ ...args ].filter(Boolean).join('\n'))
 }
 
 export function logAnnotationError(obj, expected) {
@@ -93,8 +92,8 @@ export function logAnnotationError(obj, expected) {
 
   const getSpaces = (number) => (number + '').split('').filter(Boolean).map(() => ' ').slice(1).join('')
 
-  comment.contents = comment.contents.split('\n')
-  code.contents = code.contents.split('\n')
+  comment.contents = to.array(comment.contents)
+  code.contents = to.array(code.contents)
 
   // used to modifiy the indention of numbers so that they align to the right
   let modifier = getSpaces(file.end)
@@ -175,9 +174,8 @@ export function logAnnotationError(obj, expected) {
 }
 
 
-export function escape(str) {
-  return str
-    .split('\n')
+export function escape(arg) {
+  return to.array(arg)
     .map((line) => {
       return line.replace(/[&<>'"]/g, (match) => {
         return {

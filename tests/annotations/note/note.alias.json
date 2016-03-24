@@ -15,8 +15,8 @@
           "type": "body"
         },
         "code": {
-          "start": 5,
-          "end": 5
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/note/note.alias.js",
@@ -40,8 +40,8 @@
           "type": "body"
         },
         "code": {
-          "start": 10,
-          "end": 10
+          "start": -1,
+          "end": -1
         },
         "file": {
           "path": "docs/tests/annotations/note/note.alias.js",
