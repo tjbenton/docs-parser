@@ -193,8 +193,8 @@
       2,
       "always",
       {
-        "line": { "markers": [ "/", "#" ], "exceptions": [ "-", "+", "/", "#" ] },
-        "block": { "markers": [ "!" ], "exceptions": [ "*" ] }
+        "line": { "markers": [ "/", "/#" ], "exceptions": [ "-", "+", "/", "#" ] },
+        "block": { "markers": [ "!", "*#" ], "exceptions": [ "*", "#" ] }
       }
     ],
     "valid-typeof": 2,
