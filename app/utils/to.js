@@ -12,7 +12,7 @@ let to = {
   /// Helper function to convert markdown text to html
   /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
   /// @returns {string} of `html`
-  markdown,
+  markdown: (arg) => markdown(to.string(arg)),
 
   ...changeCase,
 
