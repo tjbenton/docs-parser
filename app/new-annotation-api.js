@@ -35,7 +35,7 @@ const annotation_base = {
 
 
 export default class AnnotationApi {
-  constructor({ annotations, file }) {
+  constructor({ annotations, file, type }) {
     // object of the all the annotation
     // This object holds all the annotations
     this.annotations_list = {
@@ -50,7 +50,7 @@ export default class AnnotationApi {
       // }
     }
 
-    this.file = file
+    this.file = file || { type }
 
 
     // stores the current annotation that is being added
@@ -96,7 +96,7 @@ export default class AnnotationApi {
       return to.extend(previous, {
         [current]: this.list(current)
       })
-    }, { main: this.list() })
+    }, { parse: this.list() })
   }
 
   /// @name add
@@ -110,12 +110,12 @@ export default class AnnotationApi {
   /// @returns {this}
   ///
   /// @markup {js} **Example:** Declaring a basic annotation
-  /// annoationsApi.add("name", function(){
+  /// annotationsApi.add("name", function(){
   ///   return this.annotation.line
   /// })
   ///
   /// @markup {js} **Example:** Declaring a annotation with more options
-  /// annoationsApi.add("name", {
+  /// annotationsApi.add("name", {
   ///   alias: ['title', 'heading'],
   ///   parse(){
   ///     return this.annotation.line
@@ -125,7 +125,7 @@ export default class AnnotationApi {
   /// })
   ///
   /// @markup {js} **Example** Specifing a file specific annotation
-  /// annoationsApi.add('promise', {
+  /// annotationsApi.add('promise', {
   ///   // the filetypes passed will use the `parse` and the other
   ///   // settings in the config. It can be a string or an array of
   ///   // filetypes. Note that if a filetype isn't specificed it defaults
@@ -238,85 +238,69 @@ export default class AnnotationApi {
     })
   }
 
-  /// @name run_annotation
-  /// @access private
-  /// @arg {object} annotation - the information for the annotation to be called(name, line, content, start, end)
-  run(options) {
-    let {
-      annotation,
-      annotation_types,
-      block = {},
-      file,
-      log
-    } = options
-
-    /// @name add
-    /// @page annotation
-    /// @description Allows you to add a different annotation from within a annotation
-    /// @arg {string} name - the name of the annotation you want to add
-    /// @arg {string} str - information that is passed to the annotation
-    const add = (name, contents) => {
-      contents = to.normalize(contents)
-      return this.run({
-        annotation: {
-          name,
-          alias: is.in(annotation_types.alias, name) ? annotation_types.alias[name] : [],
-          line: to.normalize(contents[0]),
-          contents,
-          start: null,
-          end: null
-        },
-        annotation_types,
-        ...block,
-        log
-      })
+  run(type, options) {
+    {
+      const base = { contents: [], start: -1, end: -1 }
+      options = to.arguments({
+        type: 'parse',
+        annotation: { name: '', alias: '', ...base },
+        file: { path: '', name: '', type: '', options: {}, ...base },
+        comment: { ...base },
+        code: { ...base },
+      }, arguments)
     }
 
-    // removes the first line because it's the `line` of the annotation
-    annotation.contents.shift()
-
-    // normalizes the current annotation contents
-    annotation.contents = to.normalize(annotation.contents)
-
-    // normalizes the current annotation line
-    annotation.line = to.normalize(annotation.line)
-
-    // Merges the data together so it can be used to run all the annotations
-    let result = {
-      // sets the annotation block information to be in it's own namespace of `annotation`
-      annotation,
-
-      // adds the comment, code, and file information
-      ...block,
-
-      add,
-
-      // adds the ability to add logging information
-      log
-    }
-
-    // a) add the default annotation function to the object so it can be called in the file specific annotation functions if needed
-    if (is.all.truthy((this.annotations_list[file.type] || {})[annotation.name], ((this.annotations_list.default || {})[annotation.name]) || {}).parse) {
-      result.default = this.annotations_list.default[annotation.name].parse.call(result)
-    }
-
-    return annotation_types.main[annotation.name].parse.call(result)
-  }
+    let { type: fn_name, ...base } = options
 
 
-  _run({ list, parsed, block }) {
-    let parsed_keys = to.keys(parsed)
+    // /// @name add
+    // /// @page annotation
+    // /// @description Allows you to add a different annotation from within a annotation
+    // /// @arg {string} name - the name of the annotation you want to add
+    // /// @arg {string} str - information that is passed to the annotation
+    // const add = (name, contents) => {
+    //   contents = to.normalize(contents)
+    //   return this.run({
+    //     annotation: {
+    //       name,
+    //       alias: is.in(this.annotations.alias, name) ? this.annotations.alias[name] : [],
+    //       line: to.normalize(contents[0]),
+    //       contents,
+    //       start: null,
+    //       end: null
+    //     },
+    //     annotation_types,
+    //     ...block,
+    //     log
+    //   })
+    // }
 
-    for (let [ annotation, fn ] of to.entries(list)) {
-      if (!is.in(parsed_keys, annotation)) {
-        const result = is.fn(fn) ? fn.call(block) : fn
-        if (result != null) {
-          parsed[annotation] = result
-        }
+    {
+      const list = this.annotations_list
+      const { annotation, file } = base
+      const fn = (list[file.type] || {})[annotation.name]
+      let default_fn = (list.default || {})[annotation.name]
+
+      if (fn && default_fn && (default_fn = default_fn[fn_name])) {
+        base.default = () => default_fn.call(base)
       }
     }
 
-    return parsed
+    const fn = this.getAnnotationFn(base.annotation.name, fn_name)
+    let result = is.function(fn) ? fn.call(base) : fn
+    return result
+  }
+
+  getAnnotationFn(name, type) {
+    let fn = this.annotations
+    // console.log('fn 1:', fn)
+    fn = fn[type] || {}
+    fn = fn[name] || {}
+    if (is.function(fn)) {
+      return fn
+    }
+    fn = fn[type] || {}
+    return fn
   }
 
   alias_check() {
