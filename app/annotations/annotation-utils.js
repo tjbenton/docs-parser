@@ -14,21 +14,29 @@ let regexes
   const id = '(?:\\((.*)\\))?'
   const description = '(?:\\s*\\-?\\s+)?(.*)?'
 
-  regexes = {
-    arg: new RegExp(types + space + name + space + value + space + description, 'i'),
-    deprecated: new RegExp(types + space + description, 'i'),
-    markup: new RegExp(id + space + types + space + value + space + description, 'i'),
-    note: new RegExp(types + space + description, 'i'),
-    throws: new RegExp(types + space + description, 'i'),
-    requires: new RegExp(types + space + name + description, 'i'),
-    returns: new RegExp(types + space + description, 'i'),
-    since: new RegExp(types + space + description, 'i'),
-    state_id: new RegExp(`${id}${space}(.*)`, 'i'),
-    state: new RegExp(types + space + value + space + description, 'i'),
-    todo: new RegExp(types + space + value + space + description, 'i'),
-    type: new RegExp(types + space + description, 'i'),
-    version: new RegExp(types + space + description, 'i'),
-  }
+  let rg = {}
+
+  rg.arg =
+  rg.property = new RegExp(types + space + name + space + value + space + description, 'i')
+
+  rg.markup = new RegExp(id + space + types + space + value + space + description, 'i')
+
+  rg.deprecated =
+  rg.note =
+  rg.throws =
+  rg.returns =
+  rg.since =
+  rg.type =
+  rg.version = new RegExp(types + space + description, 'i')
+
+  rg.requires = new RegExp(types + space + name + description, 'i')
+
+  rg.state_id = new RegExp(`${id}${space}(.*)`, 'i')
+
+  rg.state =
+  rg.todo = new RegExp(types + space + value + space + description, 'i')
+
+  regexes = rg
 }
 
 export function regex(name, str) {
