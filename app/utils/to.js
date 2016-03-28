@@ -12,7 +12,7 @@ let to = {
   /// Helper function to convert markdown text to html
   /// For more details on how to use marked [see](https://www.npmjs.com/package/marked)
   /// @returns {string} of `html`
-  markdown: (arg) => markdown(to.string(arg)),
+  markdown: (...args) => markdown(to.string(to.flatten(...args))),
 
   ...changeCase,
 
@@ -223,8 +223,11 @@ let to = {
   /// // Output:
   /// // 0: Jane
   /// // 1: Doe
-  entries(obj, from_index = 0, to_index) {
+  entries(obj, start = 0, end /* = item.length || to.keys(item).length */) {
+    let i = start
+    // this is what's returned when the iterator is done
     const done = { done: true }
+    // this is the base iterator
     let iterator = {
       [Symbol.iterator]() {
         return this
@@ -232,21 +235,21 @@ let to = {
     }
 
     if (is.array(obj)) {
-      if (is.undefined(to_index)) {
-        to_index = obj.length
+      if (is.undefined(end)) {
+        end = obj.length
       }
 
-      if (from_index < to_index) {
+      if (i < end) {
         iterator.next = () => {
-          if (from_index < to_index) {
-            return { value: [ from_index, obj[from_index++] ] }
+          if (i < end) {
+            return { value: [ i, obj[i++] ] }
           }
           return done
         }
       } else {
         iterator.next = () => {
-          if (from_index > to_index) {
-            return { value: [ from_index, obj[from_index--] ] }
+          if (i > end) {
+            return { value: [ i, obj[i--] ] }
           }
           return done
         }
@@ -259,23 +262,23 @@ let to = {
     // Reflect.ownKeys() retrieves both. But the support it is
     // extremly low at the time of writing this.
     let keys = to.keys(obj)
-    if (is.undefined(to_index)) {
-      to_index = keys.length
+    if (is.undefined(end)) {
+      end = keys.length
     }
 
-    if (from_index < to_index) {
+    if (i < end) {
       iterator.next = () => {
-        if (from_index < to_index) {
-          let key = keys[from_index]
-          return { value: [ key, obj[key], from_index++ ] }
+        if (i < end) {
+          let key = keys[i]
+          return { value: [ key, obj[key], i++ ] }
         }
         return done
       }
     } else {
       iterator.next = () => {
-        if (from_index > to_index) {
-          let key = keys[from_index]
-          return { value: [ key, obj[key], from_index-- ] }
+        if (i > end) {
+          let key = keys[i]
+          return { value: [ key, obj[key], i-- ] }
         }
         return done
       }
@@ -418,7 +421,7 @@ let to = {
   /// // }
   ///
   /// @returns {string} - The normalized string
-  normalize: (...args) => {
+  normalize(...args) {
     const options = to.arguments({
       content: '',
       leading: true,
@@ -502,24 +505,25 @@ let to = {
   /// @arg {object} a - Source object.
   /// @arg {object} b - Object to extend with.
   /// @returns {object} The extended object.
-  extend: (a, b) => {
+  extend(a, b) {
     // Don't touch `null` or `undefined` objects.
     if (!a || !b) {
       return a
     }
 
-    let k = to.keys(b) // eslint-disable-line
-
-    for (let i = 0, l = k.length; i < l; i++) {
-      if (is.plainObject(b[k[i]])) {
-        a[k[i]] = is.plainObject(a[k[i]]) ? to.extend(a[k[i]], b[k[i]]) : b[k[i]]
-      } else {
-        a[k[i]] = b[k[i]]
+    for (let k in b) {
+      if (b.hasOwnProperty(k)) {
+        if (is.plainObject(b[k])) {
+          a[k] = is.plainObject(a[k]) ? to.extend(a[k], b[k]) : b[k]
+        } else {
+          a[k] = b[k]
+        }
       }
     }
 
     return a
   },
+
   /// @name to.clone
   /// @description
   /// This will clone argument so the passed arg doesn't change
@@ -627,7 +631,7 @@ let to = {
   /// @description Converts a json object to a plain object
   /// @arg {json} - The json to parse
   /// @returns {object}
-  object: (arg) => {
+  object(arg) {
     if (is.array(arg)) {
       let result = {}
       for (let item of arg) result[item[0]] = item[1]
@@ -650,7 +654,7 @@ let to = {
   /// It converts multiple arrays into a single array
   /// @arg {array, string, object, number} - The item you want to be converted to array
   /// @returns {array}
-  array: (arg, glue = '\n') => {
+  array(arg, glue = '\n') {
     if (is.array(arg)) {
       return arg
     } else if (is.arguments(arg)) {
@@ -670,7 +674,10 @@ let to = {
   /// Flattens an array, and arrays inside of it into a single array
   /// @arg {array}
   /// @returnes {array} - single dimensional
-  // flatten: (arg) => is.array(arg) ? [].concat(...arg.map(to.flatten)) : arg,
+  // flatten(...args) {
+  //   const flatten = (arg) => is.array(arg) ? arg.reduce((a, b) => a.concat(is.array(b) ? to.flatten(b) : b), []) : arg
+  //   return args.map(flatten)
+  // },
   flatten(...args) {
     let _flatten = (arg) => is.array(arg) ? [].concat(...arg.map(_flatten)) : arg
     return _flatten(args.map(_flatten))
@@ -722,21 +729,40 @@ let to = {
   /// @arg {array, object} obj
   /// @arg {function} callback
   /// @returns {array, object} that was mapped
-  map(obj, callback, this_arg) {
+  map(obj, callback, context = null) {
     if (is.array(obj)) {
-      return obj.map(callback, this_arg)
+      return obj.map(callback, context)
     }
 
     let result = {}
 
     for (let [ key, value, i ] of to.entries(obj)) {
-      let cb_result = callback({ key, value }, i, obj)
+      let cb_result = callback.call(context, { key, value }, i, obj)
       if (is.truthy(cb_result) && !is.empty(cb_result) && is.plainObject(cb_result)) {
         to.extend(result, cb_result)
       }
     }
 
     return result
+  },
+
+
+  /// @name to.map
+  /// @description This function allows you to map an array or object
+  /// @arg {array, object} obj
+  /// @arg {function} callback
+  /// @returns {array, object} that was mapped
+  each(obj, callback, context = null) {
+    if (is.array(obj)) {
+      for (let [ i, value ] of to.entries(obj)) {
+        callback.call(context, value, i, obj)
+      }
+      return
+    }
+
+    for (let [ key, value, i ] of to.entries(obj)) {
+      callback.call(context, { key, value }, i, obj)
+    }
   },
 
   /// @name to.reduce
@@ -761,15 +787,15 @@ let to = {
   /// @arg {array, object} obj
   /// @arg {function} callback
   /// @returns {array, object} that was filtered
-  filter(obj, callback, this_arg = null) {
+  filter(obj, callback, context = null) {
     if (is.array(obj)) {
-      return obj.filter(callback, this_arg)
+      return obj.filter(callback, context)
     }
 
     let result = {}
 
     for (let [ key, value, i ] of to.entries(obj)) {
-      if (is.truthy(callback.call(this_arg, { key, value }, i, obj))) {
+      if (is.truthy(callback.call(context, { key, value }, i, obj))) {
         to.extend(result, { [key]: value })
       }
     }
@@ -782,7 +808,7 @@ let to = {
   /// Converts `arg` to number
   /// @arg {number, array, object, string, boolean}
   /// @returns {number}
-  number: (arg) => {
+  number(arg) {
     if (is.number(arg)) {
       return arg
     } else if (is.array(arg)) {
@@ -792,6 +818,23 @@ let to = {
     }
 
     return ~~arg // eslint-disable-line
+  },
+
+  /// @name to.regex
+  /// @description
+  /// This function will convert a string or array into a regex expression
+  /// @arg {string, array}
+  /// @returns {Regex}
+  regex(...args/* , flags */) {
+    let flags = args.pop()
+    const length = flags.length
+    const test = flags.match(/[gimy]+/)
+    if (is.any.falsy(is.between(length, 1, 3), test && test.length === length)) {
+      args.push(flags)
+      flags = ''
+    }
+
+    return new RegExp(to.flatten(...args).join(''), flags)
   }
 }
 
