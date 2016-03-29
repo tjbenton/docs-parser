@@ -1,5 +1,5 @@
 import getPages from './pages'
-import getPav from './nav'
+import getNav from './nav'
 
 /// @name sort
 /// @description
@@ -7,11 +7,8 @@ import getPav from './nav'
 /// @arg {object}
 /// @returns {object}
 export default function sorter(options = {}) {
-  let pages = getPages(options)
-  let nav = getPav(pages)
+  const pages = getPages(options)
+  const nav = getNav(pages)
 
-  return {
-    nav,
-    pages
-  }
+  return { nav, pages }
 }

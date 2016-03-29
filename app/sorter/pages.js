@@ -6,69 +6,75 @@ import clor from 'clor'
 /// @description
 /// This function loops over the json that was passed and creates a organized structure
 /// based on the `@pages` annotations that were passed.
-export default function pages(options = {}) {
-  // placeholder for the result
-  let result = {}
+export default function pages(options) {
+  return new Pages(options)
+}
 
-  let { json, page_fallback, log } = options
+class Pages {
+  constructor({ json, page_fallback, log }) {
+    this.json = json
+    this.page_fallback = page_fallback
+    this.log = log
+    this.base = { page: { header: {}, body: [] } }
+    this.result = {}
 
-  for (let { path, header, body } of to.objectEntries(json, 'path')) {
-    if (!is.empty(header)) {
-      if (is.falsy(header.page)) {
-        if (is.truthy(page_fallback)) {
-          header.page = [ page_fallback ]
-        } else {
-          log.emit('warning', `
-            Header comment ${header.name && '(' + header.name + ')'} doesn't have a ${clor.bold('@page')} defined in
-            ${path}
-          `)
-        }
-      }
-
-      // a) Set the name in the header to be the name of the file
-      if (is.falsy(header.name)) {
-        log.emit('warning', '' +
-          'The hardest thing in development is naming but you gotta try, add a ' +
-          clor.bold('@name') +
-          ' to the header comment in ' +
-          clor.bold(path)
-        )
-      }
-
-      // set the header for the file
-      for (let page of header.page) set(page, 'header', header)
+    for (const obj of to.objectEntries(this.json, 'path')) {
+      let { path, header, body } = this.obj = obj
+      this.path = path
+      this.header = header
+      to.each({ header, body }, this.parse, this)
     }
 
-    if (!is.empty(body)) {
-      for (let block of body) {
-        // warn the user that there isn't a page defined.
-        if (is.all.empty(header.page, block.page)) {
-          log.emit('warning', `
-            ${block.name || 'a block'} starting on line ${block.__start} doesn't have a \`@page\` defined in
-            ${path}
-          `)
-        }
+    return this.result
+  }
 
-        // add the block to each page in the header
-        if (header.page) {
-          for (let page of header.page) {
-            set(page, 'body', block)
-
-            let index = (body.page || []).indexOf(page)
-
-            // remove the page from the body comment
-            if (index > -1) {
-              block.page.splice(index, 1)
-            }
-          }
-        }
-
-        // add the block to each page in the block
-        if (block.page && !is.empty(block.page)) {
-          for (let page of block.page) set(page, 'body', block)
-        }
+  parse({ key, value: val }) {
+    if (!is.empty(val)) {
+      if (is.array(val)) {
+        return to.each(val, (value) => this.parse({ key, value }), this)
       }
+
+      this.parseToken({ key, value: val })
     }
+  }
+
+  parseToken({ key: token_type, value: token }) {
+    let token_title = to.titleCase(token_type)
+    const is_header = token_type === 'header'
+    const path = this.path
+
+    if (is.falsy(token.page) && is_header) {
+      if (is.falsy(this.page_fallback)) {
+        this.log.emit('warning', to.normalize(`
+          ${token_title} comment ${token.name && '@name ' + token.name} doesn't have a ${clor.bold('@page')} defined in
+          ${clor.bold.blue(path)}
+        `))
+        return
+      }
+
+      this.header.page = [ this.page_fallback ]
+    }
+
+    if (!is_header && !is.empty(this.header.page)) {
+      token.page = to.unique([ ...(this.header.page), ...(token.page || []) ])
+    }
+
+
+    // If the token doesn't contain a name and isn't a header comment it get's skipped
+    if (is.falsy(token.name)) {
+      if (!is_header) {
+        this.log.emit('warning', to.normalize(`
+          The hardest thing in development is naming all the things but you gotta try, add a ${clor.bold('@name')} annotation
+          to the comment block starting on line ${token.blockinfo.comment.start} in  ${clor.bold.blue(path)}
+        `))
+        return
+      }
+
+      // set the token name to be the filepath name
+      token.name = to.titleCase(path.split('/').pop().split('.').shift())
+    }
+
+    for (const page of token.page) this.set(page, token_type, token)
   }
 
   // @name set
@@ -77,7 +83,7 @@ export default function pages(options = {}) {
   // the `base` array if it was passed.
   //
   // @returns {object} - The nested object with the set value
-  function set(path, type, value) {
+  set(path, type, value) {
     // ensures values won't change in the passed value
     value = to.clone(value)
 
@@ -85,7 +91,7 @@ export default function pages(options = {}) {
     // won't get added to the data
     delete value.page
 
-    let obj = result
+    let obj = this.result
     // convert to array, and filter out empty strings
     let path_list = path.split('/').filter(Boolean)
 
@@ -95,27 +101,16 @@ export default function pages(options = {}) {
 
     // loop over all the pages in in the `path_list` except the
     // last one and create the `page`, and `nav` if they don't exist.
-    for (let i = 0; i < length; i++) {
-      let page = path_list[i]
+    for (let [ i, page ] of to.entries(path_list, 0, length)) {  // eslint-disable-line
       if (!obj[page]) {
-        obj[page] = {
-          page: {
-            header: {},
-            body: []
-          }
-        }
+        obj[page] = to.clone(this.base)
       }
       obj = obj[page]
     }
 
     // a) Define the default data set(can't use `page` because it will be overwritten)
     if (!obj[path_list[length]]) {
-      obj[path_list[length]] = {
-        page: {
-          header: {},
-          body: []
-        }
-      }
+      obj[path_list[length]] = to.clone(this.base)
     }
 
     if (type === 'header') {
@@ -124,6 +119,4 @@ export default function pages(options = {}) {
       obj[path_list[length]].page.body.push(value)
     }
   }
-
-  return result
 }
