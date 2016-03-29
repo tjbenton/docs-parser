@@ -2,9 +2,7 @@
 
 import path from 'path'
 import {
-  info,
   to,
-  fs,
   glob,
 } from './utils'
 import Parser from './parser'
@@ -45,7 +43,8 @@ export default async function docs(options = {}) {
 
   let json = {}
   let parsers = {}
-  let ignored
+  const ignored = await glob(ignore)
+  const root = process.cwd()
 
   let walk = async (files) => {
     files = to.array(files)
@@ -53,10 +52,9 @@ export default async function docs(options = {}) {
     log.emit('start', 'total')
     try {
       log.emit('start', 'paths')
-      ignored = await glob(ignore)
       files = await glob(files, ignored)
 
-      let paths_message = `%s completed ${to.map(files, (file) => clor.bold(path.join(info.dir, file))).join(', ')} after %dms`
+      let paths_message = `%s completed ${to.map(files, (file) => clor.bold(path.join(root, file))).join(', ')} after %dms`
       if (files.length > 3) {
         let s = files.length > 1 ? 's' : '' // eslint-disable-line
         paths_message = `%s completed after %dms with ${files.length} file${s} to parse`
@@ -65,16 +63,15 @@ export default async function docs(options = {}) {
 
       log.emit('start', 'parser')
       options.annotationsApi = annotations
-      const parser_options = { blank_lines, indent, annotations, sort, log }
 
       const parse = async ({ file, type }) => {
         return {
-          [path.join('docs', file)]: await parsers[type].parse(file)
+          [file]: await parsers[type].parse(file)
         }
       }
 
 
-
+      const parser_options = { page_fallback, blank_lines, indent, annotations, sort, log }
       files = await map(files, (file) => {
         const type = path.extname(file).replace('.', '')
         if (!parsers[type]) {

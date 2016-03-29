@@ -23,6 +23,7 @@
           "author": [
             "Tyler Benton"
           ],
+          "access": "public",
           "blockinfo": {
             "comment": {
               "start": 1,
@@ -38,8 +39,7 @@
               "start": 1,
               "end": 27
             }
-          },
-          "access": "public"
+          }
         },
         "body": [
           {
@@ -62,6 +62,7 @@
                 "escaped_stateless": "@include moz-only() {\n  // removes the weird styling in firefox\n  -moz-appearance: none;\n  padding: {\n    top: nth-val(get($form-config, padding), 1) - .2em;\n    bottom: nth-val(get($form-config, padding), 3) - .2em;\n  };\n  text-indent: 0.01px;\n  text-overflow: &quot;&quot;;\n}"
               }
             ],
+            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 6,
@@ -69,20 +70,20 @@
                 "type": "body"
               },
               "code": {
-                "start": 20,
-                "end": 20
+                "start": -1,
+                "end": -1
               },
               "file": {
                 "path": "docs/tests/cases/only-comments.scss",
                 "start": 1,
                 "end": 27
               }
-            },
-            "access": "public"
+            }
           },
           {
             "name": "Test one",
             "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nQuasi omnis facilis vero architecto perferendis, debitis dignissimos tempore\ndolorem amet. Delectus, voluptatum, distinctio. Voluptas officiis\niste nostrum vel, culpa iure. Adipisci.</p>\n",
+            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 21,
@@ -90,16 +91,15 @@
                 "type": "body"
               },
               "code": {
-                "start": 27,
-                "end": 27
+                "start": -1,
+                "end": -1
               },
               "file": {
                 "path": "docs/tests/cases/only-comments.scss",
                 "start": 1,
                 "end": 27
               }
-            },
-            "access": "public"
+            }
           }
         ]
       }

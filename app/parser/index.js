@@ -36,19 +36,22 @@ export default class Parser {
       log: new Logger()
     }, arguments)
 
-    let { annotations, type, ...rest } = options
+    let { annotations, type, log, ...rest } = options
+    this.log = log
     this.options = rest
     this.api = new AnnotationApi({ annotations, type })
 
-    {
-      const { language } = this.options
-      this.comment_values = to.flatten([
-        ...to.values(language.header, '!type'),
-        ...to.values(language.body, '!type'),
-        ...to.values(language.inline, '!type')
-      ])
-      this.comment_values = to.unique(this.comment_values).filter(Boolean)
-    }
+    // this is used to pass to the annotations when they're called
+    this.annotation_options = { log: this.log, options: this.options }
+
+    const { language } = this.options
+
+    this.comment_values = to.flatten([
+      ...to.values(language.header, '!type'),
+      ...to.values(language.body, '!type'),
+      ...to.values(language.inline, '!type')
+    ])
+    this.comment_values = to.unique(this.comment_values).filter(Boolean)
 
     {
       let { alias, parse } = this.api.annotations
@@ -59,7 +62,7 @@ export default class Parser {
           .reduce((a, b) => to.extend(a, { [b]: key }), {})
         return to.extend(previous, value)
       }, {})
-      const regex = new RegExp(`^\s*${this.options.language.prefix}(?:(${to.keys(reverse_alias_list).join('|')})|(${parse.join('|')}))\\b\\s*`)
+      const regex = new RegExp(`^\s*${language.prefix}(?:(${to.keys(reverse_alias_list).join('|')})|(${parse.join('|')}))\\b\\s*`)
 
       this.annotations_list = { reverse_alias_list, regex }
     }
@@ -69,12 +72,11 @@ export default class Parser {
     file = is.plainObject(file) ? file : { path: file }
     file.type = file.type || path.extname(file.path).replace('.', '')
     file.contents = file.contents || to.string(await fs.readFile(file.path))
-    file.path = path.join(process.cwd().split(path.sep).pop(), file.path)
     file.name = path.basename(file.path, `.${file.type}`) // name of the file
-    file.options = this.options.language
     file.start = 1 // starting point of the file
     file.end = to.array(file.contents).length // ending point of the file
-    this.file = file
+    // add the file to the annotation_options that are passed to the annotation functions
+    this.annotation_options.file = this.file = file
 
     // if the file is empty or there aren't any comments then
     // just return the the empty values
@@ -98,6 +100,12 @@ export default class Parser {
     const { language, blank_lines, indent } = this.options
     const base = { blank_lines, indent, verbose: true }
     const header = new Tokenizer(contents, 0, language.header, { restrict: true, ...base })[0] || {}
+
+    // remove the code from the header comment because it shouldn't be used.
+    if (header.code) {
+      header.code = { contents: [], start: -1, end: -1 }
+    }
+
     let body = new Tokenizer(contents, header.comment ? header.comment.end + 1 : 0, language.body, base)
     const inline_tokenizer = new Tokenizer({ comment: language.inline, ...base })
 
@@ -127,7 +135,7 @@ export default class Parser {
     }
 
     header = map(header)
-    body = to.map(body, map)
+    body = to.map(body, (token, i) => map(token, i, header))
     return { header, body }
   }
 
@@ -167,12 +175,15 @@ export default class Parser {
   }
 
   parseTokens(tokens) {
-    const { log } = this.options
-    const file = this.file
-
     return this.map(tokens, (token, parent) => {
       token.parsed = to.reduce(token.annotations, (result, annotation) => {
-        const current = this.api.run('parse', { annotation, ...token, parent, file, log })
+        const current = this.api.run('parse', {
+          annotation,
+          ...token,
+          parent,
+          ...(this.annotation_options)
+        })
+
         if (result != null) {
           return to.merge(result, {
             [annotation.name]: current
@@ -185,16 +196,17 @@ export default class Parser {
   }
 
   autofillTokens(tokens) {
-    const { log } = this.options
-    const file = this.file
     const autofill_list = to.keys(this.api.annotations.autofill)
-
     return this.map(tokens, (token, parent) => {
-      const base = { ...token, parent, file, log }
       const parsed_keys = to.keys(token.parsed)
       for (let name of autofill_list) {
         if (!is.in(parsed_keys, name)) {
-          const result = this.api.run('autofill', { name }, base)
+          const result = this.api.run('autofill', {
+            annotation: { name },
+            ...token,
+            parent,
+            ...(this.annotation_options)
+          })
           if (result != null) {
             token.parsed[name] = result
           }
@@ -206,9 +218,7 @@ export default class Parser {
   }
 
   resolveTokens(tokens) {
-    const { options } = this
-    const { log, sort } = options
-    const file = this.file
+    const { sort } = this.options
     let resolve_list = to.keys(this.api.annotations.resolve)
     // sort the parsed object before the annotations are resolved
     if (is.fn(sort)) {
@@ -216,11 +226,15 @@ export default class Parser {
     }
 
     return this.map(tokens, (token, parent) => {
-      const base = { ...token, parent, file, log, }
       const parsed_keys = to.keys(token.parsed)
       for (let name of resolve_list) {
         if (is.in(parsed_keys, name)) {
-          const result = this.api.run('resolve', { name, alias: this.api.annotations.alias[name] }, base)
+          const result = this.api.run('resolve', {
+            annotation: { name, alias: this.api.annotations.alias[name] },
+            ...token,
+            parent,
+            ...(this.annotation_options)
+          })
           if (result != null) {
             token.parsed[name] = result
           }

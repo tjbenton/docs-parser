@@ -1,7 +1,7 @@
 /* eslint-disable no-loop-func */
 import path from 'path'
 import docs from '../dist/index.js'
-import Tokenizer from '../dist/new-parser/tokenizer.js'
+import Tokenizer from '../dist/parser/tokenizer.js'
 import { fs, glob } from '../dist/utils'
 import assert from 'core-assert'
 import { map } from 'async-array-methods'
@@ -53,7 +53,7 @@ addSuite('annotations', async ({ paths, expected }) => {
       let _path = paths[i]
       test(`${i}: ${_path}`, () => {
         assert.deepStrictEqual(
-          actual[i]['docs' + _path.split('/docs')[1]],
+          actual[i][_path],
           expected[i]
         )
       })
@@ -106,8 +106,8 @@ function addSuite(name, folder, callback) {
   return asyncSuite(
     name,
     async () => {
-      const base = path.join(__dirname, folder)
-      const paths = await glob(path.join(base, '**', '*'), [ path.join(base, '**', '*.json') ])
+      folder = path.join(__dirname, folder)
+      const paths = await glob(path.join(folder, '**', '*'), [ path.join(folder, '**', '*.json') ])
       return {
         paths,
         expected: await map(paths, (file) => fs.readJson(file.replace(path.extname(file), '.json')))

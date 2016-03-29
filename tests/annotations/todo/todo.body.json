@@ -9,6 +9,7 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -24,8 +25,7 @@
           "start": 1,
           "end": 15
         }
-      },
-      "access": "public"
+      }
     },
     {
       "todo": [
@@ -35,6 +35,7 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 3,
@@ -50,8 +51,7 @@
           "start": 1,
           "end": 15
         }
-      },
-      "access": "public"
+      }
     },
     {
       "todo": [
@@ -61,6 +61,7 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -76,8 +77,7 @@
           "start": 1,
           "end": 15
         }
-      },
-      "access": "public"
+      }
     },
     {
       "todo": [
@@ -89,6 +89,7 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 7,
@@ -104,8 +105,7 @@
           "start": 1,
           "end": 15
         }
-      },
-      "access": "public"
+      }
     },
     {
       "todo": [
@@ -118,6 +118,7 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 9,
@@ -133,8 +134,7 @@
           "start": 1,
           "end": 15
         }
-      },
-      "access": "public"
+      }
     },
     {
       "todo": [
@@ -147,6 +147,7 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem sed distinctio,\nneque molestiae numquam cumque incidunt magni et provident temporibus. Illum, ullam\nquidem nulla architecto, numquam hic voluptate provident sit!</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 11,
@@ -162,8 +163,7 @@
           "start": 1,
           "end": 15
         }
-      },
-      "access": "public"
+      }
     }
   ]
 }

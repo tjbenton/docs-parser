@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in */
-import { info, fs, is, to, Logger } from './utils'
+import { fs, is, to, Logger } from './utils'
 import path from 'path'
 import * as annotations from './annotations'
 
@@ -7,7 +7,7 @@ let log = new Logger()
 
 // changed by `options` key
 export const default_options = {
-  config: `${info.root}/.docsfile.js`,
+  config: `${process.cwd()}/.docsfile.js`,
 
   // files to parse for documentation
   files: [ 'app/**/*', 'src/**/*', '*.md' ],
@@ -133,12 +133,12 @@ export default async function config(options = {}) {
 
   // merge options with default_options so there's a complete list of settings
   options = to.extend(to.clone(default_options), options)
-
+  const root = process.cwd()
   if (options.gitignore) {
     try {
       options.ignore = to.flatten([
         options.ignore,
-        to.array(to.string(await fs.readFile(path.join(info.root, '.gitignore'))))
+        to.array(to.string(await fs.readFile(path.join(root, '.gitignore'))))
       ])
     } catch (err) {
       // do nothing because there's no `.gitignore`

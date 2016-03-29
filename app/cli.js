@@ -1,6 +1,6 @@
 /* eslint-disable no-bitwise */
 import pkg from '../package.json'
-import { info, fs, to } from './utils'
+import { fs, to } from './utils'
 import program from 'commander'
 import docs from './docs'
 import { default_options } from './config'
@@ -10,6 +10,7 @@ export default function cli() {
   const to_list = (str) => str.replace(/\s/g, '').split(',').filter(Boolean)
   const to_boolean = () => false
   const to_number = (str) => ~~str
+  const root = process.cwd()
 
   program
     .version(pkg.version)
@@ -20,9 +21,9 @@ export default function cli() {
 
       Note: Put globs quotes \`'.*, app/**/*'\` to avoid issues
     `)
-    .option('-d, --dest [path]', 'Documentation folder', `${info.root}/docs/docs.json`)
+    .option('-d, --dest [path]', 'Documentation folder', `${root}/docs/docs.json`)
     .option('-c, --config [path]', 'Path to configuration file', default_options.config)
-    .option('-i, --ignore <glob1,[glob2,...]>', 'Paths to ignore', to_list, default_options.ignore)
+    .option('-i, --ignore <glob1, [glob2, ...]>', 'Paths to ignore', to_list, default_options.ignore)
     .option('-w, --watch', 'Recompile docs on changes', true, default_options.watch)
     .option('-g, --gitignore', 'Add `gitignore` files to the ignored files', default_options.gitignore)
     .option('-x, --no-debug', 'Output debugging information', to_boolean, default_options.debug)

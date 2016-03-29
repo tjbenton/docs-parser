@@ -9,12 +9,13 @@ var path = require('path')
 var clor = require('clor')
 var utils = require('../dist/utils')
 var argv = process.argv.slice(2)
+const root = process.cwd()
 
 utils.glob(argv, [ 'tests/**/*.json' ])
   .then(function(files) {
     var promises = []
     for (var i = 0; i < files.length; i++) {
-      promises.push(sortTest(files[i]))
+      promises.push(sortTest(path.join(root, files[i])))
     }
 
     return Promise.all(promises)
@@ -45,7 +46,7 @@ function sortTest(file) {
 
 function output(file, data) {
   return utils.fs.outputJson(
-    file.replace(path.extname(file), '.json').replace('docs/', ''),
+    file.replace(path.extname(file), '.json'),
     data,
     { spaces: 2 }
   )
@@ -63,7 +64,7 @@ function annotationTest(file) {
       ignore: '.*'
     })
     .then(function(parsed) {
-      return output(file, parsed[path.join('docs', file)])
+      return output(file, parsed[file])
     })
     .then(function() {
       resolve(clor.green(file) + '')

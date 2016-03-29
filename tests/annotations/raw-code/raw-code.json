@@ -6,6 +6,7 @@
         "raw": "function rawCode() {\n\n}",
         "escaped": "function rawCode() {\n\n}"
       },
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -21,8 +22,7 @@
           "start": 1,
           "end": 4
         }
-      },
-      "access": "public"
+      }
     }
   ]
 }

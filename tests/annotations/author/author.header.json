@@ -3,6 +3,10 @@
     "author": [
       "Tyler Benton"
     ],
+    "access": "public",
+    "page": [
+      "general"
+    ],
     "blockinfo": {
       "comment": {
         "start": 1,
@@ -18,11 +22,7 @@
         "start": 1,
         "end": 4
       }
-    },
-    "access": "public",
-    "page": [
-      "other"
-    ]
+    }
   },
   "body": []
 }

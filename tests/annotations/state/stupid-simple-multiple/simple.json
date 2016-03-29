@@ -66,6 +66,7 @@
           "escaped_stateless": "&lt;div class=&quot;something-super-awesome&quot;&gt;\n  Mind blown\n&lt;/div&gt;"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -81,8 +82,7 @@
           "start": 1,
           "end": 24
         }
-      },
-      "access": "public"
+      }
     }
   ]
 }

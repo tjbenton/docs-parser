@@ -1,5 +1,6 @@
 import { to, is } from '../utils'
 import { logAnnotationError } from './annotation-utils'
+import path from 'path'
 /// @name blockinfo
 /// @page annotations
 /// @description
@@ -26,6 +27,8 @@ import { logAnnotationError } from './annotation-utils'
 ///   }
 /// }
 /// ```
+const root = process.cwd()
+const root_dir = root.split(path.sep).pop()
 export default {
   autofill() {
     let obj = to.clone(this)
@@ -37,18 +40,13 @@ export default {
 
     const file_filter = [ 'contents', 'name', 'type', 'comment', 'options' ]
     let file = to.filter(obj.file, ({ key }) => !is.in(file_filter, key))
+    // this ensures that the path that's displayed is always relative
+    file.path = path.normalize(file.path)
+    if (path.isAbsolute(file.path)) {
+      file.path = path.join(root_dir, file.path.replace(root, ''))
+    }
 
     return { comment, code, file }
-
-    // @todo {5} decide if `comment` needs the `type` key. If it doesn't need
-    // it then just use the code below because it removes all the things that
-    // aren't needed from each of the values in `this`
-    // const filter = [ 'contents', 'name', 'type', 'comment', 'options' ]
-    // return to.map(this, (obj) => {
-    //   return {
-    //     [obj.key]: to.filter(obj.value, ({ key }) => !is.in(filter, key))
-    //   }
-    // })
   },
   parse() {
     this.log.emit('warning', "Passed @blockinfo, it's only supposed to be an autofilled annotation", logAnnotationError(this, ''))

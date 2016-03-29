@@ -39,6 +39,7 @@
             "author": [
               "Tyler Benton"
             ],
+            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 1,
@@ -54,13 +55,13 @@
                 "start": 1,
                 "end": 89
               }
-            },
-            "access": "public"
+            }
           },
           "body": [
             {
               "name": "One",
               "description": "<p>main method</p>\n",
+              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 6,
@@ -69,19 +70,19 @@
                 },
                 "code": {
                   "start": 9,
-                  "end": 33
+                  "end": 32
                 },
                 "file": {
                   "path": "docs/tests/file-types/c/test.c",
                   "start": 1,
                   "end": 89
                 }
-              },
-              "access": "public"
+              }
             },
             {
               "name": "Two",
               "description": "<p>This is a normal multi-line comment.</p>\n",
+              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 34,
@@ -90,19 +91,19 @@
                 },
                 "code": {
                   "start": 37,
-                  "end": 63
+                  "end": 62
                 },
                 "file": {
                   "path": "docs/tests/file-types/c/test.c",
                   "start": 1,
                   "end": 89
                 }
-              },
-              "access": "public"
+              }
             },
             {
               "name": "Three",
               "description": "<p>This is another normal multi-line comment.</p>\n",
+              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 64,
@@ -111,15 +112,14 @@
                 },
                 "code": {
                   "start": 67,
-                  "end": 89
+                  "end": 88
                 },
                 "file": {
                   "path": "docs/tests/file-types/c/test.c",
                   "start": 1,
                   "end": 89
                 }
-              },
-              "access": "public"
+              }
             }
           ]
         }

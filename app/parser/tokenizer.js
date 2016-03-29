@@ -85,6 +85,8 @@ export default class Tokenizer {
     // holds the parsed tokens
     this.tokens = []
 
+    this.current_blank_lines = 0
+
     // update the stash
     this.stash = this.getStash(stash)
 
@@ -140,7 +142,7 @@ export default class Tokenizer {
     // add a space to each line so the line index is 1 based instead of 0 based. If the line is empty,
     // a space will not be added so that it's still easy to check if a line is empty or not. Doing this makes it
     // much easier to determine if any of the indexes are actually falsy or not, and it makes tracking errors easier
-    let stash = to.map(to.array(content), (line, i) => {
+    return to.map(to.array(content), (line, i) => {
       line = new Line(!line ? line : ` ${line}`, i)
       const str = `${line}`
       line.index = to.reduce([ 'start', 'single', 'end' ], (prev, next) => {
@@ -158,7 +160,9 @@ export default class Tokenizer {
         const { start, single, end } = this.options.comment
         let code_exsists
         // remove the comment and check to see if it has a line has code on it.
-        if (!this.is_multi && line.index.single) {
+        if (this.isEmpty(str)) {
+          code_exsists = true
+        } else if (!this.is_multi && line.index.single) {
           code_exsists = !this.isEmpty(this.getBefore(single, str))
         } else if (this.is_same_multi || line.index.start) {
           code_exsists = !this.isEmpty(this.getBefore(start || end, str))
@@ -170,12 +174,10 @@ export default class Tokenizer {
       }
 
       line.has_comment = is.any.truthy(line.index.start, line.index.single, line.index.end)
-      line.has_code = is.truthy(line.index.code)
+      line.has_code = is.truthy(this.isEmpty(str) || line.index.code)
 
       return line
     })
-
-    return stash
   }
 
   /// @name parse
@@ -233,16 +235,11 @@ export default class Tokenizer {
 
     debug.push(`line [${this.lineno}]: ${clor.bgBlue(this.line)}`, this.line).run()
 
-    if (
-      this.line.has_comment
-    ) {
+    if (this.line.has_comment) {
       this.token = new Token()
 
-      {
-        const { type } = this.options.comment
-        if (type) {
-          this.token.comment.type = type
-        }
+      if (this.options.comment.type) {
+        this.token.comment.type = this.options.comment.type
       }
 
       debug.push('has comment').run()
@@ -279,7 +276,7 @@ export default class Tokenizer {
   /// @returns {string}
   getBefore(comment, str) {
     if (!comment || !str) return str
-    return str.split(comment).shift()
+    return str.slice(0, str.indexOf(comment))
   }
 
   /// @name this.getAfter
@@ -290,7 +287,7 @@ export default class Tokenizer {
   /// @returns {string}
   getAfter(comment, str) {
     if (!comment || !str) return str
-    return str.split(comment).pop()
+    return str.slice(str.indexOf(comment) + comment.length)
   }
 
   /// @name getCode
@@ -298,23 +295,30 @@ export default class Tokenizer {
   /// Recursively pushes the code from each line onto the current token
   getCode() {
     const debug = this.debugGetCode
+    // store the starting lines indent
     const { indent } = this.line
 
     const recursiveCode = () => {
       let line = to.clone(this.line)
+      let str = `${line}`
       if (
         !this.is_same_multi &&
         !line.index.start &&
         line.index.end
       ) {
-        line.str = `${line}`.slice(line.index.end + this.options.comment.end.length + 1)
+        line.str = str = str.slice(line.index.end + this.options.comment.end.length + 1)
       } else {
-        line.str = `${line}`.slice(1, line.index.start || line.index.single || line.index.end || undefined)
+        line.str = str = str.slice(1, line.index.start || line.index.single || line.index.end || undefined)
       }
 
 
       // check to see if the current lines indent is less than the starting indent of the code
-      if (this.options.indent && !is.empty(line.toString()) && line.indent < indent) {
+      if (!is.empty(str)) {
+        this.current_blank_lines = 0
+        if (this.options.indent && line.indent < indent) {
+          return
+        }
+      } else if (++this.current_blank_lines >= this.options.blank_lines) {
         return
       }
 
@@ -323,10 +327,10 @@ export default class Tokenizer {
 
       if (
         this.hasNext() &&
-        debug.ifTrue(!this.is_same_multi || !line.has_comment, `the current line(${line.strno}) doesn't have a comment: ${clor.bgGreen(line)}`)
+        debug.ifTrue(!this.is_same_multi || !line.has_comment, `the current line(${line.lineno}) doesn't have a comment: ${clor.bgGreen(line)}`)
       ) {
         const next_line = this.peak()
-        const next_msg = `the next line(${next_line.strno}) has a comment: ${clor.bgRed(next_line)}`
+        const next_msg = `the next line(${next_line.lineno}) has a comment: ${clor.bgRed(next_line)}`
         return debug.ifFalse(!next_line.has_comment, next_msg) && this.next() && recursiveCode()
       }
     }
@@ -346,11 +350,11 @@ export default class Tokenizer {
     line.str = this.getAfter(comment.single, `${line}`)
 
     this.token.comment.contents.push(line)
-    const current_msg = `the current line(${line.strno}) doesn't have code: ${clor.bgGreen(line)}`
+    const current_msg = `the current line(${line.lineno}) doesn't have code: ${clor.bgGreen(line)}`
     if (debug.ifTrue(!line.has_code, current_msg) && this.hasNext()) {
       const next_line = this.peak()
       const context = next_line.has_code ? 'has code' : 'is empty'
-      const next_msg = `the next line(${next_line.strno}) ${context}: ${clor.bgRed(next_line)}`
+      const next_msg = `the next line(${next_line.lineno}) ${context}: ${clor.bgRed(next_line)}`
 
       this.next()
       return debug.ifFalse(next_line.has_comment && !next_line.has_code, next_msg, true) && this.getSingleComment()
@@ -369,10 +373,6 @@ export default class Tokenizer {
     let line = to.clone(this.line)
     let str = `${line}`
 
-    if (line.index.start || line.index.single) {
-      str = this.getAfter(line.index.start ? comment.start : comment.single, str)
-    }
-
     if (line.index.end) {
       str = this[this.is_same_multi ? 'getAfter' : 'getBefore'](comment.end, str)
 
@@ -382,17 +382,21 @@ export default class Tokenizer {
       }
     }
 
+    if (line.index.start || line.index.single) {
+      str = this.getAfter(line.index.start ? comment.start : comment.single, str)
+    }
+
     line.str = str
     this.token.comment.contents.push(line)
     debug.push(line)
     if (this.hasNext()) {
-      if (debug.ifTrue(!line.index.end, `the current line(${line.strno}) wasn't the last comment: ${clor.bgGreen(this.line)}`)) {
+      if (debug.ifTrue(!line.index.end, `the current line(${line.lineno}) wasn't the last comment: ${clor.bgGreen(this.line)}`)) {
         debug.run()
         return this.next() && this.getMultiComment()
       }
       const next = this.peak()
       if (
-        debug.ifTrue(!line.index.code, `the current line(${line.strno}) doesn't has code: ${clor.bgGreen(line)}`) &&
+        debug.ifTrue(!line.index.code, `the current line(${line.lineno}) doesn't has code: ${clor.bgGreen(line)}`) &&
         debug.ifTrue(!next.has_comment, `the next line(${next.lineno}) doesn't have a comment: ${clor.bgGreen(next)}`)
       ) {
         debug.run()
@@ -459,6 +463,7 @@ export default class Tokenizer {
     debug.push(token).run()
     this.tokens.push(token)
     this.token = undefined
+    this.current_blank_lines = 0
   }
 
   /// @name commentExisits
@@ -477,8 +482,7 @@ export default class Tokenizer {
     if (index > -1) {
       if (
         is.in(line, `${comment_type} `) || // check to see if the required space after the comment_type exisits
-        line.length === index + comment_type.length || // check to see if the comment_type is the last thing on that line (aka <!--- --->)
-        !line.slice(0, index).trim()
+        line.length === index + comment_type.length // check to see if the comment_type is the last thing on that line (aka <!--- --->)
       ) {
         return index
       }

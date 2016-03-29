@@ -785,9 +785,9 @@ let to = {
   /// @name to.filter
   /// @description This function allows you to filter an array or object
   /// @arg {array, object} obj
-  /// @arg {function} callback
+  /// @arg {function} callback [Boolean]
   /// @returns {array, object} that was filtered
-  filter(obj, callback, context = null) {
+  filter(obj, callback = Boolean, context = null) {
     if (is.array(obj)) {
       return obj.filter(callback, context)
     }

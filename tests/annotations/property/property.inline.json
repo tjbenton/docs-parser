@@ -7,6 +7,7 @@
         "type": "object",
         "description": ""
       },
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 4,
@@ -23,7 +24,6 @@
           "end": 45
         }
       },
-      "access": "public",
       "property": [
         {
           "types": [],
@@ -39,6 +39,7 @@
         "type": "object",
         "description": ""
       },
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 10,
@@ -55,7 +56,6 @@
           "end": 45
         }
       },
-      "access": "public",
       "property": [
         {
           "types": [
@@ -73,6 +73,7 @@
         "type": "object",
         "description": ""
       },
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 16,
@@ -89,7 +90,6 @@
           "end": 45
         }
       },
-      "access": "public",
       "property": [
         {
           "types": [
@@ -108,6 +108,7 @@
         "type": "object",
         "description": ""
       },
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 22,
@@ -124,7 +125,6 @@
           "end": 45
         }
       },
-      "access": "public",
       "property": [
         {
           "types": [
@@ -142,6 +142,7 @@
         "type": "object",
         "description": ""
       },
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 30,
@@ -158,7 +159,6 @@
           "end": 45
         }
       },
-      "access": "public",
       "property": [
         {
           "types": [
@@ -176,6 +176,7 @@
         "type": "object",
         "description": ""
       },
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 37,
@@ -192,7 +193,6 @@
           "end": 45
         }
       },
-      "access": "public",
       "property": [
         {
           "types": [

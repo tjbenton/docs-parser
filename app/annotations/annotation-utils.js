@@ -82,7 +82,8 @@ export function logAnnotationError(obj, expected) {
     annotation,
     comment,
     code,
-    file
+    file,
+    options
   } = obj
 
   const total_lines = ~~((11 + (annotation.end - annotation.start)) / 2)
@@ -98,7 +99,7 @@ export function logAnnotationError(obj, expected) {
   // used to modifiy the indention of numbers so that they align to the right
   let modifier = getSpaces(file.end)
   let temp_contents = to.flatten([ comment.contents, code.contents ])
-  let comment_style = file.options[comment.type].line
+  let comment_style = options.language[comment.type].single
   // The line below should get the correct length but it currently doesn't
   // let total_comment_lines = comment.end - comment.start
   let total_comment_lines = comment.contents.length - 1

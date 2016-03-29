@@ -10,6 +10,10 @@
         "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Exercitationem sed distinctio,\nneque molestiae numquam cumque incidunt magni et provident temporibus. Illum, ullam\nquidem nulla architecto, numquam hic voluptate provident sit!</p>\n"
       }
     ],
+    "access": "public",
+    "page": [
+      "general"
+    ],
     "blockinfo": {
       "comment": {
         "start": 1,
@@ -25,11 +29,7 @@
         "start": 1,
         "end": 7
       }
-    },
-    "access": "public",
-    "page": [
-      "other"
-    ]
+    }
   },
   "body": []
 }

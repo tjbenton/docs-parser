@@ -16,6 +16,7 @@
             "Tyler Benton"
           ],
           "description": "<p>This test is for a file that only has a header comment.</p>\n",
+          "access": "public",
           "blockinfo": {
             "comment": {
               "start": 1,
@@ -31,8 +32,7 @@
               "start": 1,
               "end": 8
             }
-          },
-          "access": "public"
+          }
         },
         "body": []
       }

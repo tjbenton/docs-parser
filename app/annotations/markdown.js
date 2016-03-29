@@ -25,9 +25,9 @@ export default {
     'text', 'md'
   ],
   parse() {
-    const options = this.file.options
-    const start = `(?:${options.header.start}|${options.body.start})`.replace('\\', '\\\\')
-    const end = `(?:${options.header.end}|${options.body.end})`.replace('\\', '\\\\')
+    const { header, body } = this.options.language
+    const start = `(?:${header.start}|${body.start})`.replace('\\', '\\\\')
+    const end = `(?:${header.end}|${body.end})`.replace('\\', '\\\\')
     const md_regex = new RegExp(`${start}(?:.|\\n)*\\n${end}`, 'gmi')
 
     return to.markdown(this.file.contents.replace(md_regex, ''))

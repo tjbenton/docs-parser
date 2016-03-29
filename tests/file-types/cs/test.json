@@ -40,6 +40,7 @@
               "Tyler Benton"
             ],
             "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nEaque temporibus praesentium iure, qui dolorem blanditiis\nerror a reprehenderit voluptates debitis iusto, quibusdam.</p>\n",
+            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 1,
@@ -55,13 +56,13 @@
                 "start": 1,
                 "end": 95
               }
-            },
-            "access": "public"
+            }
           },
           "body": [
             {
               "name": "One",
               "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nEaque temporibus praesentium iure, qui dolorem blanditiis\nerror a reprehenderit voluptates debitis iusto, quibusdam.</p>\n",
+              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 10,
@@ -70,19 +71,19 @@
                 },
                 "code": {
                   "start": 15,
-                  "end": 39
+                  "end": 38
                 },
                 "file": {
                   "path": "docs/tests/file-types/cs/test.cs",
                   "start": 1,
                   "end": 95
                 }
-              },
-              "access": "public"
+              }
             },
             {
               "name": "Two",
               "description": "<p>This is a normal multi-line comment.</p>\n",
+              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 40,
@@ -91,19 +92,19 @@
                 },
                 "code": {
                   "start": 43,
-                  "end": 69
+                  "end": 68
                 },
                 "file": {
                   "path": "docs/tests/file-types/cs/test.cs",
                   "start": 1,
                   "end": 95
                 }
-              },
-              "access": "public"
+              }
             },
             {
               "name": "Three",
               "description": "<p>This is another normal multi-line comment.</p>\n",
+              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 70,
@@ -112,15 +113,14 @@
                 },
                 "code": {
                   "start": 73,
-                  "end": 95
+                  "end": 94
                 },
                 "file": {
                   "path": "docs/tests/file-types/cs/test.cs",
                   "start": 1,
                   "end": 95
                 }
-              },
-              "access": "public"
+              }
             }
           ]
         }

@@ -62,7 +62,7 @@ export default {
     let state_interpolation
 
     {
-      const { interpolation, prefix } = this.file.options
+      const { interpolation, prefix } = this.options.language
       const { start, end } = interpolation
 
       state_interpolation = `${start}${prefix}states?[^${end}]*${end}`

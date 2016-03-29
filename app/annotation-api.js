@@ -1,38 +1,5 @@
 'use strict'
-
 import { is, to } from './utils'
-
-const annotation_base = {
-  // this declares where this annotation get's applied
-  filetypes: [ 'default' ],
-
-  // holds an array of aliases for the given annotation
-  alias: [],
-
-  // This function runs when the parser gets
-  // the annotations information
-  parse() {
-    return this.annotation.line
-  },
-
-  // Runs when the each annotation in the block has been
-  // parsed. If the annotation doesn't exist and the autofill
-  // is set to be a function then autofill get's called, and
-  // the block and file info are accessible within `this` if
-  // it is a function.`. **Note** this will not run if the
-  // annotation exists
-  autofill: false,
-
-  // Runs after the parsed and/or autofill runs the contents
-  // of `this` is what was returned by the parse and/or autofill.
-  // It's used to fixed data that was returned by parse.
-  // It helps when members on your team pass in the wrong keyword(s)
-  // and let's you resolve them here in the data instead of resolving
-  // the issues on the client side. It's also useful if you want want
-  // to ensure the data always returns an `array`.
-  resolve: false
-}
-
 
 export default class AnnotationApi {
   constructor({ annotations, file, type }) {
@@ -66,7 +33,7 @@ export default class AnnotationApi {
       // This function runs when the parser gets
       // the annotations information
       parse() {
-        return this.annotation.line
+        return this.contents.shift()
       },
 
       // Runs when the each annotation in the block has been
@@ -238,20 +205,16 @@ export default class AnnotationApi {
     })
   }
 
-  run(type, options) {
+  run(type, ...options) {
     {
       const base = { contents: [], start: -1, end: -1 }
       options = to.arguments({
-        type: 'parse',
         annotation: { name: '', alias: '', ...base },
-        file: { path: '', name: '', type: '', options: {}, ...base },
+        file: { path: '', name: '', type: '', ...base },
         comment: { ...base },
         code: { ...base },
-      }, arguments)
+      }, ...options)
     }
-
-    let { type: fn_name, ...base } = options
-
 
     // /// @name add
     // /// @page annotation
@@ -277,30 +240,30 @@ export default class AnnotationApi {
 
     {
       const list = this.annotations_list
-      const { annotation, file } = base
+      const { annotation, file } = options
       const fn = (list[file.type] || {})[annotation.name]
       let default_fn = (list.default || {})[annotation.name]
 
-      if (fn && default_fn && (default_fn = default_fn[fn_name])) {
-        base.default = () => default_fn.call(base)
+      if (fn && default_fn && (default_fn = default_fn[type])) {
+        options.default = () => default_fn.call(options)
       }
     }
 
-    let to_call = base
+    let to_call = options
     let details
 
     try {
-      const fn = this.getAnnotationFn(base.annotation.name, fn_name)
+      const fn = this.getAnnotationFn(options.annotation.name, type)
 
-      if (fn_name === 'parse') {
-        to_call = copyInvisible(details = base.annotation, base)
-      } else if (fn_name === 'resolve') {
-        to_call = copyInvisible(details = base.parsed[base.annotation.name], base)
+      if (type === 'parse') {
+        to_call = copyInvisible(details = options.annotation, options)
+      } else if (type === 'resolve') {
+        to_call = copyInvisible(details = options.parsed[options.annotation.name], options)
       }
 
       let result = is.function(fn) ? fn.call(to_call) : fn
 
-      if (fn_name === 'parse' && !is.any.undefined(details, result)) {
+      if (type === 'parse' && !is.any.undefined(details, result)) {
         if (is.array(result) && result.length === 1) {
           result = to.map(result, (obj) => copyInvisible(obj, { details }))
         }

@@ -8,6 +8,7 @@
           "description": ""
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -23,8 +24,7 @@
           "start": 1,
           "end": 20
         }
-      },
-      "access": "public"
+      }
     },
     {
       "note": [
@@ -33,6 +33,7 @@
           "description": ""
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 3,
@@ -48,8 +49,7 @@
           "start": 1,
           "end": 20
         }
-      },
-      "access": "public"
+      }
     },
     {
       "note": [
@@ -58,6 +58,7 @@
           "description": "<p>Lorem ipsum dolor sit amet</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -73,8 +74,7 @@
           "start": 1,
           "end": 20
         }
-      },
-      "access": "public"
+      }
     },
     {
       "note": [
@@ -83,6 +83,7 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation\nullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 7,
@@ -98,8 +99,7 @@
           "start": 1,
           "end": 20
         }
-      },
-      "access": "public"
+      }
     },
     {
       "note": [
@@ -108,6 +108,7 @@
           "description": "<p>Lorem ipsum dolor sit amet</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 13,
@@ -123,8 +124,7 @@
           "start": 1,
           "end": 20
         }
-      },
-      "access": "public"
+      }
     },
     {
       "note": [
@@ -133,6 +133,7 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna\naliqua. Ut enim ad minim veniam, quis nostrud exercitation\nullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 15,
@@ -148,8 +149,7 @@
           "start": 1,
           "end": 20
         }
-      },
-      "access": "public"
+      }
     }
   ]
 }

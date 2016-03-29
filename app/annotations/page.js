@@ -38,6 +38,7 @@ import { list } from './annotation-utils'
 /// /// @page also/add-block/to/location 2
 ///
 /// /// @page add-block/to/location 1, also/add-block/to/location 2
+import { to } from '../utils'
 export default {
   alias: [ 'group' ],
   parse() {
@@ -46,7 +47,7 @@ export default {
   autofill() {
     // autofill header comments
     if (this.comment.type === 'header') {
-      return [ 'other' ]
+      return [ this.options.page_fallback ]
     }
     // don't autofill body comments
     return

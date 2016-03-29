@@ -109,7 +109,7 @@ function replaceStates(str, states) {
 
   {
     let names = [ this.annotation.name, ...(this.annotation.alias) ].join('|')
-    const { interpolation, prefix } = this.file.options
+    const { interpolation, prefix } = this.options.language
     const { start, end } = interpolation
 
     state_interpolation = new RegExp(`${start}${prefix}(?:${names})[^${end}]*${end}`, 'g')

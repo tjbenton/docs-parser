@@ -34,7 +34,9 @@ class Pages {
         return to.each(val, (value) => this.parse({ key, value }), this)
       }
 
-      this.parseToken({ key, value: val })
+      if (!is.empty(val)) {
+        this.parseToken({ key, value: val })
+      }
     }
   }
 
@@ -55,10 +57,19 @@ class Pages {
       this.header.page = [ this.page_fallback ]
     }
 
-    if (!is_header && !is.empty(this.header.page)) {
-      token.page = to.unique([ ...(this.header.page), ...(token.page || []) ])
+    let page_list = []
+    // if the header doesn't exist or the page is empty
+    if (!token.page || is.empty(token.page)) {
+      if (this.header.page && !is.empty(this.header.page)) {
+        page_list.push(...(this.header.page))
+      } else if (!this.header.page || is.empty(this.header.page)) {
+        page_list.push(this.page_fallback)
+      }
     }
 
+    page_list.push(token.page || '')
+
+    token.page = page_list = to.unique(to.flatten(to.filter(page_list)))
 
     // If the token doesn't contain a name and isn't a header comment it get's skipped
     if (is.falsy(token.name)) {
@@ -67,13 +78,22 @@ class Pages {
           The hardest thing in development is naming all the things but you gotta try, add a ${clor.bold('@name')} annotation
           to the comment block starting on line ${token.blockinfo.comment.start} in  ${clor.bold.blue(path)}
         `))
-        return
+        // return
       }
 
       // set the token name to be the filepath name
-      token.name = to.titleCase(path.split('/').pop().split('.').shift())
+      // let name = path.split('/').pop()
+      // token.name = name.split('.')
+      // token.name = `${to.titleCase(token.name[0])} ${to.upperCase(token.name[1])} File` // `(<code>${name}</code>)`
     }
 
+    if (is.empty(page_list)) {
+      this.log.emit('warning', to.normalize(`
+        The documentation starting on line ${token.blockinfo.comment.start} isn't being added because a ${clor.bold('@page')} annotation doesn't exist
+        ${clor.bold.blue(path)}
+      `))
+      return
+    }
     for (const page of token.page) this.set(page, token_type, token)
   }
 

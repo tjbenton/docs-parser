@@ -3,6 +3,7 @@
     "page": [
       "level 1/level 2"
     ],
+    "access": "public",
     "blockinfo": {
       "comment": {
         "start": 1,
@@ -18,8 +19,7 @@
         "start": 1,
         "end": 4
       }
-    },
-    "access": "public"
+    }
   },
   "body": []
 }

@@ -4,6 +4,7 @@
     {
       "name": "single-line `desc`",
       "description": "<p>Lorem ipsum</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -19,12 +20,12 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     },
     {
       "name": "multi-line `desc`",
       "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 4,
@@ -40,12 +41,12 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     },
     {
       "name": "single-line `definition`",
       "description": "<p>Lorem ipsum</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 11,
@@ -61,12 +62,12 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     },
     {
       "name": "multi-line `definition`",
       "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 14,
@@ -82,12 +83,12 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     },
     {
       "name": "single-line `explanation`",
       "description": "<p>Lorem ipsum</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 21,
@@ -103,12 +104,12 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     },
     {
       "name": "multi-line `explanation`",
       "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 24,
@@ -124,12 +125,12 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     },
     {
       "name": "single-line `writeup`",
       "description": "<p>Lorem ipsum</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 31,
@@ -145,12 +146,12 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     },
     {
       "name": "multi-line `writeup`",
       "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 34,
@@ -166,12 +167,12 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     },
     {
       "name": "single-line `summary`",
       "description": "<p>Lorem ipsum</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 41,
@@ -187,12 +188,12 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     },
     {
       "name": "multi-line `summary`",
       "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 44,
@@ -208,12 +209,12 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     },
     {
       "name": "single-line `summarization`",
       "description": "<p>Lorem ipsum</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 51,
@@ -229,12 +230,12 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     },
     {
       "name": "multi-line `summarization`",
       "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nDelectus eaque nesciunt explicabo doloremque temporibus cumque</p>\n",
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 54,
@@ -250,8 +251,7 @@
           "start": 1,
           "end": 58
         }
-      },
-      "access": "public"
+      }
     }
   ]
 }

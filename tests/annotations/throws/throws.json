@@ -8,6 +8,7 @@
           "description": ""
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -23,8 +24,7 @@
           "start": 1,
           "end": 16
         }
-      },
-      "access": "public"
+      }
     },
     {
       "throws": [
@@ -35,6 +35,7 @@
           "description": ""
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 3,
@@ -50,8 +51,7 @@
           "start": 1,
           "end": 16
         }
-      },
-      "access": "public"
+      }
     },
     {
       "throws": [
@@ -62,6 +62,7 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -77,8 +78,7 @@
           "start": 1,
           "end": 16
         }
-      },
-      "access": "public"
+      }
     },
     {
       "throws": [
@@ -89,6 +89,7 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 7,
@@ -104,8 +105,7 @@
           "start": 1,
           "end": 16
         }
-      },
-      "access": "public"
+      }
     },
     {
       "throws": [
@@ -116,6 +116,7 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod sequi adipisci illum.\nAtque itaque sequi, qui ratione aliquid debitis dolorem alias blanditiis, impedit\nnecessitatibus quidem at non, earum a esse.</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 9,
@@ -131,8 +132,7 @@
           "start": 1,
           "end": 16
         }
-      },
-      "access": "public"
+      }
     },
     {
       "throws": [
@@ -149,6 +149,7 @@
           "description": "<p>when something goes wrong</p>\n"
         }
       ],
+      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 14,
@@ -164,8 +165,7 @@
           "start": 1,
           "end": 16
         }
-      },
-      "access": "public"
+      }
     }
   ]
 }
