@@ -235,6 +235,7 @@ export default class Parser {
     let autofill_keys = to.keys(this.api.annotations.autofill)
     const cleanup = ({ inline, parsed }) => {
       if (!parsed) return {}
+      parsed = to.object(to.json(parsed)) // this get's rid of any weird objects that might still be present
       if (inline) {
         return to.merge(parsed, to.reduce(inline, (prev, next) => {
           return to.merge(prev, to.filter(next.parsed, ({ key }) => {
