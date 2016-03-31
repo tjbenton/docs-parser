@@ -36,7 +36,6 @@
             "author": [
               "Tyler Benton"
             ],
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 7,
@@ -52,13 +51,13 @@
                 "start": 1,
                 "end": 36
               }
-            }
+            },
+            "access": "public"
           },
           "body": [
             {
               "name": "Body Block 1",
               "description": "<p>This is the main header of the site</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 13,
@@ -74,12 +73,13 @@
                   "start": 1,
                   "end": 36
                 }
-              }
+              },
+              "access": "public",
+              "inline": []
             },
             {
               "name": "Body Block 2",
               "description": "<p>This is the main footer of the site</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 26,
@@ -95,7 +95,9 @@
                   "start": 1,
                   "end": 36
                 }
-              }
+              },
+              "access": "public",
+              "inline": []
             }
           ]
         }

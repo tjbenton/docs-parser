@@ -44,7 +44,6 @@
                 "Tyler Benton"
               ],
               "description": "<p>Your standard form button.</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 1,
@@ -60,7 +59,9 @@
                   "start": 1,
                   "end": 19
                 }
-              }
+              },
+              "access": "public",
+              "inline": []
             }
           ]
         }
@@ -73,7 +74,6 @@
           {
             "name": "Button group",
             "description": "<p>Used when there&#39;s a group of buttons that need to be on the same line.</p>\n",
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 6,
@@ -89,7 +89,9 @@
                 "start": 1,
                 "end": 19
               }
-            }
+            },
+            "access": "public",
+            "inline": []
           },
           {
             "name": "Test",
@@ -125,7 +127,6 @@
               ]
             },
             "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nQuasi omnis facilis vero architecto perferendis, debitis dignissimos tempore\ndolorem amet. Delectus, voluptatum, distinctio. Voluptas officiis\niste nostrum vel, culpa iure. Adipisci.</p>\n",
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 10,
@@ -141,7 +142,9 @@
                 "start": 1,
                 "end": 19
               }
-            }
+            },
+            "access": "public",
+            "inline": []
           }
         ]
       }

@@ -1,7 +1,6 @@
 {
   "header": {
     "name": "autofill access",
-    "access": "public",
     "page": [
       "general"
     ],
@@ -20,7 +19,8 @@
         "start": 1,
         "end": 4
       }
-    }
+    },
+    "access": "public"
   },
   "body": []
 }

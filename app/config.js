@@ -2,7 +2,7 @@
 import { fs, is, to, Logger } from './utils'
 import path from 'path'
 import * as annotations from './annotations'
-
+import clor from 'clor'
 let log = new Logger()
 
 // changed by `options` key
@@ -22,6 +22,8 @@ export const default_options = {
 
   // when true it will watch files for changes
   watch: false,
+
+  dest: `${process.cwd()}/docs/docs.json`,
 
   page_fallback: 'general', // used if `@page` isn't defined
 
@@ -65,7 +67,7 @@ export const default_options = {
       // body comment style
       body: { start: '', line: '///', end: '', type: 'body' },
 
-      // @todo add support for this single line prefix for comments inside of the code below the comment block
+      // inline comments for body comments
       inline: { start: '', line: '///#', end: '', type: 'inline' },
 
       // this is used for any interpolations that might occur in annotations.
@@ -159,6 +161,14 @@ export default async function config(options = {}) {
     timestamps: options.timestamps
   })
 
+
+  {
+    const { inline } = options.annotations
+    if (inline) {
+      options.log.error(`you can't have an ${clor.bold.red('@inline')} annotation because it's reserved`)
+    }
+  }
+
   return options
 }
 
@@ -199,8 +209,6 @@ export function parseLanguages(languages) {
     delete parsed[lang].extend
   }
 
-  // console.log(parsed)
-
   return parsed
 }
 
@@ -214,14 +222,13 @@ let valid_language_options = to.keys(default_options.languages.default)
 function ensureValidConfig(user_config) {
   for (let key in user_config) {
     if (!is.in(valid_options, key)) {
-      log.emit('warning', `'${key}' is not a valid option, see docs options for more details`) //# @todo add link to the doc options
+      log.emit('warning', `'${key}' is not a valid option, see docs options for more details`) ///# @todo add link to the doc options
     }
   }
 
   // ensures the newly added language has the correct comment format
   if (user_config.languages) {
     for (let [ lang, options ] of to.entries(user_config.languages)) {
-      // console.log('type', type)
       for (let [ key ] of to.entries(options)) {
         if (!is.in(valid_language_options, key)) {
           log.emit(

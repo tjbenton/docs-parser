@@ -18,7 +18,8 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "inline": []
     },
     {
       "access": "public",
@@ -37,7 +38,8 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "inline": []
     },
     {
       "access": "private",
@@ -56,7 +58,8 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "inline": []
     }
   ]
 }

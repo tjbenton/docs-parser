@@ -2,15 +2,30 @@
 
 import path from 'path'
 import {
+  fs,
   to,
   glob,
 } from './utils'
 import Parser from './parser'
 import sorter from './sorter'
 import getConfig from './config'
-import { map } from 'async-array-methods'
+import array, { map } from 'async-array-methods'
 import chokidar from 'chokidar'
 import clor from 'clor'
+
+export {
+  fs,
+  glob,
+  is,
+  to,
+  debug
+} from './utils'
+
+export {
+  Parser,
+  getConfig,
+  array
+}
 
 ////
 /// @name docs.js
@@ -19,8 +34,9 @@ import clor from 'clor'
 /// This is used to parse any filetype that you want to and gets the
 /// documentation for it  and returns an `{}` of the document data
 ////
-export default async function docs(options = {}) {
+export default async function docs(options = {}, callback) {
   options = await getConfig(options)
+
   /* eslint-disable no-unused-vars */
   // these are all the options that can be used
   let {
@@ -28,6 +44,7 @@ export default async function docs(options = {}) {
     ignore,
     blank_lines,
     page_fallback,
+    dest,
     debug,
     warning,
     timestamps,
@@ -54,7 +71,7 @@ export default async function docs(options = {}) {
       log.emit('start', 'paths')
       files = await glob(files, ignored)
 
-      let paths_message = `%s completed ${to.map(files, (file) => clor.bold(path.join(root, file))).join(', ')} after %dms`
+      let paths_message = `%s completed ${to.map(files, (file) => clor.bold(file.replace(process.cwd() + '/', ''))).join(', ')} after %dms`
       if (files.length > 3) {
         let s = files.length > 1 ? 's' : '' // eslint-disable-line
         paths_message = `%s completed after %dms with ${files.length} file${s} to parse`
@@ -72,7 +89,7 @@ export default async function docs(options = {}) {
 
 
       const parser_options = { page_fallback, blank_lines, indent, annotations, sort, log }
-      files = await map(files, (file) => {
+      const parsed_files = await map(files, (file) => {
         const type = path.extname(file).replace('.', '')
         if (!parsers[type]) {
           parsers[type] = new Parser(languages[type] || languages.default, type, parser_options)
@@ -85,7 +102,7 @@ export default async function docs(options = {}) {
 
       // Loop through the parsed files and update the
       // json data that was stored.
-      for (let file of files) {
+      for (let file of parsed_files) {
         to.extend(json, file)
       }
 
@@ -100,13 +117,26 @@ export default async function docs(options = {}) {
       log.emit('complete', 'total')
       timestamps && log.space()
 
+      if (typeof callback === 'function') {
+        callback(result, files)
+      } else if (watch) {
+        console.log('updated: ', dest)
+        await fs.outputJson(dest, result)
+      }
+
       return result
     } catch (err) {
       log.error(err.stack)
     }
   }
 
+
+
+
   let result = await walk(initial_files)
+
+  initial_files = initial_files.map((_glob) => !path.isAbsolute(_glob) ? path.join(root, _glob) : _glob)
+  initial_files = await glob(initial_files, ignored)
 
   if (!watch) {
     return result
@@ -115,12 +145,16 @@ export default async function docs(options = {}) {
   let watcher = chokidar.watch(initial_files, { ignored, persistent: true, ignoreInitial: true })
 
   log.space()
-  log.print('Watching', to.map(initial_files, (file) => clor.bold(file)).join(', '))
-  log.print('Excluding', to.map(ignore, (file) => clor.bold(file)).join(', '))
+  log.print('Watching', to.map(initial_files, (file) => clor.bold(file.replace(`${root}/`, ''))).join(', '))
+  log.print('Excluding', to.map(ignore, (file) => clor.bold(file.replace(`${root}/`, ''))).join(', '))
   log.space()
 
   watcher.on('all', async (type, file) => {
-    if (type === 'add' || type === 'changed') {
+    if (
+      type === 'add' ||
+      type === 'changed' ||
+      type === 'change'
+    ) {
       try {
         await walk(file)
       } catch (err) {
@@ -128,6 +162,8 @@ export default async function docs(options = {}) {
       }
     }
   })
+
+  return watcher
 }
 
 // Catch uncaught exceptions

@@ -245,6 +245,13 @@ export default class Parser {
   }
 
   cleanupTokens(tokens) {
+    // option a
+    // return
+    return this.map(tokens, ({ parsed, inline }) => {
+      return to.object(to.json({ ...parsed, inline }))
+    })
+
+    // option b
     let { header, body } = tokens
     let autofill_keys = to.keys(this.api.annotations.autofill)
     const cleanup = ({ inline, parsed }) => {

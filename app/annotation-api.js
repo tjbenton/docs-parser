@@ -249,21 +249,23 @@ export default class AnnotationApi {
       }
     }
 
-    let to_call = options
-    let details
+    let details = options
 
     try {
       const fn = this.getAnnotationFn(options.annotation.name, type)
 
       if (type === 'parse') {
-        to_call = copyInvisible(details = options.annotation, options)
+        details = copyInvisible(options.annotation, options)
       } else if (type === 'resolve') {
-        to_call = copyInvisible(details = options.parsed[options.annotation.name], options)
+        details = copyInvisible(options.parsed[options.annotation.name], options)
       }
 
-      let result = is.function(fn) ? fn.call(to_call) : fn
+
+      let result = is.function(fn) ? fn.call(details) : fn
 
       if (type === 'parse' && !is.any.undefined(details, result)) {
+        // copy the details that were used to call the parse function command onto the result
+        // as `details` this gives the resolve function the ability to access all of the information if needed
         if (is.array(result) && result.length === 1) {
           result = to.map(result, (obj) => copyInvisible(obj, { details }))
         }

@@ -36,7 +36,6 @@
                 "escaped_stateless": "&lt;div class=&quot;c-btn-group&quot;&gt;\n &lt;a href=&quot;#&quot; class=&quot;c-btn&quot;&gt;Button (a.button)&lt;/a&gt;\n &lt;button class=&quot;c-btn&quot;&gt;Button (button)&lt;/button&gt;\n &lt;input class=&quot;c-btn&quot; type=&quot;button&quot; value=&quot;Button (input.button)&quot;&gt;\n&lt;/div&gt;"
               }
             ],
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 1,
@@ -52,7 +51,9 @@
                 "start": 1,
                 "end": 21
               }
-            }
+            },
+            "access": "public",
+            "inline": []
           },
           {
             "name": "Test",
@@ -88,7 +89,6 @@
               ]
             },
             "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.\nQuasi omnis facilis vero architecto perferendis, debitis dignissimos tempore\ndolorem amet. Delectus, voluptatum, distinctio. Voluptas officiis\niste nostrum vel, culpa iure. Adipisci.</p>\n",
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 12,
@@ -104,7 +104,9 @@
                 "start": 1,
                 "end": 21
               }
-            }
+            },
+            "access": "public",
+            "inline": []
           }
         ]
       }

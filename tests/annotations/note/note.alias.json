@@ -8,7 +8,6 @@
           "description": "<ul>\n<li>note 1</li>\n<li>note 2</li>\n<li>note 3</li>\n</ul>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -24,7 +23,9 @@
           "start": 1,
           "end": 10
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     },
     {
       "note": [
@@ -33,7 +34,6 @@
           "description": "<ul>\n<li>note 1</li>\n<li>note 2</li>\n<li>note 3</li>\n</ul>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 6,
@@ -49,7 +49,9 @@
           "start": 1,
           "end": 10
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     }
   ]
 }

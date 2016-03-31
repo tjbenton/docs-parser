@@ -31,7 +31,6 @@
             "author": [
               "Tyler Benton"
             ],
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 1,
@@ -47,13 +46,13 @@
                 "start": 1,
                 "end": 16
               }
-            }
+            },
+            "access": "public"
           },
           "body": [
             {
               "name": "One",
               "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem cum magni\nlaboriosam voluptate accusantium pariatur enim aspernatur quis laborum quam,\nodit doloribus repellat maiores alias soluta deleniti, at dicta iure.</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 7,
@@ -69,7 +68,9 @@
                   "start": 1,
                   "end": 16
                 }
-              }
+              },
+              "access": "public",
+              "inline": []
             }
           ]
         }

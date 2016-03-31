@@ -12,7 +12,6 @@
           "description": "<p>argument alias</p>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -28,7 +27,9 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     },
     {
       "arg": [
@@ -41,7 +42,6 @@
           "description": "<p>param alias</p>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 3,
@@ -57,7 +57,9 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     },
     {
       "arg": [
@@ -70,7 +72,6 @@
           "description": "<p>parameter alias</p>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -86,7 +87,9 @@
           "start": 1,
           "end": 6
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     }
   ]
 }

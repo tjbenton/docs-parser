@@ -10,7 +10,6 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -26,7 +25,9 @@
           "start": 1,
           "end": 8
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     },
     {
       "throws": [
@@ -37,7 +38,6 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 3,
@@ -53,7 +53,9 @@
           "start": 1,
           "end": 8
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     },
     {
       "throws": [
@@ -64,7 +66,6 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -80,7 +81,9 @@
           "start": 1,
           "end": 8
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     },
     {
       "throws": [
@@ -91,7 +94,6 @@
           "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
         }
       ],
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 7,
@@ -107,7 +109,9 @@
           "start": 1,
           "end": 8
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     }
   ]
 }

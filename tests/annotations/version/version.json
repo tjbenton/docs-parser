@@ -6,7 +6,6 @@
         "version": "undefined",
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 1,
@@ -22,14 +21,15 @@
           "start": 1,
           "end": 13
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     },
     {
       "version": {
         "version": "0.0.1",
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 3,
@@ -45,14 +45,15 @@
           "start": 1,
           "end": 13
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     },
     {
       "version": {
         "version": "^0.0.1",
         "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 5,
@@ -68,14 +69,15 @@
           "start": 1,
           "end": 13
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     },
     {
       "version": {
         "version": "^0.0.1",
         "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>\n"
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 7,
@@ -91,14 +93,15 @@
           "start": 1,
           "end": 13
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     },
     {
       "version": {
         "version": "1.0.1",
         "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium necessitatibus\nlaboriosam, hic odit sequi facilis, amet consequuntur ullam, rem iure commodi doloremque\nsapiente numquam. Minima vel voluptates sint nostrum facere.</p>\n"
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 9,
@@ -114,7 +117,9 @@
           "start": 1,
           "end": 13
         }
-      }
+      },
+      "access": "public",
+      "inline": []
     }
   ]
 }

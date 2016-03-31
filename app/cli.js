@@ -21,7 +21,7 @@ export default function cli() {
 
       Note: Put globs quotes \`'.*, app/**/*'\` to avoid issues
     `)
-    .option('-d, --dest [path]', 'Documentation folder', `${root}/docs/docs.json`)
+    .option('-d, --dest [path]', 'Documentation folder', default_options.dest)
     .option('-c, --config [path]', 'Path to configuration file', default_options.config)
     .option('-i, --ignore <glob1, [glob2, ...]>', 'Paths to ignore', to_list, default_options.ignore)
     .option('-w, --watch', 'Recompile docs on changes', true, default_options.watch)
@@ -61,6 +61,7 @@ export default function cli() {
     files,
     ignore,
     gitignore,
+    dest,
     debug,
     warning,
     timestamps,

@@ -39,7 +39,6 @@
             "author": [
               "Tyler Benton"
             ],
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 1,
@@ -55,7 +54,8 @@
                 "start": 1,
                 "end": 59
               }
-            }
+            },
+            "access": "public"
           },
           "body": [
             {
@@ -76,7 +76,6 @@
                   "escaped_stateless": "\\@name"
                 }
               ],
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 6,
@@ -92,7 +91,9 @@
                   "start": 1,
                   "end": 59
                 }
-              }
+              },
+              "access": "public",
+              "inline": []
             },
             {
               "name": "Two",
@@ -109,7 +110,6 @@
                   "escaped_stateless": "&lt;nav&gt;\n  &lt;a href=&quot;&quot;&gt;One&lt;/a&gt;\n  &lt;a href=&quot;&quot;&gt;Two&lt;/a&gt;\n  &lt;a href=&quot;&quot;&gt;Three&lt;/a&gt;\n&lt;/nav&gt;"
                 }
               ],
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 16,
@@ -125,7 +125,9 @@
                   "start": 1,
                   "end": 59
                 }
-              }
+              },
+              "access": "public",
+              "inline": []
             },
             {
               "name": "Three",
@@ -152,7 +154,6 @@
                   "escaped_stateless": ".foo {\n  .opacity(.3);\n}"
                 }
               ],
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 43,
@@ -168,7 +169,9 @@
                   "start": 1,
                   "end": 59
                 }
-              }
+              },
+              "access": "public",
+              "inline": []
             }
           ]
         }

@@ -31,7 +31,6 @@
             "author": [
               "Tyler Benton"
             ],
-            "access": "public",
             "blockinfo": {
               "comment": {
                 "start": 1,
@@ -47,7 +46,8 @@
                 "start": 1,
                 "end": 15
               }
-            }
+            },
+            "access": "public"
           },
           "body": [
             {
@@ -57,7 +57,6 @@
                 "description": ""
               },
               "description": "<p>what up\nshoot</p>\n",
-              "access": "public",
               "blockinfo": {
                 "comment": {
                   "start": 6,
@@ -74,30 +73,94 @@
                   "end": 15
                 }
               },
-              "property": [
+              "access": "public",
+              "inline": [
                 {
-                  "types": [
-                    "color"
+                  "property": [
+                    {
+                      "types": [
+                        "color"
+                      ],
+                      "name": "a",
+                      "value": "",
+                      "description": "<p>description</p>\n"
+                    }
                   ],
-                  "name": "a",
-                  "value": "",
-                  "description": "<p>description</p>\n"
+                  "blockinfo": {
+                    "comment": {
+                      "start": 12,
+                      "end": 12,
+                      "type": "inline"
+                    },
+                    "code": {
+                      "start": 12,
+                      "end": 12
+                    },
+                    "file": {
+                      "path": "docs/tests/file-types/scss/inline.scss",
+                      "start": 1,
+                      "end": 15
+                    }
+                  },
+                  "access": "public"
                 },
                 {
-                  "types": [
-                    "color"
+                  "property": [
+                    {
+                      "types": [
+                        "color"
+                      ],
+                      "name": "b",
+                      "value": "",
+                      "description": "<p>description</p>\n"
+                    }
                   ],
-                  "name": "b",
-                  "value": "",
-                  "description": "<p>description</p>\n"
+                  "blockinfo": {
+                    "comment": {
+                      "start": 13,
+                      "end": 13,
+                      "type": "inline"
+                    },
+                    "code": {
+                      "start": 13,
+                      "end": 13
+                    },
+                    "file": {
+                      "path": "docs/tests/file-types/scss/inline.scss",
+                      "start": 1,
+                      "end": 15
+                    }
+                  },
+                  "access": "public"
                 },
                 {
-                  "types": [
-                    "color"
+                  "property": [
+                    {
+                      "types": [
+                        "color"
+                      ],
+                      "name": "c",
+                      "value": "",
+                      "description": "<p>description</p>\n"
+                    }
                   ],
-                  "name": "c",
-                  "value": "",
-                  "description": "<p>description</p>\n"
+                  "blockinfo": {
+                    "comment": {
+                      "start": 14,
+                      "end": 14,
+                      "type": "inline"
+                    },
+                    "code": {
+                      "start": 14,
+                      "end": 14
+                    },
+                    "file": {
+                      "path": "docs/tests/file-types/scss/inline.scss",
+                      "start": 1,
+                      "end": 15
+                    }
+                  },
+                  "access": "public"
                 }
               ]
             }

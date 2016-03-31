@@ -7,7 +7,6 @@
         "type": "object",
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 4,
@@ -24,12 +23,34 @@
           "end": 45
         }
       },
-      "property": [
+      "access": "public",
+      "inline": [
         {
-          "types": [],
-          "name": "",
-          "value": "",
-          "description": ""
+          "property": [
+            {
+              "types": [],
+              "name": "",
+              "value": "",
+              "description": ""
+            }
+          ],
+          "blockinfo": {
+            "comment": {
+              "start": 7,
+              "end": 7,
+              "type": "inline"
+            },
+            "code": {
+              "start": 7,
+              "end": 7
+            },
+            "file": {
+              "path": "docs/tests/annotations/property/property.inline.js",
+              "start": 1,
+              "end": 45
+            }
+          },
+          "access": "public"
         }
       ]
     },
@@ -39,7 +60,6 @@
         "type": "object",
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 10,
@@ -56,14 +76,36 @@
           "end": 45
         }
       },
-      "property": [
+      "access": "public",
+      "inline": [
         {
-          "types": [
-            "number"
+          "property": [
+            {
+              "types": [
+                "number"
+              ],
+              "name": "bar.value",
+              "value": "",
+              "description": ""
+            }
           ],
-          "name": "bar.value",
-          "value": "",
-          "description": ""
+          "blockinfo": {
+            "comment": {
+              "start": 13,
+              "end": 13,
+              "type": "inline"
+            },
+            "code": {
+              "start": 13,
+              "end": 13
+            },
+            "file": {
+              "path": "docs/tests/annotations/property/property.inline.js",
+              "start": 1,
+              "end": 45
+            }
+          },
+          "access": "public"
         }
       ]
     },
@@ -73,7 +115,6 @@
         "type": "object",
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 16,
@@ -90,15 +131,37 @@
           "end": 45
         }
       },
-      "property": [
+      "access": "public",
+      "inline": [
         {
-          "types": [
-            "number",
-            "array"
+          "property": [
+            {
+              "types": [
+                "number",
+                "array"
+              ],
+              "name": "baz.value",
+              "value": "",
+              "description": ""
+            }
           ],
-          "name": "baz.value",
-          "value": "",
-          "description": ""
+          "blockinfo": {
+            "comment": {
+              "start": 19,
+              "end": 19,
+              "type": "inline"
+            },
+            "code": {
+              "start": 19,
+              "end": 19
+            },
+            "file": {
+              "path": "docs/tests/annotations/property/property.inline.js",
+              "start": 1,
+              "end": 45
+            }
+          },
+          "access": "public"
         }
       ]
     },
@@ -108,7 +171,6 @@
         "type": "object",
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 22,
@@ -125,14 +187,36 @@
           "end": 45
         }
       },
-      "property": [
+      "access": "public",
+      "inline": [
         {
-          "types": [
-            "function"
+          "property": [
+            {
+              "types": [
+                "function"
+              ],
+              "name": "qux.value",
+              "value": "",
+              "description": "<p>description</p>\n"
+            }
           ],
-          "name": "qux.value",
-          "value": "",
-          "description": "<p>description</p>\n"
+          "blockinfo": {
+            "comment": {
+              "start": 25,
+              "end": 25,
+              "type": "inline"
+            },
+            "code": {
+              "start": 25,
+              "end": 27
+            },
+            "file": {
+              "path": "docs/tests/annotations/property/property.inline.js",
+              "start": 1,
+              "end": 45
+            }
+          },
+          "access": "public"
         }
       ]
     },
@@ -142,7 +226,6 @@
         "type": "object",
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 30,
@@ -159,14 +242,36 @@
           "end": 45
         }
       },
-      "property": [
+      "access": "public",
+      "inline": [
         {
-          "types": [
-            "number"
+          "property": [
+            {
+              "types": [
+                "number"
+              ],
+              "name": "corge.value",
+              "value": "5",
+              "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>\n"
+            }
           ],
-          "name": "corge.value",
-          "value": "5",
-          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>\n"
+          "blockinfo": {
+            "comment": {
+              "start": 33,
+              "end": 33,
+              "type": "inline"
+            },
+            "code": {
+              "start": 33,
+              "end": 33
+            },
+            "file": {
+              "path": "docs/tests/annotations/property/property.inline.js",
+              "start": 1,
+              "end": 45
+            }
+          },
+          "access": "public"
         }
       ]
     },
@@ -176,7 +281,6 @@
         "type": "object",
         "description": ""
       },
-      "access": "public",
       "blockinfo": {
         "comment": {
           "start": 37,
@@ -193,14 +297,36 @@
           "end": 45
         }
       },
-      "property": [
+      "access": "public",
+      "inline": [
         {
-          "types": [
-            "function"
+          "property": [
+            {
+              "types": [
+                "function"
+              ],
+              "name": "quux.value",
+              "value": "'whatup'",
+              "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>\n"
+            }
           ],
-          "name": "quux.value",
-          "value": "'whatup'",
-          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit</p>\n"
+          "blockinfo": {
+            "comment": {
+              "start": 40,
+              "end": 40,
+              "type": "inline"
+            },
+            "code": {
+              "start": 41,
+              "end": 43
+            },
+            "file": {
+              "path": "docs/tests/annotations/property/property.inline.js",
+              "start": 1,
+              "end": 45
+            }
+          },
+          "access": "public"
         }
       ]
     }

@@ -40,38 +40,43 @@ export default {
       })
     }, {})
 
-    // Object.defineProperty(state, '__details', { __proto__: null, get: () => this })
-
     return [ { markup_id, state } ]
   },
   resolve() {
-    let { parsed, log, file } = this
+    const { parsed, log, file, parent } = this
 
-    return this.reduce((previous, current) => {
+    const is_inline = this.comment.type === 'inline'
+    return this.reduce((previous, current) => { // eslint-disable-line
       let { markup_id, state, details } = current
-      let markup
-      let start_at = details.start
+      let markup = (parsed || {}).markup || !is.empty(parent) && parent.parsed.markup // might need to be cloned
+      let start_at = details.annotation.start // gets the starting point of the current state annotation being parsed
 
       // throw an error because a state should always be accompanied by a `@markup` block
-      if (!parsed.markup) {
-        log.emit('error', "There's no instance of a '@markup' annotation")
+      if (!markup) {
+        log.emit('error', `
+          You must have a @markdown annotation associated with @state
+          ${this.file.path}:${(current.details || {}).start || this.comment.start}
+        `)
       } else if (is.falsy(markup_id)) {
-        markup = findMarkupAfter(parsed.markup, start_at)
+        if (is_inline && !parsed.markup) {
+          markup = findMarkupById(markup, 'default') || markup[0]
+        } else {
+          markup = findMarkupAfter(markup, start_at)
+        }
         markup_id = (markup || {}).id
-
         if (!markup) {
-          log.emit('error', to.normalize(`
+          log.emit('error', `
             There's no instance of a '@markup' annotation after line ${start_at}
             in ${file.path}
-          `))
+          `)
         }
       } else {
-        markup = findMarkupById(parsed.markup, markup_id)
+        markup = findMarkupById(markup, markup_id)
         if (!markup) {
-          log.emit('error', to.normalize(`
-            There's no instance of a '@markup' annotation with an id of ${markup_id}
+          log.emit('error', `
+            There's no instance of a '@markup' annotation with an id of ${markup_id}.
             in ${file.path}
-          `))
+          `)
         }
       }
 

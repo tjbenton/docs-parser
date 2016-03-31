@@ -7,7 +7,8 @@
 <!-- [![NPM][npm-image]][npm-url] -->
 
 Docs, addapts to any language and will help you document all the things.
-Where there is development there is a need for documentation. There are several great libraries for all sorts of files, written by brilliant developers, libraries like [SassDoc][sass-doc], [JSDoc][js-doc], [JavaDoc][java-doc], [Jazzy][jazzy], [StyleDocco][styledocco], [KSS][kss], [Hologram][hologram], [DSS][dss] and several more. All of these libraries do a very good job for documenting their respective languages. However there are very few projects that only require 1 file type. Which means if you really want to document all you code you may have to use 3 or 4 of these documentation generators. Each of the generators have their own way of documenting and their annotations, and their own document site which just makes it harder to keep all your documentation in one spot.
+Where there is development there is a need for documentation. There are several great libraries for all sorts of files, written by brilliant developers, libraries like [SassDoc][sass-doc], [JSDoc][js-doc], [JavaDoc][java-doc], [Jazzy][jazzy], [StyleDocco][styledocco], [KSS][kss], [Hologram][hologram], [DSS][dss] and several more. All of these libraries do a very good job for documenting their respective languages. However there are very few projects that only require 1 file type. Which means if you really want to document all your code you may have to use 3 or 4 of these documentation generators. Each of the generators have their own way of documenting and their annotations, and their own document site which just makes it harder to keep all your documentation in one spot.
+
 Docs fixes all these issues by giving you the ability to generate documentation for all your files. While giving you control over what annotations you want to use in each file type.
 
 ## Table of contents
@@ -18,7 +19,17 @@ Docs fixes all these issues by giving you the ability to generate documentation 
  - [Documenting your items](#documenting-your-items)
 
 ## Settings
-There're 3 different settings that're avaiable to change on a per file basis. When you define out new settings for a specific filetype it will be merged with the default settings.
+There're 3 different settings that are available to change on a per file basis. When you define out new settings for a specific filetype it will be merged with the default settings.
+
+
+## Usage
+
+Install:
+
+```bash
+npm i tjbenton/docs --save-dev
+```
+
 
 #### Options
 `file_comment`:
@@ -338,8 +349,6 @@ This type of comment can only occur **once** per file. Any annotations that are 
       })
     }
     ```
- - ~~Filter out files that haven't changed, and only pass through the new files.~~
- - Refactor the function that get's the blocks to be seperate functions so it can reused for both header level comments and body comments.
  - Ability to add single line notations, or allow the user to define how many lines they want to return. The way it would work is to have a special identifier after the opening comments(eg `/**#{2} @remove */`) for laguages that use them, or after the single line comment(`///#{5}`). If you didn't want to return multiple lines, then you could just write `///#` and it would return everything before the comment. Note that `///#` is different that `///#{1}` because the `{2}` telling the parser to return the next 2 lines. There couldn't be any spaces inbetween the specified comment style and the special character that's used to identify this type of comment. Having this ability would allow you to do things like the following.
 
    ###### Returning a single line example
@@ -350,7 +359,7 @@ This type of comment can only occur **once** per file. Any annotations that are 
      outline: 1px solid red; /**# @remove #*/
      margin: 10px; /**# @todo {10} - fix spacing */
     }
-    .foo--bar{ /** @state */
+    .foo--bar{ /**# @state */
       background: black;
     }
    ```
@@ -421,59 +430,6 @@ This type of comment can only occur **once** per file. Any annotations that are 
        ...
      };
    };
-   ```
-
- - Instead of returning
-
-   ```json
-   "cs": {
-     "/Users/tylerbenton/ui-development/docs/tests/lib/c#/test.cs": [
-       {
-         "author": "Tyler Benton",
-         "page": "tests/c#-file",
-         "name": "main",
-         "description": "<p>Rerum exercitationem tenetur iure facere, iusto dolores cumque repudiandae. Voluptate repudiandae soluta, deleniti, repellat explicabo placeat id maxime ea veniam error quasi!</p>"
-       },
-       {
-         "author": "Tyler Benton",
-         "page": "tests/c#-file",
-         "name": "Something",
-         "description": "<p>Rerum exercitationem tenetur iure facere, iusto dolores cumque repudiandae. Voluptate repudiandae soluta, deleniti, repellat explicabo placeat id maxime ea veniam error quasi!</p>"
-       },
-       {
-         "author": "Tyler Benton",
-         "page": "tests/c#-file",
-         "name": "Something else",
-         "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>"
-       }
-     ]
-   }
-   ```
-
-   change to return
-
-   ```json
-   "cs": {
-     "/Users/tylerbenton/ui-development/docs/tests/lib/c#/test.cs": {
-       "header": {
-         "author": "Tyler Benton",
-         "page": "tests/c#-file",
-         "description": "<p>Rerum exercitationem tenetur iure facere, iusto dolores cumque repudiandae. Voluptate repudiandae soluta, deleniti, repellat explicabo placeat id maxime ea veniam error quasi!</p>"
-       },
-       "body": [
-         {
-          "name": "main"
-         },
-         {
-          "name": "Something"
-         },
-         {
-          "name": "Something else",
-          "description": "<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>"
-         }
-       ]
-     }
-   }
    ```
   - Look into adding a callback function that runs after the block has been completely parsed this would be run after the single line comments are parsed. I'm not sure how useful this would be but it's a thought.
     - This could allow you to create your own data structure.
