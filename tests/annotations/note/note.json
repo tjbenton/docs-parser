@@ -19,7 +19,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/note/note.js",
+          "path": "docs-parser/tests/annotations/note/note.js",
           "start": 1,
           "end": 20
         }
@@ -45,7 +45,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/note/note.js",
+          "path": "docs-parser/tests/annotations/note/note.js",
           "start": 1,
           "end": 20
         }
@@ -71,7 +71,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/note/note.js",
+          "path": "docs-parser/tests/annotations/note/note.js",
           "start": 1,
           "end": 20
         }
@@ -97,7 +97,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/note/note.js",
+          "path": "docs-parser/tests/annotations/note/note.js",
           "start": 1,
           "end": 20
         }
@@ -123,7 +123,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/note/note.js",
+          "path": "docs-parser/tests/annotations/note/note.js",
           "start": 1,
           "end": 20
         }
@@ -149,7 +149,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/note/note.js",
+          "path": "docs-parser/tests/annotations/note/note.js",
           "start": 1,
           "end": 20
         }

@@ -42,7 +42,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/jade/test.jade",
+                "path": "docs-parser/tests/file-types/jade/test.jade",
                 "start": 1,
                 "end": 16
               }
@@ -64,7 +64,7 @@
                   "end": 15
                 },
                 "file": {
-                  "path": "docs/tests/file-types/jade/test.jade",
+                  "path": "docs-parser/tests/file-types/jade/test.jade",
                   "start": 1,
                   "end": 16
                 }

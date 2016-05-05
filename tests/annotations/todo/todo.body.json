@@ -20,7 +20,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/todo/todo.body.js",
+          "path": "docs-parser/tests/annotations/todo/todo.body.js",
           "start": 1,
           "end": 15
         }
@@ -47,7 +47,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/todo/todo.body.js",
+          "path": "docs-parser/tests/annotations/todo/todo.body.js",
           "start": 1,
           "end": 15
         }
@@ -74,7 +74,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/todo/todo.body.js",
+          "path": "docs-parser/tests/annotations/todo/todo.body.js",
           "start": 1,
           "end": 15
         }
@@ -103,7 +103,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/todo/todo.body.js",
+          "path": "docs-parser/tests/annotations/todo/todo.body.js",
           "start": 1,
           "end": 15
         }
@@ -133,7 +133,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/todo/todo.body.js",
+          "path": "docs-parser/tests/annotations/todo/todo.body.js",
           "start": 1,
           "end": 15
         }
@@ -163,7 +163,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/todo/todo.body.js",
+          "path": "docs-parser/tests/annotations/todo/todo.body.js",
           "start": 1,
           "end": 15
         }

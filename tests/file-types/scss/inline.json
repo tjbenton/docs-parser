@@ -42,7 +42,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/scss/inline.scss",
+                "path": "docs-parser/tests/file-types/scss/inline.scss",
                 "start": 1,
                 "end": 15
               }
@@ -68,7 +68,7 @@
                   "end": 15
                 },
                 "file": {
-                  "path": "docs/tests/file-types/scss/inline.scss",
+                  "path": "docs-parser/tests/file-types/scss/inline.scss",
                   "start": 1,
                   "end": 15
                 }
@@ -97,7 +97,7 @@
                       "end": 12
                     },
                     "file": {
-                      "path": "docs/tests/file-types/scss/inline.scss",
+                      "path": "docs-parser/tests/file-types/scss/inline.scss",
                       "start": 1,
                       "end": 15
                     }
@@ -126,7 +126,7 @@
                       "end": 13
                     },
                     "file": {
-                      "path": "docs/tests/file-types/scss/inline.scss",
+                      "path": "docs-parser/tests/file-types/scss/inline.scss",
                       "start": 1,
                       "end": 15
                     }
@@ -155,7 +155,7 @@
                       "end": 14
                     },
                     "file": {
-                      "path": "docs/tests/file-types/scss/inline.scss",
+                      "path": "docs-parser/tests/file-types/scss/inline.scss",
                       "start": 1,
                       "end": 15
                     }

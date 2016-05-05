@@ -89,7 +89,7 @@
           "end": 38
         },
         "file": {
-          "path": "docs/tests/annotations/state/complex-multiple/states-with-custom-props.scss",
+          "path": "docs-parser/tests/annotations/state/complex-multiple/states-with-custom-props.scss",
           "start": 1,
           "end": 39
         }

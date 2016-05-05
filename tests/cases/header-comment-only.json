@@ -27,7 +27,7 @@
               "end": -1
             },
             "file": {
-              "path": "docs/tests/cases/header-comment-only.scss",
+              "path": "docs-parser/tests/cases/header-comment-only.scss",
               "start": 1,
               "end": 8
             }

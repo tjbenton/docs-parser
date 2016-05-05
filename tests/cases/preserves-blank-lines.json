@@ -42,7 +42,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/cases/preserves-blank-lines.scss",
+                "path": "docs-parser/tests/cases/preserves-blank-lines.scss",
                 "start": 1,
                 "end": 13
               }

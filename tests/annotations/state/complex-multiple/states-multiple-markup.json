@@ -161,7 +161,7 @@
           "end": 59
         },
         "file": {
-          "path": "docs/tests/annotations/state/complex-multiple/states-multiple-markup.scss",
+          "path": "docs-parser/tests/annotations/state/complex-multiple/states-multiple-markup.scss",
           "start": 1,
           "end": 60
         }

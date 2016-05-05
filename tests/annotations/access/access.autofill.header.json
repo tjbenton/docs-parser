@@ -15,7 +15,7 @@
         "end": -1
       },
       "file": {
-        "path": "docs/tests/annotations/access/access.autofill.header.js",
+        "path": "docs-parser/tests/annotations/access/access.autofill.header.js",
         "start": 1,
         "end": 4
       }

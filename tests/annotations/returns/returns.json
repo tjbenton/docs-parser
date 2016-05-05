@@ -19,7 +19,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/returns/returns.js",
+          "path": "docs-parser/tests/annotations/returns/returns.js",
           "start": 1,
           "end": 23
         }
@@ -45,7 +45,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/returns/returns.js",
+          "path": "docs-parser/tests/annotations/returns/returns.js",
           "start": 1,
           "end": 23
         }
@@ -73,7 +73,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/returns/returns.js",
+          "path": "docs-parser/tests/annotations/returns/returns.js",
           "start": 1,
           "end": 23
         }
@@ -101,7 +101,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/returns/returns.js",
+          "path": "docs-parser/tests/annotations/returns/returns.js",
           "start": 1,
           "end": 23
         }
@@ -127,7 +127,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/returns/returns.js",
+          "path": "docs-parser/tests/annotations/returns/returns.js",
           "start": 1,
           "end": 23
         }
@@ -153,7 +153,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/returns/returns.js",
+          "path": "docs-parser/tests/annotations/returns/returns.js",
           "start": 1,
           "end": 23
         }
@@ -179,7 +179,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/returns/returns.js",
+          "path": "docs-parser/tests/annotations/returns/returns.js",
           "start": 1,
           "end": 23
         }

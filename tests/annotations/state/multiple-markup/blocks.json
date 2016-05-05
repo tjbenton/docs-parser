@@ -71,7 +71,7 @@
           "end": 23
         },
         "file": {
-          "path": "docs/tests/annotations/state/multiple-markup/blocks.scss",
+          "path": "docs-parser/tests/annotations/state/multiple-markup/blocks.scss",
           "start": 1,
           "end": 24
         }

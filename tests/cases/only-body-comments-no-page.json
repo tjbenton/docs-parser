@@ -47,7 +47,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/cases/only-body-comments-no-page.scss",
+                "path": "docs-parser/tests/cases/only-body-comments-no-page.scss",
                 "start": 1,
                 "end": 21
               }
@@ -100,7 +100,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/cases/only-body-comments-no-page.scss",
+                "path": "docs-parser/tests/cases/only-body-comments-no-page.scss",
                 "start": 1,
                 "end": 21
               }

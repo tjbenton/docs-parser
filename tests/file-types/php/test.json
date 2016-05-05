@@ -51,7 +51,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/php/test.php",
+                "path": "docs-parser/tests/file-types/php/test.php",
                 "start": 1,
                 "end": 37
               }
@@ -73,7 +73,7 @@
                   "end": 12
                 },
                 "file": {
-                  "path": "docs/tests/file-types/php/test.php",
+                  "path": "docs-parser/tests/file-types/php/test.php",
                   "start": 1,
                   "end": 37
                 }
@@ -95,7 +95,7 @@
                   "end": 25
                 },
                 "file": {
-                  "path": "docs/tests/file-types/php/test.php",
+                  "path": "docs-parser/tests/file-types/php/test.php",
                   "start": 1,
                   "end": 37
                 }
@@ -117,7 +117,7 @@
                   "end": 35
                 },
                 "file": {
-                  "path": "docs/tests/file-types/php/test.php",
+                  "path": "docs-parser/tests/file-types/php/test.php",
                   "start": 1,
                   "end": 37
                 }

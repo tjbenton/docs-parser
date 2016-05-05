@@ -105,7 +105,7 @@
           "end": 26
         },
         "file": {
-          "path": "docs/tests/annotations/state/multiple-markup/blocks-with-different-states.scss",
+          "path": "docs-parser/tests/annotations/state/multiple-markup/blocks-with-different-states.scss",
           "start": 1,
           "end": 27
         }

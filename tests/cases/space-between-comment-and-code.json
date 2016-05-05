@@ -51,7 +51,7 @@
                 "end": 27
               },
               "file": {
-                "path": "docs/tests/cases/space-between-comment-and-code.scss",
+                "path": "docs-parser/tests/cases/space-between-comment-and-code.scss",
                 "start": 1,
                 "end": 28
               }

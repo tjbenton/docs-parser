@@ -50,7 +50,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/stylus/test.styl",
+                "path": "docs-parser/tests/file-types/stylus/test.styl",
                 "start": 1,
                 "end": 37
               }
@@ -72,7 +72,7 @@
                   "end": 14
                 },
                 "file": {
-                  "path": "docs/tests/file-types/stylus/test.styl",
+                  "path": "docs-parser/tests/file-types/stylus/test.styl",
                   "start": 1,
                   "end": 37
                 }
@@ -94,7 +94,7 @@
                   "end": 25
                 },
                 "file": {
-                  "path": "docs/tests/file-types/stylus/test.styl",
+                  "path": "docs-parser/tests/file-types/stylus/test.styl",
                   "start": 1,
                   "end": 37
                 }
@@ -116,7 +116,7 @@
                   "end": 34
                 },
                 "file": {
-                  "path": "docs/tests/file-types/stylus/test.styl",
+                  "path": "docs-parser/tests/file-types/stylus/test.styl",
                   "start": 1,
                   "end": 37
                 }

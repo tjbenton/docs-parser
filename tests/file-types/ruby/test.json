@@ -50,7 +50,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/ruby/test.rb",
+                "path": "docs-parser/tests/file-types/ruby/test.rb",
                 "start": 1,
                 "end": 43
               }
@@ -72,7 +72,7 @@
                   "end": 12
                 },
                 "file": {
-                  "path": "docs/tests/file-types/ruby/test.rb",
+                  "path": "docs-parser/tests/file-types/ruby/test.rb",
                   "start": 1,
                   "end": 43
                 }
@@ -94,7 +94,7 @@
                   "end": 21
                 },
                 "file": {
-                  "path": "docs/tests/file-types/ruby/test.rb",
+                  "path": "docs-parser/tests/file-types/ruby/test.rb",
                   "start": 1,
                   "end": 43
                 }
@@ -116,7 +116,7 @@
                   "end": 34
                 },
                 "file": {
-                  "path": "docs/tests/file-types/ruby/test.rb",
+                  "path": "docs-parser/tests/file-types/ruby/test.rb",
                   "start": 1,
                   "end": 43
                 }

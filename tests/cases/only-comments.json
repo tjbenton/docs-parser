@@ -34,7 +34,7 @@
               "end": -1
             },
             "file": {
-              "path": "docs/tests/cases/only-comments.scss",
+              "path": "docs-parser/tests/cases/only-comments.scss",
               "start": 1,
               "end": 27
             }
@@ -73,7 +73,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/cases/only-comments.scss",
+                "path": "docs-parser/tests/cases/only-comments.scss",
                 "start": 1,
                 "end": 27
               }
@@ -95,7 +95,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/cases/only-comments.scss",
+                "path": "docs-parser/tests/cases/only-comments.scss",
                 "start": 1,
                 "end": 27
               }

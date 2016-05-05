@@ -34,7 +34,7 @@
                 "end": 13
               },
               "file": {
-                "path": "docs/tests/cases/4-blank-lines-between-code-blocks.scss",
+                "path": "docs-parser/tests/cases/4-blank-lines-between-code-blocks.scss",
                 "start": 1,
                 "end": 34
               }

@@ -31,7 +31,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/cases/single-body-comment-no-code.scss",
+                "path": "docs-parser/tests/cases/single-body-comment-no-code.scss",
                 "start": 1,
                 "end": 8
               }

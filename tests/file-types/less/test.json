@@ -50,7 +50,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/less/test.less",
+                "path": "docs-parser/tests/file-types/less/test.less",
                 "start": 1,
                 "end": 59
               }
@@ -87,7 +87,7 @@
                   "end": 14
                 },
                 "file": {
-                  "path": "docs/tests/file-types/less/test.less",
+                  "path": "docs-parser/tests/file-types/less/test.less",
                   "start": 1,
                   "end": 59
                 }
@@ -121,7 +121,7 @@
                   "end": 41
                 },
                 "file": {
-                  "path": "docs/tests/file-types/less/test.less",
+                  "path": "docs-parser/tests/file-types/less/test.less",
                   "start": 1,
                   "end": 59
                 }
@@ -165,7 +165,7 @@
                   "end": 58
                 },
                 "file": {
-                  "path": "docs/tests/file-types/less/test.less",
+                  "path": "docs-parser/tests/file-types/less/test.less",
                   "start": 1,
                   "end": 59
                 }

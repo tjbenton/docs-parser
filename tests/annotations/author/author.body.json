@@ -16,7 +16,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/author/author.body.js",
+          "path": "docs-parser/tests/annotations/author/author.body.js",
           "start": 1,
           "end": 2
         }

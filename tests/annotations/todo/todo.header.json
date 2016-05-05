@@ -24,7 +24,7 @@
         "end": -1
       },
       "file": {
-        "path": "docs/tests/annotations/todo/todo.header.js",
+        "path": "docs-parser/tests/annotations/todo/todo.header.js",
         "start": 1,
         "end": 7
       }

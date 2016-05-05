@@ -48,7 +48,7 @@
                 "end": 32
               },
               "file": {
-                "path": "docs/tests/cases/starts-and-ends-with-spaces.scss",
+                "path": "docs-parser/tests/cases/starts-and-ends-with-spaces.scss",
                 "start": 1,
                 "end": 38
               }

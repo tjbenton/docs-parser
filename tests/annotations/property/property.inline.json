@@ -18,7 +18,7 @@
           "end": 8
         },
         "file": {
-          "path": "docs/tests/annotations/property/property.inline.js",
+          "path": "docs-parser/tests/annotations/property/property.inline.js",
           "start": 1,
           "end": 45
         }
@@ -45,7 +45,7 @@
               "end": 7
             },
             "file": {
-              "path": "docs/tests/annotations/property/property.inline.js",
+              "path": "docs-parser/tests/annotations/property/property.inline.js",
               "start": 1,
               "end": 45
             }
@@ -71,7 +71,7 @@
           "end": 14
         },
         "file": {
-          "path": "docs/tests/annotations/property/property.inline.js",
+          "path": "docs-parser/tests/annotations/property/property.inline.js",
           "start": 1,
           "end": 45
         }
@@ -100,7 +100,7 @@
               "end": 13
             },
             "file": {
-              "path": "docs/tests/annotations/property/property.inline.js",
+              "path": "docs-parser/tests/annotations/property/property.inline.js",
               "start": 1,
               "end": 45
             }
@@ -126,7 +126,7 @@
           "end": 20
         },
         "file": {
-          "path": "docs/tests/annotations/property/property.inline.js",
+          "path": "docs-parser/tests/annotations/property/property.inline.js",
           "start": 1,
           "end": 45
         }
@@ -156,7 +156,7 @@
               "end": 19
             },
             "file": {
-              "path": "docs/tests/annotations/property/property.inline.js",
+              "path": "docs-parser/tests/annotations/property/property.inline.js",
               "start": 1,
               "end": 45
             }
@@ -182,7 +182,7 @@
           "end": 28
         },
         "file": {
-          "path": "docs/tests/annotations/property/property.inline.js",
+          "path": "docs-parser/tests/annotations/property/property.inline.js",
           "start": 1,
           "end": 45
         }
@@ -211,7 +211,7 @@
               "end": 27
             },
             "file": {
-              "path": "docs/tests/annotations/property/property.inline.js",
+              "path": "docs-parser/tests/annotations/property/property.inline.js",
               "start": 1,
               "end": 45
             }
@@ -237,7 +237,7 @@
           "end": 34
         },
         "file": {
-          "path": "docs/tests/annotations/property/property.inline.js",
+          "path": "docs-parser/tests/annotations/property/property.inline.js",
           "start": 1,
           "end": 45
         }
@@ -266,7 +266,7 @@
               "end": 33
             },
             "file": {
-              "path": "docs/tests/annotations/property/property.inline.js",
+              "path": "docs-parser/tests/annotations/property/property.inline.js",
               "start": 1,
               "end": 45
             }
@@ -292,7 +292,7 @@
           "end": 44
         },
         "file": {
-          "path": "docs/tests/annotations/property/property.inline.js",
+          "path": "docs-parser/tests/annotations/property/property.inline.js",
           "start": 1,
           "end": 45
         }
@@ -321,7 +321,7 @@
               "end": 43
             },
             "file": {
-              "path": "docs/tests/annotations/property/property.inline.js",
+              "path": "docs-parser/tests/annotations/property/property.inline.js",
               "start": 1,
               "end": 45
             }

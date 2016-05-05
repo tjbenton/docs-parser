@@ -17,7 +17,7 @@
           "end": 10
         },
         "file": {
-          "path": "docs/tests/annotations/raw-code/raw-code.escaped.html",
+          "path": "docs-parser/tests/annotations/raw-code/raw-code.escaped.html",
           "start": 1,
           "end": 10
         }

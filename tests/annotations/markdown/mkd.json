@@ -15,7 +15,7 @@
         "end": -1
       },
       "file": {
-        "path": "docs/tests/annotations/markdown/mkd.mkd",
+        "path": "docs-parser/tests/annotations/markdown/mkd.mkd",
         "start": 1,
         "end": 13
       }

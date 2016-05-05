@@ -16,7 +16,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/alias/alias.js",
+          "path": "docs-parser/tests/annotations/alias/alias.js",
           "start": 1,
           "end": 6
         }
@@ -40,7 +40,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/alias/alias.js",
+          "path": "docs-parser/tests/annotations/alias/alias.js",
           "start": 1,
           "end": 6
         }
@@ -64,7 +64,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/alias/alias.js",
+          "path": "docs-parser/tests/annotations/alias/alias.js",
           "start": 1,
           "end": 6
         }

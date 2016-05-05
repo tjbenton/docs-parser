@@ -18,7 +18,7 @@
         "end": -1
       },
       "file": {
-        "path": "docs/tests/annotations/since/since.header.js",
+        "path": "docs-parser/tests/annotations/since/since.header.js",
         "start": 1,
         "end": 7
       }

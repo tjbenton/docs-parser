@@ -54,7 +54,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/coldfusion/test.cfm",
+                "path": "docs-parser/tests/file-types/coldfusion/test.cfm",
                 "start": 1,
                 "end": 61
               }
@@ -76,7 +76,7 @@
                   "end": 16
                 },
                 "file": {
-                  "path": "docs/tests/file-types/coldfusion/test.cfm",
+                  "path": "docs-parser/tests/file-types/coldfusion/test.cfm",
                   "start": 1,
                   "end": 61
                 }
@@ -98,7 +98,7 @@
                   "end": 33
                 },
                 "file": {
-                  "path": "docs/tests/file-types/coldfusion/test.cfm",
+                  "path": "docs-parser/tests/file-types/coldfusion/test.cfm",
                   "start": 1,
                   "end": 61
                 }
@@ -120,7 +120,7 @@
                   "end": 49
                 },
                 "file": {
-                  "path": "docs/tests/file-types/coldfusion/test.cfm",
+                  "path": "docs-parser/tests/file-types/coldfusion/test.cfm",
                   "start": 1,
                   "end": 61
                 }
@@ -142,7 +142,7 @@
                   "end": 60
                 },
                 "file": {
-                  "path": "docs/tests/file-types/coldfusion/test.cfm",
+                  "path": "docs-parser/tests/file-types/coldfusion/test.cfm",
                   "start": 1,
                   "end": 61
                 }

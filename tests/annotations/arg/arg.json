@@ -21,7 +21,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/arg/arg.js",
+          "path": "docs-parser/tests/annotations/arg/arg.js",
           "start": 1,
           "end": 17
         }
@@ -51,7 +51,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/arg/arg.js",
+          "path": "docs-parser/tests/annotations/arg/arg.js",
           "start": 1,
           "end": 17
         }
@@ -82,7 +82,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/arg/arg.js",
+          "path": "docs-parser/tests/annotations/arg/arg.js",
           "start": 1,
           "end": 17
         }
@@ -112,7 +112,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/arg/arg.js",
+          "path": "docs-parser/tests/annotations/arg/arg.js",
           "start": 1,
           "end": 17
         }
@@ -142,7 +142,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/arg/arg.js",
+          "path": "docs-parser/tests/annotations/arg/arg.js",
           "start": 1,
           "end": 17
         }
@@ -172,7 +172,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/arg/arg.js",
+          "path": "docs-parser/tests/annotations/arg/arg.js",
           "start": 1,
           "end": 17
         }

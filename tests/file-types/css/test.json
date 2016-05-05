@@ -46,7 +46,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/css/test.css",
+                "path": "docs-parser/tests/file-types/css/test.css",
                 "start": 1,
                 "end": 31
               }
@@ -68,7 +68,7 @@
                   "end": 17
                 },
                 "file": {
-                  "path": "docs/tests/file-types/css/test.css",
+                  "path": "docs-parser/tests/file-types/css/test.css",
                   "start": 1,
                   "end": 31
                 }
@@ -90,7 +90,7 @@
                   "end": 31
                 },
                 "file": {
-                  "path": "docs/tests/file-types/css/test.css",
+                  "path": "docs-parser/tests/file-types/css/test.css",
                   "start": 1,
                   "end": 31
                 }

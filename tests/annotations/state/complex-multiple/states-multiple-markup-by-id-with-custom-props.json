@@ -161,7 +161,7 @@
           "end": 59
         },
         "file": {
-          "path": "docs/tests/annotations/state/complex-multiple/states-multiple-markup-by-id-with-custom-props.scss",
+          "path": "docs-parser/tests/annotations/state/complex-multiple/states-multiple-markup-by-id-with-custom-props.scss",
           "start": 1,
           "end": 60
         }

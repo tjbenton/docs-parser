@@ -45,7 +45,7 @@
           "end": 13
         },
         "file": {
-          "path": "docs/tests/annotations/state/stupid-simple/with-description.scss",
+          "path": "docs-parser/tests/annotations/state/stupid-simple/with-description.scss",
           "start": 1,
           "end": 43
         }
@@ -97,7 +97,7 @@
           "end": 28
         },
         "file": {
-          "path": "docs/tests/annotations/state/stupid-simple/with-description.scss",
+          "path": "docs-parser/tests/annotations/state/stupid-simple/with-description.scss",
           "start": 1,
           "end": 43
         }
@@ -149,7 +149,7 @@
           "end": 42
         },
         "file": {
-          "path": "docs/tests/annotations/state/stupid-simple/with-description.scss",
+          "path": "docs-parser/tests/annotations/state/stupid-simple/with-description.scss",
           "start": 1,
           "end": 43
         }

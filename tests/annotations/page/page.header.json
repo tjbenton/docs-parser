@@ -14,7 +14,7 @@
         "end": -1
       },
       "file": {
-        "path": "docs/tests/annotations/page/page.header.js",
+        "path": "docs-parser/tests/annotations/page/page.header.js",
         "start": 1,
         "end": 4
       }

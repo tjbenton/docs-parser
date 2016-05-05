@@ -18,7 +18,7 @@
         "end": -1
       },
       "file": {
-        "path": "docs/tests/annotations/depricated/depricated.header.js",
+        "path": "docs-parser/tests/annotations/depricated/depricated.header.js",
         "start": 1,
         "end": 7
       }

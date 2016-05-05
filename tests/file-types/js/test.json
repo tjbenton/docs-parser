@@ -42,7 +42,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/js/test.js",
+                "path": "docs-parser/tests/file-types/js/test.js",
                 "start": 1,
                 "end": 28
               }
@@ -85,7 +85,7 @@
                   "end": 27
                 },
                 "file": {
-                  "path": "docs/tests/file-types/js/test.js",
+                  "path": "docs-parser/tests/file-types/js/test.js",
                   "start": 1,
                   "end": 28
                 }

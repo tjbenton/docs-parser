@@ -50,7 +50,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/java/test.java",
+                "path": "docs-parser/tests/file-types/java/test.java",
                 "start": 1,
                 "end": 34
               }
@@ -72,7 +72,7 @@
                   "end": 15
                 },
                 "file": {
-                  "path": "docs/tests/file-types/java/test.java",
+                  "path": "docs-parser/tests/file-types/java/test.java",
                   "start": 1,
                   "end": 34
                 }
@@ -94,7 +94,7 @@
                   "end": 24
                 },
                 "file": {
-                  "path": "docs/tests/file-types/java/test.java",
+                  "path": "docs-parser/tests/file-types/java/test.java",
                   "start": 1,
                   "end": 34
                 }
@@ -116,7 +116,7 @@
                   "end": 33
                 },
                 "file": {
-                  "path": "docs/tests/file-types/java/test.java",
+                  "path": "docs-parser/tests/file-types/java/test.java",
                   "start": 1,
                   "end": 34
                 }

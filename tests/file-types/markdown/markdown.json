@@ -36,7 +36,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/markdown/markdown.markdown",
+                "path": "docs-parser/tests/file-types/markdown/markdown.markdown",
                 "start": 1,
                 "end": 21
               }

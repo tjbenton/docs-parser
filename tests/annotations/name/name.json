@@ -14,7 +14,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/name/name.js",
+          "path": "docs-parser/tests/annotations/name/name.js",
           "start": 1,
           "end": 2
         }

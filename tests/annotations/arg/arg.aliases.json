@@ -23,7 +23,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/arg/arg.aliases.js",
+          "path": "docs-parser/tests/annotations/arg/arg.aliases.js",
           "start": 1,
           "end": 6
         }
@@ -53,7 +53,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/arg/arg.aliases.js",
+          "path": "docs-parser/tests/annotations/arg/arg.aliases.js",
           "start": 1,
           "end": 6
         }
@@ -83,7 +83,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/arg/arg.aliases.js",
+          "path": "docs-parser/tests/annotations/arg/arg.aliases.js",
           "start": 1,
           "end": 6
         }

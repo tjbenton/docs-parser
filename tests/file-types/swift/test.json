@@ -50,7 +50,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/swift/test.swift",
+                "path": "docs-parser/tests/file-types/swift/test.swift",
                 "start": 1,
                 "end": 49
               }
@@ -72,7 +72,7 @@
                   "end": 20
                 },
                 "file": {
-                  "path": "docs/tests/file-types/swift/test.swift",
+                  "path": "docs-parser/tests/file-types/swift/test.swift",
                   "start": 1,
                   "end": 49
                 }
@@ -94,7 +94,7 @@
                   "end": 31
                 },
                 "file": {
-                  "path": "docs/tests/file-types/swift/test.swift",
+                  "path": "docs-parser/tests/file-types/swift/test.swift",
                   "start": 1,
                   "end": 49
                 }
@@ -116,7 +116,7 @@
                   "end": 48
                 },
                 "file": {
-                  "path": "docs/tests/file-types/swift/test.swift",
+                  "path": "docs-parser/tests/file-types/swift/test.swift",
                   "start": 1,
                   "end": 49
                 }

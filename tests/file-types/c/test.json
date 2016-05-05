@@ -50,7 +50,7 @@
                 "end": -1
               },
               "file": {
-                "path": "docs/tests/file-types/c/test.c",
+                "path": "docs-parser/tests/file-types/c/test.c",
                 "start": 1,
                 "end": 89
               }
@@ -72,7 +72,7 @@
                   "end": 32
                 },
                 "file": {
-                  "path": "docs/tests/file-types/c/test.c",
+                  "path": "docs-parser/tests/file-types/c/test.c",
                   "start": 1,
                   "end": 89
                 }
@@ -94,7 +94,7 @@
                   "end": 62
                 },
                 "file": {
-                  "path": "docs/tests/file-types/c/test.c",
+                  "path": "docs-parser/tests/file-types/c/test.c",
                   "start": 1,
                   "end": 89
                 }
@@ -116,7 +116,7 @@
                   "end": 88
                 },
                 "file": {
-                  "path": "docs/tests/file-types/c/test.c",
+                  "path": "docs-parser/tests/file-types/c/test.c",
                   "start": 1,
                   "end": 89
                 }

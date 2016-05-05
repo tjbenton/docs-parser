@@ -16,7 +16,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/page/page.body.js",
+          "path": "docs-parser/tests/annotations/page/page.body.js",
           "start": 1,
           "end": 7
         }
@@ -39,7 +39,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/page/page.body.js",
+          "path": "docs-parser/tests/annotations/page/page.body.js",
           "start": 1,
           "end": 7
         }
@@ -63,7 +63,7 @@
           "end": -1
         },
         "file": {
-          "path": "docs/tests/annotations/page/page.body.js",
+          "path": "docs-parser/tests/annotations/page/page.body.js",
           "start": 1,
           "end": 7
         }
