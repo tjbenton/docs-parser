@@ -1,3 +1,8 @@
+# ---------------------------------------------------
+# This repo has moved to [docs](https://github.com/tjbenton/docs/tree/development/packages/docs-parser)
+# ---------------------------------------------------
+
+
 # Docs
 
 <br>
